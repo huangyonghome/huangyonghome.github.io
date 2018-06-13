@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="正则表达式分类正则表达式分为三类（man grep可以看到，分别是basic RegExs，extended RegExs，perl RegExs）  一、正则表达式分类： 1、基本的正则表达式（Basic Regular Expression 又叫 Basic RegEx  简称 BREs） 2、扩展的正则表达式（Extended Regular Expression 又叫 Extended R">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则表达式分类">
+<meta property="og:url" content="http://yoursite.com/2018/06/12/正则表达式分类/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="正则表达式分类正则表达式分为三类（man grep可以看到，分别是basic RegExs，extended RegExs，perl RegExs）  一、正则表达式分类： 1、基本的正则表达式（Basic Regular Expression 又叫 Basic RegEx  简称 BREs） 2、扩展的正则表达式（Extended Regular Expression 又叫 Extended R">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-13T16:27:09.514Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="正则表达式分类">
+<meta name="twitter:description" content="正则表达式分类正则表达式分为三类（man grep可以看到，分别是basic RegExs，extended RegExs，perl RegExs）  一、正则表达式分类： 1、基本的正则表达式（Basic Regular Expression 又叫 Basic RegEx  简称 BREs） 2、扩展的正则表达式（Extended Regular Expression 又叫 Extended R">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/12/正则表达式分类/"/>
+
+
+
+
+
+  <title>正则表达式分类 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/正则表达式分类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">正则表达式分类</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-12T22:59:58+08:00">
+                2018-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/正则表达式/" itemprop="url" rel="index">
+                    <span itemprop="name">正则表达式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/12/正则表达式分类/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/正则表达式分类/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="正则表达式分类"><a href="#正则表达式分类" class="headerlink" title="正则表达式分类"></a>正则表达式分类</h2><p>正则表达式分为三类（man grep可以看到，分别是basic RegExs，extended RegExs，perl RegExs） </p>
+<p><strong>一、正则表达式分类：</strong></p>
+<p>1、基本的正则表达式（Basic Regular Expression 又叫 Basic RegEx  简称 BREs）</p>
+<p>2、扩展的正则表达式（Extended Regular Expression 又叫 Extended RegEx 简称 EREs）</p>
+<p>3、Perl 的正则表达式（Perl Regular Expression 又叫 Perl RegEx 简称 PREs）</p>
+<a id="more"></a>
+<hr>
+<p><strong>二、Linux 中常用文本工具与正则表达式的关系</strong> </p>
+<p>常握 Linux 下几种常用文本工具的特点，对于我们更好的使用正则表达式是很有帮助的</p>
+<ul>
+<li><strong>grep , egrep 正则表达式特点：</strong></li>
+</ul>
+<blockquote>
+<ol>
+<li>grep 支持：BREs、EREs、PREs 正则表达式</li>
+</ol>
+<p>grep 指令后不跟任何参数，则表示要使用 ”BREs“ </p>
+<p>grep 指令后跟 ”-E” 参数，则表示要使用 “EREs“</p>
+<p>grep 指令后跟 “-P” 参数，则表示要使用 “PREs”</p>
+</blockquote>
+<blockquote>
+<p>​    2. egrep 支持：EREs、PREs 正则表达式  </p>
+<p>egrep 指令后不跟任何参数，则表示要使用 “EREs”  </p>
+<p>egrep 指令后跟 “-P” 参数，则表示要使用 “PREs”</p>
+</blockquote>
+<hr>
+<ul>
+<li><strong>sed 正则表达式特点</strong></li>
+</ul>
+<blockquote>
+<p>1）sed 文本工具支持：BREs、EREs</p>
+<p>sed 指令默认是使用”BREs”</p>
+<p>sed 命令参数 “-r ” ，则表示要使用“EREs”</p>
+</blockquote>
+<hr>
+<ul>
+<li><strong>Awk（gawk）正则表达式特点</strong></li>
+</ul>
+<blockquote>
+<p>1）Awk 文本工具支持：EREs</p>
+<p>awk 指令默认是使用 “EREs”</p>
+</blockquote>
+<hr>
+<p><strong>三、常见3中类型正则表达式比较</strong></p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>说明</th>
+<th>Basic RegEx</th>
+<th>Extended RegEx</th>
+<th>python RegEx</th>
+<th>Perl regEx</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>转义</td>
+<td></td>
+<td>\</td>
+<td>\</td>
+<td>\</td>
+<td>\</td>
+</tr>
+<tr>
+<td>^</td>
+<td>匹配行首，例如’^dog’匹配以字符串dog开头的行（注意：awk 指令中，’^’则是匹配字符串的开始）</td>
+<td>^</td>
+<td>^</td>
+<td>^</td>
+<td>^</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配行尾，例如：’^、dog$’匹配以字符串 dog 为结尾的行（注意：awk 指令中，’$’则是匹配字符串的结尾）</td>
+<td>$</td>
+<td>$</td>
+<td>$</td>
+<td>$</td>
+</tr>
+<tr>
+<td>^$</td>
+<td>匹配空行</td>
+<td>^$</td>
+<td>^$</td>
+<td>^$</td>
+<td>^$</td>
+</tr>
+<tr>
+<td>^string$</td>
+<td>匹配行，例如：’^dog$’匹配只含一个字符串 dog 的行</td>
+<td>^string$</td>
+<td>^string$</td>
+<td>^string$</td>
+<td>^string$</td>
+</tr>
+<tr>
+<td>\&lt;</td>
+<td>匹配单词，例如：’\&lt;frog’ （等价于’\bfrog’），匹配以 frog 开头的单词</td>
+<td>\&lt;</td>
+<td>\&lt;</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong>（但可以使用\b来匹配单词，例如：’\bfrog’）</td>
+</tr>
+<tr>
+<td>></td>
+<td>匹配单词，例如：’frog>‘（等价于’frog\b ‘），匹配以 frog 结尾的单词</td>
+<td>></td>
+<td>></td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong>（但可以使用\b来匹配单词，例如：’frog\b’）</td>
+</tr>
+<tr>
+<td>\&lt;x></td>
+<td>匹配一个单词或者一个特定字符，例如：’\&lt;frog>‘（等价于’\bfrog\b’）、’\&lt;G>‘</td>
+<td>\&lt;x></td>
+<td>\&lt;x></td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong>（但可以使用\b来匹配单词，例如：’\bfrog\b’</td>
+</tr>
+<tr>
+<td>()</td>
+<td>匹配表达式，例如：不支持’（frog）’</td>
+<td><strong>不支持</strong>（但可以使用，如：dogdog</td>
+<td>()</td>
+<td>()</td>
+<td>()</td>
+</tr>
+<tr>
+<td></td>
+<td>匹配表达式，例如：不支持’（frog）’</td>
+<td></td>
+<td><strong>不支持</strong>（同())</td>
+<td><strong>不支持</strong>（同())</td>
+<td><strong>不支持</strong>（同())</td>
+</tr>
+<tr>
+<td>？</td>
+<td>匹配前面的子表达式 0 次或 1 次（等价于{0,1}），例如：where(is)?能匹配”where” 以及”whereis”</td>
+<td><strong>不支持</strong>（同\?)</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+<tr>
+<td>\?</td>
+<td>匹配前面的子表达式 0 次或 1 次（等价于’{0,1}‘），例如：’whereisis\? ‘能匹配 “where”以及”whereis”</td>
+<td>\?</td>
+<td><strong>不支持</strong>（同?)</td>
+<td><strong>不支持</strong>（同?)</td>
+<td><strong>不支持</strong>（同?)</td>
+</tr>
+<tr>
+<td>?</td>
+<td>当该字符紧跟在任何一个其他限制符（*, +, ?, {n},{n,}, {n,m}） 后面时，匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。例如，对于字符串 “oooo”，’o+?’ 将匹配单个”o”，而 ‘o+’ 将匹配所有 ‘o’</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配除换行符（’\n’）之外的任意单个字符（注意：awk 指令中的句点能匹配换行符）</td>
+<td>.</td>
+<td>.（如果要匹配包括“\n”在内的任何一个字符，请使用：’(^$)\</td>
+<td>（.）</td>
+<td>.</td>
+<td>.（如果要匹配包括“\n”在内的任何一个字符，请使用：’ [.\n] ‘</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配前面的子表达式 0 次或多次（等价于{0, }），例如：zo* 能匹配 “z”以及 “zoo”</td>
+<td>*</td>
+<td>*</td>
+<td>*</td>
+<td>*</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前面的子表达式 1 次或多次（等价于’{1, }‘），例如：’whereisis+ ‘能匹配 “whereis”以及”whereisis”</td>
+<td>+</td>
+<td><strong>不支持</strong>（同+)</td>
+<td><strong>不支持</strong>（同+)</td>
+<td><strong>不支持</strong>（同+)</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前面的子表达式 1 次或多次（等价于{1, }），例如：zo+能匹配 “zo”以及 “zoo”，但不能匹配 “z”</td>
+<td><strong>不支持</strong>（同+)</td>
+<td>+</td>
+<td>+</td>
+<td>+</td>
+</tr>
+<tr>
+<td>{n}</td>
+<td>n 必须是一个 0 或者正整数，匹配子表达式 n 次，例如：zo{2}能匹配</td>
+<td><strong>不支持</strong>（同{n})</td>
+<td>{n}</td>
+<td>{n}</td>
+<td>{n}</td>
+</tr>
+<tr>
+<td>{n,}</td>
+<td>“zooz”，但不能匹配 “Bob”n 必须是一个 0 或者正整数，匹配子表达式大于等于 n次，例如：go{2,}</td>
+<td><strong>不支持</strong>（同{n,})</td>
+<td>{n,}</td>
+<td>{n,}</td>
+<td>{n,}</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>能匹配 “good”，但不能匹配 godm 和 n 均为非负整数，其中 n &lt;= m，最少匹配 n 次且最多匹配 m 次 ，例如：o{1,3}将配”fooooood” 中的前三个 o（请注意在逗号和两个数之间不能有空格）</td>
+<td><strong>不支持</strong>（同{n,m})</td>
+<td>{n,m}</td>
+<td>{n,m}</td>
+<td>{n,m}</td>
+</tr>
+<tr>
+<td>x\</td>
+<td>y</td>
+<td>匹配 x 或 y，例如： 不支持’z\</td>
+<td>（food）’ 能匹配 “z” 或”food”；’（z\</td>
+<td>f）ood’ 则匹配”zood” 或 “food”</td>
+<td><strong>不支持</strong>（同x\</td>
+<td>y)</td>
+<td>x\</td>
+<td>y</td>
+<td>x\</td>
+<td>y</td>
+<td>x\</td>
+<td>y</td>
+</tr>
+<tr>
+<td>[0-9]</td>
+<td>匹配从 0 到 9 中的任意一个数字字符（注意：要写成递增）</td>
+<td>[0-9]</td>
+<td>[0-9]</td>
+<td>[0-9]</td>
+<td>[0-9]</td>
+</tr>
+<tr>
+<td>[xyz]</td>
+<td>字符集合，匹配所包含的任意一个字符，例如：’[abc]’可以匹配”lay” 中的 ‘a’（注意：如果元字符，例如：. *等，它们被放在[ ]中，那么它们将变成一个普通字符）</td>
+<td>[xyz]</td>
+<td>[xyz]</td>
+<td>[xyz]</td>
+<td>[xyz]</td>
+</tr>
+<tr>
+<td>[^xyz]</td>
+<td>负值字符集合，匹配未包含的任意一个字符（注意：不包括换行符），例如：’[^abc]’ 可以匹配 “Lay” 中的’L’（注意：[^xyz]在awk 指令中则是匹配未包含的任意一个字符+换行符）</td>
+<td>[^xyz]</td>
+<td>[^xyz]</td>
+<td>[^xyz]</td>
+<td>[^xyz]</td>
+</tr>
+<tr>
+<td>[A-Za-z]</td>
+<td>匹配大写字母或者小写字母中的任意一个字符（注意：要写成递增）</td>
+<td>[A-Za-z]</td>
+<td>[A-Za-z]</td>
+<td>[A-Za-z]</td>
+<td>[A-Za-z]</td>
+</tr>
+<tr>
+<td>[^A-Za-z]</td>
+<td>匹配除了大写与小写字母之外的任意一个字符（注意：写成递增）</td>
+<td>[^A-Za-z]</td>
+<td>[^A-Za-z]</td>
+<td>[^A-Za-z]</td>
+<td>[^A-Za-z]</td>
+</tr>
+<tr>
+<td><strong>\d</strong></td>
+<td>匹配从 0 到 9 中的任意一个数字字符（等价于 [0-9]）</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td>\d</td>
+<td>\d</td>
+</tr>
+<tr>
+<td><strong>\D</strong></td>
+<td>匹配非数字字符（等价于 [^0-9]）</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td>\D</td>
+<td>\D</td>
+</tr>
+<tr>
+<td>\S</td>
+<td>匹配任何非空白字符（等价于[^\f\n\r\t\v]）</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td>\S</td>
+<td>\S</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>匹配任何空白字符，包括空格、制表符、换页符等等（等价于[ \f\n\r\t\v]）</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td>\s</td>
+<td>\s</td>
+</tr>
+<tr>
+<td>\W</td>
+<td>匹配任何非单词字符 (等价于[^A-Za-z0-9_])</td>
+<td>\W</td>
+<td>\W</td>
+<td>\W</td>
+<td>\W</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>匹配包括下划线的任何单词字符（等价于[A-Za-z0-9_]）</td>
+<td>\w</td>
+<td>\w</td>
+<td>\w</td>
+<td>\w</td>
+</tr>
+<tr>
+<td>\B</td>
+<td>匹配非单词边界，例如：’er\B’ 能匹配 “verb” 中的’er’，但不能匹配”never” 中的’er’</td>
+<td>\B</td>
+<td>\B</td>
+<td>\B</td>
+<td>\B</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>匹配一个单词边界，也就是指单词和空格间的位置，例如： ‘er\b’ 可以匹配”never” 中的 ‘er’，但不能匹配 “verb” 中的’er’</td>
+<td>\b</td>
+<td>\b</td>
+<td>\b</td>
+<td>\b</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>匹配一个横向制表符（等价于 \x09和 \cI）</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td>\t</td>
+<td>\t</td>
+</tr>
+<tr>
+<td>\v</td>
+<td>匹配一个垂直制表符（等价于 \x0b和 \cK）</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td>\v</td>
+<td>\v</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>匹配一个换行符（等价于 \x0a 和\cJ）</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td>\n</td>
+<td>\n</td>
+</tr>
+<tr>
+<td>\f</td>
+<td>匹配一个换页符（等价于\x0c 和\cL）</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td>\f</td>
+<td>\f</td>
+</tr>
+<tr>
+<td>\r</td>
+<td>匹配一个回车符（等价于 \x0d 和\cM）</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td>\r</td>
+<td>\r</td>
+</tr>
+<tr>
+<td>\</td>
+<td>匹配转义字符本身”\”</td>
+<td>\</td>
+<td>\</td>
+<td>\</td>
+<td>\</td>
+</tr>
+<tr>
+<td>\cx</td>
+<td>匹配由 x 指明的控制字符，例如：\cM匹配一个Control-M 或回车符，x 的值必须为A-Z 或 a-z 之一，否则，将 c 视为一个原义的 ‘c’ 字符</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td></td>
+<td>\cx</td>
+</tr>
+<tr>
+<td>\xn</td>
+<td>匹配 n，其中 n 为十六进制转义值。十六进制转义值必须为确定的两个数字长，例如：’\x41’ 匹配 “A”。’\x041’ 则等价于’\x04’ &amp; “1”。正则表达式中可以使用 ASCII 编码</td>
+<td><strong>不支持</strong></td>
+<td><strong>不支持</strong></td>
+<td></td>
+<td>\xn</td>
+</tr>
+<tr>
+<td>\num</td>
+<td>匹配 num，其中 num是一个正整数。表示对所获取的匹配的引用</td>
+<td><strong>不支持</strong></td>
+<td>\num</td>
+<td>\num</td>
+<td></td>
+</tr>
+<tr>
+<td>[:alnum:]</td>
+<td>匹配任何一个字母或数字（[A-Za-z0-9]），例如：’[[:alnum:]] ‘</td>
+<td>[:alnum:]</td>
+<td>[:alnum:]</td>
+<td>[:alnum:]</td>
+<td>[:alnum:]</td>
+</tr>
+<tr>
+<td>[:alpha:]</td>
+<td>匹配任何一个字母（[A－Za－z]）， 例如：’ [[:alpha:]] ‘</td>
+<td>[:alpha:]</td>
+<td>[:alpha:]</td>
+<td>[:alpha:]</td>
+<td>[:alpha:]</td>
+</tr>
+<tr>
+<td>[:digit:]</td>
+<td>匹配任何一个数字（[0-9]），例如：’[[:digit:]] ‘</td>
+<td>[:digit:]</td>
+<td>[:digit:]</td>
+<td>[:digit:]</td>
+<td>[:digit:]</td>
+</tr>
+<tr>
+<td>[:lower:]</td>
+<td>匹配任何一个小写字母（[a-z]）， 例如：’ [[:lower:]] ‘</td>
+<td>[:lower:]</td>
+<td>[:lower:]</td>
+<td>[:lower:]</td>
+<td>[:lower:]</td>
+</tr>
+<tr>
+<td>[:upper:]</td>
+<td>匹配任何一个大写字母（[A-Z]）</td>
+<td>[:upper:]</td>
+<td>[:upper:]</td>
+<td>[:upper:]</td>
+<td>[:upper:]</td>
+</tr>
+<tr>
+<td>[:space:]</td>
+<td>任何一个空白字符： 支持制表符、空格，例如：’ [[:space:]] ‘</td>
+<td>[:space:]</td>
+<td>[:space:]</td>
+<td>[:space:]</td>
+<td>[:space:]</td>
+</tr>
+<tr>
+<td>[:blank:]</td>
+<td>空格和制表符（横向和纵向），例如：’[[:blank:]]’ó’[\s\t\v]’</td>
+<td>[:blank:]</td>
+<td>[:blank:]</td>
+<td>[:blank:]</td>
+<td>[:blank:]</td>
+</tr>
+<tr>
+<td>[:graph:]</td>
+<td>任何一个可以看得见的且可以打印的字符（注意：不包括空格和换行符等），例如：’[[:graph:]] ‘</td>
+<td>[:graph:]</td>
+<td>[:graph:]</td>
+<td>[:graph:]</td>
+<td>[:graph:]</td>
+</tr>
+<tr>
+<td>[:print:]</td>
+<td>任何一个可以打印的字符（注意：不包括：[:cntrl:]、字符串结束符’\0’、EOF 文件结束符（-1）， 但包括空格符号），例如：’[[:print:]] ‘</td>
+<td>[:print:]</td>
+<td>[:print:]</td>
+<td>[:print:]</td>
+<td>[:print:]</td>
+</tr>
+<tr>
+<td>[:cntrl:]</td>
+<td>任何一个控制字符（ASCII 字符集中的前 32 个字符，即：用十进制表示为从 0 到31，例如：换行符、制表符等等），例如：’ [[:cntrl:]]’</td>
+<td>[:cntrl:]</td>
+<td>[:cntrl:]</td>
+<td>[:cntrl:]</td>
+<td>[:cntrl:]</td>
+</tr>
+<tr>
+<td>[:punct:]</td>
+<td>任何一个标点符号（不包括：[:alnum:]、[:cntrl:]、[:space:]这些字符集）</td>
+<td>[:punct:]</td>
+<td>[:punct:]</td>
+<td>[:punct:]</td>
+<td>[:punct:]</td>
+</tr>
+<tr>
+<td>[:xdigit:]</td>
+<td>任何一个十六进制数（即：0-9，a-f，A-F）</td>
+<td>[:xdigit:]</td>
+<td>[:xdigit:]</td>
+<td>[:xdigit:]</td>
+<td>[:xdigit:]</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/06/12/正则表达式分类/">正则表达式分类</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2018年06月12日 - 22:06</p>
+  <p><span>最后更新:</span>2018年06月14日 - 00:06</p>
+  <p><span>原始链接:</span><a href="/2018/06/12/正则表达式分类/" title="正则表达式分类">http://yoursite.com/2018/06/12/正则表达式分类/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/06/12/正则表达式分类/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/12/正则表达式练习/" rel="next" title="正则表达式练习">
+                <i class="fa fa-chevron-left"></i> 正则表达式练习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/12/sed用法/" rel="prev" title="Sed介绍">
+                Sed介绍 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/06/12/正则表达式分类/"
+           data-title="正则表达式分类" data-url="http://yoursite.com/2018/06/12/正则表达式分类/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">保持饥渴,保持愚蠢.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/huangyonghome/huangyonghome.github.io" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/jessehuang408" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式分类"><span class="nav-number">1.</span> <span class="nav-text">正则表达式分类</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
