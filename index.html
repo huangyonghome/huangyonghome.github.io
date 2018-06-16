@@ -273,6 +273,604 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/16/BGP-Lab/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/16/BGP-Lab/" itemprop="url">BGP Lab</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-16T08:59:58+08:00">
+                2018-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Network/" itemprop="url" rel="index">
+                    <span itemprop="name">Network</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Network/Route/" itemprop="url" rel="index">
+                    <span itemprop="name">Route</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Network/Route/BGP/" itemprop="url" rel="index">
+                    <span itemprop="name">BGP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/16/BGP-Lab/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/16/BGP-Lab/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="BGP-LAB"><a href="#BGP-LAB" class="headerlink" title="BGP LAB"></a>BGP LAB</h2><h3 id="1-实验拓扑"><a href="#1-实验拓扑" class="headerlink" title="1.实验拓扑"></a>1.实验拓扑</h3><p>配置三个AS，运行BGP协议。 </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp1.png"></p>
+<hr>
+<h3 id="2-BGP配置"><a href="#2-BGP配置" class="headerlink" title="2.BGP配置"></a>2.BGP配置</h3><p>R1配置： </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp2.png"></p>
+<p>no synchronization：同步默认被关闭</p>
+<p>no auto-summary：汇总默认被关闭</p>
+<p>bgp router-id 1.1.1.1：手工指定R1路由器的ID。注意前面要加参数“BGP”</p>
+<p>network 1.1.1.0 mask 255.255.255.0：通告自己的1.1.1.0的路由。</p>
+<blockquote>
+<p>注意：在BGP中network命令代表的意思和IGP完全不一样，在IGP里network表示在某个接口启用IGP协议，并和邻居路由器建立邻接关系，发送和接受路由更新。在BGP里，不用把接口宣告进BGP，network表示把自己路由表里的路由宣告给邻居路由器。并且必须先建立邻居关系才能宣告路由，如果邻居无法建立则network命令没有任何意义。如果network手工宣告一条路由，但是该路由不在路由表中，BGP不宣告该路由出去。在这里R1宣告自己环回口的路由）</p>
+</blockquote>
+<p>neighbor 12.1.1.2 remote-as 65100：指定邻居，并且指定邻居所在的AS号。</p>
+<p>R2配置： </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp3.png"></p>
+<p>利用环回口和R3.R4.R5建立邻居。即便没有和R5直接相连。同时和R1建立EBGP邻居关系。</p>
+<p>R3配置： </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp4.png"></p>
+<p>R4配置： </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp5.png"></p>
+<p>R5配置： </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp6.png"></p>
+<p>R6配置： </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp7.png"></p>
+<hr>
+<h3 id="3-检查配置"><a href="#3-检查配置" class="headerlink" title="3.检查配置"></a>3.检查配置</h3><h5 id="1-查看R1的BGP表：show-ip-bgp"><a href="#1-查看R1的BGP表：show-ip-bgp" class="headerlink" title="1.查看R1的BGP表：show  ip bgp"></a>1.查看R1的BGP表：show  ip bgp</h5><p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp8.png"></p>
+<p>*：星号代表路由可达。</p>
+<p>>：代表这是条最优路由。</p>
+<p>network:路由前缀，网络号。</p>
+<p>next hop:0.0.0.0 表示是本台路由器通告的路由。</p>
+<p>metric：这就是MED属性值，默认是0</p>
+<p>locprf:本地性能值，默认为100.</p>
+<p>weight:权重属性值，本地通告的路由属性值默认是32768.其他路由器通告的默认值是0</p>
+<p>path：该路由通告到本地时经过的AS号，在这里表示是从65100自治系统学来的路由。</p>
+<p>i:表示始发路由器是通过network命令，将该路由通告到BGP中。</p>
+<h5 id="2-查看R1的路由表-show-ip-route：将BGP表中最优路由放入路由表"><a href="#2-查看R1的路由表-show-ip-route：将BGP表中最优路由放入路由表" class="headerlink" title="2.查看R1的路由表 show ip route：将BGP表中最优路由放入路由表"></a>2.查看R1的路由表 show ip route：将BGP表中最优路由放入路由表</h5><p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp9.png"></p>
+<h5 id="3-查看R2的BGP表：show-ip-bgp"><a href="#3-查看R2的BGP表：show-ip-bgp" class="headerlink" title="3.查看R2的BGP表：show  ip bgp"></a>3.查看R2的BGP表：show  ip bgp</h5><p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp10.png"></p>
+<blockquote>
+<p>在R2上我们并没有看到R3,R4.R5的信息。 </p>
+</blockquote>
+<h5 id="4-查看R3的BGP表：show-ip-bgp"><a href="#4-查看R3的BGP表：show-ip-bgp" class="headerlink" title="4.查看R3的BGP表：show  ip bgp"></a>4.查看R3的BGP表：show  ip bgp</h5><p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp11.png"></p>
+<blockquote>
+<p>在这只能看到自己本台路由器通告的路由，看不到任何邻居 </p>
+</blockquote>
+<h5 id="5-去R2看看邻居表：show-ip-bgp-neighbors-以下是部分输出："><a href="#5-去R2看看邻居表：show-ip-bgp-neighbors-以下是部分输出：" class="headerlink" title="5.去R2看看邻居表：show ip bgp neighbors.以下是部分输出："></a>5.去R2看看邻居表：show ip bgp neighbors.以下是部分输出：</h5><p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp12.png"></p>
+<p>从这里看到和R1的邻居关系状态是established.表示邻居已经成功建立。</p>
+<p>BGP的版本是4.远端AS号是65000，外部链路。邻居路由器的IP地址和路由器ID。</p>
+<p>keepalive间隔60秒，Hold time是三倍间隔，</p>
+<p>显示发送和接收了open,notifications,updates,keepalives,route refresh的数据包。</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp13.png"></p>
+<p>在这里看到邻居3.3.3.3的状态是active。内部链路，AS号是65100.或许不到对方的路由器ID。并且没有任何报文收发。</p>
+<p>造成BGP邻居之间active状态的原因主要有：</p>
+<ul>
+<li>配置邻居地址错误，比如邻居的地址是1.1.1.1.配置成了1.1.1.2.</li>
+<li>update-source源地址没有指定</li>
+<li>AS号不对</li>
+<li>没有到达对方的路由</li>
+</ul>
+<p>4.4.4.4邻居也是如此。 </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp14.png"></p>
+<h5 id="6-在R2上show-ip-bgp-summary"><a href="#6-在R2上show-ip-bgp-summary" class="headerlink" title="6.在R2上show ip bgp summary"></a>6.在R2上show ip bgp summary</h5><p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp15.png"></p>
+<p>可以看到只有R1的邻居有收发报文，其他邻居的状态是ACTIVE。 </p>
+<h5 id="7-在R2和R3上debug-ip-bgp"><a href="#7-在R2和R3上debug-ip-bgp" class="headerlink" title="7.在R2和R3上debug ip bgp:"></a>7.在R2和R3上debug ip bgp:</h5><p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp16.png"></p>
+<p>显示OPEN消息被拒绝，没有路由。</p>
+<p> 这是因为环回口之间没有路由，邻居不可达。所以在IBGP内部要配置IGP协议。这里配置EIGRP协议。</p>
+<h5 id="8-在R2上配置EIGRP"><a href="#8-在R2上配置EIGRP" class="headerlink" title="8.在R2上配置EIGRP"></a>8.在R2上配置EIGRP</h5><p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp17.png"></p>
+<blockquote>
+<p> 在这，我仅仅列出了R2的配置，R3.R4.R5也做了同样的配置。需要注意的是R2连接R1的接口不需要运行EIGRP协议。 </p>
+</blockquote>
+<p>查看R2的路由表： </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp18.png"></p>
+<p>再次查看R2的BGP表： </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp19.png"></p>
+<p>邻居仍然还未建立。</p>
+<p>debug ip bgp:</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp20.png"></p>
+<p>显示open消息active状态，连接远程主机失败，这是因为R2查看路由表，发现去往邻居的源地址是23.1.1.2和24.1.1.2。。但是在邻居路由器上指定的R2路由器邻居是2.2.2.2.所以邻居路由器不识别R2的源地址.</p>
+<p>我们需要修改R2的源地址.使邻居的地址匹配</p>
+<p>在R2上配置:</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp21.png"></p>
+<p>在指定邻居的时候说明自己的源地址是环回0口，如果不指定源地址，路由器会查找路由表然后按路由表到对方目的地的物理接口作为出口也就是源地址。</p>
+<p>同样，需要在R3.R4.R5路由器上做同样的配置，这里仅列入了R3的配置:</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp22.png"></p>
+<p>R3指定R2的地址是2.2.2.2。将自己的3.3.3.3作为源地址</p>
+<p>R2指定R3的地址是3.3.3.3。将自己的2.2.2.2作为源地址</p>
+<p>这样R2和R3之间已经建立了邻居。</p>
+<p>再次查看R2的BGP表:</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp23.png"></p>
+<p>至此,所有邻居已经建立.</p>
+<p>注意到去往R6路由器的环回口的路由并不是最优，而且下一跳是R6路由器的物理接口。这表明默认情况下EGP路由传递的时候下一跳始终是本台路由器的接口.</p>
+<p>在R3上看BGP表 </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp24.png"></p>
+<p>同样，去往R1和R6的路由并不是最优，而且下一跳是路由通告者的接口 </p>
+<p>查看R3路由表： </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp25.png"></p>
+<p>发现没有1.1.1.0/24和6.6.6.0/24这两条路由。这说明不是最优的路由不会放进路由表。</p>
+<p>查看R1的BGP表：</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp26.png"></p>
+<p>发现没有去往R6的路由.</p>
+<p>这说明：不是最优的路由，不放进路由表，而且不通过给其他GBP路由器，这导致R6和R1之间学不到彼此的路由。 </p>
+<h5 id="9-最优路由"><a href="#9-最优路由" class="headerlink" title="9.最优路由"></a>9.最优路由</h5><p>BGP最优路由的条件：</p>
+<p>1.同步:新版本IOS里已经自动禁用了同步。在全互联的IBGP网络里同步需要要关闭</p>
+<p>2.下一跳.</p>
+<p>查看R3的BGP表 </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp27.png"></p>
+<p>因为去往1.1.1.0/24的下一跳是12.1.1.1.是R1的物理接口，而R1是位于其他自治系统，所以没有运行IGP协议，所以R3没有到12.1.1.1的路由，也就是去往1.1.1.0/24不可达。同理6.6.6.0/24网络也是如此。</p>
+<p> 同理，在R2上,去往R6路由器的下一跳也不可达</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp28.png"></p>
+<p>所以，必须要改变下一跳地址：</p>
+<p>设置下一跳地址的最好办法是使用：next-hop-self命令。此命令经常被用于边界路由器上，用于向IBGP邻居说明去往另一个自治系统的路由下一跳指向自己本台路由器。</p>
+<p>在R2上配置:</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp29.png"></p>
+<p>在R5上配置： </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp30.png"></p>
+<p>查看R2的BGP表和路由表.去往R6的路由已经变成最优，且放进了路由表。</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp31.png"></p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp32.png"></p>
+<p>查看R3的BGP表 </p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp33.png"></p>
+<p>发现去往R1的路由下一跳已经变成了R2。去往R6的路由下一跳变成了R5。</p>
+<p>下一跳地址是R2和R6配置邻居时指定的update-source的源地址，而不是物理接口地址。</p>
+<p>并且他们都是最优路由.</p>
+<p>查看R1,R2的BGP表</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp34.png"></p>
+<p>locprf是本地性能值，默认为100.该值仅在IBGP内部有效。</p>
+<p>前面的i表示该路由是通过IBGP邻居学到的，没有打i表示改路由是通过EBGP外部学来的。</p>
+<p>前面的r表示该BGP学来的路由没有进入路由表，在rib-failure列表里。查看rib-failure：</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp35.png"></p>
+<p>显示3条BGP路由没有进入路由表，原因是相比IGP协议，BGP路由有更高的管理距离，所以没有进入路由表。</p>
+<p>查看R2的路由表，发现通过EIGRP学到的路由被放进了路由表，因为管理距离更小（90）,而IGBP的管理距离是200.</p>
+<p>![BGP] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp36.png"></p>
+<hr>
+<h3 id="第二部分-BGP路由器通告的更新"><a href="#第二部分-BGP路由器通告的更新" class="headerlink" title="第二部分: BGP路由器通告的更新"></a>第二部分: BGP路由器通告的更新</h3><p>1.查看路由器通告的更新 </p>
+<p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show ip bgp neighbor XX.XX.XX.XX advertised-routes</span><br></pre></td></tr></table></figure>
+<p>2.查看路由器接受的路由更新 </p>
+<p>命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show ip bgp neighbor XX.XX.XX.XX received-routes</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="第三部分-BGP聚合"><a href="#第三部分-BGP聚合" class="headerlink" title="第三部分:BGP聚合"></a>第三部分:BGP聚合</h3><p>BGP通告一条汇总路由的行为就叫聚合，在IGP里称为汇总。 </p>
+<h4 id="实验："><a href="#实验：" class="headerlink" title="实验："></a>实验：</h4><p>在R1路由器上配置4个环回口地址（200.192.16.0/22），然后通告一条汇总路由到其他路由器.通告汇总路由方法</p>
+<h5 id="1-利用静态路由和network通告"><a href="#1-利用静态路由和network通告" class="headerlink" title="1.利用静态路由和network通告"></a>1.利用静态路由和network通告</h5><p>在IGP路由协议里，路由器通告汇总路由的时候会在本台路由上产生一条指向空接口的汇总路由。同理，在BGP里也可以手工配置一条指向空接口静态路由，然后利用Network命令宣告该汇总路由</p>
+<p>如果不手工指定的话，本台路由表则只有明细路由，没有汇总路由，那么Network命令不会生效</p>
+<ul>
+<li>配置方法<ul>
+<li>1.手工配置一条静态路由,指向Null0</li>
+<li>2.network宣告该路由</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-聚合通告"><a href="#2-聚合通告" class="headerlink" title="2.聚合通告"></a>2.聚合通告</h5><p>使用aggregate-address命令 :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aggregate-address xx.xx.xx.xx 子网掩码</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tip: 使用summary-only参数屏蔽明细路由,只显示汇总路由.在命令后面加上summary-only参数</p>
+</blockquote>
+<blockquote>
+<p>Note:如果明细路由通告者和路由汇总者不在一台路由器的情况。 在路由汇总的时候需要加上as-set参数</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/16/HSRP实验/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/16/HSRP实验/" itemprop="url">HSRP实验</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-16T07:59:58+08:00">
+                2018-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Network/" itemprop="url" rel="index">
+                    <span itemprop="name">Network</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Network/Switch/" itemprop="url" rel="index">
+                    <span itemprop="name">Switch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/16/HSRP实验/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/16/HSRP实验/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="HSRP实验"><a href="#HSRP实验" class="headerlink" title="HSRP实验"></a>HSRP实验</h2><h3 id="1-实验拓扑："><a href="#1-实验拓扑：" class="headerlink" title="1.实验拓扑："></a>1.实验拓扑：</h3><p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp.png"></p>
+<hr>
+<h3 id="2-实验环境"><a href="#2-实验环境" class="headerlink" title="2.实验环境"></a>2.实验环境</h3><p>主机属于VLAN1，IP地址：10.1.1.1  </p>
+<p>2960为一台2层交换机，上行两条TRUNK链路连接2台三层交换机</p>
+<p>3560三层交换机通过TRUNK口相连，上行链路是3层端口连接一台路由器。并且写入两条静态路由，一条是到达5.5.5.5，另一条是到达对方三层交换机和路由器的链路。</p>
+<p>路由器开启一个环回接口5.5.5.5充当外网。</p>
+<hr>
+<h3 id="3实验目的："><a href="#3实验目的：" class="headerlink" title="3实验目的："></a>3实验目的：</h3><p>两台三层交换机开启HSRP，观察HSRP工作过程</p>
+<hr>
+<h3 id="4-配置步骤："><a href="#4-配置步骤：" class="headerlink" title="4.配置步骤："></a>4.配置步骤：</h3><ul>
+<li>在3560Switch1上:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)#int vlan 1                    #进入VLAN接口模式</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 ip 10.1.1.254    #1是HSRP的组号，参与同一个HSRP进程的所有路由器，组号必须相同。这里是对VLAN 1做的，所以组号设置为1.。后面是一个虚拟IP地址，</span><br></pre></td></tr></table></figure>
+<p><strong>以下是一些可选设置：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">1.设置优先级。默认优先级为100.优先级越高，路由器越可能成为ACTIVE</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 priority ?</span><br><span class="line"></span><br><span class="line">&lt;0-255&gt; Priority value</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 priority</span><br><span class="line"></span><br><span class="line">2.设置HELLO时间，以及HELLO间隔。默认是3秒，间隔10秒</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 timers ?</span><br><span class="line"></span><br><span class="line">&lt;1-254&gt; Hello interval in seconds</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 timers</span><br><span class="line"></span><br><span class="line">3.设置抢占特性。默认情况下，HSRP不抢占。开启preempt参数后，优先级路由器高的可以抢占ACTIVE角色</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 preempt</span><br></pre></td></tr></table></figure>
+<p>Switch1经过speak,standby角色后成为了active网关，实际总共经过listen，speak,standby,active角色。</p>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp1.png"></p>
+<hr>
+<ul>
+<li>在另外一台3560上配置：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)#int vlan 1</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 ip 10.1.1.254</span><br><span class="line"></span><br><span class="line">%HSRP-6-STATECHANGE: Vlan1 Grp 1 state Speak -&gt; Standby</span><br></pre></td></tr></table></figure>
+<p>配置基本完成。show standby和show standby brief 查看HSRP信息:</p>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp2.png"></p>
+<blockquote>
+<p>通过show standby可以看到HSRP组号，虚拟IP网关，虚拟MAC地址。Hello时间和间隔。抢占特性是否开启。活跃网关路由器，备份网关路由器，优先级等</p>
+</blockquote>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp3.png"></p>
+<blockquote>
+<p>通过show standby brief 可以更加直观的看到组号，优先级，角色状态，路由器角色，网关IP等信息</p>
+</blockquote>
+<hr>
+<h4 id="5-测试主机访问外部网络："><a href="#5-测试主机访问外部网络：" class="headerlink" title="5.测试主机访问外部网络："></a>5.测试主机访问外部网络：</h4><ul>
+<li>主机配置虚拟IP地址为默认网关：</li>
+</ul>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp4.png"></p>
+<ul>
+<li>测试访问外部网络的路径</li>
+</ul>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp5.png"></p>
+<p>实验显示R1可以正常通过默认网关访问外部网络，并且经过的是10.1.1.2这台活跃路由器</p>
+<ul>
+<li>查看主机的ARP记录表</li>
+</ul>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp6.png"></p>
+<p>实验显示主机是通过虚拟IP和虚拟MAC地址通信。</p>
+<hr>
+<h4 id="6-测试抢占特性"><a href="#6-测试抢占特性" class="headerlink" title="6.测试抢占特性"></a>6.测试抢占特性</h4><h5 id="1-开启抢占特性"><a href="#1-开启抢占特性" class="headerlink" title="1.开启抢占特性"></a>1.开启抢占特性</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)#int vlan 1</span><br><span class="line">Switch(config-if)#standby 1 preempt</span><br></pre></td></tr></table></figure>
+<h5 id="2-把Standby交换机的优先级设置成150"><a href="#2-把Standby交换机的优先级设置成150" class="headerlink" title="2.把Standby交换机的优先级设置成150"></a>2.把Standby交换机的优先级设置成150</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Switch(config-if)#standby 1 priority ?</span><br><span class="line">&lt;0-255&gt; Priority value</span><br><span class="line">Switch(config-if)#standby 1 priority 150</span><br></pre></td></tr></table></figure>
+<h5 id="3-观察HSRP的角色状态变化"><a href="#3-观察HSRP的角色状态变化" class="headerlink" title="3.观察HSRP的角色状态变化"></a>3.观察HSRP的角色状态变化</h5><p>交换机角色马上从standby转变成active</p>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp7.png"></p>
+<p>显示本交换机成为了active，对端成为了standby，并且本机优先级变成了150</p>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp8.png"></p>
+<hr>
+<h4 id="7-当active路由器出现问题时，查看主机所受的影响"><a href="#7-当active路由器出现问题时，查看主机所受的影响" class="headerlink" title="7.当active路由器出现问题时，查看主机所受的影响"></a>7.当active路由器出现问题时，查看主机所受的影响</h4><h5 id="1-在主机连续ping-远端路由器-5-5-5-5-1000个数据包"><a href="#1-在主机连续ping-远端路由器-5-5-5-5-1000个数据包" class="headerlink" title="1.在主机连续ping 远端路由器 5.5.5.5 1000个数据包"></a>1.在主机连续ping 远端路由器 5.5.5.5 1000个数据包</h5><h5 id="2-关闭ACTIVE交换机的VLAN1端口"><a href="#2-关闭ACTIVE交换机的VLAN1端口" class="headerlink" title="2.关闭ACTIVE交换机的VLAN1端口"></a>2.关闭ACTIVE交换机的VLAN1端口</h5><p>实验显示只丢了一个包</p>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp9.png"></p>
+<hr>
+<h3 id="第二部分-多组HSRP配置"><a href="#第二部分-多组HSRP配置" class="headerlink" title="第二部分 多组HSRP配置"></a>第二部分 多组HSRP配置</h3><p>HSRP是一个网关冗余协议，这就意味着默认情况下网络中只能有一台在工作，虽然达到了冗余的目的，但是如果所有流量都全部经由同一台网关，而另外一台网关设备完全不工作，这就造成了一种资源的浪费，以及可能带来网络中流量的拥挤。</p>
+<p>通过配置多个HSRP组，为每组流量设置一个不同的ACTIVE网关，</p>
+<hr>
+<h4 id="1-实验拓扑"><a href="#1-实验拓扑" class="headerlink" title="1.实验拓扑"></a>1.实验拓扑</h4><p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp10.png"></p>
+<hr>
+<h4 id="2-环境说明："><a href="#2-环境说明：" class="headerlink" title="2.环境说明："></a>2.环境说明：</h4><p>PC0和PC1分别模拟两个VLAN下的主机.</p>
+<p>上面的三层3560交换机1作为Vlan1的根网桥以及active网关，虚拟网关IP是10.1.1.254</p>
+<p>下面的三层3560交换机0作为Vlan2的根网桥以及active网关，虚拟网关IP是10.1.2.254</p>
+<blockquote>
+<p> 此次配置省略了，Vlan,trunk,vlan接口，生成树的配置</p>
+</blockquote>
+<hr>
+<h4 id="3-配置步骤"><a href="#3-配置步骤" class="headerlink" title="3.配置步骤:"></a>3.配置步骤:</h4><h5 id="1-配置VLAN1的HSRP"><a href="#1-配置VLAN1的HSRP" class="headerlink" title="1.配置VLAN1的HSRP"></a>1.配置VLAN1的HSRP</h5><p>在Switch1上的Vlan1接口下配置HSRP的VLAN1组，此台设备的优先级为150，设置虚拟IP,开启抢占特性</p>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp11.png"></p>
+<h5 id="2-在Switch0的Vlan1接口下配置HSRP的vlan1组，此台设备的优先级保留默认设置，设置虚拟IP-开启抢占特性"><a href="#2-在Switch0的Vlan1接口下配置HSRP的vlan1组，此台设备的优先级保留默认设置，设置虚拟IP-开启抢占特性" class="headerlink" title="2.在Switch0的Vlan1接口下配置HSRP的vlan1组，此台设备的优先级保留默认设置，设置虚拟IP,开启抢占特性"></a>2.在Switch0的Vlan1接口下配置HSRP的vlan1组，此台设备的优先级保留默认设置，设置虚拟IP,开启抢占特性</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)#int vlan 1</span><br><span class="line">Switch(config-if)#standby 1 ip 10.1.1.254</span><br><span class="line">Switch(config-if)#standby 1 preempt</span><br><span class="line"></span><br><span class="line">%HSRP-6-STATECHANGE: Vlan1 Grp 1 state Speak -&gt; Standby</span><br></pre></td></tr></table></figure>
+<h5 id="3-配置VLAN的HSRP"><a href="#3-配置VLAN的HSRP" class="headerlink" title="3.配置VLAN的HSRP"></a>3.配置VLAN的HSRP</h5><ul>
+<li>在Switch1上的Vlan2接口下配置HSRP的VLAN2组，此台设备的优先级保留默认设置 ，设置虚拟IP,开启抢占特性</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Switch(config-if)#int vlan 2</span><br><span class="line">Switch(config-if)#standby 2 ip 10.1.2.254</span><br><span class="line">Switch(config-if)#standby 2 preempt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在Switch0的Vlan2接口下配置HSRP的vlan2组，此台设备的优先级为150 ，设置虚拟IP,开启抢占特性</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)#int vlan 2</span><br><span class="line">Switch(config-if)#standby 2 ip 10.1.2.254</span><br><span class="line">Switch(config-if)#standby 2 priority 150</span><br><span class="line">Switch(config-if)#standby 2 preempt</span><br></pre></td></tr></table></figure>
+<h5 id="4-检查配置"><a href="#4-检查配置" class="headerlink" title="4.检查配置"></a>4.检查配置</h5><p>在Switch0上检查配置发现本台设备是VLAN1组的standby网关，Vlan2组的active网关</p>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp12.png"></p>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp13.png"></p>
+<hr>
+<h5 id="5-查看每台PC的流量路径"><a href="#5-查看每台PC的流量路径" class="headerlink" title="5.查看每台PC的流量路径"></a>5.查看每台PC的流量路径</h5><p>在Vlan1的PC0上tracert 位于路由器的5.5.5.5地址。发现流量先经过10.1.1.2的网关，而10.1.1.2正是Vlan1的ACTIVE网关的真实IP</p>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp14.png"></p>
+<p>在Vlan2的PC1上tracert位于路由器的5.5.5.5地址：发现流量先经过10.1.2.3的网关，而10.1.2.3正是Vlan2的ACTIVE网关的真实IP</p>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp15.png"></p>
+<hr>
+<h3 id="第三部分-HSRP-的Track-功能配置"><a href="#第三部分-HSRP-的Track-功能配置" class="headerlink" title="第三部分: HSRP 的Track 功能配置"></a>第三部分: HSRP 的Track 功能配置</h3><p>HSRP的track功能可以追踪上行链路的情况，如果配置了track，一旦上行链路失效，则默认情况下HSRP的路由器降低10个优先级。</p>
+<h4 id="1-配置命令："><a href="#1-配置命令：" class="headerlink" title="1.配置命令："></a>1.配置命令：</h4><p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp16.png"></p>
+<p>真实的设备中，接口后面可以指定一旦上行链路失效，会降低多少优先级。但是模拟器中没有这个功能，默认是降低10个优先级</p>
+<p>把上面的Switch 1的上行接口F0/1 shutdown 之后，可以看到Switch的优先级变化：优先级从150降低到140</p>
+<p>![hsrp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/hsrp17.png"></p>
+<blockquote>
+<p>Tips:真实的设备中，还可以track路由，既一条指定的路由失效后，HSRP的优先级会降低。</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/15/Openvpn服务搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -613,7 +1211,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/03-shell脚本模板/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/正则表达式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -632,7 +1230,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/03-shell脚本模板/" itemprop="url">shell脚本模板</a></h1>
+                <a class="post-title-link" href="/2018/06/12/正则表达式/" itemprop="url">正则表达式-语法介绍</a></h1>
         
 
         <div class="post-meta">
@@ -678,8 +1276,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
-                    <span itemprop="name">shell&shell脚本</span>
+                  <a href="/categories/Linux-Basic/正则表达式/" itemprop="url" rel="index">
+                    <span itemprop="name">正则表达式</span>
                   </a>
                 </span>
 
@@ -696,8 +1294,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/12/03-shell脚本模板/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/03-shell脚本模板/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/正则表达式/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/正则表达式/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -726,195 +1324,12 @@
 
       
         
-          <h2 id="shell脚本模板"><a href="#shell脚本模板" class="headerlink" title="shell脚本模板"></a>shell脚本模板</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>为了保持良好的脚本编写习惯,在编制一个脚本时,需要有以下参数:</p>
-<ul>
-<li>脚本用途描述  </li>
-<li>脚本作者  </li>
-<li>脚本版本</li>
-<li>脚本更新记录  </li>
-<li>脚本编写时间</li>
-</ul>
-<hr>
-<p>下面是一个常见的脚本头部内容:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#Description: this is the standard format for the head part of scripts</span><br><span class="line">#Author: Jesse</span><br><span class="line">#Version:0.1</span><br><span class="line">#Datetime:2016-10-31</span><br><span class="line">#Name:script.sh</span><br></pre></td></tr></table></figure>
-<hr>
+          <h1 id="正则表达式-语法介绍"><a href="#正则表达式-语法介绍" class="headerlink" title="正则表达式 - 语法介绍"></a>正则表达式 - 语法介绍</h1><p>正则表达式(regular expression)描述了一种字符串匹配的模式（pattern），可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等。 </p>
+<p>构造正则表达式的方法和创建数学表达式的方法一样。也就是用多种元字符与运算符可以将小的表达式结合在一起来创建更大的表达式。正则表达式的组件可以是单个的字符、字符集合、字符范围、字符间的选择或者所有这些组件的任意组合。</p>
+<p>正则表达式是由普通字符（例如字符 a 到 z）以及特殊字符（称为”元字符”）组成的文字模式。模式描述在搜索文本时要匹配的一个或多个字符串。正则表达式作为一个模板，将某个字符模式与所搜索的字符串进行匹配。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/03-shell脚本模板/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/04-shell导入外部文件/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/12/04-shell导入外部文件/" itemprop="url">shell脚本导入外部文件</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-12T22:59:58+08:00">
-                2018-06-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
-                    <span itemprop="name">shell&shell脚本</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/06/12/04-shell导入外部文件/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/04-shell导入外部文件/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><strong>shell脚本有时需要读取文件内容.下面介绍了从外部读取文件,引入循环语句处理该文件的几种常见方法</strong></p>
-<p><strong>1.文本重定向</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">定义一个文件内容:</span><br><span class="line">[root@localhost ~]$cat users.cvs</span><br><span class="line">tom</span><br><span class="line">jesse</span><br><span class="line">tony</span><br></pre></td></tr></table></figure>
-<p>shell脚本从该文件读取文件的每行内容,且创建相关账户</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/04-shell导入外部文件/#more" rel="contents">
+            <a class="btn" href="/2018/06/12/正则表达式/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1140,7 +1555,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/cut,sort,uniq/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/AWK/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1159,7 +1574,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/cut,sort,uniq/" itemprop="url">文本工具介绍</a></h1>
+                <a class="post-title-link" href="/2018/06/12/AWK/" itemprop="url">AWK介绍</a></h1>
         
 
         <div class="post-meta">
@@ -1223,8 +1638,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/12/cut,sort,uniq/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/cut,sort,uniq/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/AWK/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/AWK/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1253,12 +1668,12 @@
 
       
         
-          <h3 id="常见文本工具使用"><a href="#常见文本工具使用" class="headerlink" title="常见文本工具使用"></a>常见文本工具使用</h3><hr>
-<h4 id="管道命令介绍"><a href="#管道命令介绍" class="headerlink" title="管道命令介绍"></a>管道命令介绍</h4><hr>
-<p>1.管道|后面必须紧接一个命令.<br>2.管道命令仅仅会处理标准输出的内容,对于错误输出的不能处理<br>3.管道命令必须能够接收前一个命令输入的信息(standard input),比如less,more,head,tail.而ls,cp,mv则不行<br>4.管道命令必须能够处理前一个命令执行后的结果,</p>
+          <h3 id="AWK"><a href="#AWK" class="headerlink" title="AWK"></a>AWK</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>1.概念<br>2.基础格式<br>3.输出,格式化输出<br>4.awk操作符<br>5.awk变量<br>6.awk模式<br>7.控制语句<br>8.数组<br>9.经典例子  </p>
+<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>awk是一个强大的文本分析工具，相对于grep的查找，sed的编辑，awk在其对数据分析并生成报告时，显得尤为强大。简单来说awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。</p>
+<p>awk有3个不同版本: awk、nawk和gawk，未作特别说明，一般指gawk，gawk 是 AWK 的 GNU 版本。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/cut,sort,uniq/#more" rel="contents">
+            <a class="btn" href="/2018/06/12/AWK/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1522,7 +1937,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/sed用法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/03-shell脚本模板/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1541,7 +1956,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/sed用法/" itemprop="url">Sed介绍</a></h1>
+                <a class="post-title-link" href="/2018/06/12/03-shell脚本模板/" itemprop="url">shell脚本模板</a></h1>
         
 
         <div class="post-meta">
@@ -1587,8 +2002,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/文本处理/" itemprop="url" rel="index">
-                    <span itemprop="name">文本处理</span>
+                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
+                    <span itemprop="name">shell&shell脚本</span>
                   </a>
                 </span>
 
@@ -1605,8 +2020,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/12/sed用法/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/sed用法/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/03-shell脚本模板/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/03-shell脚本模板/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1635,20 +2050,21 @@
 
       
         
-          <h3 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h3><ul>
-<li><h4 id="概念"><a href="#概念" class="headerlink" title="概念:"></a>概念:</h4>Stream EDitor 流编辑器.sed以行为单位,纯文字符的行编辑器</li>
-</ul>
-<p>sed:默认情况下不编辑原文件,而是提取需要处理的行到内存的模式空间去编辑,并且显示出来.</p>
+          <h2 id="shell脚本模板"><a href="#shell脚本模板" class="headerlink" title="shell脚本模板"></a>shell脚本模板</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>为了保持良好的脚本编写习惯,在编制一个脚本时,需要有以下参数:</p>
 <ul>
-<li><h4 id="sed-格式"><a href="#sed-格式" class="headerlink" title="sed 格式:"></a>sed 格式:</h4>sed [options]  ‘ AddressCommand’ file      #sed [选项] ‘处理的地址块-命令’ 文件</li>
+<li>脚本用途描述  </li>
+<li>脚本作者  </li>
+<li>脚本版本</li>
+<li>脚本更新记录  </li>
+<li>脚本编写时间</li>
 </ul>
-<p>地址块和命令之间没有空格</p>
-<ul>
-<li>地址块有下面几种方法定义:  </li>
-</ul>
+<hr>
+<p>下面是一个常见的脚本头部内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#Description: this is the standard format for the head part of scripts</span><br><span class="line">#Author: Jesse</span><br><span class="line">#Version:0.1</span><br><span class="line">#Datetime:2016-10-31</span><br><span class="line">#Name:script.sh</span><br></pre></td></tr></table></figure>
+<hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/sed用法/#more" rel="contents">
+            <a class="btn" href="/2018/06/12/03-shell脚本模板/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1703,7 +2119,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/正则表达式/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/how does DHCP  work/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1722,7 +2138,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/正则表达式/" itemprop="url">正则表达式-语法介绍</a></h1>
+                <a class="post-title-link" href="/2018/06/12/how does DHCP  work/" itemprop="url">DHCP process</a></h1>
         
 
         <div class="post-meta">
@@ -1757,8 +2173,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
+                  <a href="/categories/Network/" itemprop="url" rel="index">
+                    <span itemprop="name">Network</span>
                   </a>
                 </span>
 
@@ -1768,8 +2184,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/正则表达式/" itemprop="url" rel="index">
-                    <span itemprop="name">正则表达式</span>
+                  <a href="/categories/Network/Switch/" itemprop="url" rel="index">
+                    <span itemprop="name">Switch</span>
                   </a>
                 </span>
 
@@ -1786,8 +2202,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/12/正则表达式/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/正则表达式/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/how does DHCP  work/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/how does DHCP  work/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1816,185 +2232,13 @@
 
       
         
-          <h1 id="正则表达式-语法介绍"><a href="#正则表达式-语法介绍" class="headerlink" title="正则表达式 - 语法介绍"></a>正则表达式 - 语法介绍</h1><p>正则表达式(regular expression)描述了一种字符串匹配的模式（pattern），可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等。 </p>
-<p>构造正则表达式的方法和创建数学表达式的方法一样。也就是用多种元字符与运算符可以将小的表达式结合在一起来创建更大的表达式。正则表达式的组件可以是单个的字符、字符集合、字符范围、字符间的选择或者所有这些组件的任意组合。</p>
-<p>正则表达式是由普通字符（例如字符 a 到 z）以及特殊字符（称为”元字符”）组成的文字模式。模式描述在搜索文本时要匹配的一个或多个字符串。正则表达式作为一个模板，将某个字符模式与所搜索的字符串进行匹配。</p>
+          <h2 id="How-does-DHCP-work"><a href="#How-does-DHCP-work" class="headerlink" title="How does DHCP work"></a>How does DHCP work</h2><h3 id="Lab-Topology"><a href="#Lab-Topology" class="headerlink" title="Lab Topology"></a>Lab Topology</h3><p>![dhcp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp.png"></p>
+<p>R1 simulates a DHCP server ,R2 simulates a client which get IP address from the R1 DHCP server</p>
+<p><strong>R1 configure:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DHCP(config)#ip dhcp pool CCIE                    # define a name of address Pool</span><br><span class="line">DHCP(dhcp-config)#network 10.1.1.0 255.255.255.0  # define a  subnet </span><br><span class="line">DHCP(dhcp-config)#default-router 10.1.1.1         # define default gataway</span><br><span class="line">DHCP(dhcp-config)#DNS-server 8.8.8.8              # define primary DNS server</span><br><span class="line">DHCP(dhcp-config)#dns-server 114.114.114.114      # define the Backup DNS server</span><br><span class="line">DHCP(dhcp-config)#lease 3                         # define lease time  </span><br><span class="line"></span><br><span class="line">DHCP(config)#ip dhcp excluded-address 10.1.1.1 ?  # define a range of address that won&apos;t assign to Clients</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/正则表达式/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/AWK/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/12/AWK/" itemprop="url">AWK介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-12T22:59:58+08:00">
-                2018-06-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/文本处理/" itemprop="url" rel="index">
-                    <span itemprop="name">文本处理</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/06/12/AWK/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/AWK/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="AWK"><a href="#AWK" class="headerlink" title="AWK"></a>AWK</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>1.概念<br>2.基础格式<br>3.输出,格式化输出<br>4.awk操作符<br>5.awk变量<br>6.awk模式<br>7.控制语句<br>8.数组<br>9.经典例子  </p>
-<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>awk是一个强大的文本分析工具，相对于grep的查找，sed的编辑，awk在其对数据分析并生成报告时，显得尤为强大。简单来说awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。</p>
-<p>awk有3个不同版本: awk、nawk和gawk，未作特别说明，一般指gawk，gawk 是 AWK 的 GNU 版本。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/AWK/#more" rel="contents">
+            <a class="btn" href="/2018/06/12/how does DHCP  work/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2090,7 +2334,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2101,7 +2345,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2112,7 +2356,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
