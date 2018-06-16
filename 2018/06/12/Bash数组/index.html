@@ -90,18 +90,18 @@
 
 
 
-<meta name="description" content="shell脚本特殊变量   变量名 含义     $0 当前脚本的文件名   $n 传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是$1，第二个参数是$2……第n个参数是$n   $# 传递给脚本或函数的参数个数   $* 传递给脚本或函数的所有参数。   $@ 传递给脚本或函数的所有参数。被双引号(“ “)包含时，与 $* 稍有不同，下面将会讲到。   $? 上个命令的">
+<meta name="description" content="Bash数组Bash中的数组介绍数组中可以存放多个值。Bash Shell 只支持一维数组（不支持多维数组）。 与大部分编程语言类似，数组元素的下标由0开始。">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Shell脚本特殊变量">
-<meta property="og:url" content="http://yoursite.com/2018/06/12/02-shell脚本特殊变量/index.html">
+<meta property="og:title" content="Bash数组">
+<meta property="og:url" content="http://yoursite.com/2018/06/12/Bash数组/index.html">
 <meta property="og:site_name" content="Jesse&#39;s home">
-<meta property="og:description" content="shell脚本特殊变量   变量名 含义     $0 当前脚本的文件名   $n 传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是$1，第二个参数是$2……第n个参数是$n   $# 传递给脚本或函数的参数个数   $* 传递给脚本或函数的所有参数。   $@ 传递给脚本或函数的所有参数。被双引号(“ “)包含时，与 $* 稍有不同，下面将会讲到。   $? 上个命令的">
+<meta property="og:description" content="Bash数组Bash中的数组介绍数组中可以存放多个值。Bash Shell 只支持一维数组（不支持多维数组）。 与大部分编程语言类似，数组元素的下标由0开始。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-13T16:31:57.805Z">
+<meta property="og:updated_time" content="2018-06-16T05:34:07.607Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Shell脚本特殊变量">
-<meta name="twitter:description" content="shell脚本特殊变量   变量名 含义     $0 当前脚本的文件名   $n 传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是$1，第二个参数是$2……第n个参数是$n   $# 传递给脚本或函数的参数个数   $* 传递给脚本或函数的所有参数。   $@ 传递给脚本或函数的所有参数。被双引号(“ “)包含时，与 $* 稍有不同，下面将会讲到。   $? 上个命令的">
+<meta name="twitter:title" content="Bash数组">
+<meta name="twitter:description" content="Bash数组Bash中的数组介绍数组中可以存放多个值。Bash Shell 只支持一维数组（不支持多维数组）。 与大部分编程语言类似，数组元素的下标由0开始。">
 
 
 
@@ -131,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/06/12/02-shell脚本特殊变量/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/06/12/Bash数组/"/>
 
 
 
 
 
-  <title>Shell脚本特殊变量 | Jesse's home</title>
+  <title>Bash数组 | Jesse's home</title>
   
 
 
@@ -274,7 +274,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/02-shell脚本特殊变量/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/Bash数组/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -291,7 +291,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Shell脚本特殊变量</h1>
+          <h1 class="post-title" itemprop="name headline">Bash数组</h1>
         
 
         <div class="post-meta">
@@ -355,8 +355,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/12/02-shell脚本特殊变量/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/02-shell脚本特殊变量/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/Bash数组/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Bash数组/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -384,55 +384,80 @@
       
 
       
-        <h2 id="shell脚本特殊变量"><a href="#shell脚本特殊变量" class="headerlink" title="shell脚本特殊变量"></a>shell脚本特殊变量</h2><table>
-<thead>
-<tr>
-<th>变量名</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>$0</td>
-<td>当前脚本的文件名</td>
-</tr>
-<tr>
-<td>$n</td>
-<td>传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是$1，第二个参数是$2……第n个参数是$n</td>
-</tr>
-<tr>
-<td>$#</td>
-<td>传递给脚本或函数的参数个数</td>
-</tr>
-<tr>
-<td>$*</td>
-<td>传递给脚本或函数的所有参数。</td>
-</tr>
-<tr>
-<td>$@</td>
-<td>传递给脚本或函数的所有参数。被双引号(“ “)包含时，与 $* 稍有不同，下面将会讲到。</td>
-</tr>
-<tr>
-<td>$?</td>
-<td>上个命令的退出状态，或函数的返回值。一般情况下，执行成功会返回 0，失败返回 值是个大于1的整数</td>
-</tr>
-<tr>
-<td>$$</td>
-<td>当前Shell进程ID。对于 Shell 脚本，就是这些脚本所在的进程ID</td>
-</tr>
-</tbody>
-</table>
+        <h2 id="Bash数组"><a href="#Bash数组" class="headerlink" title="Bash数组"></a>Bash数组</h2><h3 id="Bash中的数组介绍"><a href="#Bash中的数组介绍" class="headerlink" title="Bash中的数组介绍"></a>Bash中的数组介绍</h3><p>数组中可以存放多个值。Bash Shell 只支持一维数组（不支持多维数组）。</p>
+<p>与大部分编程语言类似，数组元素的下标由0开始。</p>
 <hr>
 <a id="more"></a>
-<h5 id="和-区别"><a href="#和-区别" class="headerlink" title="$*和$@ 区别:"></a>$*和$@ 区别:</h5><p>$* 和 $@ 都表示传递给函数或脚本的所有参数，不被双引号(“ “)包含时，都以”$1” “$2” … “$n” 的形式输出所有参数。  </p>
-<p>但是当它们被双引号(“ “)包含时，”$*” 会将所有的参数作为一个整体，以”$1 $2 … $n”的形式输出所有参数；”$@” 会将各个参数分开，以”$1” “$2” … “$n” 的形式输出所有参数。      </p>
-<p>例如:  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">脚本内容:</span><br><span class="line">[root@localhost ~]$cat a.txt</span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">echo &quot;\$*:&quot; $*</span><br><span class="line">echo &quot;\&quot;\$*\&quot;:&quot; &quot;$*&quot;</span><br><span class="line">echo &quot;\$@:&quot; $@</span><br><span class="line">echo &quot;\&quot;\$@\&quot;:&quot; &quot;$@&quot;</span><br><span class="line"></span><br><span class="line">echo &quot;print each param form \$*:&quot;</span><br><span class="line"></span><br><span class="line">for var in $*;do</span><br><span class="line">   echo &quot;$var&quot;</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">echo &quot;#################################&quot;</span><br><span class="line"></span><br><span class="line">echo &quot;print each param form \$@:&quot;</span><br><span class="line"></span><br><span class="line">for var in $@;do</span><br><span class="line">   echo &quot;$var&quot;</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">echo &quot;#################################&quot;</span><br><span class="line"></span><br><span class="line">echo &quot;print each param form \&quot;\$*\&quot;:&quot;</span><br><span class="line"></span><br><span class="line">for var in &quot;$*&quot;;do</span><br><span class="line">   echo &quot;$var&quot;</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">echo &quot;#################################&quot;</span><br><span class="line"></span><br><span class="line">echo &quot;print each param form \&quot;\$@\&quot;:&quot;</span><br><span class="line"></span><br><span class="line">for var in &quot;$@&quot;;do</span><br><span class="line">   echo &quot;$var&quot;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
-<p>执行结果:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash a.txt a b c d </span><br><span class="line">$*: a b c d</span><br><span class="line">&quot;$*&quot;: a b c d</span><br><span class="line">$@: a b c d</span><br><span class="line">&quot;$@&quot;: a b c d</span><br><span class="line">print each param form $*:</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">c</span><br><span class="line">d</span><br><span class="line">#################################</span><br><span class="line">print each param form $@:</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">c</span><br><span class="line">d</span><br><span class="line">#################################</span><br><span class="line">print each param form &quot;$*&quot;:</span><br><span class="line">a b c d</span><br><span class="line">#################################</span><br><span class="line">print each param form &quot;$@&quot;:</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">c</span><br><span class="line">d</span><br></pre></td></tr></table></figure>
+<h3 id="数组的创建"><a href="#数组的创建" class="headerlink" title="数组的创建"></a>数组的创建</h3><p>Shell 数组用括号来表示，元素用”空格”符号分割开，语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array_name=(value1 ... valuen)</span><br></pre></td></tr></table></figure>
+<p>实例:</p>
+<p>创建一个数组变量的方法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$A=(a b c d)</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>可以看到”$*” 将a b c d四个参数作为一个整体,当成一个参数.</p>
+<p>注意,元素之间没有逗号</p>
 </blockquote>
+<p>或者可以用下标来定义数组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$B[0]=1</span><br><span class="line">[root@localhost ~]$B[1]=2</span><br><span class="line">[root@localhost ~]$B[2]=3</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips 当然用这种方式也可以修改数组的某个元素值.比如将第1个元素的值由1改成0:<br>[root@localhost ~]$B[0]=0</p>
+</blockquote>
+<hr>
+<h3 id="数组读取"><a href="#数组读取" class="headerlink" title="数组读取"></a>数组读取</h3><p>1.读取单个元素.</p>
+<p>语法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;array_name[index]&#125;</span><br></pre></td></tr></table></figure>
+<p>例如.读取A数组的第二个元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$echo &quot;$&#123;A[2]&#125;&quot;</span><br><span class="line">c</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>读取所有元素.</li>
+</ol>
+<p>使用@ 或 * 可以获取数组中的所有元素，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$echo $&#123;A[*]&#125;</span><br><span class="line">a b c d</span><br><span class="line">[root@localhost ~]$echo $&#123;A[@]&#125;</span><br><span class="line">a b c d</span><br></pre></td></tr></table></figure>
+<p>3.读取数组的长度</p>
+<p>获取数组长度的方法与获取字符串长度的方法相同，语法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$echo $&#123;#A[@]&#125;</span><br><span class="line">4</span><br><span class="line">[root@localhost ~]$echo $&#123;#A[*]&#125;</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+<h3 id="数组删除"><a href="#数组删除" class="headerlink" title="数组删除"></a>数组删除</h3><ol>
+<li>删除整个数组</li>
+</ol>
+<p>语法: unset 数组名</p>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$unset A</span><br><span class="line">[root@localhost ~]$echo $&#123;A[*]&#125;</span><br><span class="line"></span><br><span class="line">[root@localhost ~]$</span><br></pre></td></tr></table></figure>
+<p>2.删除指定的下标元素</p>
+<p>语法: unset 数组名[index]</p>
+<p>例如.删除最后一个元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$A=(a b c d)</span><br><span class="line">[root@localhost ~]$unset A[3]</span><br><span class="line">[root@localhost ~]$echo $&#123;A[*]&#125;</span><br><span class="line">a b c</span><br></pre></td></tr></table></figure>
+<h3 id="数组分片"><a href="#数组分片" class="headerlink" title="数组分片"></a>数组分片</h3><p>像字符串截取或者Python的列表分片一样.数组也支持分片.</p>
+<p>语法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;arry[* or @]:起始分片位置:长度&#125;</span><br></pre></td></tr></table></figure>
+<p>例如.将数组A保留前面3个元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$echo $&#123;A[*]:0:3&#125;</span><br><span class="line">a b c</span><br></pre></td></tr></table></figure>
+<p>长度可以省略.例如下面表示从1个位置开始分片</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$echo $&#123;A[*]:1&#125;</span><br><span class="line">b c d e</span><br></pre></td></tr></table></figure>
+<h3 id="数组替换"><a href="#数组替换" class="headerlink" title="数组替换"></a>数组替换</h3><p>元素值的替换</p>
+<p>语法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;arry[* or @]:查找字符:替换字符&#125;</span><br></pre></td></tr></table></figure>
+<p>例如: 将第数组A的c替换成1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$echo $&#123;A[*]&#125;</span><br><span class="line">a b c d e</span><br><span class="line">[root@localhost ~]$echo $&#123;A[*]/c/1&#125;</span><br><span class="line">a b 1 d e</span><br></pre></td></tr></table></figure>
+<p>如果是一个数组里有重复的多个相同元素,则被全部替换.例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$A=(a b c d e c c)</span><br><span class="line">[root@localhost ~]$echo $&#123;A[*]/c/1&#125;</span><br><span class="line">a b 1 d e 1 1</span><br></pre></td></tr></table></figure>
+<h3 id="数组追加元素"><a href="#数组追加元素" class="headerlink" title="数组追加元素"></a>数组追加元素</h3><p>例如:<br>ary2=(1 2 3 4 5 6) .要追加7 8 9 进去:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$vim arry1.sh</span><br><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">ary2=(1 2 3 4 5 6)</span><br><span class="line"></span><br><span class="line">index=6 #之前的ary本身已经有6个值,所以索引从6开始</span><br><span class="line"></span><br><span class="line">for i in 7 8 9;do  #如果for循环的项不多,可以直接写在In 后面</span><br><span class="line">   ary2[$index]=$i</span><br><span class="line">   index=$index+1</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">echo &quot;Now ary2 is: $&#123;ary2[*]&#125;&quot;</span><br></pre></td></tr></table></figure>
+<p>执行脚本:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash arry1.sh </span><br><span class="line">Now ary2 is: 1 2 3 4 5 6 7 8 9</span><br></pre></td></tr></table></figure>
+<h2 id="第二部分-数组判断"><a href="#第二部分-数组判断" class="headerlink" title="第二部分.数组判断"></a>第二部分.数组判断</h2><p>判断一个变量是否存在数组内.</p>
+<p>语法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[ $&#123;ary2[@]/$a/&#125; == $&#123;ary2[@]&#125; ]]</span><br></pre></td></tr></table></figure>
+<p>原理是借鉴了数组分片的方法:将数组中去掉某个元素,如果和之前的数组不相等.则肯定此元素存在数组中.<br>如果去掉某个元素,仍然和之前的数组相等.那么此元素就不属于数组中   </p>
+<p>例如:</p>
+<p>判断元素3是否在数组ary2中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$ary2=(1 2 3 4 5 6)</span><br><span class="line"></span><br><span class="line">[root@localhost ~]$[[ $&#123;ary2[*]/3/&#125; != $&#123;ary2[*]&#125; ]] &amp;&amp; echo &quot;3 is in ary2&quot; || echo &quot;3 is not in ary2&quot;</span><br><span class="line">3 is in ary2</span><br></pre></td></tr></table></figure>
+<p>判断元素10是否在数组ary2中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$[[ $&#123;ary2[*]/10/&#125; != $&#123;ary2[*]&#125; ]] &amp;&amp; echo &quot;10 is in ary2&quot; || echo &quot;10 is not in ary2&quot;</span><br><span class="line">10 is not in ary2</span><br></pre></td></tr></table></figure>
+<h3 id="举一个数组应用的例子"><a href="#举一个数组应用的例子" class="headerlink" title="举一个数组应用的例子:"></a>举一个数组应用的例子:</h3><p>读取下列IP文件,并赋值给一个数组:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$cat ip.txt </span><br><span class="line">10.0.0.1</span><br><span class="line">10.0.0.2</span><br><span class="line">10.0.0.3</span><br><span class="line">10.0.0.4</span><br><span class="line">10.0.0.5</span><br></pre></td></tr></table></figure>
+<p>脚本:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">index=0</span><br><span class="line"></span><br><span class="line">while read line;do</span><br><span class="line">   arry[$index]=$line</span><br><span class="line">   index+=1</span><br><span class="line">done&lt; &lt;(cat ip.txt)</span><br><span class="line"></span><br><span class="line">echo &quot; arry is $&#123;arry[*]&#125;&quot;</span><br><span class="line">echo &quot; arry has $&#123;#arry[*]&#125; elements&quot;</span><br></pre></td></tr></table></figure>
+<p>执行脚本:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash ary.sh</span><br><span class="line"> arry is 10.0.0.1 10.0.0.2 10.0.0.3 10.0.0.4 10.0.0.5 </span><br><span class="line"> arry has 6 elements</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -449,12 +474,12 @@
   <!-- JS库 sweetalert 可修改路径 -->
   <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <p><span>本文标题:</span><a href="/2018/06/12/02-shell脚本特殊变量/">Shell脚本特殊变量</a></p>
+  <p><span>本文标题:</span><a href="/2018/06/12/Bash数组/">Bash数组</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月12日 - 22:06</p>
-  <p><span>最后更新:</span>2018年06月14日 - 00:06</p>
-  <p><span>原始链接:</span><a href="/2018/06/12/02-shell脚本特殊变量/" title="Shell脚本特殊变量">http://yoursite.com/2018/06/12/02-shell脚本特殊变量/</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/06/12/02-shell脚本特殊变量/"  aria-label="复制成功！"></i></span>
+  <p><span>最后更新:</span>2018年06月16日 - 13:06</p>
+  <p><span>原始链接:</span><a href="/2018/06/12/Bash数组/" title="Bash数组">http://yoursite.com/2018/06/12/Bash数组/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/06/12/Bash数组/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
 </div>
@@ -527,18 +552,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/12/正则表达式分类/" rel="next" title="正则表达式分类">
-                <i class="fa fa-chevron-left"></i> 正则表达式分类
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/12/03-shell脚本模板/" rel="prev" title="shell脚本模板">
-                shell脚本模板 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/12/AWK/" rel="prev" title="AWK介绍">
+                AWK介绍 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -595,8 +616,8 @@
 
   
     <div class="comments" id="comments">
-      <div class="ds-thread" data-thread-key="2018/06/12/02-shell脚本特殊变量/"
-           data-title="Shell脚本特殊变量" data-url="http://yoursite.com/2018/06/12/02-shell脚本特殊变量/">
+      <div class="ds-thread" data-thread-key="2018/06/12/Bash数组/"
+           data-title="Bash数组" data-url="http://yoursite.com/2018/06/12/Bash数组/">
       </div>
     </div>
 
@@ -707,7 +728,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#shell脚本特殊变量"><span class="nav-number">1.</span> <span class="nav-text">shell脚本特殊变量</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#和-区别"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">$*和$@ 区别:</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bash数组"><span class="nav-number">1.</span> <span class="nav-text">Bash数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bash中的数组介绍"><span class="nav-number">1.1.</span> <span class="nav-text">Bash中的数组介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组的创建"><span class="nav-number">1.2.</span> <span class="nav-text">数组的创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组读取"><span class="nav-number">1.3.</span> <span class="nav-text">数组读取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组删除"><span class="nav-number">1.4.</span> <span class="nav-text">数组删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组分片"><span class="nav-number">1.5.</span> <span class="nav-text">数组分片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组替换"><span class="nav-number">1.6.</span> <span class="nav-text">数组替换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组追加元素"><span class="nav-number">1.7.</span> <span class="nav-text">数组追加元素</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-数组判断"><span class="nav-number">2.</span> <span class="nav-text">第二部分.数组判断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#举一个数组应用的例子"><span class="nav-number">2.1.</span> <span class="nav-text">举一个数组应用的例子:</span></a></li></ol></li></ol></div>
             
 
           </div>

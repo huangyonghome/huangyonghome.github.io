@@ -90,13 +90,13 @@
 
 
 
-<meta name="description" content="How does DHCP workLab Topology![dhcp]  R1 simulates a DHCP server ,R2 simulates a client which get IP address from the R1 DHCP server R1 configure: 12345678DHCP(config)#ip dhcp pool CCIE">
+<meta name="description" content="How does DHCP workLab Topology">
 <meta name="keywords" content="network,DHCP,Cisco">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DHCP process">
 <meta property="og:url" content="http://yoursite.com/2018/06/12/how does DHCP  work/index.html">
 <meta property="og:site_name" content="Jesse&#39;s home">
-<meta property="og:description" content="How does DHCP workLab Topology![dhcp]  R1 simulates a DHCP server ,R2 simulates a client which get IP address from the R1 DHCP server R1 configure: 12345678DHCP(config)#ip dhcp pool CCIE">
+<meta property="og:description" content="How does DHCP workLab Topology">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp.png">
 <meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp1.png">
@@ -107,10 +107,10 @@
 <meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp7.png">
 <meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp8.png">
 <meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp9.png">
-<meta property="og:updated_time" content="2018-06-15T15:51:02.360Z">
+<meta property="og:updated_time" content="2018-06-16T03:07:03.399Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DHCP process">
-<meta name="twitter:description" content="How does DHCP workLab Topology![dhcp]  R1 simulates a DHCP server ,R2 simulates a client which get IP address from the R1 DHCP server R1 configure: 12345678DHCP(config)#ip dhcp pool CCIE">
+<meta name="twitter:description" content="How does DHCP workLab Topology">
 <meta name="twitter:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp.png">
 
 
@@ -394,18 +394,18 @@
       
 
       
-        <h2 id="How-does-DHCP-work"><a href="#How-does-DHCP-work" class="headerlink" title="How does DHCP work"></a>How does DHCP work</h2><h3 id="Lab-Topology"><a href="#Lab-Topology" class="headerlink" title="Lab Topology"></a>Lab Topology</h3><p>![dhcp] <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp.png"></p>
+        <h2 id="How-does-DHCP-work"><a href="#How-does-DHCP-work" class="headerlink" title="How does DHCP work"></a>How does DHCP work</h2><h3 id="Lab-Topology"><a href="#Lab-Topology" class="headerlink" title="Lab Topology"></a>Lab Topology</h3><img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp.png">
+<a id="more"></a>
 <p>R1 simulates a DHCP server ,R2 simulates a client which get IP address from the R1 DHCP server</p>
 <p><strong>R1 configure:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DHCP(config)#ip dhcp pool CCIE                    # define a name of address Pool</span><br><span class="line">DHCP(dhcp-config)#network 10.1.1.0 255.255.255.0  # define a  subnet </span><br><span class="line">DHCP(dhcp-config)#default-router 10.1.1.1         # define default gataway</span><br><span class="line">DHCP(dhcp-config)#DNS-server 8.8.8.8              # define primary DNS server</span><br><span class="line">DHCP(dhcp-config)#dns-server 114.114.114.114      # define the Backup DNS server</span><br><span class="line">DHCP(dhcp-config)#lease 3                         # define lease time  </span><br><span class="line"></span><br><span class="line">DHCP(config)#ip dhcp excluded-address 10.1.1.1 ?  # define a range of address that won&apos;t assign to Clients</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
 <p><strong>R2 configure :</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">R2(config)#int e1/2</span><br><span class="line">R2(config-if)#ip address ?</span><br><span class="line">  A.B.C.D  IP address</span><br><span class="line">  dhcp     IP Address negotiated via DHCP</span><br><span class="line">  pool     IP Address autoconfigured from a local DHCP pool</span><br><span class="line"></span><br><span class="line">R2(config-if)#ip address dhcp        # Get IP address by DHCP</span><br></pre></td></tr></table></figure>
 <p>R2 succeeds in getting an IP address ,it shows 10.1.1.2:</p>
-<p>![dhcp1]<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp1.png"></p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp1.png">
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">*Mar  1 00:08:32.059: %DHCP-6-ADDRESS_ASSIGN: Interface Ethernet1/2 assigned DHCP address 10.1.1.2, mask 255.255.255.0, hostname R2</span><br><span class="line"></span><br><span class="line">show DHCP lease , this command will show some information about the ip address and the server of DHCP</span><br></pre></td></tr></table></figure>
 <hr>
-<h4 id="Now-Let’s-analyse-the-process-of-HDCP"><a href="#Now-Let’s-analyse-the-process-of-HDCP" class="headerlink" title="Now. Let’s analyse the process of HDCP :"></a>Now. Let’s analyse the process of HDCP :</h4><p>![dhcp1]<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp3.png"></p>
+<h4 id="Now-Let’s-analyse-the-process-of-HDCP"><a href="#Now-Let’s-analyse-the-process-of-HDCP" class="headerlink" title="Now. Let’s analyse the process of HDCP :"></a>Now. Let’s analyse the process of HDCP :</h4><img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp3.png">
 <hr>
 <p><strong>1.Client send a DHCP Discover massage :</strong></p>
 <p>![dhcp1]<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp4.png"></p>
@@ -417,13 +417,13 @@
 </blockquote>
 <p>![dhcp1]<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp5.png"></p>
 <p><strong>4.Clinet send a Request massage to Server to choose an ip address (there could be more than one servers in the network )</strong></p>
-<p>![dhcp1]<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp6.png"></p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp6.png">
 <p><strong>5.DHCP server send an ACK message to make sure this IP address was accepted by Client. this is a Reply pacakge</strong></p>
-<p>![dhcp1]<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp7.png"></p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp7.png">
 <p><strong>6.At the end . Client will send a gratuitous ARP (无故ARP) to broadcast address . to inform all others about its own IP address and ARP address :</strong></p>
-<p>![dhcp1]<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp8.png"></p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp8.png">
 <hr>
-<h4 id="Summarize"><a href="#Summarize" class="headerlink" title="Summarize :"></a>Summarize :</h4><p>![dhcp1]<img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp9.png"></p>
+<h4 id="Summarize"><a href="#Summarize" class="headerlink" title="Summarize :"></a>Summarize :</h4><img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/dhcp9.png">
 <hr>
 <p><strong>DHCP mainly contains below five steps :</strong></p>
 <p>1.Client send a Discover message to broadcast address          #apply for an ip address<br>2.DHCP server send an ARP package to broadcast address     #to see if the ip address which is gonna assign to client exists in network<br>3.DHCP send an offer package                                                      #assign this ip address to Client<br>4.Client send a Request package                                                   #to announce that it chooses the ip address (there could be more than one server in network)<br>5.DHCP Server sends a ACK pacckage                                          #acknowledge this IP address was assigned to client</p>
@@ -454,7 +454,7 @@
   <p><span>本文标题:</span><a href="/2018/06/12/how does DHCP  work/">DHCP process</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月12日 - 22:06</p>
-  <p><span>最后更新:</span>2018年06月15日 - 23:06</p>
+  <p><span>最后更新:</span>2018年06月16日 - 11:06</p>
   <p><span>原始链接:</span><a href="/2018/06/12/how does DHCP  work/" title="DHCP process">http://yoursite.com/2018/06/12/how does DHCP  work/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/06/12/how does DHCP  work/"  aria-label="复制成功！"></i></span>
   </p>
@@ -533,8 +533,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/12/正则表达式分类/" rel="next" title="正则表达式分类">
-                <i class="fa fa-chevron-left"></i> 正则表达式分类
+              <a href="/2018/06/12/正则表达式/" rel="next" title="正则表达式-语法介绍">
+                <i class="fa fa-chevron-left"></i> 正则表达式-语法介绍
               </a>
             
           </div>
@@ -543,8 +543,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/12/03-shell脚本模板/" rel="prev" title="shell脚本模板">
-                shell脚本模板 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/14/01-bash变量基础知识/" rel="prev" title="bash变量基础知识">
+                bash变量基础知识 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -565,7 +565,13 @@
     <div class="post-spread">
       
         <!--MOB SHARE BEGIN-->
-<div class="-mob-share-ui-button -mob-share-open">分享</div>
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div>
 <div class="-mob-share-ui" style="display: none">
     <ul class="-mob-share-list">
         <li class="-mob-share-weibo"><p>新浪微博</p></li>
@@ -652,7 +658,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -952,6 +958,15 @@
   
 
   
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+        $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
 
 </body>
 </html>
