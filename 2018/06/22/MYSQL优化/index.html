@@ -98,7 +98,7 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="MYSQL优化以下的实验都是使用mysql的案例库:sakila.这是mysql官方提供的模拟电影出租厅信息管理系统数据库.类似oracle的scott库.可以去网上下载.   优化步骤step1:通过show status命令了解各种SQL的执行频率  语法: 1show [session|global] status .如果不指定,默认为session 例如下面的命令显示了当前session中">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-22T15:29:41.385Z">
+<meta property="og:updated_time" content="2018-06-22T16:08:44.981Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MYSQL优化">
 <meta name="twitter:description" content="MYSQL优化以下的实验都是使用mysql的案例库:sakila.这是mysql官方提供的模拟电影出租厅信息管理系统数据库.类似oracle的scott库.可以去网上下载.   优化步骤step1:通过show status命令了解各种SQL的执行频率  语法: 1show [session|global] status .如果不指定,默认为session 例如下面的命令显示了当前session中">
@@ -390,6 +390,7 @@
 <p>语法:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show [session|global] status .如果不指定,默认为session</span><br></pre></td></tr></table></figure>
 <p>例如下面的命令显示了当前session中所有统计参数的值: </p>
+<a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show session status like &apos;Com_%&apos;;</span><br><span class="line">+---------------------------+-------+</span><br><span class="line">| Variable_name             | Value |</span><br><span class="line">+---------------------------+-------+</span><br><span class="line">| Com_admin_commands        | 0     |</span><br><span class="line">| Com_assign_to_keycache    | 0     |</span><br><span class="line">| Com_alter_db              | 0     |</span><br><span class="line">| Com_alter_db_upgrade      | 0     |</span><br><span class="line">| Com_alter_event           | 0     |</span><br><span class="line">| Com_alter_function        | 0     |</span><br><span class="line">| Com_alter_procedure       | 0     |</span><br><span class="line">| Com_alter_server          | 0     |</span><br><span class="line">| Com_alter_table           | 0     |</span><br><span class="line">| Com_alter_tablespace      | 0     |</span><br><span class="line">| Com_alter_user            | 0     |</span><br><span class="line">| Com_analyze               | 0     |</span><br><span class="line">| Com_begin                 | 0     |</span><br></pre></td></tr></table></figure>
 <p>统计信息很长,没截图完整. 以下是对部分命令的解释</p>
 <p>Com_xxx 表示每个xxx语句执行的次数.通常比较重要的参数有:</p>
@@ -627,7 +628,7 @@
   <p><span>本文标题:</span><a href="/2018/06/22/MYSQL优化/">MYSQL优化</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月22日 - 22:06</p>
-  <p><span>最后更新:</span>2018年06月22日 - 23:06</p>
+  <p><span>最后更新:</span>2018年06月23日 - 00:06</p>
   <p><span>原始链接:</span><a href="/2018/06/22/MYSQL优化/" title="MYSQL优化">http://yoursite.com/2018/06/22/MYSQL优化/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/06/22/MYSQL优化/"  aria-label="复制成功！"></i></span>
   </p>
@@ -702,8 +703,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/22/MYSQL常用函数/" rel="next" title="MYSQL常用函数">
-                <i class="fa fa-chevron-left"></i> MYSQL常用函数
+              <a href="/2018/06/22/mysql-DML操作/" rel="next" title="DML操作命令">
+                <i class="fa fa-chevron-left"></i> DML操作命令
               </a>
             
           </div>
@@ -712,8 +713,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/22/mysql-DDL操作/" rel="prev" title="DDL操作命令">
-                DDL操作命令 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/22/MYSQL表锁和事务控制/" rel="prev" title="MYSQL表锁和事务控制">
+                MYSQL表锁和事务控制 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -827,7 +828,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

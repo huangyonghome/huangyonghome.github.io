@@ -90,18 +90,18 @@
 
 
 
-<meta name="description" content="MYSQL表锁和事务控制一.锁表锁表语句:LOCK table  解锁语句:UNLOCK table  用法: 1lock table 表名 &amp;#123;read [local] | [low_prioriy] WRITE&amp;#125; 例如: lock table emp read; 锁定emp表   1234567891011121314mysql&amp;gt; lock table emp read">
+<meta name="description" content="MYSQL表锁和事务控制一.锁表锁表语句:LOCK table  解锁语句:UNLOCK table  用法: 1lock table 表名 &amp;#123;read [local] | [low_prioriy] WRITE&amp;#125;">
 <meta name="keywords" content="mysql">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MYSQL表锁和事务控制">
 <meta property="og:url" content="http://yoursite.com/2018/06/22/MYSQL表锁和事务控制/index.html">
 <meta property="og:site_name" content="Jesse&#39;s home">
-<meta property="og:description" content="MYSQL表锁和事务控制一.锁表锁表语句:LOCK table  解锁语句:UNLOCK table  用法: 1lock table 表名 &amp;#123;read [local] | [low_prioriy] WRITE&amp;#125; 例如: lock table emp read; 锁定emp表   1234567891011121314mysql&amp;gt; lock table emp read">
+<meta property="og:description" content="MYSQL表锁和事务控制一.锁表锁表语句:LOCK table  解锁语句:UNLOCK table  用法: 1lock table 表名 &amp;#123;read [local] | [low_prioriy] WRITE&amp;#125;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-22T15:02:44.384Z">
+<meta property="og:updated_time" content="2018-06-22T16:08:58.980Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MYSQL表锁和事务控制">
-<meta name="twitter:description" content="MYSQL表锁和事务控制一.锁表锁表语句:LOCK table  解锁语句:UNLOCK table  用法: 1lock table 表名 &amp;#123;read [local] | [low_prioriy] WRITE&amp;#125; 例如: lock table emp read; 锁定emp表   1234567891011121314mysql&amp;gt; lock table emp read">
+<meta name="twitter:description" content="MYSQL表锁和事务控制一.锁表锁表语句:LOCK table  解锁语句:UNLOCK table  用法: 1lock table 表名 &amp;#123;read [local] | [low_prioriy] WRITE&amp;#125;">
 
 
 
@@ -388,6 +388,7 @@
 <p>解锁语句:UNLOCK table </p>
 <p>用法:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lock table 表名 &#123;read [local] | [low_prioriy] WRITE&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>例如: lock table emp read; 锁定emp表</p>
   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; lock table emp read;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from emp;</span><br><span class="line">+-------+------------+------+--------+</span><br><span class="line">| ename | hiredate   | sal  | deptno |</span><br><span class="line">+-------+------------+------+--------+</span><br><span class="line">| tony  | NULL       | 1000 |   NULL |</span><br><span class="line">| jerry | 2000-02-02 | 4000 |      2 |</span><br><span class="line">| david | 2001-02-02 | 3000 |      3 |</span><br><span class="line">| jimmy | 1999-01-01 | 9000 |      3 |</span><br><span class="line">| jesse | 2000-01-01 | 2000 |      1 |</span><br><span class="line">+-------+------------+------+--------+</span><br><span class="line">5 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
 <p>开启另外一个终端.执行select查询该表.仍然可以正常查询 </p>
@@ -483,7 +484,7 @@
   <p><span>本文标题:</span><a href="/2018/06/22/MYSQL表锁和事务控制/">MYSQL表锁和事务控制</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月22日 - 22:06</p>
-  <p><span>最后更新:</span>2018年06月22日 - 23:06</p>
+  <p><span>最后更新:</span>2018年06月23日 - 00:06</p>
   <p><span>原始链接:</span><a href="/2018/06/22/MYSQL表锁和事务控制/" title="MYSQL表锁和事务控制">http://yoursite.com/2018/06/22/MYSQL表锁和事务控制/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/06/22/MYSQL表锁和事务控制/"  aria-label="复制成功！"></i></span>
   </p>
@@ -558,8 +559,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/22/mysql-DML操作/" rel="next" title="DML操作命令">
-                <i class="fa fa-chevron-left"></i> DML操作命令
+              <a href="/2018/06/22/MYSQL优化/" rel="next" title="MYSQL优化">
+                <i class="fa fa-chevron-left"></i> MYSQL优化
               </a>
             
           </div>
@@ -567,6 +568,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/22/MYSQL常用函数/" rel="prev" title="MYSQL常用函数">
+                MYSQL常用函数 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -679,7 +684,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
