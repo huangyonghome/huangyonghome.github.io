@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'https:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux,rsync," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="rsync实战演练rsync是一个远程数据同步工具,可以快速同步多台主机的文件,且只同步有差异的部分.非常强大的工具  实战环境:服务端:192.168.10.89客户端:192.168.10.103  rsync不需要安装,默认就自带. 关于rsync的命令想法,可以参考其他笔记.  note: 以下教程都是讲述客户端从远程服务器同步数据到本地.类似于下载行为. 如果需要将本地的文件同步到远程服">
+<meta name="keywords" content="Linux,rsync">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rsync实战演练">
+<meta property="og:url" content="http://yoursite.com/2018/06/24/rsync实战演练/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="rsync实战演练rsync是一个远程数据同步工具,可以快速同步多台主机的文件,且只同步有差异的部分.非常强大的工具  实战环境:服务端:192.168.10.89客户端:192.168.10.103  rsync不需要安装,默认就自带. 关于rsync的命令想法,可以参考其他笔记.  note: 以下教程都是讲述客户端从远程服务器同步数据到本地.类似于下载行为. 如果需要将本地的文件同步到远程服">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/rsync.png">
+<meta property="og:updated_time" content="2018-06-24T05:00:30.369Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rsync实战演练">
+<meta name="twitter:description" content="rsync实战演练rsync是一个远程数据同步工具,可以快速同步多台主机的文件,且只同步有差异的部分.非常强大的工具  实战环境:服务端:192.168.10.89客户端:192.168.10.103  rsync不需要安装,默认就自带. 关于rsync的命令想法,可以参考其他笔记.  note: 以下教程都是讲述客户端从远程服务器同步数据到本地.类似于下载行为. 如果需要将本地的文件同步到远程服">
+<meta name="twitter:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/rsync.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/24/rsync实战演练/"/>
+
+
+
+
+
+  <title>rsync实战演练 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/rsync实战演练/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">rsync实战演练</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T12:59:58+08:00">
+                2018-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Service/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Service</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/24/rsync实战演练/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/rsync实战演练/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="rsync实战演练"><a href="#rsync实战演练" class="headerlink" title="rsync实战演练"></a>rsync实战演练</h2><p>rsync是一个远程数据同步工具,可以快速同步多台主机的文件,且只同步有差异的部分.非常强大的工具 </p>
+<h4 id="实战环境"><a href="#实战环境" class="headerlink" title="实战环境:"></a>实战环境:</h4><p>服务端:192.168.10.89<br>客户端:192.168.10.103 </p>
+<p>rsync不需要安装,默认就自带.</p>
+<p>关于rsync的命令想法,可以参考其他笔记.</p>
+<blockquote>
+<p>note: 以下教程都是讲述客户端从远程服务器同步数据到本地.类似于下载行为. 如果需要将本地的文件同步到远程服务器.有点类似于上传行为.则需要改变命令.   </p>
+</blockquote>
+<a id="more"></a>
+<p>下列命令表示了上传和下载的使用区别.</p>
+<blockquote>
+<p>note:在使用rsyn同步前必须要千万小心.因为如果命令搞反.可能会出现意外的严重后果.例如将对方的文件同步到本地数据目录</p>
+</blockquote>
+<p>1.下列的命令将对方(192.168.10.89)的/var/www/abc目录同步到本地的/root/rsync目录下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz --progress -e ssh root@192.168.10.89:/var/www/abc /root/rsync</span><br></pre></td></tr></table></figure>
+<p>2.下列命令表示将本地的/tmp/backups目录同步到对方(192.168.10.89)的/var/www/abc目录下 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz --progress /tmp/backups -e ssh root@192.168.10.89:/var/www/abc</span><br></pre></td></tr></table></figure>
+<p>3.另外.如果远程服务器的ssh不是默认22端口.则需要改成: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz --progress /root/rsync -e &quot;ssh -p 端口 &quot; root@192.168.10.89:/var/www/abc</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="Rync的使用方法介绍"><a href="#Rync的使用方法介绍" class="headerlink" title="Rync的使用方法介绍:"></a>Rync的使用方法介绍:</h4><p> <strong>一.以服务端的方式启动rsync进程</strong> </p>
+<p>1.编辑/etc/rsyncd.conf配置文件——-这个文件默认没有,需要自己写入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/rsyncd.conf</span><br><span class="line">#全局参数.所有模块生效配置#</span><br><span class="line">uid = nobody</span><br><span class="line">gid = nobody</span><br><span class="line">use chroot = no</span><br><span class="line">max connections = 4</span><br><span class="line">pid file = /var/run/rsyncd.pid</span><br><span class="line">lock file = /var/run/rsyncd.pid</span><br><span class="line">log file = /var/log/rsyncd.log</span><br><span class="line">#模块参数.一个模块代表一个路径#</span><br><span class="line">[www]</span><br><span class="line">path = /var/www/abc/   #路径目录,注意必须是一个/结尾的目录</span><br><span class="line">ignore errors          #忽略错误信息</span><br><span class="line">read only = yes       #服务端只读,客户端只能和服务端同步,不能上传文件</span><br><span class="line">list = no          #是否允许客户端列出服务端此路径下的文件</span><br><span class="line">hosts allow = 192.168.10.0/24  #允许哪个网络上的客户端同步</span><br><span class="line">auth users = backup    #认证用户名</span><br><span class="line">secrets file = /etc/rsync_server.pas #指定一个密码文件路径.此文件内容为username:password. 而且此文件必须和启动rsync的用户是同一个用户.且权限为600</span><br></pre></td></tr></table></figure>
+<p>2.编辑密码文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/rsync_server.pas</span><br><span class="line">backup:jesse</span><br><span class="line">[root@localhost ~]# ll /etc/rsync_server.pas</span><br><span class="line">-rw------- 1 root root 13 Dec 27 16:46 /etc/rsync_server.pas</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Note:此文件必须为600权限.且和rsync进程的用户相同.比如如果是root启动的rsync服务.则此文件属主也必须是root  </p>
+</blockquote>
+<p>3.启动rsync服务,以daemon方式启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync --daemon</span><br></pre></td></tr></table></figure>
+<p> rsync –daemon默认监控在873端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">默认监控在873端口:</span><br><span class="line">[root@localhost ~]# netstat -tulnp | grep rsync</span><br><span class="line">tcp        0      0 0.0.0.0:873                 0.0.0.0:*                   LISTEN      2034/rsync</span><br><span class="line">tcp        0      0 :::873                      :::*                        LISTEN      2034/rsync</span><br></pre></td></tr></table></figure>
+<p>4.在/var/www/abc目录下写入一个测试文件夹</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat /var/www/abc/rsync.test</span><br><span class="line">haha</span><br><span class="line">this is for test rsync</span><br><span class="line">the nginx02 is rsync server.the nginx 01 (ip:192.168.10.103) is a client</span><br><span class="line">I am going to see whether this file will be sync to the client or not!</span><br></pre></td></tr></table></figure>
+<p>5.客户端同步文件 先定义密码.改成600权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/rsync_server.pas</span><br><span class="line">jesse</span><br><span class="line">[root@localhost ~]# ll /etc/rsync_server.pas</span><br><span class="line">-rw------- 1 root root 6 Dec 27 16:47 /etc/rsync_server.pas</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Note:我在这里踩到一个大坑.客户端的密码文件只需要包含密码.不能像服务端一样指定username:password.不然会提示验证失败 </p>
+</blockquote>
+<p>6.执行rsync命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/rsync -avz  --progress backup@192.168.10.89::www /var/www/abc/ --password-file=/etc/rsync_server.pas</span><br><span class="line"></span><br><span class="line">-a ----保持文件权限</span><br><span class="line">-v ----详细显示</span><br><span class="line">-z -----启用压缩</span><br><span class="line">--progress --显示备份过程</span><br><span class="line">backup@ ----表示用backup用户认证</span><br><span class="line">::www  --------注意这里有2个冒号.表示同步服务器上的www模块</span><br><span class="line">/var/www/abc ---表示同步到本地这个目录下</span><br><span class="line">--password-file ---表示用这个文件内的密码去认证</span><br></pre></td></tr></table></figure>
+<p>可是遇到和上面一样的坑:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# /usr/bin/rsync -avz  --progress backup@192.168.10.89::www /var/www/abc/ --password-file=/etc/rsync_server.pas</span><br><span class="line">@ERROR: auth failed on module www</span><br></pre></td></tr></table></figure>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/rsync.png">
+<p>这个坑,至少坑了我5个小时.反复的确认selinux是否关闭,配置文件是否错误,密码文件和密码文件权限等最后才发现,原来配置文件的配置语句不能用注释  </p>
+<p>注释内容只能单独一行存在.修改配置文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/rsyncd.conf</span><br><span class="line">#全局参数.所有模块生效配置#</span><br><span class="line">uid = nobody</span><br><span class="line">gid = nobody</span><br><span class="line">use chroot = no</span><br><span class="line">max connections = 4</span><br><span class="line">pid file = /var/run/rsyncd.pid</span><br><span class="line">lock file = /var/run/rsyncd.pid</span><br><span class="line">log file = /var/log/rsyncd.log</span><br><span class="line">#模块参数.一个模块代表一个路径#</span><br><span class="line">[www]</span><br><span class="line">path = /var/www/abc/</span><br><span class="line">ignore errors</span><br><span class="line">read only = yes</span><br><span class="line">list = no</span><br><span class="line">hosts allow = 192.168.10.0/24</span><br><span class="line">auth users = backup</span><br><span class="line">secrets file = /etc/rsync.secrets</span><br></pre></td></tr></table></figure>
+<p>客户端重新执行命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# /usr/bin/rsync -avz  --progress backup@192.168.10.89::www /var/www/abc/ --password-file=/etc/rsync_server.pas</span><br><span class="line">receiving incremental file list</span><br><span class="line">./</span><br><span class="line">index.html</span><br><span class="line">          91 100%   88.87kB/s    0:00:00 (xfer#1, to-check=2/4)</span><br><span class="line">rsync.test</span><br><span class="line">         173 100%  168.95kB/s    0:00:00 (xfer#2, to-check=1/4)</span><br><span class="line">test.jpg</span><br><span class="line">      185883 100%   25.32MB/s    0:00:00 (xfer#3, to-check=0/4)</span><br><span class="line">sent 115 bytes  received 186303 bytes  372836.00 bytes/sec</span><br><span class="line">total size is 186147  speedup is 1.00</span><br><span class="line">[root@localhost ~]#</span><br><span class="line">可以看到同步了rsync.test文件过来了.另外其他2个文件也一并同步过来</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="演示-服务端文件名不修改-往文件内新增文件-观察rsync是否能实行增量同步"><a href="#演示-服务端文件名不修改-往文件内新增文件-观察rsync是否能实行增量同步" class="headerlink" title="演示: 服务端文件名不修改.往文件内新增文件.观察rsync是否能实行增量同步"></a>演示: 服务端文件名不修改.往文件内新增文件.观察rsync是否能实行增量同步</h4><p> 1.在rsync服务端内的/var/www/abc/index.html文件新增一行内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@rabbitmqnode0 abc]# vim index.html</span><br><span class="line">hello.This is nginx server for www.abc.com</span><br><span class="line">hello world!</span><br><span class="line">add a new line to test rsync   #新增一行</span><br></pre></td></tr></table></figure>
+<p> 2.客户端在原有同步后的基础上再次执行命令:可以看见.只同步了Index.html文件.其他文件并没有复制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@rabbitmqnode1 ~]# /usr/bin/rsync -avz  --progress backup@172.16.1.130::www /var/www/abc/ --password-file=/etc/rsync_server.pas</span><br><span class="line">receiving incremental file list</span><br><span class="line">./</span><br><span class="line">index.html</span><br><span class="line">          85 100%   83.01kB/s    0:00:00 (xfer#1, to-check=1/3)</span><br><span class="line">sent 83 bytes  received 251 bytes  668.00 bytes/sec</span><br><span class="line">total size is 106558  speedup is 319.04</span><br></pre></td></tr></table></figure>
+<p>查看文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@rabbitmqnode1 ~]# cat /var/www/abc/index.html</span><br><span class="line">hello.This is nginx server for www.abc.com</span><br><span class="line">hello world!</span><br><span class="line">add a new line to test rsync</span><br><span class="line"></span><br><span class="line">可见.即便文件名一致.只要文件内容有变化,仍然会同步到客户端.</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="二-以ssh方式同步文件"><a href="#二-以ssh方式同步文件" class="headerlink" title="二.以ssh方式同步文件"></a>二.以ssh方式同步文件</h4><p> 1.关掉服务端的rsync进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep rsync</span><br><span class="line">root       2014      1  0 21:28 ?        00:00:00 rsync --daemon</span><br><span class="line">root       6334   2588  0 22:37 pts/1    00:00:00 grep rsync</span><br><span class="line">[root@localhost ~]# kill -9 2014</span><br><span class="line">[root@localhost ~]# rm -rf /var/run/rsyncd.pid</span><br></pre></td></tr></table></figure>
+<p>2.客户端直接执行命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# rsync -avz --progress -e ssh root@192.168.10.89:/var/www/abc /root</span><br><span class="line">root@192.168.10.89&apos;s password:</span><br><span class="line">receiving incremental file list</span><br><span class="line">abc/</span><br><span class="line">abc/index.html</span><br><span class="line">          91 100%   88.87kB/s    0:00:00 (xfer#1, to-check=2/4)</span><br><span class="line">abc/rsync.test</span><br><span class="line">         173 100%  168.95kB/s    0:00:00 (xfer#2, to-check=1/4)</span><br><span class="line">abc/test.jpg</span><br><span class="line">      185883 100%   25.32MB/s    0:00:00 (xfer#3, to-check=0/4)</span><br><span class="line">sent 72 bytes  received 186254 bytes  53236.00 bytes/sec</span><br><span class="line">total size is 186147  speedup is 1.00</span><br><span class="line">[root@localhost ~]#</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>-e 表示 使用ssh协议root@ 表示服务器的本地用户(注意,这里是服务器本地真实用户)..这里的用法和普通的scp命令一致 </p>
+</blockquote>
+<p>可以看到文件已经同步过来了.且权限保持一致</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ll /root/abc</span><br><span class="line">total 192</span><br><span class="line">-rw-r--r-- 1 root root     91 Dec 26 19:21 index.html</span><br><span class="line">-rw-r--r-- 1 root root    173 Dec 27 15:07 rsync.test</span><br><span class="line">-rw-r--r-- 1 root root 185883 Dec 26 19:21 test.jpg</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意:ssh模式不能像rsync daemon模式那样指定一个密码文件.如果想不输入密码.只能复制本机的公钥到rsync服务端相关用户下.</p>
+</blockquote>
+<blockquote>
+<p>Note:</p>
+<p>1.一般在生产中 在客户端同步的时候还需要加入个  –delete参数.表示如果本机相关目录下有某个文件.而这个文件在服务端上没有.那么就删除.这是为了保持和服务端完全同步 </p>
+<p>2.一般需要写一个crontab定时任务,每5分钟同步一次</p>
+<p><em>/5 </em> <em> </em> * /usr/bin/rsync -avz  –progress <a href="mailto:backup@192.168.10.89" target="_blank" rel="noopener">backup@192.168.10.89</a>::www /var/www/abc/ –password-file=/etc/rsync_server.pas &gt; /dev/null 2&gt;&amp;1   </p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/06/24/rsync实战演练/">rsync实战演练</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2018年06月24日 - 12:06</p>
+  <p><span>最后更新:</span>2018年06月24日 - 13:06</p>
+  <p><span>原始链接:</span><a href="/2018/06/24/rsync实战演练/" title="rsync实战演练">http://yoursite.com/2018/06/24/rsync实战演练/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/06/24/rsync实战演练/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux-rsync/" rel="tag"># Linux,rsync</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/24/inotify+rsync实战演练/" rel="next" title="inotify+rsync实战演练">
+                <i class="fa fa-chevron-left"></i> inotify+rsync实战演练
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/24/rabbitmq+haproxy-集群环境搭建/" rel="prev" title="rabbitmq+haproxy 集群环境搭建">
+                rabbitmq+haproxy 集群环境搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div>
+<div class="-mob-share-ui" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-qzone"><p>QQ空间</p></li>
+        <li class="-mob-share-qq"><p>QQ好友</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-youdao"><p>有道云笔记</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="https://f1.webshare.mob.com/code/mob-share.js?appkey=266b0526b70f4"></script>
+<!--MOB SHARE END-->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/06/24/rsync实战演练/"
+           data-title="rsync实战演练" data-url="http://yoursite.com/2018/06/24/rsync实战演练/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">保持饥渴,保持愚蠢.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/anselphilnos" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:mailhuangyong@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/jessehuang408" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/jessehuang408" target="_blank" title="FaceBook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FaceBook</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rsync实战演练"><span class="nav-number">1.</span> <span class="nav-text">rsync实战演练</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实战环境"><span class="nav-number">1.0.1.</span> <span class="nav-text">实战环境:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rync的使用方法介绍"><span class="nav-number">1.0.2.</span> <span class="nav-text">Rync的使用方法介绍:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#演示-服务端文件名不修改-往文件内新增文件-观察rsync是否能实行增量同步"><span class="nav-number">1.0.3.</span> <span class="nav-text">演示: 服务端文件名不修改.往文件内新增文件.观察rsync是否能实行增量同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-以ssh方式同步文件"><span class="nav-number">1.0.4.</span> <span class="nav-text">二.以ssh方式同步文件</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+        $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'https:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux,MQ," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="rabbitmq+haproxy 集群环境搭建实验环境:4台centos6服务器: 172.16.1.130  rabbitmqnode0 主rabbitmq服务器 172.16.1.131  rabbitmqnode1  节点2 172.16.1.132  rabbitmqnode2  节点3 172.16.1.140 haproxy  负载代理服务器">
+<meta name="keywords" content="Linux,MQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rabbitmq+haproxy 集群环境搭建">
+<meta property="og:url" content="http://yoursite.com/2018/06/24/rabbitmq+haproxy-集群环境搭建/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="rabbitmq+haproxy 集群环境搭建实验环境:4台centos6服务器: 172.16.1.130  rabbitmqnode0 主rabbitmq服务器 172.16.1.131  rabbitmqnode1  节点2 172.16.1.132  rabbitmqnode2  节点3 172.16.1.140 haproxy  负载代理服务器">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="h:/%E6%9C%89%E9%81%93%E4%BA%91%E7%AC%94%E8%AE%B0%E6%96%87%E4%BB%B6/mailhuangyong@163.com/459fe491005c438b954e4633a04ae74a/untitle.png">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq.png">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq1.png">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq2.png">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq3.png">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq4.png">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq5.png">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq6.png">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq7.png">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq8.png">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq9.png">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq10.png">
+<meta property="og:updated_time" content="2018-06-24T04:19:58.155Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rabbitmq+haproxy 集群环境搭建">
+<meta name="twitter:description" content="rabbitmq+haproxy 集群环境搭建实验环境:4台centos6服务器: 172.16.1.130  rabbitmqnode0 主rabbitmq服务器 172.16.1.131  rabbitmqnode1  节点2 172.16.1.132  rabbitmqnode2  节点3 172.16.1.140 haproxy  负载代理服务器">
+<meta name="twitter:image" content="h:/%E6%9C%89%E9%81%93%E4%BA%91%E7%AC%94%E8%AE%B0%E6%96%87%E4%BB%B6/mailhuangyong@163.com/459fe491005c438b954e4633a04ae74a/untitle.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/24/rabbitmq+haproxy-集群环境搭建/"/>
+
+
+
+
+
+  <title>rabbitmq+haproxy 集群环境搭建 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/rabbitmq+haproxy-集群环境搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">rabbitmq+haproxy 集群环境搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T12:59:58+08:00">
+                2018-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/24/rabbitmq+haproxy-集群环境搭建/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/rabbitmq+haproxy-集群环境搭建/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="rabbitmq-haproxy-集群环境搭建"><a href="#rabbitmq-haproxy-集群环境搭建" class="headerlink" title="rabbitmq+haproxy 集群环境搭建"></a>rabbitmq+haproxy 集群环境搭建</h2><h3 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境:"></a>实验环境:</h3><p>4台centos6服务器:</p>
+<p>172.16.1.130  rabbitmqnode0 主rabbitmq服务器</p>
+<p>172.16.1.131  rabbitmqnode1  节点2</p>
+<p>172.16.1.132  rabbitmqnode2  节点3</p>
+<p>172.16.1.140 haproxy  负载代理服务器</p>
+<a id="more"></a>
+<p>1,在三个rabbitmq节点上分别搭建rabbitmq.</p>
+<p>2.搭建haproxy服务…..方法略.yum源自带有haproxy工具</p>
+<p>yum install haproxy</p>
+<hr>
+<h4 id="一-rabbitmq安装"><a href="#一-rabbitmq安装" class="headerlink" title="一.rabbitmq安装."></a>一.rabbitmq安装.</h4><p>这里只讲解一台服务器的安装.</p>
+<p>1.先安装erlang环境</p>
+<p>rabbitmq是基于erlang语言开发的.所以需要安装erlang语言包.官网提供了三种安装Erlang的方法:<a href="http://www.rabbitmq.com/install-rpm.html" target="_blank" rel="noopener">install Erlang</a></p>
+<p>1.rabbitmq提供了精简版的erlang包.只安装运行rabbitmq的组件.</p>
+<p>2.erlang的源码包</p>
+<p>3.EPEL源</p>
+<p>这里使用了epel源安装erlang:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm</span><br><span class="line">yum install erlang</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>对于centos7的yum源地址为: <a href="https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm" target="_blank" rel="noopener">https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm</a></p>
+</blockquote>
+<p>2.官网下载rabbitmq-server的RPM包</p>
+<p><a href="http://www.rabbitmq.com/install-rpm.html" target="_blank" rel="noopener">http://www.rabbitmq.com/install-rpm.html</a> </p>
+<p>3.rabbitmq-server需要socat工具,安装socat </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget --no-cache http://www.convirture.com/repos/definitions/rhel/6.x/convirt.repo -O /etc/yum.repos.d/convirt.repo</span><br><span class="line">yum makecache</span><br><span class="line">yum install socat</span><br></pre></td></tr></table></figure>
+<p>4.安装rabbitmq-server </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh rabbitmq-server-3.4.1-1.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>5.设置rabbitmq开机启动 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig rabbitmq-server on</span><br></pre></td></tr></table></figure>
+<p>6.配置配置文件 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/share/doc/rabbitmq-server-3.4.1/rabbitmq.config.example /etc/rabbitmq/  </span><br><span class="line">cd /etc/rabbitmq</span><br><span class="line">mv rabbitmq.config.example rabbitmq.config</span><br></pre></td></tr></table></figure>
+<p>6.开启用户远程访问 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/rabbitmq/rabbitmq.config </span><br><span class="line">取消注释&#123;loopback_users,[]&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>note:注意要去掉后面的逗号。 </p>
+</blockquote>
+<p>7.开启web界面管理工具 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins enable rabbitmq_management</span><br></pre></td></tr></table></figure>
+<p>8.启动rabbitmq-server </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service rabbitmq-server restart</span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>我在启动的时候遇见两个坑</strong> </p>
+<p><strong>1.ERROR: epmd error for host 172: badarg (unknown POSIX error)</strong> </p>
+<p>解决方案: </p>
+<p>vim /etc/rabbitmq/rabbitmq-env.conf  (这个文件是没有的,需要手动创建)</p>
+<p>在文件里面添加这一行：NODENAME=rabbit@localhost，保存</p>
+<p><strong>2.cookie文件权限不对</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chown rabbitmq.rabbitmq /var/lib/rabbitmq/.erlang.cookie</span><br><span class="line">chmod 600 /var/lib/rabbitmq/.erlang.cookie</span><br></pre></td></tr></table></figure>
+<p>9.开放端口 : 15672/5672 </p>
+<p>至此.Rabbitmq安装完毕</p>
+<hr>
+<h3 id="二-集群搭建"><a href="#二-集群搭建" class="headerlink" title="二.集群搭建"></a>二.集群搭建</h3><p>1.在三台rabbitmq服务器上分别指定对方的Hostname和ip地址关系</p>
+<p><img src="H:/%E6%9C%89%E9%81%93%E4%BA%91%E7%AC%94%E8%AE%B0%E6%96%87%E4%BB%B6/mailhuangyong@163.com/459fe491005c438b954e4633a04ae74a/untitle.png" alt="img"></p>
+<blockquote>
+<p>注意 这里要指定的是本机和其他节点的hostname主机名.</p>
+</blockquote>
+<blockquote>
+<p>我在生产上搭建集群的时候,我指定的格式是:rabbit@hostname.所以在这里踩过很深很深的坑..请详细看另外一篇笔记: 生产环境搭建rabbitmq集群遇到的坑</p>
+</blockquote>
+<p>2.把主节点的Erlang cookie复制到其他两台节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@rabbitmqnode0 ~]# scp /var/lib/rabbitmq/.erlang.cookie  172.16.1.131:/var/lib/rabbitmq/</span><br><span class="line">[root@rabbitmqnode0 ~]# scp /var/lib/rabbitmq/.erlang.cookie  172.16.1.132:/var/lib/rabbitmq/</span><br></pre></td></tr></table></figure>
+<p>3.在其他2个节点上使用-detached运行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@rabbitmqnode1 rabbitmq]# rabbitmqctl stop</span><br><span class="line">[root@rabbitmqnode1 rabbitmq]# rabbitmq-server -detached</span><br></pre></td></tr></table></figure>
+<p>(节点2服务器过程略)</p>
+<p>4.查看各节点状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl status</span><br></pre></td></tr></table></figure>
+<p>5.在其他2个节点上创建并部署集群</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@rabbitmqnode1 rabbitmq]# rabbitmqctl stop_app</span><br><span class="line">[root@rabbitmqnode1 rabbitmq]# rabbitmqctl join_cluster rabbit@rabbitmqnode0  #加入到rabbitmqnode0集群</span><br><span class="line">[root@rabbitmqnode1 rabbitmq]# rabbitmqctl start_app</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p> 我在这里踩到过坑.加入集群报错.重新 rabbitmq-server -detached又正常了,很奇怪</p>
+</blockquote>
+<p>6.查看集群状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@rabbitmqCluster]#rabbitmqctl cluster_status</span><br></pre></td></tr></table></figure>
+<p>集群到此部署完毕.</p>
+<hr>
+<p>访问主节点页面可以看到rabbitmq集群状态,使用默认的用户密码:guest登录</p>
+<p><a href="http://172.16.1.130:15672/#/" target="_blank" rel="noopener">http://172.16.1.130:15672/#/</a></p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq.png">
+<hr>
+<h3 id="三-配置haproxy服务"><a href="#三-配置haproxy服务" class="headerlink" title="三.配置haproxy服务"></a>三.配置haproxy服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/haproxy/haproxy.cfg</span><br><span class="line">###########全局配置#########</span><br><span class="line">global</span><br><span class="line">    log /dev/log    local0</span><br><span class="line">    log /dev/log    local1 notice</span><br><span class="line">    chroot /var/lib/haproxy     # 改变当前工作目录</span><br><span class="line">    stats socket /run/haproxy/admin.sock mode 660 level admin   # 创建监控所用的套接字目录</span><br><span class="line">    pidfile  /var/run/haproxy.pid   # haproxy的pid存放路径,启动进程的用户必须有权限访问此文件</span><br><span class="line">    maxconn  4000                   # 最大连接数，默认4000</span><br><span class="line">    user   haproxy                  # 默认用户</span><br><span class="line">    group   haproxy                 # 默认用户组</span><br><span class="line">    daemon                          # 创建1个进程进入deamon模式运行。此参数要求将运行模式设置为&quot;daemon</span><br><span class="line">    # Default SSL material locations</span><br><span class="line">    ca-base /etc/ssl/certs</span><br><span class="line">    crt-base /etc/ssl/private</span><br><span class="line">    # Default ciphers to use on SSL-enabled listening sockets.</span><br><span class="line">    # For more information, see ciphers(1SSL). This list is from:</span><br><span class="line">    #  https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/</span><br><span class="line">    ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS</span><br><span class="line">    ssl-default-bind-options no-sslv3</span><br><span class="line">###########默认配置#########</span><br><span class="line">defaults</span><br><span class="line">    log global</span><br><span class="line">    mode    http                                # 默认的模式mode &#123; tcp|http|health &#125;，tcp是4层，http是7层，health只会返回OK</span><br><span class="line">    option  httplog                             # 采用http日志格式</span><br><span class="line">    option  dontlognull                         # 启用该项，日志中将不会记录空连接。所谓空连接就是在上游的负载均衡器</span><br><span class="line">                                                # 或者监控系统为了探测该 服务是否存活可用时，需要定期的连接或者获取某</span><br><span class="line">                                                # 一固定的组件或页面，或者探测扫描端口是否在监听或开放等动作被称为空连接；</span><br><span class="line">                                                # 官方文档中标注，如果该服务上游没有其他的负载均衡器的话，建议不要使用</span><br><span class="line">                                                # 该参数，因为互联网上的恶意扫描或其他动作就不会被记录下来</span><br><span class="line">    timeout connect 5000                    # 连接超时时间</span><br><span class="line">    timeout client  50000                   # 客户端连接超时时间</span><br><span class="line">    timeout server  50000                   # 服务器端连接超时时间</span><br><span class="line">    option  httpclose       # 每次请求完毕后主动关闭http通道</span><br><span class="line">    option  httplog         # 日志类别http日志格式</span><br><span class="line">    #option  forwardfor      # 如果后端服务器需要获得客户端真实ip需要配置的参数，可以从Http Header中获得客户端ip  </span><br><span class="line">    option  redispatch      # serverId对应的服务器挂掉后,强制定向到其他健康的服务器</span><br><span class="line">    timeout connect 10000   # default 10 second timeout if a backend is not found</span><br><span class="line">    maxconn     60000       # 最大连接数</span><br><span class="line">    retries     3           # 3次连接失败就认为服务不可用，也可以通过后面设置</span><br><span class="line">    errorfile 400 /etc/haproxy/errors/400.http</span><br><span class="line">    errorfile 403 /etc/haproxy/errors/403.http</span><br><span class="line">    errorfile 408 /etc/haproxy/errors/408.http</span><br><span class="line">    errorfile 500 /etc/haproxy/errors/500.http</span><br><span class="line">    errorfile 502 /etc/haproxy/errors/502.http</span><br><span class="line">    errorfile 503 /etc/haproxy/errors/503.http</span><br><span class="line">    errorfile 504 /etc/haproxy/errors/504.http</span><br><span class="line">####################################################################</span><br><span class="line">listen http_front</span><br><span class="line">        bind 0.0.0.0:1080           #监听端口  </span><br><span class="line">        stats refresh 30s           #统计页面自动刷新时间  </span><br><span class="line">        stats uri /haproxy?stats            #统计页面url  </span><br><span class="line">        stats realm Haproxy Manager #统计页面密码框上提示文本  </span><br><span class="line">        stats auth admin:admin      #统计页面用户名和密码设置  </span><br><span class="line">        #stats hide-version         #隐藏统计页面上HAProxy的版本信息</span><br><span class="line">#####################我把RabbitMQ的管理界面也放在HAProxy后面了###############################</span><br><span class="line">listen rabbitmq_admin</span><br><span class="line">    bind 0.0.0.0:8004</span><br><span class="line">    server node1 172.16.1.130:15672</span><br><span class="line">    server node2 172.16.1.131:15672</span><br><span class="line">    server node3 172.16.1.132:15672</span><br><span class="line">####################################################################</span><br><span class="line">listen rabbitmq_cluster</span><br><span class="line">    bind 0.0.0.0:5672</span><br><span class="line">    option tcplog</span><br><span class="line">    mode tcp</span><br><span class="line">    timeout client  3h</span><br><span class="line">    timeout server  3h</span><br><span class="line">    option          clitcpka</span><br><span class="line">    balance roundrobin      #负载均衡算法（#banlance roundrobin 轮询，balance source 保存session值，支持static-rr，leastconn，first，uri等参数）</span><br><span class="line">    #balance url_param userid</span><br><span class="line">    #balance url_param session_id check_post 64</span><br><span class="line">    #balance hdr(User-Agent)</span><br><span class="line">    #balance hdr(host)</span><br><span class="line">    #balance hdr(Host) use_domain_only</span><br><span class="line">    #balance rdp-cookie</span><br><span class="line">    #balance leastconn</span><br><span class="line">    #balance source //ip</span><br><span class="line">    server   node1 172.16.1.130:5672 check inter 5s rise 2 fall 3   #check inter 2000 是检测心跳频率，rise 2是2次正确认为服务器可用，fall 3是3次失败认为服务器不可用</span><br><span class="line">    server   node2 172.16.1.131:5672 check inter 5s rise 2 fall 3</span><br><span class="line">    server   node3 172.16.1.132:5672 check inter 5s rise 2 fall 3</span><br></pre></td></tr></table></figure>
+<p>启动haproxy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service haproxy start</span><br></pre></td></tr></table></figure>
+<p>浏览器输入:<a href="http://172.16.1.140:1080/haproxy?stats" target="_blank" rel="noopener">http://172.16.1.140:1080/haproxy?stats</a>  —用户名和密码admin:admin</p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq1.png">
+<p><a href="http://172.16.1.140:8004/" target="_blank" rel="noopener">http://172.16.1.140:8004</a>  —用户名密码:guest</p>
+<p>可以看到和rabbitmq主节点一样的页面</p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq2.png">
+<p><strong>至此haproxy+rabbitmq集群成功搭建完成</strong></p>
+<hr>
+<h3 id="四-代码测试"><a href="#四-代码测试" class="headerlink" title="四.代码测试:"></a>四.代码测试:</h3><p>在python上编写producer和consumer代码.连接到Haproxy.端口默认5672不用指定.</p>
+<p>发送5条测试消息.</p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq3.png">
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq4.png">
+<p><strong>可以看到成功接收到5条消息</strong></p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq5.png">
+<p> 队列名为hello</p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq6.png">
+<hr>
+<p><strong>模拟一个节点down掉:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@rabbitmqnode2 ~]# rabbitmqctl stop_app</span><br><span class="line">Stopping rabbit application on node rabbit@rabbitmqnode2 ...</span><br></pre></td></tr></table></figure>
+<p>haproxy和rabbitmq显示一个节点不可用:</p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq7.png">
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq8.png">
+<p>节点启动:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@rabbitmqnode2 ~]# rabbitmqctl start_app</span><br><span class="line">Starting node rabbit@rabbitmqnode2 ...</span><br><span class="line">completed with 3 plugins.</span><br></pre></td></tr></table></figure>
+<p>回归正常:</p>
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq9.png">
+<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq10.png">
+<hr>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/06/24/rabbitmq+haproxy-集群环境搭建/">rabbitmq+haproxy 集群环境搭建</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2018年06月24日 - 12:06</p>
+  <p><span>最后更新:</span>2018年06月24日 - 12:06</p>
+  <p><span>原始链接:</span><a href="/2018/06/24/rabbitmq+haproxy-集群环境搭建/" title="rabbitmq+haproxy 集群环境搭建">http://yoursite.com/2018/06/24/rabbitmq+haproxy-集群环境搭建/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/06/24/rabbitmq+haproxy-集群环境搭建/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux-MQ/" rel="tag"># Linux,MQ</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/24/rsync实战演练/" rel="next" title="rsync实战演练">
+                <i class="fa fa-chevron-left"></i> rsync实战演练
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/24/git常用命令/" rel="prev" title="git常用命令">
+                git常用命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div>
+<div class="-mob-share-ui" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-qzone"><p>QQ空间</p></li>
+        <li class="-mob-share-qq"><p>QQ好友</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-youdao"><p>有道云笔记</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="https://f1.webshare.mob.com/code/mob-share.js?appkey=266b0526b70f4"></script>
+<!--MOB SHARE END-->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/06/24/rabbitmq+haproxy-集群环境搭建/"
+           data-title="rabbitmq+haproxy 集群环境搭建" data-url="http://yoursite.com/2018/06/24/rabbitmq+haproxy-集群环境搭建/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">保持饥渴,保持愚蠢.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/anselphilnos" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:mailhuangyong@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/jessehuang408" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/jessehuang408" target="_blank" title="FaceBook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FaceBook</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rabbitmq-haproxy-集群环境搭建"><span class="nav-number">1.</span> <span class="nav-text">rabbitmq+haproxy 集群环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实验环境"><span class="nav-number">1.1.</span> <span class="nav-text">实验环境:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-rabbitmq安装"><span class="nav-number">1.1.1.</span> <span class="nav-text">一.rabbitmq安装.</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-集群搭建"><span class="nav-number">1.2.</span> <span class="nav-text">二.集群搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-配置haproxy服务"><span class="nav-number">1.3.</span> <span class="nav-text">三.配置haproxy服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-代码测试"><span class="nav-number">1.4.</span> <span class="nav-text">四.代码测试:</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+        $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+</body>
+</html>
