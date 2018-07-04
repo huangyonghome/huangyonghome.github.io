@@ -388,319 +388,11 @@
 
       
         
-          
-            <h2 id="pt-heartbeat-zabbix监控mysql主从延时"><a href="#pt-heartbeat-zabbix监控mysql主从延时" class="headerlink" title="pt-heartbeat+zabbix监控mysql主从延时"></a>pt-heartbeat+zabbix监控mysql主从延时</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>传统上,大家查看和监控mysql的主从延时都是通过执行show slave status命令来观察Slave_IO_Running和Slave_SQL_Running这两个线程的运行情况.以及Seconds_Behind_Master参数值来判断从库同步是否有延时.<br>但是.这些参数其实上并不准确.</p>
+          <h2 id="pt-heartbeat-zabbix监控mysql主从延时"><a href="#pt-heartbeat-zabbix监控mysql主从延时" class="headerlink" title="pt-heartbeat+zabbix监控mysql主从延时"></a>pt-heartbeat+zabbix监控mysql主从延时</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>传统上,大家查看和监控mysql的主从延时都是通过执行show slave status命令来观察Slave_IO_Running和Slave_SQL_Running这两个线程的运行情况.以及Seconds_Behind_Master参数值来判断从库同步是否有延时.<br>但是.这些参数其实上并不准确.</p>
 <p>笔者在实际工作就遇到这个问题.这个故障也很好复现.当master主库的mysql服务重启后(从库不做任何操作),这个时候从库的所有参数都是正常的.Seconds_Behind_Master参数的值也是0.但是实际上从库没有同步任何数据直到手动执行start slave命令</p>
-<p>幸好,percona提供了一整套的维护mysql的工具箱.percona toolkit.其中就有一款pt-heartbeat工具用来监控主从复制的延时情况.</p>
-<p>除此之外,toolkit还包含各种方便我们维护mysql的工具.关于percona的toolkit工具大家可以访问官网详细了解:<a href="https://www.percona.com/doc/percona-toolkit/LATEST/index.html" target="_blank" rel="noopener">percona toolkit</a></p>
-<hr>
-<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>此章主要介绍pt-heartbeat工具.包含以下几个方面:</p>
-<ul>
-<li>pt-heartbeat介绍</li>
-<li>pt-heartbeat安装</li>
-<li>pt-heartbeat前提条件</li>
-<li>pt-heartbeat使用</li>
-<li>大并发写入的情况下,延时监控</li>
-<li>生产上使用pt-heartbeat优化</li>
-<li>zabbix+pt-heartbeat监控主从同步延时</li>
-</ul>
-<hr>
-<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>pt-heartbeat在主库上创建一个heartbeat表,然后定期(默认1s)持续更新时间戳,<br>然后在从库上读取被更新的时间戳后与本地系统时间对比来得出其延迟。</p>
-<p>所以使用heartbeat要满足2个前提:<br>1.主从库都需要安装pt-heartbeat工具<br>2.主从库的时间要保持一致.否则会出现偏差</p>
-<p>关于官网的介绍可以参考:<a href="https://www.percona.com/doc/percona-toolkit/LATEST/pt-heartbeat.html" target="_blank" rel="noopener">pt-heartbeat</a></p>
-<hr>
-<h3 id="测试环境"><a href="#测试环境" class="headerlink" title="测试环境:"></a>测试环境:</h3><p>master库: centos7 IP地址:10.0.4.230</p>
-<p>slave库: centos7 IP地址:10.0.4.231</p>
-<hr>
-<h3 id="pt-heartbeat安装"><a href="#pt-heartbeat安装" class="headerlink" title="pt-heartbeat安装"></a>pt-heartbeat安装</h3><p>以下主要介绍redhat/centos的yum方式</p>
-<p>1.添加percona的Yum源</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install http://www.percona.com/downloads/percona-release/redhat/0.1-6/percona-release-0.1-6.noarch.rpm</span><br></pre></td></tr></table></figure>
-<p>2.yum安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install percona-toolkit</span><br></pre></td></tr></table></figure>
-<p>安装完成后可以看到该工具箱包含很多管理工具:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 ~]# ll /usr/bin/pt*</span><br><span class="line">-rwxr-xr-x. 1 root root   41754 May 22 01:56 /usr/bin/pt-align</span><br><span class="line">-rwxr-xr-x. 1 root root  269347 May 22 01:56 /usr/bin/pt-archiver</span><br><span class="line">-rwxr-xr-x. 1 root root    3891 Nov  6  2016 /usr/bin/ptaskset</span><br><span class="line">-rwxr-xr-x. 1 root root  170420 May 22 01:56 /usr/bin/pt-config-diff</span><br><span class="line">-rwxr-xr-x. 1 root root  167616 May 22 01:56 /usr/bin/pt-deadlock-logger</span><br><span class="line">-rwxr-xr-x. 1 root root  165964 May 22 01:56 /usr/bin/pt-diskstats</span><br><span class="line">-rwxr-xr-x. 1 root root  170737 May 22 01:56 /usr/bin/pt-duplicate-key-checker</span><br><span class="line">-rwxr-xr-x. 1 root root   50164 May 22 01:56 /usr/bin/pt-fifo-split</span><br><span class="line">-rwxr-xr-x. 1 root root  151447 May 22 01:56 /usr/bin/pt-find</span><br><span class="line">-rwxr-xr-x. 1 root root   67311 May 22 01:56 /usr/bin/pt-fingerprint</span><br><span class="line">-rwxr-xr-x. 1 root root  134593 May 22 01:56 /usr/bin/pt-fk-error-logger</span><br><span class="line">-rwxr-xr-x. 1 root root  223097 May 22 01:56 /usr/bin/pt-heartbeat</span><br><span class="line">-rwxr-xr-x. 1 root root  227851 May 22 01:56 /usr/bin/pt-index-usage</span><br><span class="line">-rwxr-xr-x. 1 root root   32412 May 22 01:56 /usr/bin/pt-ioprofile</span><br><span class="line">-rwxr-xr-x. 1 root root  255247 May 22 01:56 /usr/bin/pt-kill</span><br><span class="line">-rwxr-xr-x. 1 root root   21920 May 22 01:56 /usr/bin/pt-mext</span><br><span class="line">-rwxr-xr-x. 1 root root 6691168 May 22 01:56 /usr/bin/pt-mongodb-query-digest</span><br><span class="line">-rwxr-xr-x. 1 root root 7168736 May 22 01:56 /usr/bin/pt-mongodb-summary</span><br><span class="line">-rwxr-xr-x. 1 root root  108030 May 22 01:56 /usr/bin/pt-mysql-summary</span><br><span class="line">-rwxr-xr-x. 1 root root  419918 May 22 01:56 /usr/bin/pt-online-schema-change</span><br><span class="line">-rwxr-xr-x. 1 root root   24661 May 22 01:56 /usr/bin/pt-pmp</span><br><span class="line">-rwxr-xr-x. 1 root root  526640 May 22 01:56 /usr/bin/pt-query-digest</span><br><span class="line">-rwxr-xr-x. 1 root root 4373504 May 22 01:56 /usr/bin/pt-secure-collect</span><br><span class="line">-rwxr-xr-x. 1 root root   78095 May 22 01:56 /usr/bin/pt-show-grants</span><br><span class="line">-rwxr-xr-x. 1 root root   37791 May 22 01:56 /usr/bin/pt-sift</span><br><span class="line">-rwxr-xr-x. 1 root root  146590 May 22 01:56 /usr/bin/pt-slave-delay</span><br><span class="line">-rwxr-xr-x. 1 root root  131383 May 22 01:56 /usr/bin/pt-slave-find</span><br><span class="line">-rwxr-xr-x. 1 root root  184554 May 22 01:56 /usr/bin/pt-slave-restart</span><br><span class="line">-rwxr-xr-x. 1 root root   74606 May 22 01:56 /usr/bin/pt-stalk</span><br><span class="line">-rwxr-xr-x. 1 root root   90823 May 22 01:56 /usr/bin/pt-summary</span><br><span class="line">-rwxr-xr-x. 1 root root  454981 May 22 01:56 /usr/bin/pt-table-checksum</span><br><span class="line">-rwxr-xr-x. 1 root root  404729 May 22 01:56 /usr/bin/pt-table-sync</span><br><span class="line">-rwxr-xr-x. 1 root root  247750 May 22 01:56 /usr/bin/pt-table-usage</span><br><span class="line">-rwxr-xr-x. 1 root root  332574 May 22 01:56 /usr/bin/pt-upgrade</span><br><span class="line">-rwxr-xr-x. 1 root root  178057 May 22 01:56 /usr/bin/pt-variable-advisor</span><br><span class="line">-rwxr-xr-x. 1 root root  102552 May 22 01:56 /usr/bin/pt-visual-explain</span><br><span class="line">-rwxr-xr-x. 1 root root   66648 Nov  6  2016 /usr/bin/ptx</span><br></pre></td></tr></table></figure>
-<hr>
-<h3 id="使用pt-heartbeat的前提条件"><a href="#使用pt-heartbeat的前提条件" class="headerlink" title="使用pt-heartbeat的前提条件"></a>使用pt-heartbeat的前提条件</h3><p><strong>1.保持时间始终同步</strong></p>
-<p>heartbeat的原理是通过接收master更新过来的时间戳,然后对比本地系统当前时间判断时间延时.这就意味着slave库和master库的时间要保持高度的一致,否则如果时间不一致,则pt-heartbeat采集到的延时数据没有任何用处,甚至会产生误导,导致意外后果.  </p>
-<p>可以通过ntpdate命令来同步网络时钟.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntpdate -u ntp.api.bz</span><br></pre></td></tr></table></figure>
-<p>为了时钟保持时间同步.在每台服务器上通过crontab定时任务,定期同步时间.例如每隔30分钟同步一次:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/crontab</span><br><span class="line"> */30 * *  *  *   root  /sbin/ntpdate -u ntp.api.bz</span><br></pre></td></tr></table></figure>
-<p>另外,为了防止服务器重启后时间不一致,还需要让此命令开机自动执行.例如在centos7系统下可以如下配置:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod +x /etc/rc.d/rc.local</span><br><span class="line">echo &quot;/sbin/ntpdate -u ntp.api.bz&quot; &gt;&gt;  /etc/rc.d/rc.local</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Note:理解和注意master,slave服务器的时间同步极其重要.否则会导致出现意外的误判,甚至导致严重故障</p>
-</blockquote>
-<p><strong>2.配置主从复制环境</strong></p>
-<p>pt-heartbeat工作基于主从复制,所以前提需要搭建好主从环境,并且确保他们能正常工作.master和slave数据已经同步一致.否则使用pt-heartbeat将毫无意义. </p>
-<p>关于主从复制环境配置在此不做任何介绍,有兴趣可以翻阅我的另外一篇笔记:mysql5.7使用GTID配置主从复制</p>
-<hr>
-<h3 id="pt-heartbeat使用"><a href="#pt-heartbeat使用" class="headerlink" title="pt-heartbeat使用"></a>pt-heartbeat使用</h3><p>以下摘取一些主要的选项:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Options:</span><br><span class="line"></span><br><span class="line">  --ask-pass                  在交互界面输入数据库密码</span><br><span class="line">  --charset=s             -A  默认字符集</span><br><span class="line">  --check                     检查从库的延时,只检查一次,检查完就退出</span><br><span class="line">  --create-table              如果heartbeat表不存在.则主库创建heartbeat表</span><br><span class="line">  --daemonize                 后台挂起运行</span><br><span class="line">  --database=s            -D  需要监控延时的数据库</span><br><span class="line">  --file=s                    如果使用monitor选项,则输出结果到一个文件中</span><br><span class="line">  --help                      查看帮助信息</span><br><span class="line">  --host=s                -h  连接数据库的IP地址</span><br><span class="line">  --interval=f                多久一次去更新主库的时间戳,以及从库多久一次去查看接收到的时间戳</span><br><span class="line">  --log=s                     当daemonize模式运行时.打印输出到一个日志文件</span><br><span class="line">  --master-server-id=s        从库指定master库的server-id</span><br><span class="line">  --monitor                   持续监控延时情况.这里和check选项的监控一次就退出相反</span><br><span class="line">  --password=s            -p  在命令行上明文指定密码</span><br><span class="line">  --port=i                -P  数据库端口,默认3306</span><br><span class="line">  --replace                   使用replace参数替换update参数</span><br><span class="line">  --skew=f                    多长时间的延时偏量(默认0.5秒).也就是超过0.5秒不认为有延时</span><br><span class="line">  --slave-password=s          连接slave库的密码</span><br><span class="line">  --slave-user=s              连接slave库的用户名</span><br><span class="line">  --socket=s              -S  连接数据库的socket</span><br><span class="line">  --stop                      停止运行该工具（--daemonize），在/tmp/目录下创建一个“pt-heartbeat-sentinel” 文件。后面想重新开启则需要把该临时文件删除，才能开启（--daemonize）。</span><br><span class="line">  --table=s                   创建一个表用来更新时间戳(默认是heartbeat)</span><br><span class="line">  --update                    更新master库的时间戳</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>note.如果安装后执行pt-heartbeat报如下错误:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">install_driver(mysql) failed: Attempt to reload DBD/mysql.pm aborted.</span><br><span class="line">Compilation failed in require at (eval 31) line 3, &lt;STDIN&gt; line 1. </span><br><span class="line">at /usr/bin/pt-heartbeat line 2888.</span><br></pre></td></tr></table></figure>
-<p>这可能是缺少了mysql的lib库.执行如下操作:</p>
-<pre><code>ln -s /usr/lib64/mysql/libmysqlclient.so.18 /lib64/
-</code></pre><hr>
-<p><strong>step1:</strong> 在Master主库上以守护进程方式运行heartbeat</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$pt-heartbeat --user=root --ask-pass --host=127.0.0.1  --create-table -D dwd  --update --replace --daemonize</span><br><span class="line">Enter password:</span><br><span class="line">[root@localhost ~]$</span><br></pre></td></tr></table></figure>
-<p>查看进程:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$ps aux | grep pt-heartbeat | grep -v grep</span><br><span class="line">root       8057  0.0  1.5 226420 16016 ?        Ss   12:31   0:00 perl /usr/bin/pt-heartbeat --user=root --ask-pass --host=127.0.0.1 --create-table -D dwd --update --replace --daemonize</span><br></pre></td></tr></table></figure>
-<p>查看被创建的heartbeat表:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; desc heartbeat;</span><br><span class="line">+-----------------------+---------------------+------+-----+---------+-------+</span><br><span class="line">| Field                 | Type                | Null | Key | Default | Extra |</span><br><span class="line">+-----------------------+---------------------+------+-----+---------+-------+</span><br><span class="line">| ts                    | varchar(26)         | NO   |     | NULL    |       |</span><br><span class="line">| server_id             | int(10) unsigned    | NO   | PRI | NULL    |       |</span><br><span class="line">| file                  | varchar(255)        | YES  |     | NULL    |       |</span><br><span class="line">| position              | bigint(20) unsigned | YES  |     | NULL    |       |</span><br><span class="line">| relay_master_log_file | varchar(255)        | YES  |     | NULL    |       |</span><br><span class="line">| exec_master_log_pos   | bigint(20) unsigned | YES  |     | NULL    |       |</span><br><span class="line">+-----------------------+---------------------+------+-----+---------+-------+</span><br><span class="line">6 rows in set (0.09 sec)</span><br></pre></td></tr></table></figure>
-<p>查看时间戳更新情况.可以看到每秒更新一次:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from heartbeat;</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">| ts                         | server_id | file             | position  | relay_master_log_file | exec_master_log_pos |</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">| 2018-06-22T12:32:56.004830 |       230 | mysql-bin.000007 | 305862718 | NULL                  | NULL                |</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">1 row in set (0.09 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from heartbeat;</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">| ts                         | server_id | file             | position  | relay_master_log_file | exec_master_log_pos |</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">| 2018-06-22T12:32:57.001820 |       230 | mysql-bin.000007 | 305863097 | NULL                  | NULL                |</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">1 row in set (0.09 sec)</span><br></pre></td></tr></table></figure>
-<p><strong>step2:</strong> 从库持续监控延时情况</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$pt-heartbeat --user=root --password=xxxx -D dwd --master-server-id=230 --monitor</span><br><span class="line">0.00s [  0.00s,  0.00s,  0.00s ]</span><br><span class="line">0.00s [  0.00s,  0.00s,  0.00s ]</span><br><span class="line">0.00s [  0.00s,  0.00s,  0.00s ]</span><br><span class="line">0.00s [  0.00s,  0.00s,  0.00s ]</span><br><span class="line">0.00s [  0.00s,  0.00s,  0.00s ]</span><br><span class="line">0.00s [  0.00s,  0.00s,  0.00s ]</span><br><span class="line">0.00s [  0.00s,  0.00s,  0.00s ]</span><br><span class="line">0.00s [  0.00s,  0.00s,  0.00s ]</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>monitor选项表示持续监控,并且打印结果. 如果加上–print-master-server-id还可以打印主库的server-id</p>
-<p>上述的四个值代表:实时延时[过去1分钟延时,5分钟延时,15分钟延时]</p>
-</blockquote>
-<p><strong>step3</strong> 利用check选项,监控一次就退出</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$pt-heartbeat --user=root --password=xxxx -D dwd --master-server-id=230 --check</span><br><span class="line">0.00</span><br><span class="line">[root@localhost ~]$</span><br></pre></td></tr></table></figure>
-<p>主要的使用方法就到这.</p>
-<hr>
-<h3 id="模拟大并发写入-pt-heartbeat监控延时情况"><a href="#模拟大并发写入-pt-heartbeat监控延时情况" class="headerlink" title="模拟大并发写入.pt-heartbeat监控延时情况"></a>模拟大并发写入.pt-heartbeat监控延时情况</h3><p><strong>step1</strong>.master库创建一个表</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE `t_user` (</span><br><span class="line">  `id` bigint(20) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `name` varchar(255) DEFAULT NULL,</span><br><span class="line">  `age` tinyint(4) DEFAULT NULL,</span><br><span class="line">  `create_time` datetime DEFAULT NULL,</span><br><span class="line">  `update_time` datetime DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br></pre></td></tr></table></figure>
-<p><strong>step2</strong>.执行一个存储过程,模拟写入百万条数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; delimiter $$</span><br><span class="line">DROP PROCEDURE IF EXISTS proc_batch_insert;</span><br><span class="line">CREATE PROCEDURE proc_batch_insert()</span><br><span class="line">BEGIN</span><br><span class="line">DECLARE pre_name BIGINT;</span><br><span class="line">DECLARE ageVal INT;</span><br><span class="line">DECLARE i INT;</span><br><span class="line">SET pre_name=187635267;</span><br><span class="line">SET ageVal=100;</span><br><span class="line">SET i=1;</span><br><span class="line">WHILE i &lt; 1000000 DO</span><br><span class="line">        INSERT INTO t_user(`name`,age,create_time,update_time) VALUES(CONCAT(pre_name,&apos;@qq.com&apos;),(ageVal+1)%30,NOW(),NOW());</span><br><span class="line">SET pre_name=pre_name+100;</span><br><span class="line">SET i=i+1;</span><br><span class="line">END WHILE;</span><br><span class="line">END $$</span><br><span class="line"> </span><br><span class="line">delimiter ;</span><br><span class="line">call proc_batch_insert();</span><br></pre></td></tr></table></figure>
-<p><strong>step3:</strong>延时明显升高</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">6.00s [  6.00s,  3.30s,  1.10s ]</span><br><span class="line">6.00s [  6.00s,  3.32s,  1.11s ]</span><br><span class="line">6.00s [  6.00s,  3.34s,  1.11s ]</span><br><span class="line">6.00s [  6.00s,  3.36s,  1.12s ]</span><br><span class="line">6.00s [  6.00s,  3.38s,  1.13s ]</span><br><span class="line">6.01s [  6.00s,  3.40s,  1.13s ]</span><br><span class="line">6.00s [  6.00s,  3.42s,  1.14s ]</span><br><span class="line">6.01s [  6.00s,  3.44s,  1.15s ]</span><br></pre></td></tr></table></figure>
-<hr>
-<h3 id="生产中使用pt-heartbeat的优化"><a href="#生产中使用pt-heartbeat的优化" class="headerlink" title="生产中使用pt-heartbeat的优化"></a>生产中使用pt-heartbeat的优化</h3><p>1.在从库新建一个专用于检查延时的mysql账户,且只赋予heartbeat表的select权限.例如下面创建一个heartbeat账户:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create user &apos;heartbeat&apos;@&apos;localhost&apos; identified by &apos;密码&apos;;</span><br><span class="line">Query OK, 0 rows affected (0.33 sec)</span><br><span class="line">mysql&gt; grant select on 数据库.heartbeat to &apos;heartbeat&apos;@&apos;localhost&apos;;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.13 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
-<p>2.默认情况下,master库每隔1秒更新时间戳.这可能会过于频繁.使用–interval参数可以设置master库的更新时间戳频率.例如,master每隔10s更新一次时间戳</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$/usr/bin/pt-heartbeat --user=root --ask-pass --host=127.0.0.1 --create-table -D dwd --interval=10 --update --replace --daemonize</span><br></pre></td></tr></table></figure>
-<p>检查heartbeat库,发现确实是10秒才更新一次:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from heartbeat;</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">| ts                         | server_id | file             | position  | relay_master_log_file | exec_master_log_pos |</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">| 2018-06-22T14:46:35.003090 |       230 | mysql-bin.000007 | 308874907 | NULL                  | NULL                |</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">1 row in set (0.09 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from heartbeat;</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">| ts                         | server_id | file             | position  | relay_master_log_file | exec_master_log_pos |</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">| 2018-06-22T14:46:45.001820 |       230 | mysql-bin.000007 | 308875286 | NULL                  | NULL                |</span><br><span class="line">+----------------------------+-----------+------------------+-----------+-----------------------+---------------------+</span><br><span class="line">1 row in set (0.08 sec)</span><br></pre></td></tr></table></figure>
-<p>查看slave服务器的延时.由于slave默认每秒检查所以延时会一直持续,直到第10秒时候接收到master更新.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">0.00s [  0.00s,  0.00s,  0.00s ]</span><br><span class="line">1.00s [  0.02s,  0.00s,  0.00s ]</span><br><span class="line">2.00s [  0.05s,  0.01s,  0.00s ]</span><br><span class="line">3.00s [  0.10s,  0.02s,  0.01s ]</span><br><span class="line">4.00s [  0.17s,  0.03s,  0.01s ]</span><br><span class="line">5.00s [  0.25s,  0.05s,  0.02s ]</span><br><span class="line">6.00s [  0.35s,  0.07s,  0.02s ]</span><br><span class="line">7.00s [  0.47s,  0.09s,  0.03s ]</span><br><span class="line">8.00s [  0.60s,  0.12s,  0.04s ]</span><br><span class="line">9.00s [  0.75s,  0.15s,  0.05s ]</span><br><span class="line">0.00s [  0.75s,  0.15s,  0.05s ]</span><br><span class="line">1.00s [  0.77s,  0.15s,  0.05s ]</span><br></pre></td></tr></table></figure>
-<hr>
-<h3 id="pt-heartbeat-zabbix-监控延时"><a href="#pt-heartbeat-zabbix-监控延时" class="headerlink" title="pt-heartbeat+zabbix 监控延时"></a>pt-heartbeat+zabbix 监控延时</h3><p>工作中可以通过shell脚本来持续监控heartbeat,判断主从是否有延时.方式主要有两种</p>
-<p>1.编写shell脚本获取heartbeat采集到的数据,并且通过crontab定期执行脚本.利用邮件方式报警延时情况</p>
-<p>2.通过zabbix监控shell脚本采集heartbeat数据.通过邮件,微信,钉钉等报警方式通告延时情况</p>
-<p>这里我们选择了zabbix,因为zabbix可以实时观察延时情况,而且可以分不通的报警等级.报警到工作的钉钉群</p>
-<blockquote>
-<p>note:</p>
-<p>1.以下的配置大部分都在slave服务器,且该服务器上安装了zabbix agent</p>
-<p>2.我们使用的是zabbix 3.4版本.可能并不是每个步骤都适用于其他版本</p>
-</blockquote>
-<p>接下来配置zabbix监控项</p>
-<p>1.编写一个shell脚本.采集heartbeat的延时数据.使用–check选项.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim mysql-heartbeat.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">#description: use percona pt-heartbeat to monitor the delay of MASTER-SLAVE replication</span><br><span class="line"></span><br><span class="line">delay=$(/usr/bin/pt-heartbeat --host=127.0.0.1 --user=heartbeat --password=密码 -D 数据库  --master-server-id=MASTER库的server-ID  --check)</span><br><span class="line">echo $&#123;delay%.*&#125;</span><br></pre></td></tr></table></figure>
-<p>2.将该脚本移动到/etc/zabbix/script目录下(这个目录需要手动创建),且赋予执行权限.出于安全考虑.设置为只有zabbix用户可以查看</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 script]# ll /etc/zabbix/script/</span><br><span class="line">-rwx--x--x. 1 zabbix zabbix 263 Jun 25 17:22 mysql-heartbeat.sh</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>当然,你也可以将该脚本放在任何您想存放的地方</p>
-</blockquote>
-<p>3.在/etc/zabbix/zabbix_agentd.d目录下编写UserParameter文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 script]# cd /etc/zabbix/zabbix_agentd.d/</span><br><span class="line"></span><br><span class="line">[root@server-6 zabbix_agentd.d]# vim  userparameter_heartbeat.conf</span><br><span class="line"></span><br><span class="line">UserParameter=heartbeat.delay,/etc/zabbix/script/mysql-heartbeat.sh</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>note: 这里的UserParameter为固定格式.</p>
-<p>heartbeat.delay表示zabbix的监控项</p>
-<p>后面的脚本表示监控项获取到的数据.也就是说zabbix检查heartbeat.delay监控项的数据,其实就是执行后面的shell脚本,并得到脚本的返回结果</p>
-</blockquote>
-<p>4.配置zabbix agentd配置文件.修改include字段,让zabbix agent读取UserParameter配置文件:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 zabbix_agentd.d]# vim /etc/zabbix/zabbix_agentd.conf</span><br><span class="line">Include=/etc/zabbix/zabbix_agentd.d/*.conf</span><br></pre></td></tr></table></figure>
-<p>5.重启zabbix_agentd服务</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pkill zabbix_agentd</span><br><span class="line">zabbix_agentd -c /etc/zabbix/zabbix_agentd.conf</span><br></pre></td></tr></table></figure>
-<p>6.在zabbix server服务器检查是否可以正常获取到监控项的数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@server-4 ~]# zabbix_get -s 10.0.0.216 -k heartbeat.delay</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>-s 参数表示zabbix agent的IP地址</p>
-<p>-k 参数表示监控项</p>
-<p>这里可以正常获取到监控项的数据,也就是shell脚本的执行结果</p>
-</blockquote>
-<hr>
-<p>既然zabbix server通过命令行可以获取到监控项的数据,接下来只要配置zabbix的web界面就可以了.</p>
-<p>1.在slave库配置监控项</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat.png" alt=""></p>
-<p>2.配置图形</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat1.png" alt=""></p>
-<p>3.配置触发器</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat2.png" alt=""></p>
-<blockquote>
-<p>note: 为了防止因为网络抖动造成的频繁的延时报警.这里表达式设置为连续3次采集的数据都大于10秒才报警.也可以换成另外一种表达式:</p>
-<p>{server-6:heartbeat.delay.last(0)}&gt;30</p>
-<p>这个表达式表示监控项的最新数据只要大于30秒就报警.大于30秒就意味着连续3次报警都延时.我认为这种效果更好</p>
-</blockquote>
-<p>另外.再设置一档报警.比如5分钟延时报警,此时报警等级为严重.</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat3.png" alt=""></p>
-<p>4.查看监控数据</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat4.png" alt=""></p>
-<p>5.测试触发器是否工作正常</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat5.png" alt=""></p>
-<hr>
-<p>至此.成功利用zabbix来监控mysql的主从复制同步情况.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">install_driver(mysql) failed: Attempt to reload DBD/mysql.pm aborted.</span><br><span class="line">Compilation failed in require at (eval 31) line 3, &lt;STDIN&gt; line 1.</span><br><span class="line"></span><br><span class="line"> at /usr/bin/pt-heartbeat line 2888.</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/lib64/mysql/libmysqlclient.so.18 /lib64/</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/Linux-Service/git常用命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/24/Linux-Service/git常用命令/" itemprop="url">git常用命令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T12:59:58+08:00">
-                2018-06-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Service/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Service</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/06/24/Linux-Service/git常用命令/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/Linux-Service/git常用命令/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="git常用命令"><a href="#git常用命令" class="headerlink" title="git常用命令"></a>git常用命令</h2><p>以下命令整理自廖雪峰的git笔记</p>
-<p><a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">git笔记</a></p>
-<hr>
-<h4 id="一-基础命令-查看命令"><a href="#一-基础命令-查看命令" class="headerlink" title="一.基础命令.查看命令"></a>一.基础命令.查看命令</h4><p>git init  ——-创建版本库</p>
-<p>git add file  ———添加git追踪文件</p>
-<p>git status    ———查看缓存区的文件</p>
-<p>git stash    ———–保存当前缓存区修改文件(方便临时切换到其他分支,后续再切换回来)</p>
-<p>git stash list  ———查看保存的缓存区文件</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/24/Linux-Service/git常用命令/#more" rel="contents">
+            <a class="btn" href="/2018/07/01/mysql/pt-heartbeat+zabbix监控mysql主从延时/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1027,6 +719,173 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/06/24/Linux-分布式&消息队列/rabbitmq+haproxy-集群环境搭建/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/Linux-Service/git常用命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/24/Linux-Service/git常用命令/" itemprop="url">git常用命令</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T12:59:58+08:00">
+                2018-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Service/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Service</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/24/Linux-Service/git常用命令/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/Linux-Service/git常用命令/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="git常用命令"><a href="#git常用命令" class="headerlink" title="git常用命令"></a>git常用命令</h2><p>以下命令整理自廖雪峰的git笔记</p>
+<p><a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">git笔记</a></p>
+<hr>
+<h4 id="一-基础命令-查看命令"><a href="#一-基础命令-查看命令" class="headerlink" title="一.基础命令.查看命令"></a>一.基础命令.查看命令</h4><p>git init  ——-创建版本库</p>
+<p>git add file  ———添加git追踪文件</p>
+<p>git status    ———查看缓存区的文件</p>
+<p>git stash    ———–保存当前缓存区修改文件(方便临时切换到其他分支,后续再切换回来)</p>
+<p>git stash list  ———查看保存的缓存区文件</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/24/Linux-Service/git常用命令/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1572,167 +1431,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/写作杂谈/高中/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/24/写作杂谈/高中/" itemprop="url">高中</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T10:59:58+08:00">
-                2018-06-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/写作杂谈/" itemprop="url" rel="index">
-                    <span itemprop="name">写作杂谈</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/06/24/写作杂谈/高中/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/写作杂谈/高中/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="高中"><a href="#高中" class="headerlink" title="高中"></a>高中</h2><p>&emsp;老K所读的高中在一个小镇上，有点远，离家有一个上午的路程。小镇并不大，只有这一所中学，学校也就套上了小镇的名字—–XX镇中学，但是学校却好像没有享受到半点独生子女般的待遇，地方偏僻的就像现在的寺庙—–专往人烟稀少的地方跑。</p>
-<p>&emsp;学校地方不大，构造也比较简单，两栋看起来非常不错的建筑，其中一栋建成了老师的房子，另外一栋就是教学楼。然而令人费解的是，教学楼整栋建筑5层高却只有一楼是教室，其他楼层不知道用处，学生也很少上去。另外两栋2层的建筑，怀疑和该小镇同寿，破烂不堪，坐在里面时刻有担心房顶塌下来的危险，却都被用来当作教室使用，不知道是用来体现学校历史悠久还是掏政府口袋翻新学校的借口，但是可以肯定的是效果都不怎么理想。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/24/写作杂谈/高中/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/写作杂谈/肖申克的救赎-----观后感/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1894,7 +1592,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/写作杂谈/生命/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/写作杂谈/高中/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1913,7 +1611,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/24/写作杂谈/生命/" itemprop="url">生命</a></h1>
+                <a class="post-title-link" href="/2018/06/24/写作杂谈/高中/" itemprop="url">高中</a></h1>
         
 
         <div class="post-meta">
@@ -1966,8 +1664,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/24/写作杂谈/生命/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/写作杂谈/生命/" itemprop="commentCount"></span>
+                <a href="/2018/06/24/写作杂谈/高中/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/写作杂谈/高中/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1996,12 +1694,173 @@
 
       
         
-          <h2 id="生命"><a href="#生命" class="headerlink" title="生命"></a>生命</h2><p>今天在twitter看到一幅图，觉得很有意思。一时兴起，又忍不住上来啰嗦几句了</p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/article/shengming.jpg">
-<h5 id="每篇文章都应有一个主题，我叫它为：生命。"><a href="#每篇文章都应有一个主题，我叫它为：生命。" class="headerlink" title="每篇文章都应有一个主题，我叫它为：生命。"></a>每篇文章都应有一个主题，我叫它为：生命。</h5><hr>
+          <h2 id="高中"><a href="#高中" class="headerlink" title="高中"></a>高中</h2><p>&emsp;老K所读的高中在一个小镇上，有点远，离家有一个上午的路程。小镇并不大，只有这一所中学，学校也就套上了小镇的名字—–XX镇中学，但是学校却好像没有享受到半点独生子女般的待遇，地方偏僻的就像现在的寺庙—–专往人烟稀少的地方跑。</p>
+<p>&emsp;学校地方不大，构造也比较简单，两栋看起来非常不错的建筑，其中一栋建成了老师的房子，另外一栋就是教学楼。然而令人费解的是，教学楼整栋建筑5层高却只有一楼是教室，其他楼层不知道用处，学生也很少上去。另外两栋2层的建筑，怀疑和该小镇同寿，破烂不堪，坐在里面时刻有担心房顶塌下来的危险，却都被用来当作教室使用，不知道是用来体现学校历史悠久还是掏政府口袋翻新学校的借口，但是可以肯定的是效果都不怎么理想。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/24/写作杂谈/生命/#more" rel="contents">
+            <a class="btn" href="/2018/06/24/写作杂谈/高中/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/写作杂谈/凯文.我是传奇/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/24/写作杂谈/凯文.我是传奇/" itemprop="url">凯文.我是传奇</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T10:59:58+08:00">
+                2018-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/写作杂谈/" itemprop="url" rel="index">
+                    <span itemprop="name">写作杂谈</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/24/写作杂谈/凯文.我是传奇/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/写作杂谈/凯文.我是传奇/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="凯文-我是传奇"><a href="#凯文-我是传奇" class="headerlink" title="凯文.我是传奇"></a>凯文.我是传奇</h2><p>&emsp;凯文，你真的只有23岁吗？？北京时间2012年6月7日，雷霆以4比2淘汰马刺，赢得了西部决赛的冠军，在颁奖典礼上主持人打趣的问道。凯文-杜兰特还是一如既往的谦逊，就像中国人的获奖感言一样，嘴里不断碎碎念的用“感谢”造排比句。</p>
+<p>&emsp;在2011-2012这个缩水赛季，万恶资本主义的球员打工仔为了美元和老板上演了几个月的肥皂剧，眼看新赛季拖到世界末日都不能开打。诸如威尔森-钱德勒，JR-史密斯等这样的当红球员敏锐地看到资本主义在金融危机的摧残下已然日落西山。于是当机立断，弃暗投明，跑到CBA混饭吃，用实际行动与NBA划清界限。这是社会主义优越性在篮球领域的充分体现。</p>
+<p>&emsp;也正是这个缩水赛季，雷霆和他们的年轻球员在蛰伏，等待着新的机会；今天，这帮年轻人终于叩响了总冠军的大门，距离眼前闪耀的奥布莱恩杯只有一步之遥。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/24/写作杂谈/凯文.我是传奇/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

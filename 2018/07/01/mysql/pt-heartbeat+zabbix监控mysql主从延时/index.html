@@ -106,7 +106,7 @@
 <meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat3.png">
 <meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat4.png">
 <meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat5.png">
-<meta property="og:updated_time" content="2018-07-04T12:06:26.427Z">
+<meta property="og:updated_time" content="2018-07-04T12:08:01.026Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pt-heartbeat+zabbix监控mysql主从延时">
 <meta name="twitter:description" content="pt-heartbeat+zabbix监控mysql主从延时前言传统上,大家查看和监控mysql的主从延时都是通过执行show slave status命令来观察Slave_IO_Running和Slave_SQL_Running这两个线程的运行情况.以及Seconds_Behind_Master参数值来判断从库同步是否有延时.但是.这些参数其实上并不准确. 笔者在实际工作就遇到这个问题.这个故障">
@@ -395,6 +395,7 @@
       
         <h2 id="pt-heartbeat-zabbix监控mysql主从延时"><a href="#pt-heartbeat-zabbix监控mysql主从延时" class="headerlink" title="pt-heartbeat+zabbix监控mysql主从延时"></a>pt-heartbeat+zabbix监控mysql主从延时</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>传统上,大家查看和监控mysql的主从延时都是通过执行show slave status命令来观察Slave_IO_Running和Slave_SQL_Running这两个线程的运行情况.以及Seconds_Behind_Master参数值来判断从库同步是否有延时.<br>但是.这些参数其实上并不准确.</p>
 <p>笔者在实际工作就遇到这个问题.这个故障也很好复现.当master主库的mysql服务重启后(从库不做任何操作),这个时候从库的所有参数都是正常的.Seconds_Behind_Master参数的值也是0.但是实际上从库没有同步任何数据直到手动执行start slave命令</p>
+<a id="more"></a>
 <p>幸好,percona提供了一整套的维护mysql的工具箱.percona toolkit.其中就有一款pt-heartbeat工具用来监控主从复制的延时情况.</p>
 <p>除此之外,toolkit还包含各种方便我们维护mysql的工具.关于percona的toolkit工具大家可以访问官网详细了解:<a href="https://www.percona.com/doc/percona-toolkit/LATEST/index.html" target="_blank" rel="noopener">percona toolkit</a></p>
 <hr>
@@ -634,8 +635,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/24/Linux-Service/git常用命令/" rel="next" title="git常用命令">
-                <i class="fa fa-chevron-left"></i> git常用命令
+              <a href="/2018/06/24/Linux-Service/inotify+rsync实战演练/" rel="next" title="inotify+rsync实战演练">
+                <i class="fa fa-chevron-left"></i> inotify+rsync实战演练
               </a>
             
           </div>
