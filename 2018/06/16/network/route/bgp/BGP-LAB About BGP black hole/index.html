@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'https:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="network,Cisco,route," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="LAB About BGP black holeLAB Topology">
+<meta name="keywords" content="network,Cisco,route">
+<meta property="og:type" content="article">
+<meta property="og:title" content="03-BGP Lab BGP black hole">
+<meta property="og:url" content="http://yoursite.com/2018/06/16/network/route/bgp/BGP-LAB About BGP black hole/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="LAB About BGP black holeLAB Topology">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp3-1.png">
+<meta property="og:updated_time" content="2018-06-16T14:33:30.873Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="03-BGP Lab BGP black hole">
+<meta name="twitter:description" content="LAB About BGP black holeLAB Topology">
+<meta name="twitter:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp3-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/16/network/route/bgp/BGP-LAB About BGP black hole/"/>
+
+
+
+
+
+  <title>03-BGP Lab BGP black hole | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/16/network/route/bgp/BGP-LAB About BGP black hole/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">03-BGP Lab BGP black hole</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-16T08:59:58+08:00">
+                2018-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Network/" itemprop="url" rel="index">
+                    <span itemprop="name">Network</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Network/Route/" itemprop="url" rel="index">
+                    <span itemprop="name">Route</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Network/Route/BGP/" itemprop="url" rel="index">
+                    <span itemprop="name">BGP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/16/network/route/bgp/BGP-LAB About BGP black hole/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/16/network/route/bgp/BGP-LAB About BGP black hole/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="LAB-About-BGP-black-hole"><a href="#LAB-About-BGP-black-hole" class="headerlink" title="LAB About BGP black hole"></a>LAB About BGP black hole</h2><h3 id="LAB-Topology"><a href="#LAB-Topology" class="headerlink" title="LAB Topology"></a>LAB Topology</h3> <img src="http://pabkmteb4.bkt.clouddn.com/static/images/network/bgp3-1.png">
+<hr>
+<a id="more"></a>
+<h3 id="Configure"><a href="#Configure" class="headerlink" title="Configure"></a>Configure</h3><h5 id="1-configure-Ip-address-on-all-Routers-Test-the-connectivity-with-each-neighbors"><a href="#1-configure-Ip-address-on-all-Routers-Test-the-connectivity-with-each-neighbors" class="headerlink" title="1. configure Ip address on all Routers. Test the connectivity with each neighbors"></a>1. configure Ip address on all Routers. Test the connectivity with each neighbors</h5><h5 id="2-Configure-IGP-internal-AS123-here-we-choose-EIGRP"><a href="#2-Configure-IGP-internal-AS123-here-we-choose-EIGRP" class="headerlink" title="2.Configure IGP internal AS123 , here we choose EIGRP."></a>2.Configure IGP internal AS123 , here we choose EIGRP.</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">R1 : router eigrp 100</span><br><span class="line"> no auto-summary</span><br><span class="line"> network 12.1.1.0 0.0.0.255</span><br><span class="line"> network 13.1.1.0 0.0.0.255</span><br></pre></td></tr></table></figure>
+<h5 id="3-configure-IBGP"><a href="#3-configure-IBGP" class="headerlink" title="3.configure IBGP"></a>3.configure IBGP</h5><ul>
+<li>on R2 </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">configure bgp and specify R3 as neighbor </span><br><span class="line"></span><br><span class="line">R2(config)#router bgp 123                #enable BGP process and specify itself AS number</span><br><span class="line">R2(config-router)#bgp router-id 2.2.2.2  #specify itself router ID</span><br><span class="line">R2(config-router)#neighbor 13.1.1.3 remote 123      #specify neighbor with neighbor&apos;s ID</span><br></pre></td></tr></table></figure>
+<ul>
+<li>on R3 </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">R3(config)#router bgp 123</span><br><span class="line">R3(config-router)#bgp router-id 3.3.3.3</span><br><span class="line">R3(config-router)#neighbor 12.1.1.2 remote 123 </span><br><span class="line"></span><br><span class="line">*Apr  9 13:26:24.087: %BGP-5-ADJCHANGE: neighbor 12.1.1.2 Up   #prompts that BGP neighbor relationship has been set up</span><br></pre></td></tr></table></figure>
+<hr>
+<h5 id="4-Check-neighbor-table"><a href="#4-Check-neighbor-table" class="headerlink" title="4.Check neighbor table"></a>4.Check neighbor table</h5><p>R3#show ip bgp summary  #this command shows bgp information about neighbors </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BGP router identifier 3.3.3.3, local AS number 123      ----------- router itself ID , local AS</span><br><span class="line">BGP table version is 1, main routing table version 1     </span><br><span class="line"></span><br><span class="line">Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd</span><br><span class="line">12.1.1.2        4          123       5       5        1    0    0                       00:01:38                0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>12.1.1.2   #neighbor’s ip address</p>
+<p>4              #the version of neighbor’s BGP protocol </p>
+<p>123        #neighbor’s AS number</p>
+<p>Msgcvd /MsgSent     #receive or send messages between itself and neighbor</p>
+<p>UP/DOWN                 #the time of the relationship</p>
+<p>“State”                       #the status of neighbor relationship . “Blank” represents to be normal </p>
+<p>“Ffxrcd”                    #shows how many 前缀 (routes updates) do you receive from neighbor. in this case it is 0</p>
+</blockquote>
+<h5 id="5-configure-EBGP"><a href="#5-configure-EBGP" class="headerlink" title="5.configure EBGP"></a>5.configure EBGP</h5><ul>
+<li>On R2 </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">R2(config-router)#router bgp 123</span><br><span class="line">R2(config-router)#bgp route</span><br><span class="line">R2(config-router)#bgp router-id 2.2.2.2</span><br><span class="line">R2(config-router)#neighbor 24.1.1.4 remote 4</span><br></pre></td></tr></table></figure>
+<ul>
+<li>On R4</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">R2(config-router)#router bgp 4</span><br><span class="line">R2(config-router)#bgp route</span><br><span class="line">R2(config-router)#bgp router-id 4.4.4.4</span><br><span class="line">R2(config-router)#neighbor 24.1.1.4 remote 123</span><br></pre></td></tr></table></figure>
+<p>Check neighbor table:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">R2#show ip bgp summary</span><br><span class="line">BGP router identifier 2.2.2.2, local AS number 123</span><br><span class="line">BGP table version is 1, main routing table version 1</span><br><span class="line"></span><br><span class="line">Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd</span><br><span class="line">13.1.1.3        4          123      22      22        1    0           0 00:16:45        0</span><br><span class="line">24.1.1.4        4            4       4       4        1    0           0 00:00:43        0</span><br></pre></td></tr></table></figure>
+<ul>
+<li>On R3</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R3(config)#router bgp 123</span><br><span class="line">R3(config-router)#bgp router-id 3.3.3.3</span><br><span class="line">R3(config-router)#neighbor 35.1.1.5 remote 5</span><br></pre></td></tr></table></figure>
+<ul>
+<li>On R5</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R5(config)#router bgp 5</span><br><span class="line">R5(config-router)#bgp router-id 5.5.5.5</span><br><span class="line">R5(config-router)#neighbor 35.1.1.3 remote 123</span><br></pre></td></tr></table></figure>
+<p>Check neighbor table:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">R5#sho ip bgp summary</span><br><span class="line">BGP router identifier 5.5.5.5, local AS number 5</span><br><span class="line">BGP table version is 1, main routing table version 1</span><br><span class="line"></span><br><span class="line">Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd</span><br><span class="line">35.1.1.3        4          123       4       4        1    0    0        00:00:21        0</span><br></pre></td></tr></table></figure>
+<hr>
+<h5 id="6-Advertise-network"><a href="#6-Advertise-network" class="headerlink" title="6.Advertise network"></a>6.Advertise network</h5><p>1.R4 advertise its loop interface ip address:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R4(config)#router bgp 4</span><br><span class="line">R4(config-router)#network 172.16.1.0 mask 255.255.255.0</span><br></pre></td></tr></table></figure>
+<p>Check bgp route table : </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">R4#show ip bgp          #this command is to show the bgp route table ,not ip route table </span><br><span class="line"></span><br><span class="line">BGP table version is 2, local router ID is 4.4.4.4</span><br><span class="line"></span><br><span class="line">Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal,</span><br><span class="line"></span><br><span class="line">              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,</span><br><span class="line"></span><br><span class="line">              x best-external, a additional-path, c RIB-compressed,</span><br><span class="line"></span><br><span class="line">Origin codes: i - IGP, e - EGP, ? - incomplete</span><br><span class="line"></span><br><span class="line">RPKI validation codes: V valid, I invalid, N Not found</span><br><span class="line"></span><br><span class="line">     Network          Next Hop              Metric   LocPrf         Weight   Path</span><br><span class="line"></span><br><span class="line"> *&gt;  172.16.1.0/24    0.0.0.0                  0                           32768      i</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>*                    #valid route</p>
+<p>network        #advertise network infomation</p>
+<p>next hop       #the next equipment to reach the network 0.0.0.0 means itself</p>
+<p>Metric,Locprf ,weight,path     #some attributes of the route Path</p>
+</blockquote>
+<p>Check it on R2 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">R2#show ip bgp</span><br><span class="line">BGP table version is 2, local router ID is 2.2.2.2</span><br><span class="line">Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal,</span><br><span class="line">              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,</span><br><span class="line">              x best-external, a additional-path, c RIB-compressed,</span><br><span class="line">Origin codes: i - IGP, e - EGP, ? - incomplete</span><br><span class="line">RPKI validation codes: V valid, I invalid, N Not found</span><br><span class="line"></span><br><span class="line">     Network          Next Hop            Metric LocPrf Weight Path</span><br><span class="line"> *&gt;  172.16.1.0/24    24.1.1.4                 0             0 4 i</span><br></pre></td></tr></table></figure>
+<p>Check the route table on R2 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">      12.0.0.0/8 is variably subnetted, 2 subnets, 2 masks</span><br><span class="line">C        12.1.1.0/24 is directly connected, Serial2/1</span><br><span class="line">L        12.1.1.2/32 is directly connected, Serial2/1</span><br><span class="line">      13.0.0.0/24 is subnetted, 1 subnets</span><br><span class="line">D        13.1.1.0 [90/2681856] via 12.1.1.1, 00:48:40, Serial2/1</span><br><span class="line">      24.0.0.0/8 is variably subnetted, 2 subnets, 2 masks</span><br><span class="line">C        24.1.1.0/24 is directly connected, Serial4/2</span><br><span class="line">L        24.1.1.2/32 is directly connected, Serial4/2</span><br><span class="line">      172.16.0.0/24 is subnetted, 1 subnets</span><br><span class="line">B        172.16.1.0 [20/0] via 24.1.1.4, 00:11:51</span><br></pre></td></tr></table></figure>
+<p>We can see a route path to 172.16.1.0 ..it shows to be a BGP route with 20 administrate distance ,the next hop is R4  </p>
+<blockquote>
+<p>Notice : EBGP admin distance is 20</p>
+<p>​             IBGP admin distance is 200</p>
+</blockquote>
+<p>Check the bgp route table on R3 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">R3#show ip bgp</span><br><span class="line">BGP table version is 1, local router ID is 3.3.3.3</span><br><span class="line">Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal,</span><br><span class="line">              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,</span><br><span class="line">              x best-external, a additional-path, c RIB-compressed,</span><br><span class="line">Origin codes: i - IGP, e - EGP, ? - incomplete</span><br><span class="line">RPKI validation codes: V valid, I invalid, N Not found</span><br><span class="line"></span><br><span class="line">     Network          Next Hop            Metric LocPrf Weight Path</span><br><span class="line"> * i 172.16.1.0/24    24.1.1.4                 0    100      0 4 i</span><br></pre></td></tr></table></figure>
+<p>Check the ip route table on R3 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">      12.0.0.0/24 is subnetted, 1 subnets</span><br><span class="line">D        12.1.1.0 [90/2681856] via 13.1.1.1, 00:52:40, Serial1/3</span><br><span class="line">      13.0.0.0/8 is variably subnetted, 2 subnets, 2 masks</span><br><span class="line">C        13.1.1.0/24 is directly connected, Serial1/3</span><br><span class="line">L        13.1.1.3/32 is directly connected, Serial1/3</span><br><span class="line">      35.0.0.0/8 is variably subnetted, 2 subnets, 2 masks</span><br><span class="line">C        35.1.1.0/24 is directly connected, Serial5/3</span><br><span class="line">L        35.1.1.3/32 is directly connected, Serial5/3</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Warn : We couldn’t see BGP routes in route table  </p>
+</blockquote>
+<p>Compare with the BGP route table on R2 and R3 ,we find that:</p>
+<p>1.there is no “&gt;” behind “*“ on R3 BGP table ..  “&gt;” means the best route path to the destination </p>
+<p>2.the next hop in the BGP route table on R3 is 24.1.1.4 which the ip address of the interface on R4. But apparently , this is an unreachable address for R3 ,So this BGP route couldn’t appear in route table</p>
+<h6 id="So-we-get-the-conclusion"><a href="#So-we-get-the-conclusion" class="headerlink" title="So we get the conclusion :"></a>So we get the conclusion :</h6><p>while a route from the external AS passes through the internal AS ,the information of “next hop” never changes by default  </p>
+<h5 id="Then-we-need-to-change-this-situation"><a href="#Then-we-need-to-change-this-situation" class="headerlink" title="Then we need to change this situation"></a>Then we need to change this situation</h5><p>the best way is to let R3 know that the next hop is R2 ———in another word is when the marginal routers receive routes from other AS and pass it through the local AS, the marginal routers take themself as the next hop .Because they know how to get to the distant network  </p>
+<blockquote>
+<p>note : it is unnecessary to specify next hop self on none-marginal routers </p>
+</blockquote>
+<hr>
+<h4 id="7-implement-method"><a href="#7-implement-method" class="headerlink" title="7.implement method :"></a>7.implement method :</h4><p>specify itself as the next hop when configure neighbor relationship :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R2(config)#router bgp 123</span><br><span class="line">R2(config-router)#neighbor 13.1.1.3 next-hop-self</span><br></pre></td></tr></table></figure>
+<p>Check the bgp table on R3”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">BGP table version is 2, local router ID is 3.3.3.3</span><br><span class="line"></span><br><span class="line">Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal,</span><br><span class="line"></span><br><span class="line">              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,</span><br><span class="line"></span><br><span class="line">              x best-external, a additional-path, c RIB-compressed,</span><br><span class="line"></span><br><span class="line">Origin codes: i - IGP, e - EGP, ? - incomplete</span><br><span class="line"></span><br><span class="line">RPKI validation codes: V valid, I invalid, N Not found</span><br><span class="line"></span><br><span class="line">     Network          Next Hop            Metric LocPrf Weight Path</span><br><span class="line"></span><br><span class="line"> *&gt;i 172.16.1.0/24    12.1.1.2                 0    100      0 4 i</span><br></pre></td></tr></table></figure>
+<p>the next hop changed to R2 and “&gt;” shows it is the best route path </p>
+<p>check the route table :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">   12.0.0.0/24 is subnetted, 1 subnets</span><br><span class="line"></span><br><span class="line">D        12.1.1.0 [90/2681856] via 13.1.1.1, 01:11:46, Serial1/3</span><br><span class="line"></span><br><span class="line">      13.0.0.0/8 is variably subnetted, 2 subnets, 2 masks</span><br><span class="line"></span><br><span class="line">C        13.1.1.0/24 is directly connected, Serial1/3</span><br><span class="line"></span><br><span class="line">L        13.1.1.3/32 is directly connected, Serial1/3</span><br><span class="line"></span><br><span class="line">      35.0.0.0/8 is variably subnetted, 2 subnets, 2 masks</span><br><span class="line"></span><br><span class="line">C        35.1.1.0/24 is directly connected, Serial5/3</span><br><span class="line"></span><br><span class="line">L        35.1.1.3/32 is directly connected, Serial5/3</span><br><span class="line"></span><br><span class="line">      172.16.0.0/24 is subnetted, 1 subnets</span><br><span class="line"></span><br><span class="line">B        172.16.1.0 [200/0] via 12.1.1.2, 00:01:34</span><br></pre></td></tr></table></figure>
+<p>Now ,we can see the BGP route.  </p>
+<p>of course . we can see this routes update on R5 now  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">R5#show ip bgp</span><br><span class="line">BGP table version is 2, local router ID is 5.5.5.5</span><br><span class="line">Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal,</span><br><span class="line">              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,</span><br><span class="line">              x best-external, a additional-path, c RIB-compressed,</span><br><span class="line">Origin codes: i - IGP, e - EGP, ? - incomplete</span><br><span class="line">RPKI validation codes: V valid, I invalid, N Not found</span><br><span class="line"></span><br><span class="line">     Network          Next Hop            Metric LocPrf Weight Path</span><br><span class="line"> *&gt;  172.16.1.0/24    35.1.1.3                               0 123 4 i</span><br></pre></td></tr></table></figure>
+<p>It is obviously that when R5 advertise routes updates ,we can see the same situation on R2 and R4, So I am not gonna demonstrate it .  </p>
+<p> We need to specify the next hop on R3 when he configure the neighbor relationship with R2,so that the routes update from R5 could be extended to R4 </p>
+<h5 id="8-For-now-we-are-done-with-configuring-BGP-we-try-to-send-a-packet-from-R4-to-R5-through-three-AS"><a href="#8-For-now-we-are-done-with-configuring-BGP-we-try-to-send-a-packet-from-R4-to-R5-through-three-AS" class="headerlink" title="8. For now , we are done with configuring BGP .we try to send a packet from R4 to R5 ,through three AS"></a>8. For now , we are done with configuring BGP .we try to send a packet from R4 to R5 ,through three AS</h5><p>failed to ping R5 .check the ICMP debug information on R1 : </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">R4#ping 192.168.1.1 source 172.16.1.1</span><br><span class="line">Type escape sequence to abort.</span><br><span class="line">Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:</span><br><span class="line">Packet sent with a source address of 172.16.1.1</span><br><span class="line">.....</span><br><span class="line">Success rate is 0 percent (0/5)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">R1#debug ip icmp </span><br><span class="line">ICMP packet debugging is on</span><br><span class="line">R1#</span><br><span class="line">*Apr  9 17:37:58.362: ICMP: dst (192.168.1.1) host unreachable sent to 172.16.1.1</span><br><span class="line">R1#</span><br><span class="line">*Apr  9 17:38:00.358: ICMP: dst (192.168.1.1) host unreachable sent to 172.16.1.1</span><br></pre></td></tr></table></figure>
+<p>R1 has not the information of route about 192.168.1.0  </p>
+<p>now we run BGP protocol on R1:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">R3(config-router)#neighbor 13.1.1.1 remote 123</span><br><span class="line">R3(config-router)#neighbor 13.1.1.1 next-hop-self</span><br><span class="line"></span><br><span class="line">R2(config-router)#neighbor 12.1.1.1 remote 123</span><br><span class="line">R2(config-router)#neighbor 12.1.1.1 next-hop-se\</span><br><span class="line"></span><br><span class="line">R1:</span><br><span class="line">router bgp 123</span><br><span class="line"> bgp router-id 1.1.1.1</span><br><span class="line"> bgp log-neighbor-changes</span><br><span class="line"> neighbor 12.1.1.2 remote-as 123         -------------needn&apos;t take himself as the next hop</span><br><span class="line"> neighbor 13.1.1.3 remote-as 123</span><br></pre></td></tr></table></figure>
+<p>now ,we can see routes in routing table about R1 and R5  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Gateway of last resort is not set</span><br><span class="line"></span><br><span class="line">      12.0.0.0/8 is variably subnetted, 2 subnets, 2 masks</span><br><span class="line">C        12.1.1.0/24 is directly connected, Serial2/1</span><br><span class="line">L        12.1.1.1/32 is directly connected, Serial2/1</span><br><span class="line">      13.0.0.0/8 is variably subnetted, 2 subnets, 2 masks</span><br><span class="line">C        13.1.1.0/24 is directly connected, Serial1/3</span><br><span class="line">L        13.1.1.1/32 is directly connected, Serial1/3</span><br><span class="line">      172.16.0.0/24 is subnetted, 1 subnets</span><br><span class="line">B        172.16.1.0 [200/0] via 12.1.1.2, 00:02:26</span><br><span class="line">B     192.168.1.0/24 [200/0] via 13.1.1.3, 00:01:58</span><br></pre></td></tr></table></figure>
+<p>now R4 and R5 is pingable </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">R4#ping 192.168.1.1 source 172.16.1.1</span><br><span class="line"></span><br><span class="line">Type escape sequence to abort.</span><br><span class="line"></span><br><span class="line">Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:</span><br><span class="line"></span><br><span class="line">Packet sent with a source address of 172.16.1.1</span><br><span class="line"></span><br><span class="line">!!!!!</span><br><span class="line"></span><br><span class="line">Success rate is 100 percent (5/5), round-trip min/avg/max = 40/56/76 ms</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/06/16/network/route/bgp/BGP-LAB About BGP black hole/">03-BGP Lab BGP black hole</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2018年06月16日 - 08:06</p>
+  <p><span>最后更新:</span>2018年06月16日 - 22:06</p>
+  <p><span>原始链接:</span><a href="/2018/06/16/network/route/bgp/BGP-LAB About BGP black hole/" title="03-BGP Lab BGP black hole">http://yoursite.com/2018/06/16/network/route/bgp/BGP-LAB About BGP black hole/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/06/16/network/route/bgp/BGP-LAB About BGP black hole/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/network/" rel="tag"># network</a>
+          
+            <a href="/tags/Cisco/" rel="tag"># Cisco</a>
+          
+            <a href="/tags/route/" rel="tag"># route</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/16/network/route/bgp/BGP-Lab/" rel="next" title="02-BGP Lab">
+                <i class="fa fa-chevron-left"></i> 02-BGP Lab
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/22/mysql/mysql-DDL操作/" rel="prev" title="DDL操作命令">
+                DDL操作命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div>
+<div class="-mob-share-ui" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-qzone"><p>QQ空间</p></li>
+        <li class="-mob-share-qq"><p>QQ好友</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-youdao"><p>有道云笔记</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="https://f1.webshare.mob.com/code/mob-share.js?appkey=266b0526b70f4"></script>
+<!--MOB SHARE END-->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/06/16/network/route/bgp/BGP-LAB About BGP black hole/"
+           data-title="03-BGP Lab BGP black hole" data-url="http://yoursite.com/2018/06/16/network/route/bgp/BGP-LAB About BGP black hole/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">保持饥渴,保持愚蠢.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/anselphilnos" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:mailhuangyong@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/jessehuang408" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/jessehuang408" target="_blank" title="FaceBook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FaceBook</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LAB-About-BGP-black-hole"><span class="nav-number">1.</span> <span class="nav-text">LAB About BGP black hole</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LAB-Topology"><span class="nav-number">1.1.</span> <span class="nav-text">LAB Topology</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Configure"><span class="nav-number">1.2.</span> <span class="nav-text">Configure</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-configure-Ip-address-on-all-Routers-Test-the-connectivity-with-each-neighbors"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">1. configure Ip address on all Routers. Test the connectivity with each neighbors</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-Configure-IGP-internal-AS123-here-we-choose-EIGRP"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">2.Configure IGP internal AS123 , here we choose EIGRP.</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-configure-IBGP"><span class="nav-number">1.2.0.3.</span> <span class="nav-text">3.configure IBGP</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-Check-neighbor-table"><span class="nav-number">1.2.0.4.</span> <span class="nav-text">4.Check neighbor table</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-configure-EBGP"><span class="nav-number">1.2.0.5.</span> <span class="nav-text">5.configure EBGP</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-Advertise-network"><span class="nav-number">1.2.0.6.</span> <span class="nav-text">6.Advertise network</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#So-we-get-the-conclusion"><span class="nav-number">1.2.0.6.1.</span> <span class="nav-text">So we get the conclusion :</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Then-we-need-to-change-this-situation"><span class="nav-number">1.2.0.7.</span> <span class="nav-text">Then we need to change this situation</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-implement-method"><span class="nav-number">1.2.1.</span> <span class="nav-text">7.implement method :</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#8-For-now-we-are-done-with-configuring-BGP-we-try-to-send-a-packet-from-R4-to-R5-through-three-AS"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">8. For now , we are done with configuring BGP .we try to send a packet from R4 to R5 ,through three AS</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+        $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+</body>
+</html>
