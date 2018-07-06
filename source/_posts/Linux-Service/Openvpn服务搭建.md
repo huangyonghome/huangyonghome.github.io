@@ -11,11 +11,12 @@ copyright: true
 
 ## OpenVpn 搭建教程
 
-参考下面文档  
-http://www.startupcto.com/server-tech/centos/setting-up-openvpn-server-on-centos
---------
+参考下面文档  [centos7 搭建openvpn](http://www.startupcto.com/server-tech/centos/setting-up-openvpn-server-on-centos)
+
+
 
 #### 环境:
+
 KVM虚拟机  
 操作系统:centos7.4  
 openvpn版本:2.4  
@@ -362,7 +363,7 @@ vpn-client/vpnclient.tar
 ;duplicate-cn
 ```
 
-> Note: 开启了这个参数就表示每个客户端秘钥账户就只能同时一个人使用,如果多个人同时同一个账户会挤掉前面已经连接上的vpn的用户:
+> Note: 注释这个参数就表示每个客户端秘钥账户就只能同时一个人使用,如果多个人同时同一个账户会挤掉前面已经连接上的vpn的用户:
 
 下面是故障出现时,服务器Openvpn日志的报错:
 
