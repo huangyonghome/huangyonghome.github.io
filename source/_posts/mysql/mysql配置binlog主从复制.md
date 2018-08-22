@@ -1,8 +1,8 @@
 ---
 title: mysql 5.7配置binlog主从复制
 date: 2018-07-04 22:59:58
-tags:  mysql
-categories: [mysql,mysql-basic ]
+tags:  [mysql,mysql维护  ]
+categories: [mysql,mysql维护 ]
 comments: true
 copyright: true
 ---
@@ -21,17 +21,17 @@ copyright: true
 
 master数据库:
 
-​        hostname:tongji-db
-
-​        内网IP:xx.xx.xx.xx
+        hostname:tongji-db
+    
+        内网IP:xx.xx.xx.xx
 
 <!--more-->
 
  slave数据库:
 
-​        hostname:tongji-1
-
-​        内网IP:xx.xx.xx.xx
+        hostname:tongji-1
+    
+        内网IP:xx.xx.xx.xx
 
 两台数据库服务器的操作系统都是CentOS 7.4
 

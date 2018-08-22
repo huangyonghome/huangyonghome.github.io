@@ -1,8 +1,8 @@
 ---
 title: mysql5.7 GTID主从复制
 date: 2018-06-23 22:59:58
-tags:  mysql
-categories: [mysql,mysql-basic ]
+tags: [mysql,mysql维护 ]
+categories: [mysql,mysql维护 ]
 comments: true
 copyright: true
 ---

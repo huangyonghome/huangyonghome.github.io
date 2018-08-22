@@ -1,8 +1,8 @@
 ---
 title: pt-heartbeat+zabbix监控mysql主从延时
 date: 2018-07-01 22:59:58
-tags:  mysql
-categories: [mysql,mysql-basic ]
+tags:  [mysql,mysql维护 ]
+categories: [mysql,mysql维护 ]
 comments: true
 copyright: true
 ---
