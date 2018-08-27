@@ -1,6 +1,42 @@
+---
+title:  Ansible变量
+date: 2018-08-26 22:59:58
+tags:  Ansible
+categories: Ansible
+comments: true
+copyright: true
+---
+
 ## Ansible变量
 
 ansible有多重方式定义变量,还可以通过fact来获取变量.接下来学习一下ansibled 变量知识
+
+---
+<!--more-->
+
+### 在Inventory主机文件中定义变量
+
+可以对每台主机分配具体的变量,然后在playbook中调用.例如下面的主机Host和host2的变量定义:
+
+```
+[atlanta]
+host1 http_port=80 maxRequestsPerChild=808
+host2 http_port=303 maxRequestsPerChild=909
+```
+
+也可以定义属于整个组的变量,这些变量在组内的所有服务器节点上生效:
+
+```
+[atlanta]
+host1
+host2
+
+[atlanta:vars]
+ntp_server=ntp.atlanta.example.com
+proxy=proxy.atlanta.example.com
+```
+
+---
 
 
 
@@ -30,6 +66,18 @@ nginx.yml文件内容如下:
 ```
 
 ---
+
+### 引用变量
+
+ansible使用jinjia2模板系统在playbook中引用变量.引用方法为{{ varname }} .例如:
+
+```
+My amp goes to {{ max_amp_value }}
+```
+
+
+
+### 
 
 ### 查看变量的值
 
@@ -184,5 +232,138 @@ setup特殊模块可以显示fact信息:
 }
 ```
 
+---
 
+### 内置变量
+
+Ansible会自动提供一些变量,即使你没有去定义他们.这些变量是ansible预留的.所以用户不应该手动定义重名的变量.比如下面这些:
+
+* **hostvars**
+
+hostvars可以让你访问所有主机节点的fact信息.如果一台服务器想要访问另一个节点服务器的fact信息,这很有用.一般语法是:hostvars['inventory_hostname']\['fact信息']:例如下面的例子
+
+```
+[root@localhost playbook]$vim facttest.yml
+
+---
+ - hosts: all
+   remote_user: root
+   gather_facts: True
+   tasks:
+     - name: print the fact varibale:ansible_distrubution
+       debug: var=hostvars[inventory_hostname]['ansible_all_ipv4_addresses']
+
+```
+
+执行结果:
+
+```
+[root@localhost playbook]$ansible-playbook facttest.yml
+
+
+TASK [print the fact varibale:ansible_distrubution] **************************************************************************************************************************************************************
+ok: [10.0.4.231] => {
+    "hostvars[inventory_hostname]['ansible_all_ipv4_addresses']": [
+        "10.0.4.231"
+    ]
+}
+ok: [10.0.4.230] => {
+    "hostvars[inventory_hostname]['ansible_all_ipv4_addresses']": [
+        "10.0.4.230"
+    ]
+}
+
+```
+
+
+
+* **inventory_hostname**
+
+inventory_hostname是ansible识别的当前主机的主机名.如果是在hosts文件中定义过别名.比如:
+
+```
+beta ansible_ssh_host=10.0.0.250
+```
+
+那么inventory_hostname就是beta
+
+
+
+* **groups**
+
+当要访问一组主机的变量时,groups变量会很有用.比如一个模板文件需要知道一个test群组内所有服务器的IP地址.那么可以编辑这样一个模板配置文件
+
+```
+{% for host in group.test %}
+   server {{ host.inventory_hostname }} {{host.ansible_default_ipv4.address}}:80
+ {% endfor %}
+ 
+ 最终生成的配置文件如下:
+ server test1 10.0.4.230
+ server test2 10.0.4.231
+```
+
+----
+
+### 命令行输入变量
+
+通过向ansible-playbook传递-e var=value参数可以像shell脚本那样使用Playbook.并且该参数的变量拥有最高优先级.例如下面的例子:
+
+```
+[root@localhost playbook]$vim greet.yml
+
+---
+  - hosts: 10.0.4.230
+    vars:
+       greeting: "hello"
+    tasks:
+       - name: print greeting
+         debug: msg="{{ greeting }}"
+```
+
+
+
+通过-e指定greeting变量执行playbook:
+
+```
+[root@localhost playbook]$ansible-playbook greet.yml -e 'greeting="hello world"'
+
+TASK [print greeting] ******************************************************************************************************************************
+ok: [10.0.4.230] => {
+    "msg": "hello world"
+}
+
+```
+
+此时greeting的变量值变成了"hello world" .而不是playbook中定义的"hello"
+
+注意,如果变量包含空格,要把整个-e后面的参数用单引号括起来..否则就会得出意外的结果:
+
+```
+[root@localhost playbook]$ansible-playbook greet.yml -e greeting="hello world"
+
+
+TASK [print greeting] ******************************************************************************************************************************
+ok: [10.0.4.230] => {
+    "msg": "hello"
+}
+```
+
+另外,-e选项不仅仅可以传递单个字符串,还能传递进一个包含变量的文件.比如下面的例子中,将greetvars.yml这整个文件传递进playbook:
+
+```
+[root@localhost playbook]$ansible-playbook greet.yml -e @greetvars.yml
+```
+
+---
+
+### 变量优先级:
+
+1.命令行中使用-e参数手动指定
+
+2.inventory主机文件,或者yaml文件定义的主机变量或者群组变量
+
+3.FACT变量
+
+4.role的default/main.yml文件定义的变量
 
