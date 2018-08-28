@@ -1,7 +1,7 @@
 ---
 title: tomcat 翻译官方文档
 date: 2018-06-24 11:59:58
-tags:  tomcat,web 
+tags:  [tomcat,web ]
 categories: [Linux-Web]
 comments: true
 copyright: true
@@ -21,35 +21,35 @@ copyright: true
 
 - **Server** :
 
-​     <Server> is the root element of the entire configuration file
+     <Server> is the root element of the entire configuration file
 
-​            **Server**组件是整个配置文件的根元素.
+            **Server**组件是整个配置文件的根元素.
 
 - **Service**:
 
-​         <Service> represents a group of Connectors that is associated with an Engine.
+         <Service> represents a group of Connectors that is associated with an Engine.
 
-​           **Service**组件代表关联一个Engine的一组Connectors(调度器,接口)
+           **Service**组件代表关联一个Engine的一组Connectors(调度器,接口)
 
 - **Connectors** :
 
-​           **Connectors** - Represent the interface between external clients sending requests to (and receiving responses from) a particular Service.
+           **Connectors** - Represent the interface between external clients sending requests to (and receiving responses from) a particular Service.
 
-​           **Connectors**代表外部客户端发送请求至某个服务(或者从某个服务接收响应)的接口
+           **Connectors**代表外部客户端发送请求至某个服务(或者从某个服务接收响应)的接口
 
 - **Containers**:
 
-​           Containers - Represent components whose function is to process incoming requests, and create the corresponding responses. An Engine handles all requests for a Service, a Host handles all requests for a particular virtual host, and a Context handles all requests for a specific web application.
+           Containers - Represent components whose function is to process incoming requests, and create the corresponding responses. An Engine handles all requests for a Service, a Host handles all requests for a particular virtual host, and a Context handles all requests for a specific web application.
 
-​           **Containers**----代表处理入站请求,创建相关响应等这些功能的组件.一个Engine为Service处理所有请求,一个Host为某个虚拟主机处理所有请求,一个Context为某个WEB应用处理所有请求      
+           **Containers**----代表处理入站请求,创建相关响应等这些功能的组件.一个Engine为Service处理所有请求,一个Host为某个虚拟主机处理所有请求,一个Context为某个WEB应用处理所有请求      
 
  所以,一个Containers容器应该包含Engine,Host,Context组件.而这些组件都是用来处理和响应请求的.只是处理和响应的对象范围不同Nested Components:
 
 -  **Nested** **Components** :
 
-​           Nested Components --- Represent elements that can be nested inside the element for a Container. Some elements can be nested inside any Container, while others can only be nested inside a Context.
+           Nested Components --- Represent elements that can be nested inside the element for a Container. Some elements can be nested inside any Container, while others can only be nested inside a Context.
 
-​            **Nested** **Components**-代表一些可以nest(嵌套)进Containers下各组件的元素.有些元素可以嵌套进所有Container下的组件,而有些元素只能嵌套进Context组件.
+            **Nested** **Components**-代表一些可以nest(嵌套)进Containers下各组件的元素.有些元素可以嵌套进所有Container下的组件,而有些元素只能嵌套进Context组件.
 
 **Nested** **Components**组件包含有:Valve,Cluster,Realm,Manager,Resources,Loader,Listener,等.下面再详细解释
 

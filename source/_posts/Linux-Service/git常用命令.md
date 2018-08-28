@@ -1,7 +1,7 @@
 ---
 title:  git常用命令
 date: 2018-06-24 12:59:58
-tags:  Linux,git
+tags:  git
 categories: [Linux-Service ]
 comments: true
 copyright: true

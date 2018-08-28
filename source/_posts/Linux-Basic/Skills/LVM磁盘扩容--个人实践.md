@@ -1,7 +1,7 @@
 ---
 title:  Linux LVM磁盘扩容--个人实践
 date: 2018-06-23 22:59:58
-tags:  Linux,LVM
+tags:  LVM
 categories: [Linux-Basic,Skills ]
 comments: true
 copyright: true

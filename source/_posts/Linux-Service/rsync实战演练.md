@@ -1,7 +1,7 @@
 ---
 title:  rsync实战演练
 date: 2018-06-24 12:59:58
-tags:  Linux,rsync
+tags:  rsync
 categories: [Linux-Service ]
 comments: true
 copyright: true

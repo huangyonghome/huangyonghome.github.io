@@ -1,7 +1,7 @@
 ---
 title: supervisor介绍
 date: 2018-06-15 15:59:58
-tags:  Linux,supervisor
+tags:  supervisor
 categories: [Linux-Service ]
 comments: true
 copyright: true
