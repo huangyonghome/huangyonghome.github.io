@@ -94,3 +94,40 @@ tasks:
 
 register注册一个result的变量,该变量是ls /home/work这个task的执行结果..然后when条件判断当result执行成功,或者执行失败时,才执行相应的task任务
 
+---
+
+### when结合loop循环
+
+变量注册的结果可以是字符串,布尔值,也可以是列表.使用"loop"或者"with_items"关键字可以对变量进行循环.例如:
+
+```
+- name: registered variable usage as a loop list
+  hosts: all
+  tasks:
+
+    - name: retrieve the list of home directories
+      command: ls /home
+      register: home_dirs
+
+    - name: add home dirs to the backup spooler
+      file:
+        path: /tmp/{{ item }}
+        src: /home/{{ item }}
+        state: link
+      loop: "{{ home_dirs.stdout_lines }}"
+      # same as loop: "{{ home_dirs.stdout.split() }}"
+```
+
+执行结果:
+
+```
+[root@localhost ~]# ls /home
+jesse  tom  tony
+[root@localhost ~]# ls /tmp -l
+total 0
+lrwxrwxrwx 1 root root 11 Aug  3 10:57 jesse -> /home/jesse
+lrwxrwxrwx 1 root root  9 Aug  3 10:57 tom -> /home/tom
+lrwxrwxrwx 1 root root 10 Aug  3 10:57 tony -> /home/tony
+
+```
+
