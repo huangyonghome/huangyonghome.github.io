@@ -2,7 +2,7 @@
 
 #### 标准循环
 
-下面是一个简单的标准loop循环的例子:
+* 下面是一个简单的标准loop循环的例子:
 
 ```
 [root@localhost playbook]$vim loop-useradd.yaml
@@ -20,7 +20,7 @@
          - testuser2
 ```
 
-如果变量是一个Yaml列表,则可以循环这个列表:
+* 如果变量是一个Yaml列表,则可以循环这个列表:
 
 ```
 loop: "{{ somelist }}"
@@ -56,7 +56,30 @@ loop: "{{ somelist }}"
     groups: "wheel"
 ```
 
----
+
+
+* 也可以循环一个字典,例如:
+
+```
+- name: add several users
+  user:
+    name: "{{ item.name }}"
+    state: present
+    groups: "{{ item.groups }}"
+  loop:
+    - { name: 'testuser1', groups: 'wheel' }
+    - { name: 'testuser2', groups: 'root' }
+```
+
+
+
+
+
+
+
+
+
+
 
 #### loop与yum,apt
 
