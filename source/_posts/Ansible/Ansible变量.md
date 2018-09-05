@@ -36,9 +36,23 @@ ntp_server=ntp.atlanta.example.com
 proxy=proxy.atlanta.example.com
 ```
 
+ansible还会从/etc/ansible/host_vars目录下寻找主机名命名的变量文件.例如如果inventory下有个host1主机,则可以在/etc/ansible/host_vars目录下创建host1文件.并且定义如下内容:
+
+```
 ---
+foo: bar
+baz: qux
+```
+
+则以上2个变量则会应用到host1主机中.
 
 
+
+同理,可以在/etc/ansible/group_vars目录下创建主机组命名的变量文件,比如新建一个atlanta文件,且定义上面变量,则这2个变量会被应用到整个atlanta主机组
+
+
+
+---
 
 ## 在playbook中定义变量
 
@@ -50,6 +64,8 @@ vars:
   cert_files: /etc/nginx/ssl/nginx.crt
   conf_files: /etc/nginx/sites-avaliable/default
 ```
+
+> note: 在Inventory文件中定义变量是用var=value,而在Playbook以及下面讲到的yaml格式的变量文件中变量格式为var: value
 
 
 
