@@ -71,15 +71,7 @@ loop: "{{ somelist }}"
     - { name: 'testuser2', groups: 'root' }
 ```
 
-
-
-
-
-
-
-
-
-
+---
 
 #### loop与yum,apt
 
@@ -106,4 +98,25 @@ loop: "{{ somelist }}"
     state: present
   loop: "{{list_of_packages}}"
 ```
+
+---
+
+#### with_items迭代
+
+ansible默认使用item作为循环迭代变量名,with_items列出了一个items的列表.迭代的传递值给{{item}}变量.例如:
+
+```
+-name: install apt packages
+ apt: pkg={{item}} update_cache=yes cache_valid_time=3600
+ sudo: True
+ with_items:
+    - git
+    - libjpeg-dev
+    - libpq-dev
+    - memcached
+    - nginx
+    - postgresql
+```
+
+> 在apt,yum等模块中,使用with_items语句安装软件包效率更高,这是因为ansible会将整个软件包的列表一起传递给apt,yum模块,相当于只调用一次apt,yum命令
 
