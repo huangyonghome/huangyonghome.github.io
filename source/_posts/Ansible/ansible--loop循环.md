@@ -120,3 +120,22 @@ ansible默认使用item作为循环迭代变量名,with_items列出了一个item
 
 > 在apt,yum等模块中,使用with_items语句安装软件包效率更高,这是因为ansible会将整个软件包的列表一起传递给apt,yum模块,相当于只调用一次apt,yum命令
 
+----
+
+#### 嵌套循环
+
+如果一个模块要使用2个循环那该怎么办.在前一个循环的基础上,再进行一次循环时,就可以使用嵌套循环.
+
+例如:
+
+```
+     - name: create project dir
+       file: path=/data/apps/msf-{{ item[0] }}-api-{{ dwd_env }}/{{ item[1] }} recurse=yes owner=root group=root mode=0644 state=directory
+       with_nested:
+         - ['open','internal']
+         - ['releases','vendor','shared']
+```
+
+  item[0]表示循环'open','internal'.在每次循环item[0]时都循环一遍item[1],也就是'release,vendor,shared.
+   上面的循环语句其实类似于shell的命令:
+   mkdir -pv /data/apps/msf-{open,internal}-api/{releases,vendor,shared}

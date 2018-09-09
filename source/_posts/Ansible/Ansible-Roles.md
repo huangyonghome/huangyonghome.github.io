@@ -6,6 +6,10 @@ ansible的roles功能就是为了解决这个问题应运而生.roles字面意�
 
 但是需要注意的是,为了规范和维护期间.roles应该定义一个清晰,明确的目录结构以及文件名.不可随意更改.
 
+---
+
+#### roles目录结构
+
 常见的roles任务包含下列目录结构:
 
 ```
@@ -40,3 +44,55 @@ roles/
 * files: 文件
 * templates: 模板文件
 * meta: 元数据
+
+---
+
+#### main.yml文件
+
+main.yml文件是各目录代表的功能模块的入口,main.yml文件可以通过include或者import_task选项导入同目录下的其他yml文件(也就是其他playbook).例如下面的tasks/main.yml文件:
+
+```
+#下面是main.yml文件内容.main.yml文件作为tasks的入口,导入了同目录下的redhat和debian2个playbook
+# roles/example/tasks/main.yml
+- name: added in 2.4, previously you used 'include'
+  import_tasks: redhat.yml
+  when: ansible_os_platform|lower == 'redhat'
+- import_tasks: debian.yml
+  when: ansible_os_platform|lower == 'debian'
+
+
+#下面是tasks/redhat.yml文件,其实就是个独立的playbook
+# roles/example/tasks/redhat.yml
+- yum:
+    name: "httpd"
+    state: present
+
+#同理,下面是debian.yml文件
+# roles/example/tasks/debian.yml
+- apt:
+    name: "apache2"
+    state: present
+```
+
+### 运行roles
+
+运行roles非常简单,只需要在最外层的Playbook上使用roles关键字,指定运行哪些roles目录即可:
+
+```
+---
+- hosts: webservers
+  roles:
+     - common
+     - webservers
+```
+
+一旦运行这个playbook,那么针对上面这2个roles(common和webservers),都会自动执行下面文件:
+
+* roles/{common,webservers}/tasks/main.yml (如果该文件存在)
+* roles/{common,webservers}/vars/main.yml .(如果该文件存在)
+* roles/{common,webservers}/default/main.yml (如果该文件存在)
+* roles/{common,webservers}/handlers/main.yml  (如果该文件存在,且tasks目录下的playbook调用了handlers)
+* .......
+
+---
+
