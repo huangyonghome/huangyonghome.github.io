@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'https:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mysql,mysql维护," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="mysql主从同步延时问题最近领导将MASTER的主库清空了最近几个月的数据,进行了大并发的操作.这导致了mysql的从库延时非常高的问题.zabbix报警如下:  延时一直飙升到23个小时.">
+<meta name="keywords" content="mysql,mysql维护">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql5.7主从同步延时问题">
+<meta property="og:url" content="https://jesse.top/2018/08/22/mysql/mysql主从同步延时问题/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="mysql主从同步延时问题最近领导将MASTER的主库清空了最近几个月的数据,进行了大并发的操作.这导致了mysql的从库延时非常高的问题.zabbix报警如下:  延时一直飙升到23个小时.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-monitor.png">
+<meta property="og:updated_time" content="2018-08-25T00:07:22.528Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql5.7主从同步延时问题">
+<meta name="twitter:description" content="mysql主从同步延时问题最近领导将MASTER的主库清空了最近几个月的数据,进行了大并发的操作.这导致了mysql的从库延时非常高的问题.zabbix报警如下:  延时一直飙升到23个小时.">
+<meta name="twitter:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-monitor.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2018/08/22/mysql/mysql主从同步延时问题/"/>
+
+
+
+
+
+  <title>mysql5.7主从同步延时问题 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/22/mysql/mysql主从同步延时问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">mysql5.7主从同步延时问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-22T11:59:58+08:00">
+                2018-08-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/mysql维护/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql维护</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/22/mysql/mysql主从同步延时问题/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/22/mysql/mysql主从同步延时问题/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="mysql主从同步延时问题"><a href="#mysql主从同步延时问题" class="headerlink" title="mysql主从同步延时问题"></a>mysql主从同步延时问题</h2><p>最近领导将MASTER的主库清空了最近几个月的数据,进行了大并发的操作.这导致了mysql的从库延时非常高的问题.zabbix报警如下:</p>
+<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-monitor.png" alt="mysql-zabbix"></p>
+<p>延时一直飙升到23个小时.</p>
+<a id="more"></a> 
+<h4 id="解决过程"><a href="#解决过程" class="headerlink" title="解决过程"></a>解决过程</h4><p>1.查看master库的慢查询条数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&quot;root@localhost:mysql.sock  [(none)]&gt;show processlist;</span><br><span class="line">+-----------+--------+----------------------+---------------+-------------+--------+---------------------------------------------------------------+------------------+</span><br><span class="line">| Id        | User   | Host                 | db            | Command     | Time   | State                                                         | Info             |</span><br><span class="line">+-----------+--------+----------------------+---------------+-------------+--------+---------------------------------------------------------------+------------------+</span><br><span class="line">                                                         | NULL             |</span><br><span class="line">| 285241295 | repl   | 10.8.0.6:60866       | NULL          | Binlog Dump | 319038 | Master has sent all binlog to slave; waiting for more updates | NULL             |</span><br><span class="line">| 285243495 | canal  | 10.25.2.85:42252     | NULL          | Binlog Dump | 319014 | Master has sent all binlog to slave; waiting for more updates | NULL             |</span><br><span class="line">| 290884712 | root   | 10.47.54.80:49170    | dwd_cron      | Sleep       |     68 |                                                               | NULL             |</span><br><span class="line">| 292617828 | tongji | 10.153.138.121:62821 | NULL          | Sleep       |      1 |                                                               | NULL             |</span><br><span class="line">| 292617838 | tongji | 10.153.138.121:62822 | NULL          | Sleep       |      2 |                                                               | NULL             |</span><br><span class="line">| 292617918 | tongji | 10.153.138.121:62872 | NULL          | Sleep       |      2 |                                                               | NULL             |</span><br><span class="line">| 300508313 | root   | 10.47.54.80:41858    | dwd_cron      | Sleep       |    194 |                                                               | NULL             |</span><br><span class="line">| 309403589 | root   | 10.47.54.80:42136    | dwd_cron      | Sleep       |    198 |                                                               | NULL             |</span><br><span class="line">| 309403590 | root   | 10.47.54.80:42138    | dwd_cron      | Sleep       |    198 |                                                               | NULL             |</span><br><span class="line">| 313939869 | root   | 10.25.2.85:40936     | hsq_online    | Sleep       |     11 |                                                               | NULL             |</span><br><span class="line">| 317005283 | root   | 10.25.2.85:34854     | hsq_online    | Sleep       |  27800 |                                                               | NULL             |                                                               | NULL             |</span><br><span class="line">| 319272252 | repl   | 10.27.3.27:35818     | NULL          | Binlog Dump |   3014 | Master has sent all binlog to slave; waiting for more updates | NULL             |</span><br><span class="line">                                                             | NULL             |</span><br><span class="line">+-----------+--------+----------------------+---------------+-------------+--------+---------------------------------------------------------------+------------------+</span><br><span class="line">118 rows in set (0.01 sec)</span><br></pre></td></tr></table></figure>
+<p>只截取了部分数据..慢查询条数并不多,而且binlog也已经全部send到slave了..主库这边一切正常.</p>
+<p>2.查看从库的状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show slave status\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">               Slave_IO_State: Waiting for master to send event</span><br><span class="line">                  Master_Host: 10.81.61.101</span><br><span class="line">                  Master_User: repl</span><br><span class="line">                  Master_Port: 3306</span><br><span class="line">                Connect_Retry: 60</span><br><span class="line">              Master_Log_File: mysql-bin.005022</span><br><span class="line">          Read_Master_Log_Pos: 905366832</span><br><span class="line">               Relay_Log_File: server-6-relay-bin.004891</span><br><span class="line">                Relay_Log_Pos: 925220397</span><br><span class="line">        Relay_Master_Log_File: mysql-bin.004927</span><br><span class="line">             Slave_IO_Running: Yes</span><br><span class="line">            Slave_SQL_Running: Yes</span><br><span class="line">              Replicate_Do_DB: dwd_analystic,hsq_sync_RDS</span><br><span class="line">          Replicate_Ignore_DB:</span><br><span class="line">           Replicate_Do_Table:</span><br><span class="line">       Replicate_Ignore_Table:</span><br><span class="line">      Replicate_Wild_Do_Table:</span><br><span class="line">  Replicate_Wild_Ignore_Table:</span><br><span class="line">                   Last_Errno: 0</span><br><span class="line">                   Last_Error:</span><br><span class="line">                 Skip_Counter: 0</span><br><span class="line">          Exec_Master_Log_Pos: 925220184</span><br><span class="line">              Relay_Log_Space: 102979799744</span><br><span class="line">              Until_Condition: None</span><br><span class="line">               Until_Log_File:</span><br><span class="line">                Until_Log_Pos: 0</span><br><span class="line">           Master_SSL_Allowed: No</span><br><span class="line">           Master_SSL_CA_File:</span><br><span class="line">           Master_SSL_CA_Path:</span><br><span class="line">              Master_SSL_Cert:</span><br><span class="line">            Master_SSL_Cipher:</span><br><span class="line">               Master_SSL_Key:</span><br><span class="line">        Seconds_Behind_Master: 84227</span><br><span class="line">Master_SSL_Verify_Server_Cert: No</span><br><span class="line">                Last_IO_Errno: 0</span><br><span class="line">                Last_IO_Error:</span><br><span class="line">               Last_SQL_Errno: 0</span><br><span class="line">               Last_SQL_Error:</span><br><span class="line">  Replicate_Ignore_Server_Ids:</span><br><span class="line">             Master_Server_Id: 63306</span><br></pre></td></tr></table></figure>
+<p>除了Seconds_Behind_Master参数的值非常高以外也没有太大问题</p>
+<p>3.查看从库的慢查询情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show processlist;</span><br><span class="line">+--------+-------------+----------------+--------------+---------+--------+----------------------------------+------------------------------------------------------------------------------------------------------+</span><br><span class="line">| Id     | User        | Host           | db           | Command | Time   | State                            | Info  |</span><br><span class="line">+--------+-------------+----------------+--------------+---------+--------+----------------------------------+------------------------------------------------------------------------------------------------------+</span><br><span class="line">| 358262 | system user |                | NULL         | Connect | 319299 | Waiting for master to send event | NULL  |</span><br><span class="line">| 358263 | system user |                | NULL         | Connect |  84290 | System lock                      | NULL  |</span><br><span class="line">| 433117 | tongji      | server-5:53032 | hsq_sync_RDS | Query   |   1715 | Sending data                     | SELECT `id`, `user_id`, `buyer_id`, `order_ids`, `payment_method`, `trade_no`, `tn`, `third_party_no |</span><br><span class="line">| 433118 | tongji      | server-2:54130 | hsq_sync_RDS | Query   |   1714 | Sending data                     | SELECT `id`, `user_id`, `buyer_id`, `order_ids`, `payment_method`, `trade_no`, `tn`, `third_party_no |</span><br><span class="line">| 433119 | tongji      | server-1:34396 | hsq_sync_RDS | Query   |   1714 | Sending data                     | SELECT `id`, `user_id`, `buyer_id`, `order_ids`, `payment_method`, `trade_no`, `tn`, `third_party_no |</span><br><span class="line">| 433120 | tongji      | server-6:45128 | hsq_sync_RDS | Query   |   1712 | Sending data                     | SELECT `id`, `user_id`, `buyer_id`, `order_ids`, `payment_method`, `trade_no`, `tn`, `third_party_no |</span><br><span class="line">| 433181 | tongji      | server-1:34744 | hsq_sync_RDS | Query   |   1626 | Sending data                     | SELECT `id`, `user_id`, `password`, `last_login_ip`, `token`, `session`, `mobile`, `email`, `wechat_ |</span><br><span class="line">| 433206 | tongji      | server-6:45812 | hsq_sync_RDS | Query   |   1587 | Sending data                     | SELECT `id`, `order_id`, `user_id`, `delivery_no`, `delivery_com_code`, `delivery_com_name`, `status |</span><br><span class="line">| 433207 | tongji      | server-2:54888 | hsq_sync_RDS | Query   |   1587 | Sending data                     | SELECT `id`, `order_id`, `user_id`, `delivery_no`, `delivery_com_code`, `delivery_com_name`, `status |</span><br><span class="line">| 433208 | tongji      | server-4:47770 | hsq_sync_RDS | Query   |   1587 | Sending data                     | SELECT `id`, `order_id`, `user_id`, `delivery_no`, `delivery_com_code`, `delivery_com_name`, `status |</span><br><span class="line">| 433209 | tongji      | server-1:35058 | hsq_sync_RDS | Query   |   1586 | Sending data                     | SELECT `id`, `order_id`, `user_id`, `delivery_no`, `delivery_com_code`, `delivery_com_name`, `status |</span><br><span class="line">| 433246 | root        | localhost      | NULL         | Query   |      0 | starting                         | show processlist  |</span><br><span class="line">| 433373 | tongji      | server-6:47244 | hsq_sync_RDS | Query   |   1281 | Sending data                     | SELECT `id`, `user_id`, `password`, `last_login_ip`, `token`, `session`, `mobile`, `email`, `wechat_ |</span><br><span class="line">| 433505 | tongji      | server-1:38008 | hsq_sync_RDS | Query   |    797 | Sending data                     | SELECT `id`, `user_id`, `open_id`, `type`, `app_id`, `access_token`, `refresh_token`, `token_refresh |</span><br><span class="line">| 433506 | tongji      | server-5:34952 | hsq_sync_RDS | Query   |    797 | Sending data                     | SELECT `id`, `user_id`, `open_id`, `type`, `app_id`, `access_token`, `refresh_token`, `token_refresh |</span><br><span class="line">| 433508 | tongji      | server-3:33080 | hsq_sync_RDS | Query   |    796 | Sending data                     | SELECT `id`, `user_id`, `open_id`, `type`, `app_id`, `access_token`, `refresh_token`, `token_refresh |</span><br><span class="line">| 433977 | tongji      | server-3:38782 | hsq_sync_RDS | Query   |     53 | Sending data                     | SELECT `id`, `user_id`, `open_id`, `type`, `app_id`, `access_token`, `refresh_token`, `token_refresh |</span><br><span class="line">| 433982 | tongji      | server-3:38948 | hsq_sync_RDS | Query   |     40 | Sending data                     | SELECT `payment_id`, `order_id` FROM `trade_order_payment_map` AS `trade_order_payment_map` WHERE (  |</span><br><span class="line">| 433983 | tongji      | server-2:35990 | hsq_sync_RDS | Query   |     40 | Sending data                     | SELECT `payment_id`, `order_id` FROM `trade_order_payment_map` AS `trade_order_payment_map` WHERE (  |</span><br><span class="line">| 433984 | tongji      | server-6:53400 | hsq_sync_RDS | Query   |     40 | Sending data                     | SELECT `payment_id`, `order_id` FROM `trade_order_payment_map` AS `trade_order_payment_map` WHERE (  |</span><br><span class="line">| 433985 | tongji      | server-4:44578 | hsq_sync_RDS | Query   |     40 | Sending data                     | SELECT `payment_id`, `order_id` FROM `trade_order_payment_map` AS `trade_order_payment_map` WHERE (  |</span><br><span class="line">| 433986 | tongji      | server-3:38986 | hsq_sync_RDS | Query   |     38 | Sending data                     | SELECT `id`, `user_id`, `open_id`, `type`, `app_id`, `access_token`, `refresh_token`, `token_refresh |</span><br><span class="line">| 433997 | tongji      | server-2:36126 | hsq_sync_RDS | Query   |     23 | Sending data                     | SELECT `id`, `user_id`, `open_id`, `type`, `app_id`, `access_token`, `refresh_token`, `token_refresh |</span><br><span class="line">| 434019 | tongji      | server-6:53648 | hsq_sync_RDS | Sleep   |      0 |                                  | NULL  |</span><br><span class="line">+--------+-------------+----------------+--------------+---------+--------+----------------------------------+------------------------------------------------------------------------------------------------------+</span><br><span class="line">24 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>从库的select语句性能不是很好,</p>
+<p>mysql数据文件目录存在大量的binlog日志.显然从库的数据写入有严重的滞后问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br></pre></td><td class="code"><pre><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 11:04 server-6-relay-bin.004893</span><br><span class="line">-rw-r----- 1 mysql mysql 1074907748 Aug 19 11:20 server-6-relay-bin.004894</span><br><span class="line">-rw-r----- 1 mysql mysql     326897 Aug 19 11:20 server-6-relay-bin.004895</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 11:20 server-6-relay-bin.004896</span><br><span class="line">-rw-r----- 1 mysql mysql 1073757574 Aug 19 11:35 server-6-relay-bin.004897</span><br><span class="line">-rw-r----- 1 mysql mysql    3014623 Aug 19 11:35 server-6-relay-bin.004898</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 11:35 server-6-relay-bin.004899</span><br><span class="line">-rw-r----- 1 mysql mysql 1073756933 Aug 19 11:50 server-6-relay-bin.004900</span><br><span class="line">-rw-r----- 1 mysql mysql       1981 Aug 19 11:50 server-6-relay-bin.004901</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 11:50 server-6-relay-bin.004902</span><br><span class="line">-rw-r----- 1 mysql mysql 1073755064 Aug 19 12:05 server-6-relay-bin.004903</span><br><span class="line">-rw-r----- 1 mysql mysql     461835 Aug 19 12:05 server-6-relay-bin.004904</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 12:05 server-6-relay-bin.004905</span><br><span class="line">-rw-r----- 1 mysql mysql 1074493379 Aug 19 12:20 server-6-relay-bin.004906</span><br><span class="line">-rw-r----- 1 mysql mysql       2579 Aug 19 12:20 server-6-relay-bin.004907</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 12:20 server-6-relay-bin.004908</span><br><span class="line">-rw-r----- 1 mysql mysql 1073750403 Aug 19 12:35 server-6-relay-bin.004909</span><br><span class="line">-rw-r----- 1 mysql mysql      38029 Aug 19 12:35 server-6-relay-bin.004910</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 12:35 server-6-relay-bin.004911</span><br><span class="line">-rw-r----- 1 mysql mysql 1073757889 Aug 19 12:50 server-6-relay-bin.004912</span><br><span class="line">-rw-r----- 1 mysql mysql     472751 Aug 19 12:50 server-6-relay-bin.004913</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 12:50 server-6-relay-bin.004914</span><br><span class="line">-rw-r----- 1 mysql mysql 1075262040 Aug 19 13:00 server-6-relay-bin.004915</span><br><span class="line">-rw-r----- 1 mysql mysql       3009 Aug 19 13:00 server-6-relay-bin.004916</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 13:00 server-6-relay-bin.004917</span><br><span class="line">-rw-r----- 1 mysql mysql 1073747998 Aug 19 13:15 server-6-relay-bin.004918</span><br><span class="line">-rw-r----- 1 mysql mysql     421255 Aug 19 13:15 server-6-relay-bin.004919</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 13:15 server-6-relay-bin.004920</span><br><span class="line">-rw-r----- 1 mysql mysql 1073742443 Aug 19 13:31 server-6-relay-bin.004921</span><br><span class="line">-rw-r----- 1 mysql mysql      21636 Aug 19 13:31 server-6-relay-bin.004922</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 13:31 server-6-relay-bin.004923</span><br><span class="line">-rw-r----- 1 mysql mysql 1074325521 Aug 19 13:47 server-6-relay-bin.004924</span><br><span class="line">-rw-r----- 1 mysql mysql       8141 Aug 19 13:47 server-6-relay-bin.004925</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 13:47 server-6-relay-bin.004926</span><br><span class="line">-rw-r----- 1 mysql mysql 1074539167 Aug 19 14:01 server-6-relay-bin.004927</span><br><span class="line">-rw-r----- 1 mysql mysql       3783 Aug 19 14:01 server-6-relay-bin.004928</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 14:01 server-6-relay-bin.004929</span><br><span class="line">-rw-r----- 1 mysql mysql 1073756221 Aug 19 14:15 server-6-relay-bin.004930</span><br><span class="line">-rw-r----- 1 mysql mysql     505231 Aug 19 14:15 server-6-relay-bin.004931</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 14:15 server-6-relay-bin.004932</span><br><span class="line">-rw-r----- 1 mysql mysql 1073741891 Aug 19 14:32 server-6-relay-bin.004933</span><br><span class="line">-rw-r----- 1 mysql mysql    2159339 Aug 19 14:32 server-6-relay-bin.004934</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 14:32 server-6-relay-bin.004935</span><br><span class="line">-rw-r----- 1 mysql mysql 1074633232 Aug 19 14:48 server-6-relay-bin.004936</span><br><span class="line">-rw-r----- 1 mysql mysql       5415 Aug 19 14:48 server-6-relay-bin.004937</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 14:48 server-6-relay-bin.004938</span><br><span class="line">-rw-r----- 1 mysql mysql 1074746727 Aug 19 15:03 server-6-relay-bin.004939</span><br><span class="line">-rw-r----- 1 mysql mysql       2791 Aug 19 15:03 server-6-relay-bin.004940</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 15:03 server-6-relay-bin.004941</span><br><span class="line">-rw-r----- 1 mysql mysql 1074641101 Aug 19 15:18 server-6-relay-bin.004942</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 19 15:18 server-6-relay-bin.004943</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 15:18 server-6-relay-bin.004944</span><br><span class="line">-rw-r----- 1 mysql mysql 1074670108 Aug 19 15:35 server-6-relay-bin.004945</span><br><span class="line">-rw-r----- 1 mysql mysql     544530 Aug 19 15:35 server-6-relay-bin.004946</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 15:35 server-6-relay-bin.004947</span><br><span class="line">-rw-r----- 1 mysql mysql 1075095236 Aug 19 15:50 server-6-relay-bin.004948</span><br><span class="line">-rw-r----- 1 mysql mysql     370712 Aug 19 15:50 server-6-relay-bin.004949</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 15:50 server-6-relay-bin.004950</span><br><span class="line">-rw-r----- 1 mysql mysql 1075138343 Aug 19 16:01 server-6-relay-bin.004951</span><br><span class="line">-rw-r----- 1 mysql mysql       1148 Aug 19 16:01 server-6-relay-bin.004952</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 16:01 server-6-relay-bin.004953</span><br><span class="line">-rw-r----- 1 mysql mysql 1073753579 Aug 19 16:15 server-6-relay-bin.004954</span><br><span class="line">-rw-r----- 1 mysql mysql     166719 Aug 19 16:15 server-6-relay-bin.004955</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 16:15 server-6-relay-bin.004956</span><br><span class="line">-rw-r----- 1 mysql mysql 1073744509 Aug 19 16:31 server-6-relay-bin.004957</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 19 16:31 server-6-relay-bin.004958</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 16:31 server-6-relay-bin.004959</span><br><span class="line">-rw-r----- 1 mysql mysql 1075785150 Aug 19 16:48 server-6-relay-bin.004960</span><br><span class="line">-rw-r----- 1 mysql mysql       3213 Aug 19 16:48 server-6-relay-bin.004961</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 16:48 server-6-relay-bin.004962</span><br><span class="line">-rw-r----- 1 mysql mysql 1074787881 Aug 19 17:04 server-6-relay-bin.004963</span><br><span class="line">-rw-r----- 1 mysql mysql       3117 Aug 19 17:04 server-6-relay-bin.004964</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 17:04 server-6-relay-bin.004965</span><br><span class="line">-rw-r----- 1 mysql mysql 1073742293 Aug 19 17:16 server-6-relay-bin.004966</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 19 17:16 server-6-relay-bin.004967</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 17:16 server-6-relay-bin.004968</span><br><span class="line">-rw-r----- 1 mysql mysql 1073875360 Aug 19 17:35 server-6-relay-bin.004969</span><br><span class="line">-rw-r----- 1 mysql mysql     561335 Aug 19 17:35 server-6-relay-bin.004970</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 17:35 server-6-relay-bin.004971</span><br><span class="line">-rw-r----- 1 mysql mysql 1075427971 Aug 19 17:51 server-6-relay-bin.004972</span><br><span class="line">-rw-r----- 1 mysql mysql     119238 Aug 19 17:51 server-6-relay-bin.004973</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 17:51 server-6-relay-bin.004974</span><br><span class="line">-rw-r----- 1 mysql mysql 1074518543 Aug 19 18:06 server-6-relay-bin.004975</span><br><span class="line">-rw-r----- 1 mysql mysql       1392 Aug 19 18:06 server-6-relay-bin.004976</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 18:06 server-6-relay-bin.004977</span><br><span class="line">-rw-r----- 1 mysql mysql 1075430034 Aug 19 18:18 server-6-relay-bin.004978</span><br><span class="line">-rw-r----- 1 mysql mysql        777 Aug 19 18:18 server-6-relay-bin.004979</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 18:18 server-6-relay-bin.004980</span><br><span class="line">-rw-r----- 1 mysql mysql 1074768456 Aug 19 18:36 server-6-relay-bin.004981</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 19 18:36 server-6-relay-bin.004982</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 18:36 server-6-relay-bin.004983</span><br><span class="line">-rw-r----- 1 mysql mysql 1074375191 Aug 19 18:54 server-6-relay-bin.004984</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 19 18:54 server-6-relay-bin.004985</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 18:54 server-6-relay-bin.004986</span><br><span class="line">-rw-r----- 1 mysql mysql 1073742784 Aug 19 19:08 server-6-relay-bin.004987</span><br><span class="line">-rw-r----- 1 mysql mysql       5045 Aug 19 19:08 server-6-relay-bin.004988</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 19:08 server-6-relay-bin.004989</span><br><span class="line">-rw-r----- 1 mysql mysql 1074531001 Aug 19 19:24 server-6-relay-bin.004990</span><br><span class="line">-rw-r----- 1 mysql mysql       7092 Aug 19 19:24 server-6-relay-bin.004991</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 19:24 server-6-relay-bin.004992</span><br><span class="line">-rw-r----- 1 mysql mysql 1073942849 Aug 19 19:43 server-6-relay-bin.004993</span><br><span class="line">-rw-r----- 1 mysql mysql       3298 Aug 19 19:43 server-6-relay-bin.004994</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 19:43 server-6-relay-bin.004995</span><br><span class="line">-rw-r----- 1 mysql mysql 1073747538 Aug 19 20:00 server-6-relay-bin.004996</span><br><span class="line">-rw-r----- 1 mysql mysql     358612 Aug 19 20:00 server-6-relay-bin.004997</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 20:00 server-6-relay-bin.004998</span><br><span class="line">-rw-r----- 1 mysql mysql 1075636850 Aug 19 20:12 server-6-relay-bin.004999</span><br><span class="line">-rw-r----- 1 mysql mysql      12810 Aug 19 20:12 server-6-relay-bin.005000</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 20:12 server-6-relay-bin.005001</span><br><span class="line">-rw-r----- 1 mysql mysql 1073748897 Aug 19 20:25 server-6-relay-bin.005002</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 19 20:25 server-6-relay-bin.005003</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 20:25 server-6-relay-bin.005004</span><br><span class="line">-rw-r----- 1 mysql mysql 1075627773 Aug 19 20:44 server-6-relay-bin.005005</span><br><span class="line">-rw-r----- 1 mysql mysql       1452 Aug 19 20:44 server-6-relay-bin.005006</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 20:44 server-6-relay-bin.005007</span><br><span class="line">-rw-r----- 1 mysql mysql 1073973063 Aug 19 21:02 server-6-relay-bin.005008</span><br><span class="line">-rw-r----- 1 mysql mysql      12392 Aug 19 21:02 server-6-relay-bin.005009</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 21:02 server-6-relay-bin.005010</span><br><span class="line">-rw-r----- 1 mysql mysql 1074198559 Aug 19 21:18 server-6-relay-bin.005011</span><br><span class="line">-rw-r----- 1 mysql mysql       9813 Aug 19 21:18 server-6-relay-bin.005012</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 21:18 server-6-relay-bin.005013</span><br><span class="line">-rw-r----- 1 mysql mysql 1073750958 Aug 19 21:35 server-6-relay-bin.005014</span><br><span class="line">-rw-r----- 1 mysql mysql     415417 Aug 19 21:35 server-6-relay-bin.005015</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 21:35 server-6-relay-bin.005016</span><br><span class="line">-rw-r----- 1 mysql mysql 1073757766 Aug 19 21:55 server-6-relay-bin.005017</span><br><span class="line">-rw-r----- 1 mysql mysql     484712 Aug 19 21:55 server-6-relay-bin.005018</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 21:55 server-6-relay-bin.005019</span><br><span class="line">-rw-r----- 1 mysql mysql 1074704096 Aug 19 22:14 server-6-relay-bin.005020</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 19 22:14 server-6-relay-bin.005021</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 22:14 server-6-relay-bin.005022</span><br><span class="line">-rw-r----- 1 mysql mysql 1074567071 Aug 19 22:25 server-6-relay-bin.005023</span><br><span class="line">-rw-r----- 1 mysql mysql       3299 Aug 19 22:25 server-6-relay-bin.005024</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 22:25 server-6-relay-bin.005025</span><br><span class="line">-rw-r----- 1 mysql mysql 1073747930 Aug 19 22:35 server-6-relay-bin.005026</span><br><span class="line">-rw-r----- 1 mysql mysql     152479 Aug 19 22:35 server-6-relay-bin.005027</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 22:35 server-6-relay-bin.005028</span><br><span class="line">-rw-r----- 1 mysql mysql 1073749573 Aug 19 22:55 server-6-relay-bin.005029</span><br><span class="line">-rw-r----- 1 mysql mysql     206060 Aug 19 22:55 server-6-relay-bin.005030</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 22:55 server-6-relay-bin.005031</span><br><span class="line">-rw-r----- 1 mysql mysql 1073974611 Aug 19 23:14 server-6-relay-bin.005032</span><br><span class="line">-rw-r----- 1 mysql mysql      16223 Aug 19 23:14 server-6-relay-bin.005033</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 23:14 server-6-relay-bin.005034</span><br><span class="line">-rw-r----- 1 mysql mysql 1073747289 Aug 19 23:30 server-6-relay-bin.005035</span><br><span class="line">-rw-r----- 1 mysql mysql     394623 Aug 19 23:30 server-6-relay-bin.005036</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 23:30 server-6-relay-bin.005037</span><br><span class="line">-rw-r----- 1 mysql mysql 1073964634 Aug 19 23:40 server-6-relay-bin.005038</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 19 23:40 server-6-relay-bin.005039</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 23:40 server-6-relay-bin.005040</span><br><span class="line">-rw-r----- 1 mysql mysql 1074362909 Aug 19 23:51 server-6-relay-bin.005041</span><br><span class="line">-rw-r----- 1 mysql mysql       3074 Aug 19 23:51 server-6-relay-bin.005042</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 19 23:51 server-6-relay-bin.005043</span><br><span class="line">-rw-r----- 1 mysql mysql 1073753748 Aug 20 00:06 server-6-relay-bin.005044</span><br><span class="line">-rw-r----- 1 mysql mysql     365716 Aug 20 00:06 server-6-relay-bin.005045</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 00:06 server-6-relay-bin.005046</span><br><span class="line">-rw-r----- 1 mysql mysql 1075420004 Aug 20 00:21 server-6-relay-bin.005047</span><br><span class="line">-rw-r----- 1 mysql mysql       4027 Aug 20 00:21 server-6-relay-bin.005048</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 00:21 server-6-relay-bin.005049</span><br><span class="line">-rw-r----- 1 mysql mysql 1073757176 Aug 20 00:40 server-6-relay-bin.005050</span><br><span class="line">-rw-r----- 1 mysql mysql      17029 Aug 20 00:40 server-6-relay-bin.005051</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 00:40 server-6-relay-bin.005052</span><br><span class="line">-rw-r----- 1 mysql mysql 1074848048 Aug 20 00:56 server-6-relay-bin.005053</span><br><span class="line">-rw-r----- 1 mysql mysql       2106 Aug 20 00:56 server-6-relay-bin.005054</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 00:56 server-6-relay-bin.005055</span><br><span class="line">-rw-r----- 1 mysql mysql 1073744109 Aug 20 01:15 server-6-relay-bin.005056</span><br><span class="line">-rw-r----- 1 mysql mysql     167283 Aug 20 01:15 server-6-relay-bin.005057</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 01:15 server-6-relay-bin.005058</span><br><span class="line">-rw-r----- 1 mysql mysql 1073863153 Aug 20 01:31 server-6-relay-bin.005059</span><br><span class="line">-rw-r----- 1 mysql mysql        832 Aug 20 01:31 server-6-relay-bin.005060</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 01:31 server-6-relay-bin.005061</span><br><span class="line">-rw-r----- 1 mysql mysql 1073755275 Aug 20 01:50 server-6-relay-bin.005062</span><br><span class="line">-rw-r----- 1 mysql mysql     351680 Aug 20 01:50 server-6-relay-bin.005063</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 01:50 server-6-relay-bin.005064</span><br><span class="line">-rw-r----- 1 mysql mysql 1073745924 Aug 20 02:00 server-6-relay-bin.005065</span><br><span class="line">-rw-r----- 1 mysql mysql     184126 Aug 20 02:00 server-6-relay-bin.005066</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 02:00 server-6-relay-bin.005067</span><br><span class="line">-rw-r----- 1 mysql mysql 1074559080 Aug 20 02:11 server-6-relay-bin.005068</span><br><span class="line">-rw-r----- 1 mysql mysql        832 Aug 20 02:11 server-6-relay-bin.005069</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 02:11 server-6-relay-bin.005070</span><br><span class="line">-rw-r----- 1 mysql mysql 1074703077 Aug 20 02:21 server-6-relay-bin.005071</span><br><span class="line">-rw-r----- 1 mysql mysql        832 Aug 20 02:21 server-6-relay-bin.005072</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 02:21 server-6-relay-bin.005073</span><br><span class="line">-rw-r----- 1 mysql mysql 1075168834 Aug 20 02:31 server-6-relay-bin.005074</span><br><span class="line">-rw-r----- 1 mysql mysql       3009 Aug 20 02:31 server-6-relay-bin.005075</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 02:31 server-6-relay-bin.005076</span><br><span class="line">-rw-r----- 1 mysql mysql 1073786213 Aug 20 02:41 server-6-relay-bin.005077</span><br><span class="line">-rw-r----- 1 mysql mysql       1969 Aug 20 02:41 server-6-relay-bin.005078</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 02:41 server-6-relay-bin.005079</span><br><span class="line">-rw-r----- 1 mysql mysql 1075261516 Aug 20 02:52 server-6-relay-bin.005080</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 02:52 server-6-relay-bin.005081</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 02:52 server-6-relay-bin.005082</span><br><span class="line">-rw-r----- 1 mysql mysql 1074090288 Aug 20 03:03 server-6-relay-bin.005083</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 03:03 server-6-relay-bin.005084</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 03:03 server-6-relay-bin.005085</span><br><span class="line">-rw-r----- 1 mysql mysql 1074140925 Aug 20 03:13 server-6-relay-bin.005086</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 03:13 server-6-relay-bin.005087</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 03:13 server-6-relay-bin.005088</span><br><span class="line">-rw-r----- 1 mysql mysql 1074942298 Aug 20 03:23 server-6-relay-bin.005089</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 03:23 server-6-relay-bin.005090</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 03:23 server-6-relay-bin.005091</span><br><span class="line">-rw-r----- 1 mysql mysql 1073946866 Aug 20 03:33 server-6-relay-bin.005092</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 03:33 server-6-relay-bin.005093</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 03:33 server-6-relay-bin.005094</span><br><span class="line">-rw-r----- 1 mysql mysql 1074995326 Aug 20 03:43 server-6-relay-bin.005095</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 03:43 server-6-relay-bin.005096</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 03:43 server-6-relay-bin.005097</span><br><span class="line">-rw-r----- 1 mysql mysql 1074411312 Aug 20 03:53 server-6-relay-bin.005098</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 03:53 server-6-relay-bin.005099</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 03:53 server-6-relay-bin.005100</span><br><span class="line">-rw-r----- 1 mysql mysql 1073961985 Aug 20 04:03 server-6-relay-bin.005101</span><br><span class="line">-rw-r----- 1 mysql mysql       1581 Aug 20 04:03 server-6-relay-bin.005102</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 04:03 server-6-relay-bin.005103</span><br><span class="line">-rw-r----- 1 mysql mysql 1073987949 Aug 20 04:14 server-6-relay-bin.005104</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 04:14 server-6-relay-bin.005105</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 04:14 server-6-relay-bin.005106</span><br><span class="line">-rw-r----- 1 mysql mysql 1074580980 Aug 20 04:23 server-6-relay-bin.005107</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 04:23 server-6-relay-bin.005108</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 04:23 server-6-relay-bin.005109</span><br><span class="line">-rw-r----- 1 mysql mysql 1074915235 Aug 20 04:32 server-6-relay-bin.005110</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 04:32 server-6-relay-bin.005111</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 04:32 server-6-relay-bin.005112</span><br><span class="line">-rw-r----- 1 mysql mysql 1073750177 Aug 20 04:42 server-6-relay-bin.005113</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 04:42 server-6-relay-bin.005114</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 04:42 server-6-relay-bin.005115</span><br><span class="line">-rw-r----- 1 mysql mysql 1075582907 Aug 20 04:52 server-6-relay-bin.005116</span><br><span class="line">-rw-r----- 1 mysql mysql       1654 Aug 20 04:52 server-6-relay-bin.005117</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 04:52 server-6-relay-bin.005118</span><br><span class="line">-rw-r----- 1 mysql mysql 1073831777 Aug 20 05:02 server-6-relay-bin.005119</span><br><span class="line">-rw-r----- 1 mysql mysql        944 Aug 20 05:02 server-6-relay-bin.005120</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 05:02 server-6-relay-bin.005121</span><br><span class="line">-rw-r----- 1 mysql mysql 1073939965 Aug 20 05:12 server-6-relay-bin.005122</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 05:12 server-6-relay-bin.005123</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 05:12 server-6-relay-bin.005124</span><br><span class="line">-rw-r----- 1 mysql mysql 1074975635 Aug 20 05:23 server-6-relay-bin.005125</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 05:23 server-6-relay-bin.005126</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 05:23 server-6-relay-bin.005127</span><br><span class="line">-rw-r----- 1 mysql mysql 1073775752 Aug 20 05:34 server-6-relay-bin.005128</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 05:34 server-6-relay-bin.005129</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 05:34 server-6-relay-bin.005130</span><br><span class="line">-rw-r----- 1 mysql mysql 1073748439 Aug 20 05:45 server-6-relay-bin.005131</span><br><span class="line">-rw-r----- 1 mysql mysql      50123 Aug 20 05:45 server-6-relay-bin.005132</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 05:45 server-6-relay-bin.005133</span><br><span class="line">-rw-r----- 1 mysql mysql 1074232059 Aug 20 06:00 server-6-relay-bin.005134</span><br><span class="line">-rw-r----- 1 mysql mysql     218243 Aug 20 06:00 server-6-relay-bin.005135</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 06:00 server-6-relay-bin.005136</span><br><span class="line">-rw-r----- 1 mysql mysql 1073742109 Aug 20 06:29 server-6-relay-bin.005137</span><br><span class="line">-rw-r----- 1 mysql mysql     566273 Aug 20 06:29 server-6-relay-bin.005138</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 06:29 server-6-relay-bin.005139</span><br><span class="line">-rw-r----- 1 mysql mysql 1073743811 Aug 20 06:50 server-6-relay-bin.005140</span><br><span class="line">-rw-r----- 1 mysql mysql     496397 Aug 20 06:50 server-6-relay-bin.005141</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 06:50 server-6-relay-bin.005142</span><br><span class="line">-rw-r----- 1 mysql mysql 1074448682 Aug 20 07:04 server-6-relay-bin.005143</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 07:04 server-6-relay-bin.005144</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 07:04 server-6-relay-bin.005145</span><br><span class="line">-rw-r----- 1 mysql mysql 1073933474 Aug 20 07:16 server-6-relay-bin.005146</span><br><span class="line">-rw-r----- 1 mysql mysql       5355 Aug 20 07:16 server-6-relay-bin.005147</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 07:16 server-6-relay-bin.005148</span><br><span class="line">-rw-r----- 1 mysql mysql 1074128415 Aug 20 07:29 server-6-relay-bin.005149</span><br><span class="line">-rw-r----- 1 mysql mysql        832 Aug 20 07:29 server-6-relay-bin.005150</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 07:29 server-6-relay-bin.005151</span><br><span class="line">-rw-r----- 1 mysql mysql 1074672741 Aug 20 07:40 server-6-relay-bin.005152</span><br><span class="line">-rw-r----- 1 mysql mysql       1335 Aug 20 07:40 server-6-relay-bin.005153</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 07:40 server-6-relay-bin.005154</span><br><span class="line">-rw-r----- 1 mysql mysql 1074458702 Aug 20 07:51 server-6-relay-bin.005155</span><br><span class="line">-rw-r----- 1 mysql mysql      10856 Aug 20 07:51 server-6-relay-bin.005156</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 07:51 server-6-relay-bin.005157</span><br><span class="line">-rw-r----- 1 mysql mysql 1073924438 Aug 20 08:01 server-6-relay-bin.005158</span><br><span class="line">-rw-r----- 1 mysql mysql        832 Aug 20 08:01 server-6-relay-bin.005159</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 08:01 server-6-relay-bin.005160</span><br><span class="line">-rw-r----- 1 mysql mysql 1075303853 Aug 20 08:13 server-6-relay-bin.005161</span><br><span class="line">-rw-r----- 1 mysql mysql       3783 Aug 20 08:13 server-6-relay-bin.005162</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 08:13 server-6-relay-bin.005163</span><br><span class="line">-rw-r----- 1 mysql mysql 1075011674 Aug 20 08:25 server-6-relay-bin.005164</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 08:25 server-6-relay-bin.005165</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 08:25 server-6-relay-bin.005166</span><br><span class="line">-rw-r----- 1 mysql mysql 1073759149 Aug 20 08:45 server-6-relay-bin.005167</span><br><span class="line">-rw-r----- 1 mysql mysql     595560 Aug 20 08:45 server-6-relay-bin.005168</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 08:45 server-6-relay-bin.005169</span><br><span class="line">-rw-r----- 1 mysql mysql 1073744454 Aug 20 09:21 server-6-relay-bin.005170</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 09:21 server-6-relay-bin.005171</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 09:21 server-6-relay-bin.005172</span><br><span class="line">-rw-r----- 1 mysql mysql 1073744721 Aug 20 09:59 server-6-relay-bin.005173</span><br><span class="line">-rw-r----- 1 mysql mysql        329 Aug 20 09:59 server-6-relay-bin.005174</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 09:59 server-6-relay-bin.005175</span><br><span class="line">-rw-r----- 1 mysql mysql 1073744402 Aug 20 10:33 server-6-relay-bin.005176</span><br><span class="line">-rw-r----- 1 mysql mysql       1415 Aug 20 10:33 server-6-relay-bin.005177</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 10:33 server-6-relay-bin.005178</span><br><span class="line">-rw-r----- 1 mysql mysql  492892939 Aug 20 10:47 server-6-relay-bin.005179</span><br><span class="line">-rw-r----- 1 mysql mysql        210 Aug 20 10:47 server-6-relay-bin.005180</span><br><span class="line">-rw-r----- 1 mysql mysql  581257657 Aug 20 11:05 server-6-relay-bin.005181</span><br><span class="line">-rw-r----- 1 mysql mysql        257 Aug 20 11:05 server-6-relay-bin.005182</span><br><span class="line">-rw-r----- 1 mysql mysql   89230476 Aug 20 11:07 server-6-relay-bin.005183</span><br></pre></td></tr></table></figure>
+<p>4.查看innoDB的相关配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like &apos;%innodb_log%&apos;;</span><br><span class="line">+---------------------------+------------+</span><br><span class="line">| Variable_name             | Value      |</span><br><span class="line">+---------------------------+------------+</span><br><span class="line">| Innodb_log_waits          | 0          |</span><br><span class="line">| Innodb_log_write_requests | 1563734583 |</span><br><span class="line">| Innodb_log_writes         | 259641866  |</span><br><span class="line">+---------------------------+------------+</span><br><span class="line">3 rows in set (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; show global status like &apos;%innodb_buffer_pool_wait%&apos;;</span><br><span class="line">+------------------------------+----------+</span><br><span class="line">| Variable_name                | Value    |</span><br><span class="line">+------------------------------+----------+</span><br><span class="line">| Innodb_buffer_pool_wait_free | 13307693 |</span><br><span class="line">+------------------------------+----------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>发现缓冲池有大量的空闲页等待被执行</p>
+<p>5.初步怀疑是从库的sql语句读写速度比较慢,查看服务器磁盘IO情况:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 ~]# iostat -d -x 2</span><br><span class="line">Linux 3.10.0-693.el7.x86_64 (server-6) 	08/20/2018 	_x86_64_	(56 CPU)</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda               1.06    14.14   80.26 1964.48  6209.75 19539.84    25.19     0.79    0.38   10.58    0.47   0.18  37.16</span><br><span class="line">dm-0              0.00     0.00   80.18 1977.08  6205.01 19533.60    25.02     0.07    0.04    0.45    0.02   0.18  37.17</span><br><span class="line">dm-1              0.00     0.00    1.18    1.56     4.74     6.23     8.00     0.03   11.99    4.65   17.57   0.12   0.03</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda               0.00    86.50  294.50 2278.00 22820.00 38805.75    47.91    19.72    7.54   58.32    0.98   0.39 100.00</span><br><span class="line">dm-0              0.00     0.00  296.50 2327.00 22852.00 38221.75    46.56    20.08    7.54   57.92    1.12   0.38  99.95</span><br><span class="line">dm-1              0.00     0.00    0.00    0.00     0.00     0.00     0.00     0.00    0.00    0.00    0.00   0.00   0.00</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda               0.00    31.50  497.00 2887.00 38196.00 42797.50    47.87    14.84    4.59   29.85    0.24   0.30 100.00</span><br><span class="line">dm-0              0.00     0.00  491.50 2918.50 37828.00 42797.50    47.29    14.88    4.56   30.19    0.25   0.29 100.00</span><br><span class="line">dm-1              0.00     0.00    0.00    0.00     0.00     0.00     0.00     0.00    0.00    0.00    0.00   0.00   0.00</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda               0.00     0.00  433.50 2135.00 34016.00 61046.25    74.02    11.60    3.98   17.68    1.20   0.39  99.85</span><br><span class="line">dm-0              0.00     0.00  439.50 2136.00 34680.00 61052.25    74.34    11.61    3.97   17.43    1.20   0.39  99.90</span><br><span class="line">dm-1              0.00     0.00    0.00    0.00     0.00     0.00     0.00     0.00    0.00    0.00    0.00   0.00   0.00</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda               0.00     0.00  828.00 1987.00 61214.00 21236.25    58.58    11.50    4.56   15.08    0.17   0.36  99.95</span><br><span class="line">dm-0              0.00     0.00  824.00 1986.00 60774.00 21230.25    58.37    11.52    4.57   15.15    0.18   0.36 100.00</span><br><span class="line">dm-1              0.00     0.00    0.00    0.00     0.00     0.00     0.00     0.00    0.00    0.00    0.00   0.00   0.00</span><br></pre></td></tr></table></figure>
+<p>磁盘IO负载已经达到了100%.</p>
+<p>6.查看占用磁盘IO的主要进程:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Total DISK READ :      25.90 M/s | Total DISK WRITE :	   64.71 M/s</span><br><span class="line">Actual DISK READ:      27.85 M/s | Actual DISK WRITE:	   52.46 M/s</span><br><span class="line">   TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span><br><span class="line"> 93677 be/4 mysql    1280.78 K/s   54.50 K/s  0.00 % 89.19 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line">124925 be/4 mysql       5.30 M/s  735.77 K/s  0.00 % 86.79 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"> 86834 be/4 mysql    1853.04 K/s  711.92 K/s  0.00 % 85.62 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line">124935 be/4 mysql       2.83 M/s  817.52 K/s  0.00 % 77.32 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line">127362 be/4 mysql    1825.79 K/s  545.01 K/s  0.00 % 74.37 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line">124928 be/4 mysql       3.94 M/s  517.76 K/s  0.00 % 74.02 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"> 31008 be/4 mysql       2.20 M/s  531.39 K/s  0.00 % 72.05 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"> 30965 be/4 mysql     572.26 K/s  180.54 K/s  0.00 % 68.54 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"> 54715 be/4 mysql       3.67 M/s 1062.77 K/s  0.00 % 67.73 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"> 30967 be/4 mysql     545.01 K/s  953.77 K/s  0.00 % 57.04 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"> 30966 be/4 mysql    1021.90 K/s 1086.62 K/s  0.00 % 44.76 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"> 30968 be/4 mysql     803.89 K/s  909.49 K/s  0.00 % 33.53 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"> 23438 be/4 mysql     136.25 K/s 1216.06 K/s  0.00 %  4.78 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"> 30948 be/4 mysql       0.00 B/s    0.00 B/s  0.00 %  3.82 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"> 30945 be/4 mysql       0.00 B/s    0.00 B/s  0.00 %  1.16 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"> 30949 be/4 mysql       0.00 B/s   36.62 M/s  0.00 %  0.42 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br></pre></td></tr></table></figure>
+<p>7.查看mysql有关磁盘IO的主要配置参数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like &apos;%sync_bin%&apos;;</span><br><span class="line">+---------------+-------+</span><br><span class="line">| Variable_name | Value |</span><br><span class="line">+---------------+-------+</span><br><span class="line">| sync_binlog   | 1     |</span><br><span class="line">+---------------+-------+</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; show variables like &apos;%innodb_flush%&apos;;</span><br><span class="line">+--------------------------------+-------+</span><br><span class="line">| Variable_name                  | Value |</span><br><span class="line">+--------------------------------+-------+</span><br><span class="line">| innodb_flush_log_at_timeout    | 1     |</span><br><span class="line">| innodb_flush_log_at_trx_commit | 1     |</span><br><span class="line">| innodb_flush_method            |       |</span><br><span class="line">| innodb_flush_neighbors         | 1     |</span><br><span class="line">| innodb_flush_sync              | ON    |</span><br><span class="line">| innodb_flushing_avg_loops      | 30    |</span><br><span class="line">+--------------------------------+-------+</span><br><span class="line">6 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>sync_binlog=1表示每次事务提交后MySQL将进行一次fsync之类的磁盘同步指令来将binlog_cache中的数据强制写入磁盘，频繁的写盘导致磁盘IO居高不下 </p>
+<p>innodb_flush_log_at_trx_commit=1时,log buffer 会被写入到日志文件并刷写到磁盘。这也是默认值。这是最安全的配置，但由于每次事务都需要进行磁盘I/O，所以也最慢 </p>
+<p>有关这两个参数的更多解释,请百度</p>
+<p>8.修改参数配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">编辑my.cnf配置文件:</span><br><span class="line">[root@server-6 ~]# vim /etc/my.cnf</span><br><span class="line">sync_binlog=0</span><br><span class="line">innodb_flush_log_at_trx_commit=2</span><br></pre></td></tr></table></figure>
+<p>9.重启mysql服务,重启slave进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 ~]# service mysqld restart</span><br><span class="line"></span><br><span class="line">[root@server-6 ~]# mysql -uroot -p</span><br><span class="line">Enter password:</span><br><span class="line">mysql&gt; start slave;</span><br><span class="line">Query OK, 0 rows affected, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>10.查看参数是否已经生效:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like &apos;%sync_bin%&apos;;</span><br><span class="line">+---------------+-------+</span><br><span class="line">| Variable_name | Value |</span><br><span class="line">+---------------+-------+</span><br><span class="line">| sync_binlog   | 0     |</span><br><span class="line">+---------------+-------+</span><br><span class="line">1 row in set (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; show variables like &apos;%innodb_flush%&apos;;</span><br><span class="line">+--------------------------------+-------+</span><br><span class="line">| Variable_name                  | Value |</span><br><span class="line">+--------------------------------+-------+</span><br><span class="line">| innodb_flush_log_at_timeout    | 1     |</span><br><span class="line">| innodb_flush_log_at_trx_commit | 2     |</span><br><span class="line">| innodb_flush_method            |       |</span><br><span class="line">| innodb_flush_neighbors         | 1     |</span><br><span class="line">| innodb_flush_sync              | ON    |</span><br><span class="line">| innodb_flushing_avg_loops      | 30    |</span><br><span class="line">+--------------------------------+-------+</span><br><span class="line">6 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>11.但是查看磁盘IO还是居高不下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 mysql]# iostat -d -x 2</span><br><span class="line">Linux 3.10.0-693.el7.x86_64 (server-6) 	08/20/2018 	_x86_64_	(56 CPU)</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda               1.06    14.18   80.43 1966.48  6216.32 19621.73    25.25     0.80    0.39   10.68    0.47   0.18  37.31</span><br><span class="line">dm-0              0.00     0.00   80.35 1979.12  6211.59 19615.51    25.08     0.09    0.04    0.60    0.02   0.18  37.33</span><br><span class="line">dm-1              0.00     0.00    1.18    1.55     4.73     6.22     8.00     0.03   11.99    4.65   17.57   0.12   0.03</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda               0.00     0.00   44.50 3126.00  1534.00 67250.50    43.39     3.18    1.10   51.88    0.38   0.31  96.95</span><br><span class="line">dm-0              0.00     0.00   44.00 3126.50  1526.00 67258.50    43.39     3.17    1.10   52.47    0.37   0.31  96.75</span><br><span class="line">dm-1              0.00     0.00    0.00    0.00     0.00     0.00     0.00     0.00    0.00    0.00    0.00   0.00   0.00</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda               0.00     0.00    7.50 3152.50   600.00 51644.00    33.07     2.69    0.87   81.47    0.68   0.30  94.10</span><br><span class="line">dm-0              0.00     0.00    7.50 3152.00   600.00 51636.00    33.07     2.69    0.87   81.47    0.67   0.30  94.00</span><br><span class="line">dm-1              0.00     0.00    0.00    0.00     0.00     0.00     0.00     0.00    0.00    0.00    0.00   0.00   0.00</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda               0.00     0.00   30.00 2915.00  1334.00 53757.25    37.41     3.74    1.27   36.00    0.91   0.30  88.95</span><br><span class="line">dm-0              0.00     0.00   30.50 2915.00  1398.00 53757.25    37.45     3.73    1.27   35.43    0.91   0.30  88.80</span><br><span class="line">dm-1              0.00     0.00    0.00    0.00     0.00     0.00     0.00     0.00    0.00    0.00    0.00   0.00   0.00</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda               0.00     0.00   66.50 3325.00  1656.00 65172.75    39.41     3.91    1.15   46.50    0.24   0.29  99.15</span><br><span class="line">dm-0              0.00     0.00   66.50 3325.00  1600.00 65172.75    39.38     3.90    1.14   46.50    0.24   0.29  99.10</span><br><span class="line">dm-1              0.00     0.00    0.00    0.00     0.00     0.00     0.00     0.00    0.00    0.00    0.00   0.00   0.00</span><br></pre></td></tr></table></figure>
+<p>此外,延时仍然在不断的上升,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 mysql]# /usr/bin/pt-heartbeat --host=127.0.0.1 --user=heartbeat --password=xxxxxx -D dwd_analystic  --master-server-id=63306  --check</span><br><span class="line">94110.00</span><br></pre></td></tr></table></figure>
+<p>12.但是查看slave状态.仍然在不停的读取bin日志和log信息.但是读取速度非常慢</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show slave status\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">               Slave_IO_State: Waiting for master to send event</span><br><span class="line">                  Master_Host: 10.81.61.101</span><br><span class="line">                  Master_User: repl</span><br><span class="line">                  Master_Port: 3306</span><br><span class="line">                Connect_Retry: 60</span><br><span class="line">              Master_Log_File: mysql-bin.005029</span><br><span class="line">          Read_Master_Log_Pos: 195990517</span><br><span class="line">               Relay_Log_File: server-6-relay-bin.004900</span><br><span class="line">                Relay_Log_Pos: 983195495</span><br><span class="line">        Relay_Master_Log_File: mysql-bin.004930</span><br><span class="line">             Slave_IO_Running: Yes</span><br><span class="line">            Slave_SQL_Running: Yes</span><br><span class="line">              Replicate_Do_DB: dwd_analystic,hsq_sync_RDS</span><br><span class="line">          Replicate_Ignore_DB:</span><br><span class="line">           Replicate_Do_Table:</span><br><span class="line">       Replicate_Ignore_Table:</span><br><span class="line">      Replicate_Wild_Do_Table:</span><br><span class="line">  Replicate_Wild_Ignore_Table:</span><br><span class="line">                   Last_Errno: 0</span><br><span class="line">                   Last_Error:</span><br><span class="line">                 Skip_Counter: 0</span><br><span class="line">          Exec_Master_Log_Pos: 983195282</span><br><span class="line">              Relay_Log_Space: 106561330708</span><br><span class="line">              Until_Condition: None</span><br><span class="line">               Until_Log_File:</span><br><span class="line">                Until_Log_Pos: 0</span><br><span class="line">           Master_SSL_Allowed: No</span><br><span class="line">           Master_SSL_CA_File:</span><br><span class="line">           Master_SSL_CA_Path:</span><br><span class="line">              Master_SSL_Cert:</span><br><span class="line">            Master_SSL_Cipher:</span><br><span class="line">               Master_SSL_Key:</span><br><span class="line">        Seconds_Behind_Master: 94159</span><br></pre></td></tr></table></figure>
+<p>13.查看mysql数据文件的binlog日志文件个数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 mysql]# ls server-6-relay-bin.* | wc -l</span><br><span class="line">301</span><br></pre></td></tr></table></figure>
+<hr>
+<p>14.优化完sync磁盘写入机制后发现延时还是非常高,而且在不断上升,最高的时候达到了34个小时.slave读取binlog日志还是非常慢.  </p>
+<p>查看一下mysql数据库的关键性能配置参数,发现没有经过任何优化.这极大的限制了mysql的性能.</p>
+<p>编辑my.cnf配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sync_binlog=0</span><br><span class="line">innodb_flush_log_at_trx_commit=2</span><br><span class="line">innodb_buffer_pool_size=100G</span><br><span class="line">innodb_page_cleaners=2</span><br><span class="line">innodb_log_file_size=1G</span><br></pre></td></tr></table></figure>
+<p>重启mysql服务,启动slave进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service mysqld restart</span><br><span class="line">mysql -uroot -p</span><br><span class="line">mysql&gt; start slave;</span><br></pre></td></tr></table></figure>
+<p>下面是修改过后的部分配置参数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">#下面的参数是最关键的性能指标.默认值是148M.一般建议是服务器内存的70%-75%</span><br><span class="line">由于我服务器是189G的内存,考虑到其他耗内存的进程,所以设置为100G</span><br><span class="line"></span><br><span class="line">mysql&gt; show variables like &quot;innodb_buffer_pool_size%&quot;;</span><br><span class="line">+-------------------------+--------------+</span><br><span class="line">| Variable_name           | Value        |</span><br><span class="line">+-------------------------+--------------+</span><br><span class="line">| innodb_buffer_pool_size | 107374182400 |</span><br><span class="line">+-------------------------+--------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">#Instances参数和上面的pool_size相关联.这个是自动设置的.</span><br><span class="line"></span><br><span class="line">mysql&gt; show variables like &quot;innodb_buffer_pool_instances&quot;;</span><br><span class="line">+------------------------------+-------+</span><br><span class="line">| Variable_name                | Value |</span><br><span class="line">+------------------------------+-------+</span><br><span class="line">| innodb_buffer_pool_instances | 8     |</span><br><span class="line">+------------------------------+-------+</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">#下面是日志的参数.log_file_size定义了日志文件的大小,这个值调高为好</span><br><span class="line"></span><br><span class="line">mysql&gt; show variables like &quot;innodb_log_file%&quot;;</span><br><span class="line">+---------------------------+------------+</span><br><span class="line">| Variable_name             | Value      |</span><br><span class="line">+---------------------------+------------+</span><br><span class="line">| innodb_log_file_size      | 1073741824 |</span><br><span class="line">| innodb_log_files_in_group | 2          |</span><br><span class="line">+---------------------------+------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>有关mysql的参数的配置和优化.请参考mysql的官方文档:<a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" target="_blank" rel="noopener">Server Option, System Variable, and Status Variable Reference</a></p>
+<hr>
+<p>此时,虽然延时还在上涨.但是slave读取binlog日志的速度明显快了很多,相比之前同步速度几乎是指数级的翻倍上涨.性能大幅提升.而且从库上的binlog日志文件在不断减少.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Binlog文件从300多个在逐渐减少:</span><br><span class="line">[root@server-6 ~]# ls /data/mysql/server-6-relay-bin.*  | wc -l</span><br><span class="line">243</span><br></pre></td></tr></table></figure></p>
+<p>观察了1天之后,日志文件进一步减少,而且延时在不断的最近</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 ~]# /usr/bin/pt-heartbeat --host=127.0.0.1 --user=heartbeat --password=xxxx -D dwd_analystic  --master-server-id=63306  --check</span><br><span class="line">124563.00</span><br><span class="line">[root@server-6 ~]# /usr/bin/pt-heartbeat --host=127.0.0.1 --user=heartbeat --password=xxxx -D dwd_analystic  --master-server-id=63306  --check</span><br><span class="line">124547.00</span><br><span class="line">[root@server-6 ~]# /usr/bin/pt-heartbeat --host=127.0.0.1 --user=heartbeat --password=xxxx -D dwd_analystic  --master-server-id=63306  --check</span><br><span class="line">124532.00</span><br><span class="line">[root@server-6 ~]# ls /data/mysql/server-6-relay-bin.*  | wc -l</span><br><span class="line">183</span><br></pre></td></tr></table></figure>
+<p>再观察一个晚上后,延时故障消失,主从恢复正常.binlog文件几乎读完了.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 ~]# ls /data/mysql/server-6-relay-bin.*  | wc -l</span><br><span class="line">3</span><br><span class="line">[root@server-6 ~]# /usr/bin/pt-heartbeat --host=127.0.0.1 --user=heartbeat --password=xxxx -D dwd_analystic  --master-server-id=63306  --check</span><br><span class="line">1.00</span><br></pre></td></tr></table></figure>
+<p>奇怪的是磁盘的IO负载还是非常高:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@server-6 ~]# iostat -d -x 2</span><br><span class="line">Linux 3.10.0-693.el7.x86_64 (server-6) 	08/22/2018 	_x86_64_	(56 CPU)</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda               3.05    18.97   82.57 1959.78  6145.11 20097.05    25.70     0.02    0.01    0.10    0.00   0.19  39.06</span><br><span class="line">dm-0              0.00     0.00   82.12 1972.87  6130.89 20073.49    25.50     0.27    0.13    1.96    0.05   0.19  38.91</span><br><span class="line">dm-1              0.00     0.00    3.55    5.89    14.21    23.56     8.00     0.23   24.24   22.84   25.08   0.79   0.74</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda              55.50    72.50  218.50 1409.50  1272.00 12573.00    17.01     3.45    1.91   13.30    0.15   0.61  99.85</span><br><span class="line">dm-0              0.00     0.00  207.00 1482.00  1018.00 12573.00    16.09     3.25    1.73   12.88    0.18   0.59  99.70</span><br><span class="line">dm-1              0.00     0.00   68.50    0.00   274.00     0.00     8.00     1.21   16.61   16.61    0.00   2.69  18.40</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda              51.50     0.00  144.50 1809.00  1120.00 12491.25    13.94     2.95    1.69   19.88    0.24   0.51  99.80</span><br><span class="line">dm-0              0.00     0.00  136.50 1809.00   866.00 12491.25    13.73     2.63    1.53   18.63    0.24   0.51  99.70</span><br><span class="line">dm-1              0.00     0.00   58.50    0.00   234.00     0.00     8.00     2.47   43.60   43.60    0.00   5.34  31.25</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util</span><br><span class="line">sda              46.00    67.00  186.00 1726.00  1354.00 13791.75    15.84     2.73    1.25   11.63    0.13   0.52  99.50</span><br><span class="line">dm-0              0.00     0.00  179.50 1793.00  1158.00 13791.75    15.16     2.49    1.15   11.18    0.15   0.50  99.45</span><br><span class="line">dm-1              0.00     0.00   53.50    0.00   214.00     0.00     8.00     2.14   21.75   21.75    0.00   4.38  23.45</span><br></pre></td></tr></table></figure>
+<p>但是磁盘的读写速度并不高,而且是es和kafka进程在消耗磁盘IO.并不是mysql进程了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Total DISK READ :     131.73 K/s | Total DISK WRITE :	   11.93 M/s</span><br><span class="line">Actual DISK READ:     185.77 K/s | Actual DISK WRITE:	   16.11 M/s</span><br><span class="line">   TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span><br><span class="line">   305 be/4 root        0.00 B/s    0.00 B/s  0.00 % 88.69 % [kswapd0]</span><br><span class="line">117157 be/4 hadoop     50.66 K/s    3.38 K/s  0.00 %  8.19 % java -Xmx64G -Xms64G -server -XX:+UseG1GC -~a.Kafka /opt/kafka/config/server.properties</span><br><span class="line">140979 be/4 hadoop      0.00 B/s  118.22 K/s  0.00 %  6.71 % java -Xms24g -Xmx24g -XX:+UseConcMarkSweepG~rg.elasticsearch.bootstrap.Elasticsearch -d</span><br><span class="line">140960 be/4 hadoop      0.00 B/s   50.66 K/s  0.00 %  0.38 % java -Xms24g -Xmx24g -XX:+UseConcMarkSweepG~rg.elasticsearch.bootstrap.Elasticsearch -d</span><br><span class="line">140449 be/4 hadoop      0.00 B/s  148.61 K/s  0.00 %  0.26 % java -Xms24g -Xmx24g -XX:+UseConcMarkSweepG~rg.elasticsearch.bootstrap.Elasticsearch -d</span><br><span class="line">140974 be/4 hadoop      0.00 B/s  138.48 K/s  0.00 %  0.26 % java -Xms24g -Xmx24g -XX:+UseConcMarkSweepG~rg.elasticsearch.bootstrap.Elasticsearch -d</span><br><span class="line">140980 be/4 hadoop      0.00 B/s  141.86 K/s  0.00 %  0.25 % java -Xms24g -Xmx24g -XX:+UseConcMarkSweepG~rg.elasticsearch.bootstrap.Elasticsearch -d</span><br><span class="line">140973 be/4 hadoop      0.00 B/s  145.24 K/s  0.00 %  0.24 % java -Xms24g -Xmx24g -XX:+UseConcMarkSweepG~rg.elasticsearch.bootstrap.Elasticsearch -d</span><br><span class="line">140869 be/4 hadoop      0.00 B/s   43.91 K/s  0.00 %  0.23 % java -Xms24g -Xmx24g -XX:+UseConcMarkSweepG~rg.elasticsearch.bootstrap.Elasticsearch -d</span><br><span class="line">140966 be/4 hadoop      0.00 B/s  179.01 K/s  0.00 %  0.22 % java -Xms24g -Xmx24g -XX:+UseConcMarkSweepG~rg.elasticsearch.bootstrap.Elasticsearch -d</span><br></pre></td></tr></table></figure>
+<hr>
+<p>总结: </p>
+<p>主从延时比较关键的地方:</p>
+<p>1.确保slave库的服务器配置和master相当,或者比master更高.<br>2.确保网络延时较低.<br>3.sync_binlog和innodb_flush_log_at_trx_commit,这两个参数决定了磁盘写入机制.如果sync_binlog设置为1.则每次操作都要回写到磁盘日志,极大的增加磁盘IO负载和同步负担.<br>4.innodb_buffer_pool_size参数调整会将mysql的整体性能提高到好几个倍数.<br>5.如果是mysql5.7以上版本,尽量使用GTID主从复制机制代替传统的Binlog机制.因为Binlog的sql线程还是单线程工作模式.<br>6.完善的监控机制.如果第一时间发现延时较高,就要尽早介入处理.</p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/08/22/mysql/mysql主从同步延时问题/">mysql5.7主从同步延时问题</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2018年08月22日 - 11:08</p>
+  <p><span>最后更新:</span>2018年08月25日 - 08:08</p>
+  <p><span>原始链接:</span><a href="/2018/08/22/mysql/mysql主从同步延时问题/" title="mysql5.7主从同步延时问题">https://jesse.top/2018/08/22/mysql/mysql主从同步延时问题/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/08/22/mysql/mysql主从同步延时问题/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+            <a href="/tags/mysql维护/" rel="tag"># mysql维护</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/14/Linux-Service/DNS介绍/" rel="next" title="DNS介绍">
+                <i class="fa fa-chevron-left"></i> DNS介绍
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/26/Linux-Web/Nginx 的ngx_http_core_module模块变量/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div>
+<div class="-mob-share-ui" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-qzone"><p>QQ空间</p></li>
+        <li class="-mob-share-qq"><p>QQ好友</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-youdao"><p>有道云笔记</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="https://f1.webshare.mob.com/code/mob-share.js?appkey=266b0526b70f4"></script>
+<!--MOB SHARE END-->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/08/22/mysql/mysql主从同步延时问题/"
+           data-title="mysql5.7主从同步延时问题" data-url="https://jesse.top/2018/08/22/mysql/mysql主从同步延时问题/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">保持饥渴,保持愚蠢.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/anselphilnos" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:mailhuangyong@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/jessehuang408" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/jessehuang408" target="_blank" title="FaceBook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FaceBook</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql主从同步延时问题"><span class="nav-number">1.</span> <span class="nav-text">mysql主从同步延时问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#解决过程"><span class="nav-number">1.0.1.</span> <span class="nav-text">解决过程</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+        $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+</body>
+</html>

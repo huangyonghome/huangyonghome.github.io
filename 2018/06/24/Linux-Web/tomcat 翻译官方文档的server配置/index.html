@@ -79,7 +79,7 @@
 
 
 
-  <meta name="keywords" content="tomcat,web," />
+  <meta name="keywords" content="web,tomcat," />
 
 
 
@@ -93,7 +93,7 @@
 
 
 <meta name="description" content="tomcat 翻译官方文档的server配置官方文档:tomcat9  note:此文档翻译自官方的tomcat9版本的文档,可能和其他版本部分配置有区别">
-<meta name="keywords" content="tomcat,web">
+<meta name="keywords" content="web,tomcat">
 <meta property="og:type" content="article">
 <meta property="og:title" content="tomcat 翻译官方文档">
 <meta property="og:url" content="https://jesse.top/2018/06/24/Linux-Web/tomcat 翻译官方文档的server配置/index.html">
@@ -101,7 +101,7 @@
 <meta property="og:description" content="tomcat 翻译官方文档的server配置官方文档:tomcat9  note:此文档翻译自官方的tomcat9版本的文档,可能和其他版本部分配置有区别">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/web/tomcat.png">
-<meta property="og:updated_time" content="2018-06-24T06:24:12.165Z">
+<meta property="og:updated_time" content="2018-09-01T01:29:42.551Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tomcat 翻译官方文档">
 <meta name="twitter:description" content="tomcat 翻译官方文档的server配置官方文档:tomcat9  note:此文档翻译自官方的tomcat9版本的文档,可能和其他版本部分配置有区别">
@@ -383,31 +383,32 @@
 </blockquote>
 <a id="more"></a>
 <h3 id="各组件官方解释"><a href="#各组件官方解释" class="headerlink" title="各组件官方解释:"></a>各组件官方解释:</h3><ul>
-<li><strong>Server</strong> :</li>
+<li><p><strong>Server</strong> :</p>
+<p>   <server> is the root element of the entire configuration file</server></p>
+<pre><code>**Server**组件是整个配置文件的根元素.
+</code></pre></li>
+<li><p><strong>Service</strong>:</p>
+<pre><code>&lt;Service&gt; represents a group of Connectors that is associated with an Engine.
+
+  **Service**组件代表关联一个Engine的一组Connectors(调度器,接口)
+</code></pre></li>
+<li><p><strong>Connectors</strong> :</p>
+<pre><code>**Connectors** - Represent the interface between external clients sending requests to (and receiving responses from) a particular Service.
+
+**Connectors**代表外部客户端发送请求至某个服务(或者从某个服务接收响应)的接口
+</code></pre></li>
+<li><p><strong>Containers</strong>:</p>
+<pre><code>Containers - Represent components whose function is to process incoming requests, and create the corresponding responses. An Engine handles all requests for a Service, a Host handles all requests for a particular virtual host, and a Context handles all requests for a specific web application.
+
+**Containers**----代表处理入站请求,创建相关响应等这些功能的组件.一个Engine为Service处理所有请求,一个Host为某个虚拟主机处理所有请求,一个Context为某个WEB应用处理所有请求      
+</code></pre><p>所以,一个Containers容器应该包含Engine,Host,Context组件.而这些组件都是用来处理和响应请求的.只是处理和响应的对象范围不同Nested Components:</p>
+</li>
+<li><p><strong>Nested</strong> <strong>Components</strong> :</p>
+<pre><code>Nested Components --- Represent elements that can be nested inside the element for a Container. Some elements can be nested inside any Container, while others can only be nested inside a Context.
+
+ **Nested** **Components**-代表一些可以nest(嵌套)进Containers下各组件的元素.有些元素可以嵌套进所有Container下的组件,而有些元素只能嵌套进Context组件.
+</code></pre></li>
 </ul>
-<p>​     <server> is the root element of the entire configuration file</server></p>
-<p>​            <strong>Server</strong>组件是整个配置文件的根元素.</p>
-<ul>
-<li><strong>Service</strong>:</li>
-</ul>
-<p>​         <service> represents a group of Connectors that is associated with an Engine.</service></p>
-<p>​           <strong>Service</strong>组件代表关联一个Engine的一组Connectors(调度器,接口)</p>
-<ul>
-<li><strong>Connectors</strong> :</li>
-</ul>
-<p>​           <strong>Connectors</strong> - Represent the interface between external clients sending requests to (and receiving responses from) a particular Service.</p>
-<p>​           <strong>Connectors</strong>代表外部客户端发送请求至某个服务(或者从某个服务接收响应)的接口</p>
-<ul>
-<li><strong>Containers</strong>:</li>
-</ul>
-<p>​           Containers - Represent components whose function is to process incoming requests, and create the corresponding responses. An Engine handles all requests for a Service, a Host handles all requests for a particular virtual host, and a Context handles all requests for a specific web application.</p>
-<p>​           <strong>Containers</strong>—-代表处理入站请求,创建相关响应等这些功能的组件.一个Engine为Service处理所有请求,一个Host为某个虚拟主机处理所有请求,一个Context为某个WEB应用处理所有请求      </p>
-<p> 所以,一个Containers容器应该包含Engine,Host,Context组件.而这些组件都是用来处理和响应请求的.只是处理和响应的对象范围不同Nested Components:</p>
-<ul>
-<li><strong>Nested</strong> <strong>Components</strong> :</li>
-</ul>
-<p>​           Nested Components — Represent elements that can be nested inside the element for a Container. Some elements can be nested inside any Container, while others can only be nested inside a Context.</p>
-<p>​            <strong>Nested</strong> <strong>Components</strong>-代表一些可以nest(嵌套)进Containers下各组件的元素.有些元素可以嵌套进所有Container下的组件,而有些元素只能嵌套进Context组件.</p>
 <p><strong>Nested</strong> <strong>Components</strong>组件包含有:Valve,Cluster,Realm,Manager,Resources,Loader,Listener,等.下面再详细解释</p>
 <hr>
 <h3 id="详细组件介绍"><a href="#详细组件介绍" class="headerlink" title="详细组件介绍"></a>详细组件介绍</h3><h4 id="Server"><a href="#Server" class="headerlink" title="Server:"></a>Server:</h4><p>A Server element represents the entire Catalina servlet container. Therefore, it must be the single outermost element in the conf/server.xml configuration file</p>
@@ -649,7 +650,7 @@
   <p><span>本文标题:</span><a href="/2018/06/24/Linux-Web/tomcat 翻译官方文档的server配置/">tomcat 翻译官方文档</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月24日 - 11:06</p>
-  <p><span>最后更新:</span>2018年06月24日 - 14:06</p>
+  <p><span>最后更新:</span>2018年09月01日 - 09:09</p>
   <p><span>原始链接:</span><a href="/2018/06/24/Linux-Web/tomcat 翻译官方文档的server配置/" title="tomcat 翻译官方文档">https://jesse.top/2018/06/24/Linux-Web/tomcat 翻译官方文档的server配置/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/06/24/Linux-Web/tomcat 翻译官方文档的server配置/"  aria-label="复制成功！"></i></span>
   </p>
@@ -711,7 +712,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/tomcat-web/" rel="tag"># tomcat,web</a>
+            <a href="/tags/web/" rel="tag"># web</a>
+          
+            <a href="/tags/tomcat/" rel="tag"># tomcat</a>
           
         </div>
       
@@ -724,8 +727,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/24/Linux-Basic/SSL/lets-encrypt学习/" rel="next" title="lets encrypt学习">
-                <i class="fa fa-chevron-left"></i> lets encrypt学习
+              <a href="/2018/06/24/写作杂谈/大学二/" rel="next" title="大学<二>">
+                <i class="fa fa-chevron-left"></i> 大学<二>
               </a>
             
           </div>
@@ -734,8 +737,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/24/Linux-分布式&消息队列/rabbitmq+haproxy-集群环境搭建/" rel="prev" title="rabbitmq+haproxy 集群环境搭建">
-                rabbitmq+haproxy 集群环境搭建 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/24/Linux-Basic/SSL/lets-encrypt学习/" rel="prev" title="lets encrypt学习">
+                lets encrypt学习 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -849,7 +852,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">62</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -860,7 +863,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -871,7 +874,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

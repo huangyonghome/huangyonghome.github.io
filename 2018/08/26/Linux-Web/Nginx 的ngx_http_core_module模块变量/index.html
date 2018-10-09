@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'https:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Nginx 配置ngx_http_core_module模块变量下列表格中列出了部分的变量名及其代表的意义          $arg_PARAMETER http请求中某个参数的值,例如/index.html?size=100,可以用$arg_size取得100这个值   $args HTTP请求中的完整参数,例如.在请求/index.html?_w=120&amp;amp;_h=120中,$args表">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jesse&#39;s home">
+<meta property="og:url" content="https://jesse.top/2018/08/26/Linux-Web/Nginx 的ngx_http_core_module模块变量/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="Nginx 配置ngx_http_core_module模块变量下列表格中列出了部分的变量名及其代表的意义          $arg_PARAMETER http请求中某个参数的值,例如/index.html?size=100,可以用$arg_size取得100这个值   $args HTTP请求中的完整参数,例如.在请求/index.html?_w=120&amp;amp;_h=120中,$args表">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-11T12:40:12.931Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Jesse&#39;s home">
+<meta name="twitter:description" content="Nginx 配置ngx_http_core_module模块变量下列表格中列出了部分的变量名及其代表的意义          $arg_PARAMETER http请求中某个参数的值,例如/index.html?size=100,可以用$arg_size取得100这个值   $args HTTP请求中的完整参数,例如.在请求/index.html?_w=120&amp;amp;_h=120中,$args表">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2018/08/26/Linux-Web/Nginx 的ngx_http_core_module模块变量/"/>
+
+
+
+
+
+  <title> | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/26/Linux-Web/Nginx 的ngx_http_core_module模块变量/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T10:08:36+08:00">
+                2018-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/26/Linux-Web/Nginx 的ngx_http_core_module模块变量/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/26/Linux-Web/Nginx 的ngx_http_core_module模块变量/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Nginx-配置"><a href="#Nginx-配置" class="headerlink" title="Nginx 配置"></a>Nginx 配置</h2><h3 id="ngx-http-core-module模块变量"><a href="#ngx-http-core-module模块变量" class="headerlink" title="ngx_http_core_module模块变量"></a>ngx_http_core_module模块变量</h3><p>下列表格中列出了部分的变量名及其代表的意义</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">$arg_PARAMETER</td>
+<td>http请求中某个参数的值,例如/index.html?size=100,可以用$arg_size取得100这个值</td>
+</tr>
+<tr>
+<td style="text-align:left">$args</td>
+<td>HTTP请求中的完整参数,例如.在请求/index.html?_w=120&amp;_h=120中,$args表示字符串_w=120&amp;_h=120</td>
+</tr>
+<tr>
+<td style="text-align:left">$binary_remote_addr</td>
+<td>二进制客户端地址</td>
+</tr>
+<tr>
+<td style="text-align:left">$document_root</td>
+<td>表示当前请求所使用的root配置项的值</td>
+</tr>
+<tr>
+<td style="text-align:left">$uri</td>
+<td>表示当前请求的URI,不带任何参数</td>
+</tr>
+<tr>
+<td style="text-align:left">$document_uri</td>
+<td>与$uri的含义相同</td>
+</tr>
+<tr>
+<td style="text-align:left">$request_uri</td>
+<td>表示客户端发来的原始URI,带完整的参数.$uri和$document_uri未必是用户的原始请求,在内部重定向后可能是重定向后的URI,而$request_uri永远不会改变,始终是客户端的原始URI</td>
+</tr>
+<tr>
+<td style="text-align:left">$host</td>
+<td>表示客户端请求头部中的Host字段,如果Host字段不存在,则以实际处理的server(虚拟主机)名称代替,如果host字段带有端口,如IP:PORT,那么$host是去掉端口的,它的值为IP.$host是全小写的.和$http_HEADER中的http_host不同,http_host只是取出Host头部对应的值</td>
+</tr>
+<tr>
+<td style="text-align:left">$http_HEADER</td>
+<td>表示http请求中相应头部的值,HEADER名称全小写.例如$http_host表示请求中host头部对应的值</td>
+</tr>
+<tr>
+<td style="text-align:left">$send_http_HEADER</td>
+<td>表示返回客户端的HTTP响应中相应头部的值.HEADER名称全小写,例如$send_http_content_type表示响应中Content-Type头部对应的值</td>
+</tr>
+<tr>
+<td style="text-align:left">$is_args</td>
+<td>表示请求中的URI是否带参数,.如果带参数.$is_args值为?,否则值为空字符串</td>
+</tr>
+<tr>
+<td style="text-align:left">$limit_rate</td>
+<td>表示当前连接限速,0表示不限速</td>
+</tr>
+<tr>
+<td style="text-align:left">$query_string</td>
+<td>表示URI中的参数,与$args相同,然而$query_string是只读的不会改变</td>
+</tr>
+<tr>
+<td style="text-align:left">$remote_addr</td>
+<td>客户端地址</td>
+</tr>
+<tr>
+<td style="text-align:left">$remote_port</td>
+<td>客户端连接使用的接口</td>
+</tr>
+<tr>
+<td style="text-align:left">$request_filename</td>
+<td>表示用户请求中的URI经过root或者alias转换后的文件路径</td>
+</tr>
+<tr>
+<td style="text-align:left">$request_body</td>
+<td>表示Http请求中的包体,该参数只在proxy_pass或fastcgi_pass中有意义</td>
+</tr>
+<tr>
+<td style="text-align:left">$request_method</td>
+<td>表示HTTP请求的方法名,例如GET,PUT,POST等</td>
+</tr>
+<tr>
+<td style="text-align:left">$scheme</td>
+<td>表示http scheme,如在请求<a href="https://nginx.com/中表示https" target="_blank" rel="noopener">https://nginx.com/中表示https</a></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="反向代理服务器"><a href="#反向代理服务器" class="headerlink" title="反向代理服务器"></a>反向代理服务器</h3><p>下面介绍负载均衡的配置项</p>
+<p>1.<strong>upstream块</strong></p>
+<p><strong>语法:</strong> upstream name {…}</p>
+<p><strong>配置块:</strong>http</p>
+<p>upstream块定义了一个上游服务器的集群.便于反向代理中的Proxy_pass使用.例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">upstream backend &#123;</span><br><span class="line">       server www.test.com;</span><br><span class="line">       server www.test1.com;</span><br><span class="line">       server www.test2.com;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass http://backend</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.<strong>server</strong>(这个是upstream块内的server参数,并非指server{}块)</p>
+<p><strong>语法:</strong> server name [parameters];</p>
+<p><strong>配置块:</strong> upstream</p>
+<p>server配置项指定了一台上游服务器的名字,可以是域名,IP地址端口,UNIX句柄等,在服务器后面还可以跟下列参数.</p>
+<ul>
+<li>weight=number: 设置转发权重,默认为1.</li>
+<li>max_fails=number: 和fail_timeout配合使用,指在fail_timeout时间段内,如果上游服务器失败次数超过max_fails,则认为这台上游服务器不可用.max_fails默认为1,如果设置为0,不检查失败次数</li>
+<li>fail_timeout=time: 表示该时间段内转发失败多少次后,就认为上游服务器暂时不可用.默认为10秒</li>
+<li>down: 表示所在的上游服务器永久下线,只在使用Ip_hash配置项时才有用</li>
+<li>backup:在使用ip_hash时,这个配置是无效的,它表示所在的上游服务器只是备份服务器,只有在所有的非备份上游服务器都失效后,才会启用这台backup服务器</li>
+</ul>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upstream backend &#123;</span><br><span class="line">    server www.test.com weight=5;</span><br><span class="line">    server 127.0.0.1:8080 max_fails=3 fail_timeout=30s;</span><br><span class="line">    server unix:/tmp/nginx;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li><strong>ip_hash</strong></li>
+</ol>
+<p><strong>语法:</strong> ip_hash;</p>
+<p><strong>配置块:</strong> upstream</p>
+<p>ip_hash表示始终将来自某一个用户的请求反代到一台固定的上游服务器上,这有助于保持用户的session一致性.ip_hash首先根据客户端的IP地址计算出一个KEY,将KEY按照Upstream集群里的上游服务器数量进行取模,然后根据取模后的结果把请求转发到相应的上游服务器中.这样就确保了同一个客户端的请求只会转发到指定的上游服务器中.</p>
+<blockquote>
+<p>ip_hash与weight配置不可同时使用.另外如果upstream集群中有一台上游服务器暂时不可用,应该要用down参数标识出这台参数,而不是直接将该服务器从集群中移除,确保上游服务器的数量不变,这样才能保证转发策略的一贯性.</p>
+</blockquote>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">upstream backend &#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    server www.test.com;</span><br><span class="line">    server www.test1.com;</span><br><span class="line">    server www.test2.com down;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>有关负载均衡的日志变量</strong></p>
+<p>有些负载均衡的信息可能需要记录到access_log日志中,在定义日志格式时,可以使用负载均衡提供的变量.例如:</p>
+<table>
+<thead>
+<tr>
+<th>$upstream_addr</th>
+<th>处理请求的上游服务器地址</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$upstream_cache_status</td>
+<td>表示是否命中缓存,取值范围:MISS,EXPIRED,UPDATING,STALE,HIT</td>
+</tr>
+<tr>
+<td>$upstream_status</td>
+<td>上游服务器返回的响应中的Http响应码</td>
+</tr>
+<tr>
+<td>$upstream_response_time</td>
+<td>上游服务器的响应时间,精度到毫秒</td>
+</tr>
+<tr>
+<td>$upstream_http_$HEADER</td>
+<td>http头部,如:upstream_http_host</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="反向代理的基本配置"><a href="#反向代理的基本配置" class="headerlink" title="反向代理的基本配置"></a>反向代理的基本配置</h3><p><strong>下面列出一些重要的配置参数</strong></p>
+<p><strong>1.proxy_apss</strong></p>
+<p><strong>语法:</strong> proxy_pass URL:</p>
+<p><strong>配置块:</strong> location, if </p>
+<p>此配置将当前请求反向代理到URL参数指定的服务器上.URL可以是主机名,IP地址加端口的形式,unix句柄,以及upstream名称.例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass http://localhost:8080/uri/;</span><br><span class="line">proxy_pass http://unix:/path/to/nginx.socket:/uri/;</span><br><span class="line">proxy_pass http://backend;</span><br><span class="line"></span><br><span class="line">#也可以代理成Https:</span><br><span class="line">proxy_pass https://localhost;</span><br></pre></td></tr></table></figure>
+<p>默认情况下,反向代理不会转发请求中的host头部.如果需要转发,必须加上下面的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_set_header Host $host;</span><br></pre></td></tr></table></figure>
+<p><strong>2.proxy_pass_header</strong></p>
+<p>将上游服务器的响应http头部字段转发给客户端,例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass_header X-Accel-Redirect;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p> 该参数和proxy_hide_header字段相反.proxy_hide_header是隐藏header字段</p>
+</blockquote>
+<p><strong>3.proxy_pass_request_body on | off</strong> </p>
+<p>是否向上游服务器转发Http包体部分,默认是on;</p>
+<p><strong>4.proxy_pass_request_headers on |off</strong></p>
+<p>是否转发http头部,默认on</p>
+<p>.</p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/22/mysql/mysql主从同步延时问题/" rel="next" title="mysql5.7主从同步延时问题">
+                <i class="fa fa-chevron-left"></i> mysql5.7主从同步延时问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/" rel="prev" title="Ansible-Playbook">
+                Ansible-Playbook <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div>
+<div class="-mob-share-ui" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-qzone"><p>QQ空间</p></li>
+        <li class="-mob-share-qq"><p>QQ好友</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-youdao"><p>有道云笔记</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="https://f1.webshare.mob.com/code/mob-share.js?appkey=266b0526b70f4"></script>
+<!--MOB SHARE END-->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/08/26/Linux-Web/Nginx 的ngx_http_core_module模块变量/"
+           data-title="" data-url="https://jesse.top/2018/08/26/Linux-Web/Nginx 的ngx_http_core_module模块变量/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">保持饥渴,保持愚蠢.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/anselphilnos" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:mailhuangyong@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/jessehuang408" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/jessehuang408" target="_blank" title="FaceBook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FaceBook</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-配置"><span class="nav-number">1.</span> <span class="nav-text">Nginx 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ngx-http-core-module模块变量"><span class="nav-number">1.1.</span> <span class="nav-text">ngx_http_core_module模块变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反向代理服务器"><span class="nav-number">1.2.</span> <span class="nav-text">反向代理服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反向代理的基本配置"><span class="nav-number">1.3.</span> <span class="nav-text">反向代理的基本配置</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+        $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'https:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Ansible," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Ansible 部署Nginx项目的playbook实践工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置. 下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:  准备工作1.创建主机inventory清单123456[root@ansibl">
+<meta name="keywords" content="Ansible">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ansible部署nginx实战">
+<meta property="og:url" content="https://jesse.top/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="Ansible 部署Nginx项目的playbook实践工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置. 下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:  准备工作1.创建主机inventory清单123456[root@ansibl">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-10-09T14:05:48.601Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ansible部署nginx实战">
+<meta name="twitter:description" content="Ansible 部署Nginx项目的playbook实践工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置. 下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:  准备工作1.创建主机inventory清单123456[root@ansibl">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/"/>
+
+
+
+
+
+  <title>Ansible部署nginx实战 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ansible部署nginx实战</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-30T22:59:58+08:00">
+                2018-08-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Ansible/" itemprop="url" rel="index">
+                    <span itemprop="name">Ansible</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Ansible-部署Nginx项目的playbook实践"><a href="#Ansible-部署Nginx项目的playbook实践" class="headerlink" title="Ansible 部署Nginx项目的playbook实践"></a>Ansible 部署Nginx项目的playbook实践</h2><p>工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置.</p>
+<p>下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:</p>
+<hr>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><h5 id="1-创建主机inventory清单"><a href="#1-创建主机inventory清单" class="headerlink" title="1.创建主机inventory清单"></a>1.创建主机inventory清单</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible host_vars]$vim /etc/ansible/hosts</span><br><span class="line"></span><br><span class="line">[test]</span><br><span class="line">host100 ansible_host=172.16.1.100</span><br><span class="line">host120 ansible_host=172.16.1.120</span><br><span class="line">host102 ansible_host=172.16.1.102</span><br></pre></td></tr></table></figure>
+<h5 id="1-变量文件"><a href="#1-变量文件" class="headerlink" title="1.变量文件"></a>1.变量文件</h5><p>由于不同的服务器所属不同的环境.所以需要为不同的主机定义所属环境的变量.利用ansible的host_vars主机变量可以轻松实现:</p>
+<ul>
+<li>创建主机变量目录:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkidr /etc/ansible/host_vars</span><br></pre></td></tr></table></figure>
+<ul>
+<li>为每台主机创建变量文件,定义dwd_env变量.这个变量代表了主机所在的环境,</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible host_vars]$vim host100</span><br><span class="line">---</span><br><span class="line">dwd_env: beta</span><br><span class="line"></span><br><span class="line">[root@ansible host_vars]$vim host102</span><br><span class="line">---</span><br><span class="line">dwd_env: dev</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>一台远程主机属于beta环境,另外一台属于dev环境.</p>
+<p>host_vars目录下的文件名和inventory主机清单的主机名要保持一致,只要是主机名文件内的变量都会自动被ansible调用在这台主机下</p>
+</blockquote>
+<h5 id="2-nginx的站点配置文件"><a href="#2-nginx的站点配置文件" class="headerlink" title="2.nginx的站点配置文件"></a>2.nginx的站点配置文件</h5><p>这里定义两个站点文件,分别是openapi和internalapi的2套项目环境.配置文件由于需要调用变量,所以使用template模板功能可以很好的满足我们的需求.</p>
+<ul>
+<li>在playbook目录下创建template目录</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/ansible/playbook/template</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建internalapi的nginx虚拟主机</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible template]$vim nginx-internal.conf </span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line"></span><br><span class="line">#不同的环境的域名也不同.这里调用了dwd_env变量.对于dev环境的主机来说.server_name就是#internal.dev.msf.net</span><br><span class="line"></span><br><span class="line">  server_name internal.&#123;&#123; dwd_env &#125;&#125;.msf.net;</span><br><span class="line">  root /data/apps/msf-internal-api-&#123;&#123; dwd_env &#125;&#125;/; # 站点根目录</span><br><span class="line"></span><br><span class="line">  error_log /data/logs/nginx/msf_internal.error.log;</span><br><span class="line">  access_log /data/logs/nginx/msf_internal.access.log main;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  location / &#123;</span><br><span class="line">    index index.html;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里为了演示,所以配置文件比较简单.当然结合template的变量,循环,条件判断等功能,也可以根据需求编写出复杂的nginx站点配置文件</p>
+</blockquote>
+<ul>
+<li>创建openapi的nginx虚拟主机</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible template]$vim nginx-open.conf </span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line"></span><br><span class="line">  server_name open.&#123;&#123; dwd_env &#125;&#125;.msf.net;</span><br><span class="line">  root /data/apps/msf-open-api-&#123;&#123; dwd_env &#125;&#125;/; # 站点根目录</span><br><span class="line"></span><br><span class="line">  error_log /data/logs/nginx/msf_open.error.log;</span><br><span class="line">  access_log /data/logs/nginx/msf_open.access.log main;</span><br><span class="line"></span><br><span class="line">  # 如果URL中包含app.php，则转发为伪静态格式</span><br><span class="line"></span><br><span class="line">  location / &#123;</span><br><span class="line">    index index.html;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="3-创建nginx的index-html首页文件-这里为了演示也只是编写一个简单文件"><a href="#3-创建nginx的index-html首页文件-这里为了演示也只是编写一个简单文件" class="headerlink" title="3.  创建nginx的index.html首页文件.这里为了演示也只是编写一个简单文件"></a>3.  创建nginx的index.html首页文件.这里为了演示也只是编写一个简单文件</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">#创建file目录,用于统一存放Playbook的文件</span><br><span class="line">mkdir /etc/ansible/playbook/files</span><br><span class="line"></span><br><span class="line">#创建openapi的首页文件</span><br><span class="line">[root@ansible files]$cat nginx-open.html </span><br><span class="line"></span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">   &lt;title&gt;Welcome to dwd openapi website &lt;/title&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line"></span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;h1&gt;nginx,configured by ansible&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;If you see this,Ansible successfully installed and configured nginx .&lt;/p&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"></span><br><span class="line">#创建internalapi的首页文件</span><br><span class="line">[root@ansible files]$cat nginx-internal.html </span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">   &lt;title&gt;Welcome to dwd internal website &lt;/title&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line"></span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;h1&gt;nginx,configured by ansible&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;If you see this,Ansible successfully installed and configured nginx .&lt;/p&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="编排playbook"><a href="#编排playbook" class="headerlink" title="编排playbook"></a>编排playbook</h3><p>nginx所需的配置文件和资源站点文件都准备完毕后,就可以编排playbook了.</p>
+<p>playbook大致分为以下几个tasks:</p>
+<ul>
+<li>检查nginx是否安装,(如果是新服务器,或者在nginx服务器上添加新项目,则步骤可略)</li>
+<li>添加nginx的yum源,安装nginx (同上)</li>
+<li>创建nginx站点资源目录</li>
+<li>在该目录下,创建nginx主页文件</li>
+<li>创建nginx虚拟主机配置文件(重启nginx服务)</li>
+<li>启动nginx</li>
+</ul>
+<p>下面是具体的Playbook文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible playbook]$cat  nginx_env.yml </span><br><span class="line">---</span><br><span class="line">#all:!主机名的用法表示除了这台服务器外,在所有主机节点执行playbook</span><br><span class="line"> - hosts: all:!host120</span><br><span class="line">   remote_user: root</span><br><span class="line">   tasks:</span><br><span class="line">    </span><br><span class="line">    #这里用到了register注册变量,并且忽略了task执行错误的情况.判断是否有nginx的yum源</span><br><span class="line">     - name: check if there is nginx repo on server</span><br><span class="line">       shell: yum repolist all | grep nginx</span><br><span class="line">       register: nginx_repo</span><br><span class="line">       ignore_errors: True</span><br><span class="line"></span><br><span class="line">   #这里用到了when条件判断,如果变量nginx_repo执行失败,则添加nginx的yum源</span><br><span class="line">     - name: install nginx yum repo,if there is no nginx repo</span><br><span class="line">       command: rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</span><br><span class="line">       when: nginx_repo is failed</span><br><span class="line"></span><br><span class="line">     - name: install nginx</span><br><span class="line">       yum: name=nginx state=present</span><br><span class="line">      </span><br><span class="line">   #创建Nginx资源目录,这里使用了嵌套循环.item[0]表示循环&apos;open&apos;,&apos;internal&apos;.在每次循环item[0]时都循环一遍item[1],也就是&apos;release,vendor,shared.</span><br><span class="line">   #下面的语句类似于shell的命令:</span><br><span class="line">   mkdir -pv /data/apps/msf-&#123;open,internal&#125;-api/&#123;releases,vendor,shared&#125;</span><br><span class="line">   </span><br><span class="line">     - name: create project dir</span><br><span class="line">       file: path=/data/apps/msf-&#123;&#123; item[0] &#125;&#125;-api-&#123;&#123; dwd_env &#125;&#125;/&#123;&#123; item[1] &#125;&#125; recurse=yes owner=root group=root mode=0644 state=directory</span><br><span class="line">       with_nested:</span><br><span class="line">         - [&apos;open&apos;,&apos;internal&apos;]</span><br><span class="line">         - [&apos;releases&apos;,&apos;vendor&apos;,&apos;shared&apos;]</span><br><span class="line"></span><br><span class="line">     - name: create nginx log dir</span><br><span class="line">       file: path=/data/logs/nginx state=directory recurse=yes owner=root group=root mode=0644</span><br><span class="line">    </span><br><span class="line">    #下面使用了with_items的标准循环</span><br><span class="line">     - name: copy nginx conf file</span><br><span class="line">       template: src=template/nginx-&#123;&#123; item &#125;&#125;.conf dest=/etc/nginx/conf.d/msf-&#123;&#123; item &#125;&#125;-api.conf</span><br><span class="line">       with_items:</span><br><span class="line">          - open</span><br><span class="line">          - internal        </span><br><span class="line">       notify: restart nginx</span><br><span class="line"></span><br><span class="line">     - name: copy nginx web file</span><br><span class="line">       copy: src=files/nginx-&#123;&#123; item &#125;&#125;.html dest=/data/apps/msf-&#123;&#123; item &#125;&#125;-api-&#123;&#123; dwd_env &#125;&#125;/index.html </span><br><span class="line">       with_items:</span><br><span class="line">         - open</span><br><span class="line">         - internal     </span><br><span class="line"></span><br><span class="line">     - name: start nginx</span><br><span class="line">       service: name=nginx state=started</span><br><span class="line"></span><br><span class="line">   handlers:</span><br><span class="line">     - name: restart nginx</span><br><span class="line">       service: name=nginx state=restarted</span><br></pre></td></tr></table></figure>
+<p>执行完毕后,可以在两台节点上检查是否按我们需求创建正确的目录和文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"># 在beta环境服务上,创建了正确的目录结构和首页文件</span><br><span class="line"></span><br><span class="line">[root@localhost conf.d]# ll /data/apps/*</span><br><span class="line">/data/apps/msf-internal-api-beta:</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 root root 227 Aug  3 21:09 index.html</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 releases</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 shared</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 vendor</span><br><span class="line"></span><br><span class="line">/data/apps/msf-open-api-beta:</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 root root 226 Aug  3 21:09 index.html</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 releases</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 shared</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 vendor</span><br><span class="line"></span><br><span class="line">#创建了正确的beta环境的nginx虚拟主机配置文件</span><br><span class="line">[root@localhost conf.d]# cat msf-open-api.conf </span><br><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line"></span><br><span class="line">  server_name open.beta.msf.net;</span><br><span class="line">  root /data/apps/msf-open-api-beta/; # 站点根目录</span><br><span class="line"></span><br><span class="line">  error_log /data/logs/nginx/msf_open.error.log;</span><br><span class="line">  access_log /data/logs/nginx/msf_open.access.log main;</span><br><span class="line"></span><br><span class="line">  # 如果URL中包含app.php，则转发为伪静态格式</span><br><span class="line"></span><br><span class="line">  location / &#123;</span><br><span class="line">    index index.html;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#其他文件检查过程略.</span><br></pre></td></tr></table></figure>
+<p>在另外一台服务器上检查结果如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"># 创建了正确的dev环境目录:</span><br><span class="line">[root@localhost conf.d]$ll /data/apps/*</span><br><span class="line">/data/apps/msf-internal-api-dev:</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 root root 227 Sep  9 03:22 index.html</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 releases</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 shared</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 vendor</span><br><span class="line"></span><br><span class="line">/data/apps/msf-open-api-dev:</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 root root 226 Sep  9 03:22 index.html</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 releases</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 shared</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 vendor</span><br><span class="line"></span><br><span class="line">#创建了正确的nginx配置文件</span><br><span class="line"></span><br><span class="line">[root@localhost conf.d]$cat msf-open-api.conf </span><br><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line"></span><br><span class="line">  server_name open.dev.msf.net;</span><br><span class="line">  root /data/apps/msf-open-api-dev/; # 站点根目录</span><br><span class="line"></span><br><span class="line">  error_log /data/logs/nginx/msf_open.error.log;</span><br><span class="line">  access_log /data/logs/nginx/msf_open.access.log main;</span><br><span class="line"></span><br><span class="line">  # 如果URL中包含app.php，则转发为伪静态格式</span><br><span class="line"></span><br><span class="line">  location / &#123;</span><br><span class="line">    index index.html;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可见所有的目录和配置文件都按我们需求做到自动化部署,这为我们节省了大量的时间,工作效率大幅提升.而且也能很轻松的胜任更复杂的项目环境配置工作</p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/">Ansible部署nginx实战</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2018年08月30日 - 22:08</p>
+  <p><span>最后更新:</span>2018年10月09日 - 22:10</p>
+  <p><span>原始链接:</span><a href="/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/" title="Ansible部署nginx实战">https://jesse.top/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Ansible/" rel="tag"># Ansible</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/29/Ansible/Ansible 条件选择/" rel="next" title="Ansible 条件选择">
+                <i class="fa fa-chevron-left"></i> Ansible 条件选择
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div>
+<div class="-mob-share-ui" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-qzone"><p>QQ空间</p></li>
+        <li class="-mob-share-qq"><p>QQ好友</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-youdao"><p>有道云笔记</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="https://f1.webshare.mob.com/code/mob-share.js?appkey=266b0526b70f4"></script>
+<!--MOB SHARE END-->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/"
+           data-title="Ansible部署nginx实战" data-url="https://jesse.top/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">保持饥渴,保持愚蠢.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/anselphilnos" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:mailhuangyong@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/jessehuang408" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/jessehuang408" target="_blank" title="FaceBook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FaceBook</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ansible-部署Nginx项目的playbook实践"><span class="nav-number">1.</span> <span class="nav-text">Ansible 部署Nginx项目的playbook实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">1.1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-创建主机inventory清单"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">1.创建主机inventory清单</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-变量文件"><span class="nav-number">1.1.0.2.</span> <span class="nav-text">1.变量文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-nginx的站点配置文件"><span class="nav-number">1.1.0.3.</span> <span class="nav-text">2.nginx的站点配置文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-创建nginx的index-html首页文件-这里为了演示也只是编写一个简单文件"><span class="nav-number">1.1.0.4.</span> <span class="nav-text">3.  创建nginx的index.html首页文件.这里为了演示也只是编写一个简单文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编排playbook"><span class="nav-number">1.2.</span> <span class="nav-text">编排playbook</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+        $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+</body>
+</html>
