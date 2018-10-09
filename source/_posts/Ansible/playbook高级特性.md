@@ -1,3 +1,12 @@
+---
+title:  Ansible playbook高级特性
+date: 2018-08-26 22:59:58
+tags:  Ansible
+categories: Ansible
+comments: true
+copyright: true
+---
+
 ## playbook高级特性
 
 ### tags 标签
