@@ -216,7 +216,7 @@ PLAY RECAP *********************************************************************
 
 ### template 模板
 
-template常被用来传输文件,但是template模板的强大之处就在于支持变量替换.template支持jinja2的渲染格式,使用{{ variable }} 引入变量.另外还支持for循环以及if判断语句.下面来一个简单的例子:
+template常被用来传输文件,但是template模板的强大之处就在于支持变量替换.template支持jinja2的渲染格式,.另外还支持for循环以及if判断语句.下面来一个简单的例子:
 
 ```
 #编写一个简单的playbook
@@ -280,7 +280,7 @@ project_author: jesse
 {% endfor %}
 ```
 
-渲染风格和python的django的模板渲染风格一模一样,{% for %}结构开头,然后endfor结尾. 和{{ variable }} 变量引用一样. 大括号两边也要预留一个空格..
+渲染风格和python的django的模板渲染风格一模一样,. 大括号两边也要预留一个空格..
 
 例如稍微改一下上面例子中的test_template.j2模板文件:
 

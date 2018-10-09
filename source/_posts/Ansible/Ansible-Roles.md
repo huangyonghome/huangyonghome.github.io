@@ -97,10 +97,10 @@ main.yml文件是各目录代表的功能模块的入口,main.yml文件可以通
 
 一旦运行这个playbook,那么针对上面这2个roles(common和webservers),都会自动执行下面文件:
 
-* roles/{common,webservers}/tasks/main.yml (如果该文件存在)
-* roles/{common,webservers}/vars/main.yml .(如果该文件存在)
-* roles/{common,webservers}/default/main.yml (如果该文件存在)
-* roles/{common,webservers}/handlers/main.yml  (如果该文件存在,且tasks目录下的playbook调用了handlers)
+* roles/\{common,webservers\}/tasks/main.yml (如果该文件存在)
+* roles/\{common,webservers\}/vars/main.yml .(如果该文件存在)
+* roles/\{common,webservers\}/default/main.yml (如果该文件存在)
+* roles/\{common,webservers\}/handlers/main.yml  (如果该文件存在,且tasks目录下的playbook调用了handlers)
 * .......
 
 ---
