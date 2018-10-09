@@ -1,3 +1,12 @@
+---
+title:  Ansible-Roles
+date: 2018-08-27 22:59:58
+tags:  Ansible
+categories: Ansible
+comments: true
+copyright: true
+---
+
 ## Ansible-Roles
 
   对于中小型项目来说playbook结合include就足以胜任,清晰,有效的完成自动化部署工作了.但是如果是对于大型的项目,几十个playbook来说,可能会造成文件繁多,目录结构不清晰,命名不规范,以及后期维护成本大大升高.

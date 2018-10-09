@@ -1,3 +1,12 @@
+---
+title:  ansible--loop循环
+date: 2018-08-28 22:59:58
+tags:  Ansible
+categories: Ansible
+comments: true
+copyright: true
+---
+
 ## ansible--loop循环
 
 #### 标准循环

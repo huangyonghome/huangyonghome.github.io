@@ -1,3 +1,12 @@
+---
+title:  Ansible部署nginx实战
+date: 2018-08-30 22:59:58
+tags:  Ansible
+categories: Ansible
+comments: true
+copyright: true
+---
+
 ## Ansible 部署Nginx项目的playbook实践
 
 工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置.

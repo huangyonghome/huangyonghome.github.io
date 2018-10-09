@@ -1,3 +1,12 @@
+---
+title:  Ansible 条件选择
+date: 2018-08-29 22:59:58
+tags:  Ansible
+categories: Ansible
+comments: true
+copyright: true
+---
+
 ## Ansible 条件选择
 
 playbook也可以像shell脚本的if语句那样,基于一个变量的结果来判断是否应该执行某个task.只是ansible的逻辑判断和语法上要别扭,复杂点.
