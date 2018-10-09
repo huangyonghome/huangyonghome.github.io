@@ -92,18 +92,18 @@
 
 
 
-<meta name="description" content="playbook高级特性tags 标签给task打上标签可以允许playbook执行的时候使用–tags选项只执行某个task或者–skip-tags选项不执行某个task.例如: 12345678910111213141516tasks:    - yum:        name: &amp;quot;&amp;#123;&amp;#123; item &amp;#125;&amp;#125;&amp;quot;        state:">
+<meta name="description" content="playbook高级特性tags 标签给task打上标签可以允许playbook执行的时候使用–tags选项只执行某个task或者–skip-tags选项不执行某个task.例如:">
 <meta name="keywords" content="Ansible">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ansible playbook高级特性">
 <meta property="og:url" content="https://jesse.top/2018/08/26/Ansible/playbook高级特性/index.html">
 <meta property="og:site_name" content="Jesse&#39;s home">
-<meta property="og:description" content="playbook高级特性tags 标签给task打上标签可以允许playbook执行的时候使用–tags选项只执行某个task或者–skip-tags选项不执行某个task.例如: 12345678910111213141516tasks:    - yum:        name: &amp;quot;&amp;#123;&amp;#123; item &amp;#125;&amp;#125;&amp;quot;        state:">
+<meta property="og:description" content="playbook高级特性tags 标签给task打上标签可以允许playbook执行的时候使用–tags选项只执行某个task或者–skip-tags选项不执行某个task.例如:">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-09T15:00:20.335Z">
+<meta property="og:updated_time" content="2018-10-09T15:16:11.948Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ansible playbook高级特性">
-<meta name="twitter:description" content="playbook高级特性tags 标签给task打上标签可以允许playbook执行的时候使用–tags选项只执行某个task或者–skip-tags选项不执行某个task.例如: 12345678910111213141516tasks:    - yum:        name: &amp;quot;&amp;#123;&amp;#123; item &amp;#125;&amp;#125;&amp;quot;        state:">
+<meta name="twitter:description" content="playbook高级特性tags 标签给task打上标签可以允许playbook执行的时候使用–tags选项只执行某个task或者–skip-tags选项不执行某个task.例如:">
 
 
 
@@ -376,6 +376,7 @@
 
       
         <h2 id="playbook高级特性"><a href="#playbook高级特性" class="headerlink" title="playbook高级特性"></a>playbook高级特性</h2><h3 id="tags-标签"><a href="#tags-标签" class="headerlink" title="tags 标签"></a>tags 标签</h3><p>给task打上标签可以允许playbook执行的时候使用–tags选项只执行某个task或者–skip-tags选项不执行某个task.例如:</p>
+<a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">tasks:</span><br><span class="line"></span><br><span class="line">    - yum:</span><br><span class="line">        name: &quot;&#123;&#123; item &#125;&#125;&quot;</span><br><span class="line">        state: installed</span><br><span class="line">      loop:</span><br><span class="line">         - httpd</span><br><span class="line">         - memcached</span><br><span class="line">      tags:</span><br><span class="line">         - packages</span><br><span class="line"></span><br><span class="line">    - template:</span><br><span class="line">        src: templates/src.j2</span><br><span class="line">        dest: /etc/foo.conf</span><br><span class="line">      tags:</span><br><span class="line">         - configuration</span><br></pre></td></tr></table></figure>
 <p>如果只想执行”configuration”和”packags”标签的task,只需要执行:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-playbook example.yml --tags &quot;configuration,packages&quot;</span><br></pre></td></tr></table></figure>
@@ -543,8 +544,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/27/Ansible/Ansible-Roles/" rel="prev" title="Ansible-Roles">
-                Ansible-Roles <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/26/Ansible/Ansible变量/" rel="prev" title="Ansible变量">
+                Ansible变量 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="ansible–loop循环标准循环 下面是一个简单的标准loop循环的例子:  12345678910111213[root@localhost playbook]$vim loop-useradd.yaml---- hosts: all  tasks:    - name: add several users      user:         name: &amp;quot;&amp;#123;&amp;#123">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-09T15:00:20.334Z">
+<meta property="og:updated_time" content="2018-10-09T15:15:45.305Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ansible--loop循环">
 <meta name="twitter:description" content="ansible–loop循环标准循环 下面是一个简单的标准loop循环的例子:  12345678910111213[root@localhost playbook]$vim loop-useradd.yaml---- hosts: all  tasks:    - name: add several users      user:         name: &amp;quot;&amp;#123;&amp;#123">
@@ -379,6 +379,7 @@
 <li>下面是一个简单的标准loop循环的例子:</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$vim loop-useradd.yaml</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">- hosts: all</span><br><span class="line">  tasks:</span><br><span class="line">    - name: add several users</span><br><span class="line">      user:</span><br><span class="line">         name: &quot;&#123;&#123; item &#125;&#125;&quot;</span><br><span class="line">         state: present</span><br><span class="line">         groups: &quot;wheel&quot;</span><br><span class="line">      loop:</span><br><span class="line">         - testuser1</span><br><span class="line">         - testuser2</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <ul>
 <li>如果变量是一个Yaml列表,则可以循环这个列表:</li>
 </ul>

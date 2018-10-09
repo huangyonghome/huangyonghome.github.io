@@ -92,18 +92,18 @@
 
 
 
-<meta name="description" content="Ansible 部署Nginx项目的playbook实践工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置. 下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:  准备工作1.创建主机inventory清单123456[root@ansibl">
+<meta name="description" content="Ansible 部署Nginx项目的playbook实践工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置. 下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:">
 <meta name="keywords" content="Ansible">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ansible部署nginx实战">
 <meta property="og:url" content="https://jesse.top/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/index.html">
 <meta property="og:site_name" content="Jesse&#39;s home">
-<meta property="og:description" content="Ansible 部署Nginx项目的playbook实践工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置. 下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:  准备工作1.创建主机inventory清单123456[root@ansibl">
+<meta property="og:description" content="Ansible 部署Nginx项目的playbook实践工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置. 下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-09T15:00:20.333Z">
+<meta property="og:updated_time" content="2018-10-09T15:15:16.739Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ansible部署nginx实战">
-<meta name="twitter:description" content="Ansible 部署Nginx项目的playbook实践工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置. 下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:  准备工作1.创建主机inventory清单123456[root@ansibl">
+<meta name="twitter:description" content="Ansible 部署Nginx项目的playbook实践工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置. 下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:">
 
 
 
@@ -377,6 +377,7 @@
       
         <h2 id="Ansible-部署Nginx项目的playbook实践"><a href="#Ansible-部署Nginx项目的playbook实践" class="headerlink" title="Ansible 部署Nginx项目的playbook实践"></a>Ansible 部署Nginx项目的playbook实践</h2><p>工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置.</p>
 <p>下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:</p>
+<a id="more"></a>
 <hr>
 <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><h5 id="1-创建主机inventory清单"><a href="#1-创建主机inventory清单" class="headerlink" title="1.创建主机inventory清单"></a>1.创建主机inventory清单</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible host_vars]$vim /etc/ansible/hosts</span><br><span class="line"></span><br><span class="line">[test]</span><br><span class="line">host100 ansible_host=172.16.1.100</span><br><span class="line">host120 ansible_host=172.16.1.120</span><br><span class="line">host102 ansible_host=172.16.1.102</span><br></pre></td></tr></table></figure>
 <h5 id="1-变量文件"><a href="#1-变量文件" class="headerlink" title="1.变量文件"></a>1.变量文件</h5><p>由于不同的服务器所属不同的环境.所以需要为不同的主机定义所属环境的变量.利用ansible的host_vars主机变量可以轻松实现:</p>
@@ -530,10 +531,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/09/Linux-Web/Nginx 的ngx_http_core_module模块变量/" rel="prev" title="">
-                 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>

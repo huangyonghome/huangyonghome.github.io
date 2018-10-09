@@ -275,306 +275,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/09/Linux-Web/Nginx 的ngx_http_core_module模块变量/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/09/Linux-Web/Nginx 的ngx_http_core_module模块变量/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-09T23:00:20+08:00">
-                2018-10-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/09/Linux-Web/Nginx 的ngx_http_core_module模块变量/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/09/Linux-Web/Nginx 的ngx_http_core_module模块变量/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Nginx-配置"><a href="#Nginx-配置" class="headerlink" title="Nginx 配置"></a>Nginx 配置</h2><h3 id="ngx-http-core-module模块变量"><a href="#ngx-http-core-module模块变量" class="headerlink" title="ngx_http_core_module模块变量"></a>ngx_http_core_module模块变量</h3><p>下列表格中列出了部分的变量名及其代表的意义</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left"></th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">$arg_PARAMETER</td>
-<td>http请求中某个参数的值,例如/index.html?size=100,可以用$arg_size取得100这个值</td>
-</tr>
-<tr>
-<td style="text-align:left">$args</td>
-<td>HTTP请求中的完整参数,例如.在请求/index.html?_w=120&amp;_h=120中,$args表示字符串_w=120&amp;_h=120</td>
-</tr>
-<tr>
-<td style="text-align:left">$binary_remote_addr</td>
-<td>二进制客户端地址</td>
-</tr>
-<tr>
-<td style="text-align:left">$document_root</td>
-<td>表示当前请求所使用的root配置项的值</td>
-</tr>
-<tr>
-<td style="text-align:left">$uri</td>
-<td>表示当前请求的URI,不带任何参数</td>
-</tr>
-<tr>
-<td style="text-align:left">$document_uri</td>
-<td>与$uri的含义相同</td>
-</tr>
-<tr>
-<td style="text-align:left">$request_uri</td>
-<td>表示客户端发来的原始URI,带完整的参数.$uri和$document_uri未必是用户的原始请求,在内部重定向后可能是重定向后的URI,而$request_uri永远不会改变,始终是客户端的原始URI</td>
-</tr>
-<tr>
-<td style="text-align:left">$host</td>
-<td>表示客户端请求头部中的Host字段,如果Host字段不存在,则以实际处理的server(虚拟主机)名称代替,如果host字段带有端口,如IP:PORT,那么$host是去掉端口的,它的值为IP.$host是全小写的.和$http_HEADER中的http_host不同,http_host只是取出Host头部对应的值</td>
-</tr>
-<tr>
-<td style="text-align:left">$http_HEADER</td>
-<td>表示http请求中相应头部的值,HEADER名称全小写.例如$http_host表示请求中host头部对应的值</td>
-</tr>
-<tr>
-<td style="text-align:left">$send_http_HEADER</td>
-<td>表示返回客户端的HTTP响应中相应头部的值.HEADER名称全小写,例如$send_http_content_type表示响应中Content-Type头部对应的值</td>
-</tr>
-<tr>
-<td style="text-align:left">$is_args</td>
-<td>表示请求中的URI是否带参数,.如果带参数.$is_args值为?,否则值为空字符串</td>
-</tr>
-<tr>
-<td style="text-align:left">$limit_rate</td>
-<td>表示当前连接限速,0表示不限速</td>
-</tr>
-<tr>
-<td style="text-align:left">$query_string</td>
-<td>表示URI中的参数,与$args相同,然而$query_string是只读的不会改变</td>
-</tr>
-<tr>
-<td style="text-align:left">$remote_addr</td>
-<td>客户端地址</td>
-</tr>
-<tr>
-<td style="text-align:left">$remote_port</td>
-<td>客户端连接使用的接口</td>
-</tr>
-<tr>
-<td style="text-align:left">$request_filename</td>
-<td>表示用户请求中的URI经过root或者alias转换后的文件路径</td>
-</tr>
-<tr>
-<td style="text-align:left">$request_body</td>
-<td>表示Http请求中的包体,该参数只在proxy_pass或fastcgi_pass中有意义</td>
-</tr>
-<tr>
-<td style="text-align:left">$request_method</td>
-<td>表示HTTP请求的方法名,例如GET,PUT,POST等</td>
-</tr>
-<tr>
-<td style="text-align:left">$scheme</td>
-<td>表示http scheme,如在请求<a href="https://nginx.com/中表示https" target="_blank" rel="noopener">https://nginx.com/中表示https</a></td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h3 id="反向代理服务器"><a href="#反向代理服务器" class="headerlink" title="反向代理服务器"></a>反向代理服务器</h3><p>下面介绍负载均衡的配置项</p>
-<p>1.<strong>upstream块</strong></p>
-<p><strong>语法:</strong> upstream name {…}</p>
-<p><strong>配置块:</strong>http</p>
-<p>upstream块定义了一个上游服务器的集群.便于反向代理中的Proxy_pass使用.例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">upstream backend &#123;</span><br><span class="line">       server www.test.com;</span><br><span class="line">       server www.test1.com;</span><br><span class="line">       server www.test2.com;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass http://backend</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>2.<strong>server</strong>(这个是upstream块内的server参数,并非指server{}块)</p>
-<p><strong>语法:</strong> server name [parameters];</p>
-<p><strong>配置块:</strong> upstream</p>
-<p>server配置项指定了一台上游服务器的名字,可以是域名,IP地址端口,UNIX句柄等,在服务器后面还可以跟下列参数.</p>
-<ul>
-<li>weight=number: 设置转发权重,默认为1.</li>
-<li>max_fails=number: 和fail_timeout配合使用,指在fail_timeout时间段内,如果上游服务器失败次数超过max_fails,则认为这台上游服务器不可用.max_fails默认为1,如果设置为0,不检查失败次数</li>
-<li>fail_timeout=time: 表示该时间段内转发失败多少次后,就认为上游服务器暂时不可用.默认为10秒</li>
-<li>down: 表示所在的上游服务器永久下线,只在使用Ip_hash配置项时才有用</li>
-<li>backup:在使用ip_hash时,这个配置是无效的,它表示所在的上游服务器只是备份服务器,只有在所有的非备份上游服务器都失效后,才会启用这台backup服务器</li>
-</ul>
-<p>例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upstream backend &#123;</span><br><span class="line">    server www.test.com weight=5;</span><br><span class="line">    server 127.0.0.1:8080 max_fails=3 fail_timeout=30s;</span><br><span class="line">    server unix:/tmp/nginx;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li><strong>ip_hash</strong></li>
-</ol>
-<p><strong>语法:</strong> ip_hash;</p>
-<p><strong>配置块:</strong> upstream</p>
-<p>ip_hash表示始终将来自某一个用户的请求反代到一台固定的上游服务器上,这有助于保持用户的session一致性.ip_hash首先根据客户端的IP地址计算出一个KEY,将KEY按照Upstream集群里的上游服务器数量进行取模,然后根据取模后的结果把请求转发到相应的上游服务器中.这样就确保了同一个客户端的请求只会转发到指定的上游服务器中.</p>
-<blockquote>
-<p>ip_hash与weight配置不可同时使用.另外如果upstream集群中有一台上游服务器暂时不可用,应该要用down参数标识出这台参数,而不是直接将该服务器从集群中移除,确保上游服务器的数量不变,这样才能保证转发策略的一贯性.</p>
-</blockquote>
-<p>例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">upstream backend &#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    server www.test.com;</span><br><span class="line">    server www.test1.com;</span><br><span class="line">    server www.test2.com down;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<p><strong>有关负载均衡的日志变量</strong></p>
-<p>有些负载均衡的信息可能需要记录到access_log日志中,在定义日志格式时,可以使用负载均衡提供的变量.例如:</p>
-<table>
-<thead>
-<tr>
-<th>$upstream_addr</th>
-<th>处理请求的上游服务器地址</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>$upstream_cache_status</td>
-<td>表示是否命中缓存,取值范围:MISS,EXPIRED,UPDATING,STALE,HIT</td>
-</tr>
-<tr>
-<td>$upstream_status</td>
-<td>上游服务器返回的响应中的Http响应码</td>
-</tr>
-<tr>
-<td>$upstream_response_time</td>
-<td>上游服务器的响应时间,精度到毫秒</td>
-</tr>
-<tr>
-<td>$upstream_http_$HEADER</td>
-<td>http头部,如:upstream_http_host</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h3 id="反向代理的基本配置"><a href="#反向代理的基本配置" class="headerlink" title="反向代理的基本配置"></a>反向代理的基本配置</h3><p><strong>下面列出一些重要的配置参数</strong></p>
-<p><strong>1.proxy_apss</strong></p>
-<p><strong>语法:</strong> proxy_pass URL:</p>
-<p><strong>配置块:</strong> location, if </p>
-<p>此配置将当前请求反向代理到URL参数指定的服务器上.URL可以是主机名,IP地址加端口的形式,unix句柄,以及upstream名称.例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass http://localhost:8080/uri/;</span><br><span class="line">proxy_pass http://unix:/path/to/nginx.socket:/uri/;</span><br><span class="line">proxy_pass http://backend;</span><br><span class="line"></span><br><span class="line">#也可以代理成Https:</span><br><span class="line">proxy_pass https://localhost;</span><br></pre></td></tr></table></figure>
-<p>默认情况下,反向代理不会转发请求中的host头部.如果需要转发,必须加上下面的参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_set_header Host $host;</span><br></pre></td></tr></table></figure>
-<p><strong>2.proxy_pass_header</strong></p>
-<p>将上游服务器的响应http头部字段转发给客户端,例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass_header X-Accel-Redirect;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p> 该参数和proxy_hide_header字段相反.proxy_hide_header是隐藏header字段</p>
-</blockquote>
-<p><strong>3.proxy_pass_request_body on | off</strong> </p>
-<p>是否向上游服务器转发Http包体部分,默认是on;</p>
-<p><strong>4.proxy_pass_request_headers on |off</strong></p>
-<p>是否转发http头部,默认on</p>
-<p>.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -677,61 +377,15 @@
 
       
         
-          
-            <h2 id="Ansible-部署Nginx项目的playbook实践"><a href="#Ansible-部署Nginx项目的playbook实践" class="headerlink" title="Ansible 部署Nginx项目的playbook实践"></a>Ansible 部署Nginx项目的playbook实践</h2><p>工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置.</p>
+          <h2 id="Ansible-部署Nginx项目的playbook实践"><a href="#Ansible-部署Nginx项目的playbook实践" class="headerlink" title="Ansible 部署Nginx项目的playbook实践"></a>Ansible 部署Nginx项目的playbook实践</h2><p>工作中经常需要搭建项目的业务环境.需要部署同一套nginx站点业务在联调,测试,预发布,生产等各种不同环境的服务器上.这些工作主要包括两个部分:创建web资源目录,nginx站点配置.</p>
 <p>下面来看看如何使用playbook来自动化部署项目到不同环境的多台服务器上:</p>
-<hr>
-<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><h5 id="1-创建主机inventory清单"><a href="#1-创建主机inventory清单" class="headerlink" title="1.创建主机inventory清单"></a>1.创建主机inventory清单</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible host_vars]$vim /etc/ansible/hosts</span><br><span class="line"></span><br><span class="line">[test]</span><br><span class="line">host100 ansible_host=172.16.1.100</span><br><span class="line">host120 ansible_host=172.16.1.120</span><br><span class="line">host102 ansible_host=172.16.1.102</span><br></pre></td></tr></table></figure>
-<h5 id="1-变量文件"><a href="#1-变量文件" class="headerlink" title="1.变量文件"></a>1.变量文件</h5><p>由于不同的服务器所属不同的环境.所以需要为不同的主机定义所属环境的变量.利用ansible的host_vars主机变量可以轻松实现:</p>
-<ul>
-<li>创建主机变量目录:</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkidr /etc/ansible/host_vars</span><br></pre></td></tr></table></figure>
-<ul>
-<li>为每台主机创建变量文件,定义dwd_env变量.这个变量代表了主机所在的环境,</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible host_vars]$vim host100</span><br><span class="line">---</span><br><span class="line">dwd_env: beta</span><br><span class="line"></span><br><span class="line">[root@ansible host_vars]$vim host102</span><br><span class="line">---</span><br><span class="line">dwd_env: dev</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>一台远程主机属于beta环境,另外一台属于dev环境.</p>
-<p>host_vars目录下的文件名和inventory主机清单的主机名要保持一致,只要是主机名文件内的变量都会自动被ansible调用在这台主机下</p>
-</blockquote>
-<h5 id="2-nginx的站点配置文件"><a href="#2-nginx的站点配置文件" class="headerlink" title="2.nginx的站点配置文件"></a>2.nginx的站点配置文件</h5><p>这里定义两个站点文件,分别是openapi和internalapi的2套项目环境.配置文件由于需要调用变量,所以使用template模板功能可以很好的满足我们的需求.</p>
-<ul>
-<li>在playbook目录下创建template目录</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/ansible/playbook/template</span><br></pre></td></tr></table></figure>
-<ul>
-<li>创建internalapi的nginx虚拟主机</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible template]$vim nginx-internal.conf </span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line"></span><br><span class="line">#不同的环境的域名也不同.这里调用了dwd_env变量.对于dev环境的主机来说.server_name就是#internal.dev.msf.net</span><br><span class="line"></span><br><span class="line">  server_name internal.&#123;&#123; dwd_env &#125;&#125;.msf.net;</span><br><span class="line">  root /data/apps/msf-internal-api-&#123;&#123; dwd_env &#125;&#125;/; # 站点根目录</span><br><span class="line"></span><br><span class="line">  error_log /data/logs/nginx/msf_internal.error.log;</span><br><span class="line">  access_log /data/logs/nginx/msf_internal.access.log main;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  location / &#123;</span><br><span class="line">    index index.html;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>这里为了演示,所以配置文件比较简单.当然结合template的变量,循环,条件判断等功能,也可以根据需求编写出复杂的nginx站点配置文件</p>
-</blockquote>
-<ul>
-<li>创建openapi的nginx虚拟主机</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible template]$vim nginx-open.conf </span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line"></span><br><span class="line">  server_name open.&#123;&#123; dwd_env &#125;&#125;.msf.net;</span><br><span class="line">  root /data/apps/msf-open-api-&#123;&#123; dwd_env &#125;&#125;/; # 站点根目录</span><br><span class="line"></span><br><span class="line">  error_log /data/logs/nginx/msf_open.error.log;</span><br><span class="line">  access_log /data/logs/nginx/msf_open.access.log main;</span><br><span class="line"></span><br><span class="line">  # 如果URL中包含app.php，则转发为伪静态格式</span><br><span class="line"></span><br><span class="line">  location / &#123;</span><br><span class="line">    index index.html;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="3-创建nginx的index-html首页文件-这里为了演示也只是编写一个简单文件"><a href="#3-创建nginx的index-html首页文件-这里为了演示也只是编写一个简单文件" class="headerlink" title="3.  创建nginx的index.html首页文件.这里为了演示也只是编写一个简单文件"></a>3.  创建nginx的index.html首页文件.这里为了演示也只是编写一个简单文件</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">#创建file目录,用于统一存放Playbook的文件</span><br><span class="line">mkdir /etc/ansible/playbook/files</span><br><span class="line"></span><br><span class="line">#创建openapi的首页文件</span><br><span class="line">[root@ansible files]$cat nginx-open.html </span><br><span class="line"></span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">   &lt;title&gt;Welcome to dwd openapi website &lt;/title&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line"></span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;h1&gt;nginx,configured by ansible&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;If you see this,Ansible successfully installed and configured nginx .&lt;/p&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"></span><br><span class="line">#创建internalapi的首页文件</span><br><span class="line">[root@ansible files]$cat nginx-internal.html </span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">   &lt;title&gt;Welcome to dwd internal website &lt;/title&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line"></span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;h1&gt;nginx,configured by ansible&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;If you see this,Ansible successfully installed and configured nginx .&lt;/p&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
-<hr>
-<h3 id="编排playbook"><a href="#编排playbook" class="headerlink" title="编排playbook"></a>编排playbook</h3><p>nginx所需的配置文件和资源站点文件都准备完毕后,就可以编排playbook了.</p>
-<p>playbook大致分为以下几个tasks:</p>
-<ul>
-<li>检查nginx是否安装,(如果是新服务器,或者在nginx服务器上添加新项目,则步骤可略)</li>
-<li>添加nginx的yum源,安装nginx (同上)</li>
-<li>创建nginx站点资源目录</li>
-<li>在该目录下,创建nginx主页文件</li>
-<li>创建nginx虚拟主机配置文件(重启nginx服务)</li>
-<li>启动nginx</li>
-</ul>
-<p>下面是具体的Playbook文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible playbook]$cat  nginx_env.yml </span><br><span class="line">---</span><br><span class="line">#all:!主机名的用法表示除了这台服务器外,在所有主机节点执行playbook</span><br><span class="line"> - hosts: all:!host120</span><br><span class="line">   remote_user: root</span><br><span class="line">   tasks:</span><br><span class="line">    </span><br><span class="line">    #这里用到了register注册变量,并且忽略了task执行错误的情况.判断是否有nginx的yum源</span><br><span class="line">     - name: check if there is nginx repo on server</span><br><span class="line">       shell: yum repolist all | grep nginx</span><br><span class="line">       register: nginx_repo</span><br><span class="line">       ignore_errors: True</span><br><span class="line"></span><br><span class="line">   #这里用到了when条件判断,如果变量nginx_repo执行失败,则添加nginx的yum源</span><br><span class="line">     - name: install nginx yum repo,if there is no nginx repo</span><br><span class="line">       command: rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</span><br><span class="line">       when: nginx_repo is failed</span><br><span class="line"></span><br><span class="line">     - name: install nginx</span><br><span class="line">       yum: name=nginx state=present</span><br><span class="line">      </span><br><span class="line">   #创建Nginx资源目录,这里使用了嵌套循环.item[0]表示循环&apos;open&apos;,&apos;internal&apos;.在每次循环item[0]时都循环一遍item[1],也就是&apos;release,vendor,shared.</span><br><span class="line">   #下面的语句类似于shell的命令:</span><br><span class="line">   mkdir -pv /data/apps/msf-&#123;open,internal&#125;-api/&#123;releases,vendor,shared&#125;</span><br><span class="line">   </span><br><span class="line">     - name: create project dir</span><br><span class="line">       file: path=/data/apps/msf-&#123;&#123; item[0] &#125;&#125;-api-&#123;&#123; dwd_env &#125;&#125;/&#123;&#123; item[1] &#125;&#125; recurse=yes owner=root group=root mode=0644 state=directory</span><br><span class="line">       with_nested:</span><br><span class="line">         - [&apos;open&apos;,&apos;internal&apos;]</span><br><span class="line">         - [&apos;releases&apos;,&apos;vendor&apos;,&apos;shared&apos;]</span><br><span class="line"></span><br><span class="line">     - name: create nginx log dir</span><br><span class="line">       file: path=/data/logs/nginx state=directory recurse=yes owner=root group=root mode=0644</span><br><span class="line">    </span><br><span class="line">    #下面使用了with_items的标准循环</span><br><span class="line">     - name: copy nginx conf file</span><br><span class="line">       template: src=template/nginx-&#123;&#123; item &#125;&#125;.conf dest=/etc/nginx/conf.d/msf-&#123;&#123; item &#125;&#125;-api.conf</span><br><span class="line">       with_items:</span><br><span class="line">          - open</span><br><span class="line">          - internal        </span><br><span class="line">       notify: restart nginx</span><br><span class="line"></span><br><span class="line">     - name: copy nginx web file</span><br><span class="line">       copy: src=files/nginx-&#123;&#123; item &#125;&#125;.html dest=/data/apps/msf-&#123;&#123; item &#125;&#125;-api-&#123;&#123; dwd_env &#125;&#125;/index.html </span><br><span class="line">       with_items:</span><br><span class="line">         - open</span><br><span class="line">         - internal     </span><br><span class="line"></span><br><span class="line">     - name: start nginx</span><br><span class="line">       service: name=nginx state=started</span><br><span class="line"></span><br><span class="line">   handlers:</span><br><span class="line">     - name: restart nginx</span><br><span class="line">       service: name=nginx state=restarted</span><br></pre></td></tr></table></figure>
-<p>执行完毕后,可以在两台节点上检查是否按我们需求创建正确的目录和文件:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"># 在beta环境服务上,创建了正确的目录结构和首页文件</span><br><span class="line"></span><br><span class="line">[root@localhost conf.d]# ll /data/apps/*</span><br><span class="line">/data/apps/msf-internal-api-beta:</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 root root 227 Aug  3 21:09 index.html</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 releases</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 shared</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 vendor</span><br><span class="line"></span><br><span class="line">/data/apps/msf-open-api-beta:</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 root root 226 Aug  3 21:09 index.html</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 releases</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 shared</span><br><span class="line">drw-r--r-- 2 root root   6 Aug  3 21:02 vendor</span><br><span class="line"></span><br><span class="line">#创建了正确的beta环境的nginx虚拟主机配置文件</span><br><span class="line">[root@localhost conf.d]# cat msf-open-api.conf </span><br><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line"></span><br><span class="line">  server_name open.beta.msf.net;</span><br><span class="line">  root /data/apps/msf-open-api-beta/; # 站点根目录</span><br><span class="line"></span><br><span class="line">  error_log /data/logs/nginx/msf_open.error.log;</span><br><span class="line">  access_log /data/logs/nginx/msf_open.access.log main;</span><br><span class="line"></span><br><span class="line">  # 如果URL中包含app.php，则转发为伪静态格式</span><br><span class="line"></span><br><span class="line">  location / &#123;</span><br><span class="line">    index index.html;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#其他文件检查过程略.</span><br></pre></td></tr></table></figure>
-<p>在另外一台服务器上检查结果如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"># 创建了正确的dev环境目录:</span><br><span class="line">[root@localhost conf.d]$ll /data/apps/*</span><br><span class="line">/data/apps/msf-internal-api-dev:</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 root root 227 Sep  9 03:22 index.html</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 releases</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 shared</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 vendor</span><br><span class="line"></span><br><span class="line">/data/apps/msf-open-api-dev:</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 root root 226 Sep  9 03:22 index.html</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 releases</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 shared</span><br><span class="line">drw-r--r-- 2 root root   6 Sep  9 03:14 vendor</span><br><span class="line"></span><br><span class="line">#创建了正确的nginx配置文件</span><br><span class="line"></span><br><span class="line">[root@localhost conf.d]$cat msf-open-api.conf </span><br><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line"></span><br><span class="line">  server_name open.dev.msf.net;</span><br><span class="line">  root /data/apps/msf-open-api-dev/; # 站点根目录</span><br><span class="line"></span><br><span class="line">  error_log /data/logs/nginx/msf_open.error.log;</span><br><span class="line">  access_log /data/logs/nginx/msf_open.access.log main;</span><br><span class="line"></span><br><span class="line">  # 如果URL中包含app.php，则转发为伪静态格式</span><br><span class="line"></span><br><span class="line">  location / &#123;</span><br><span class="line">    index index.html;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可见所有的目录和配置文件都按我们需求做到自动化部署,这为我们节省了大量的时间,工作效率大幅提升.而且也能很轻松的胜任更复杂的项目环境配置工作</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/30/Ansible/Ansible 部署Nginx项目的playbook实践/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -884,32 +538,14 @@
 
       
         
-          
-            <h2 id="Ansible-条件选择"><a href="#Ansible-条件选择" class="headerlink" title="Ansible 条件选择"></a>Ansible 条件选择</h2><p>playbook也可以像shell脚本的if语句那样,基于一个变量的结果来判断是否应该执行某个task.只是ansible的逻辑判断和语法上要别扭,复杂点.</p>
-<hr>
-<h3 id="when语句"><a href="#when语句" class="headerlink" title="when语句"></a>when语句</h3><p>when语句的条件判断使用非常简单,一般包含2种用法:</p>
-<p>1.基于变量值来判断是否应该执行某个task:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line"> - hosts: all</span><br><span class="line">   tasks:</span><br><span class="line">     - name: &quot;shutdown Debian flavored systems&quot;</span><br><span class="line">       file: path=/tmp/when state=touch</span><br><span class="line">       when: ansible_default_ipv4.address == &quot;10.0.4.230&quot;</span><br></pre></td></tr></table></figure>
-<p>执行结果:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$ansible-playbook when.yaml</span><br><span class="line"></span><br><span class="line">PLAY [all] *******************************************************************************************************************************************************************************************************</span><br><span class="line"></span><br><span class="line">TASK [Gathering Facts] *******************************************************************************************************************************************************************************************</span><br><span class="line">ok: [10.0.4.231]</span><br><span class="line">ok: [10.0.4.230]</span><br><span class="line"></span><br><span class="line">TASK [shutdown Debian flavored systems] **************************************************************************************************************************************************************************</span><br><span class="line">skipping: [10.0.4.231]</span><br><span class="line">changed: [10.0.4.230]</span><br><span class="line"></span><br><span class="line">PLAY RECAP *******************************************************************************************************************************************************************************************************</span><br><span class="line">10.0.4.230                 : ok=2    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.4.231                 : ok=1    changed=0    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
-<p>可以看到只在230这个IP上执行了动作.</p>
-<p>另外,还可以基于or 或者 and的条件判断.例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tasks:</span><br><span class="line">  - name: &quot;shut down CentOS 6 and Debian 7 systems&quot;</span><br><span class="line">    command: /sbin/shutdown -t now</span><br><span class="line">    when: (ansible_distribution == &quot;CentOS&quot; and ansible_distribution_major_version == &quot;6&quot;) or</span><br><span class="line">          (ansible_distribution == &quot;Debian&quot; and ansible_distribution_major_version == &quot;7&quot;)</span><br></pre></td></tr></table></figure>
-<p>或者and,同时满足2个条件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tasks:</span><br><span class="line">  - name: &quot;shut down CentOS 6 systems&quot;</span><br><span class="line">    command: /sbin/shutdown -t now</span><br><span class="line">    when:</span><br><span class="line">      - ansible_distribution == &quot;CentOS&quot;</span><br><span class="line">      - ansible_distribution_major_version == &quot;6&quot;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>note: 也可以写成 when: ansible_distribution == “CentOS” and ansible_distribution_major_version == “6”</p>
-</blockquote>
-<p>2.基于某个task执行的成功与否作为条件.例如.执行 ls /home/work这个动作,来判断如果有这个文件,则创建个软链.此时就要忽略ls /home/work 这个动作可能出现错误(文件不存在).</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line"> - hosts: all</span><br><span class="line">   tasks:</span><br><span class="line">     - name: &quot;test file&quot;</span><br><span class="line">       command: ls /home/work</span><br><span class="line">       ignore_errors: True</span><br><span class="line">       register: result</span><br><span class="line"></span><br><span class="line">     - name: &quot;create link&quot;</span><br><span class="line">       file: src=/home/work dest=/tmp/work  state=link</span><br><span class="line">       when: result is succeeded</span><br><span class="line"></span><br><span class="line">     - name: &quot;create /tmp/home/work&quot;</span><br><span class="line">       file: src=/tmp/home/work state=directory</span><br><span class="line">       when: result is failed</span><br></pre></td></tr></table></figure>
-<p>register注册一个result的变量,该变量是ls /home/work这个task的执行结果..然后when条件判断当result执行成功,或者执行失败时,才执行相应的task任务</p>
-<hr>
-<h3 id="when结合loop循环"><a href="#when结合loop循环" class="headerlink" title="when结合loop循环"></a>when结合loop循环</h3><p>变量注册的结果可以是字符串,布尔值,也可以是列表.使用”loop”或者”with_items”关键字可以对变量进行循环.例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- name: registered variable usage as a loop list</span><br><span class="line">  hosts: all</span><br><span class="line">  tasks:</span><br><span class="line"></span><br><span class="line">    - name: retrieve the list of home directories</span><br><span class="line">      command: ls /home</span><br><span class="line">      register: home_dirs</span><br><span class="line"></span><br><span class="line">    - name: add home dirs to the backup spooler</span><br><span class="line">      file:</span><br><span class="line">        path: /tmp/&#123;&#123; item &#125;&#125;</span><br><span class="line">        src: /home/&#123;&#123; item &#125;&#125;</span><br><span class="line">        state: link</span><br><span class="line">      loop: &quot;&#123;&#123; home_dirs.stdout_lines &#125;&#125;&quot;</span><br><span class="line">      # same as loop: &quot;&#123;&#123; home_dirs.stdout.split() &#125;&#125;&quot;</span><br></pre></td></tr></table></figure>
-<p>执行结果:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ls /home</span><br><span class="line">jesse  tom  tony</span><br><span class="line">[root@localhost ~]# ls /tmp -l</span><br><span class="line">total 0</span><br><span class="line">lrwxrwxrwx 1 root root 11 Aug  3 10:57 jesse -&gt; /home/jesse</span><br><span class="line">lrwxrwxrwx 1 root root  9 Aug  3 10:57 tom -&gt; /home/tom</span><br><span class="line">lrwxrwxrwx 1 root root 10 Aug  3 10:57 tony -&gt; /home/tony</span><br></pre></td></tr></table></figure>
-
-          
+          <h2 id="Ansible-条件选择"><a href="#Ansible-条件选择" class="headerlink" title="Ansible 条件选择"></a>Ansible 条件选择</h2><p>playbook也可以像shell脚本的if语句那样,基于一个变量的结果来判断是否应该执行某个task.只是ansible的逻辑判断和语法上要别扭,复杂点.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/29/Ansible/Ansible 条件选择/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1062,41 +698,17 @@
 
       
         
-          
-            <h2 id="ansible–loop循环"><a href="#ansible–loop循环" class="headerlink" title="ansible–loop循环"></a>ansible–loop循环</h2><h4 id="标准循环"><a href="#标准循环" class="headerlink" title="标准循环"></a>标准循环</h4><ul>
+          <h2 id="ansible–loop循环"><a href="#ansible–loop循环" class="headerlink" title="ansible–loop循环"></a>ansible–loop循环</h2><h4 id="标准循环"><a href="#标准循环" class="headerlink" title="标准循环"></a>标准循环</h4><ul>
 <li>下面是一个简单的标准loop循环的例子:</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$vim loop-useradd.yaml</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">- hosts: all</span><br><span class="line">  tasks:</span><br><span class="line">    - name: add several users</span><br><span class="line">      user:</span><br><span class="line">         name: &quot;&#123;&#123; item &#125;&#125;&quot;</span><br><span class="line">         state: present</span><br><span class="line">         groups: &quot;wheel&quot;</span><br><span class="line">      loop:</span><br><span class="line">         - testuser1</span><br><span class="line">         - testuser2</span><br></pre></td></tr></table></figure>
-<ul>
-<li>如果变量是一个Yaml列表,则可以循环这个列表:</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loop: &quot;&#123;&#123; somelist &#125;&#125;&quot;</span><br></pre></td></tr></table></figure>
-<p>所以上面的例子也可以改成:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">- hosts: all</span><br><span class="line">  tasks:</span><br><span class="line">    - name: add several users</span><br><span class="line">      user:</span><br><span class="line">         name: &quot;&#123;&#123; item &#125;&#125;&quot;</span><br><span class="line">         state: present</span><br><span class="line">         groups: &quot;wheel&quot;</span><br><span class="line">      loop: [ testuser3,testuser4]</span><br></pre></td></tr></table></figure>
-<p>循环实际上相当于下面的语句:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- name: add user testuser1</span><br><span class="line">  user:</span><br><span class="line">    name: &quot;testuser1&quot;</span><br><span class="line">    state: present</span><br><span class="line">    groups: &quot;wheel&quot;</span><br><span class="line">- name: add user testuser2</span><br><span class="line">  user:</span><br><span class="line">    name: &quot;testuser2&quot;</span><br><span class="line">    state: present</span><br><span class="line">    groups: &quot;wheel&quot;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>也可以循环一个字典,例如:</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- name: add several users</span><br><span class="line">  user:</span><br><span class="line">    name: &quot;&#123;&#123; item.name &#125;&#125;&quot;</span><br><span class="line">    state: present</span><br><span class="line">    groups: &quot;&#123;&#123; item.groups &#125;&#125;&quot;</span><br><span class="line">  loop:</span><br><span class="line">    - &#123; name: &apos;testuser1&apos;, groups: &apos;wheel&apos; &#125;</span><br><span class="line">    - &#123; name: &apos;testuser2&apos;, groups: &apos;root&apos; &#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<h4 id="loop与yum-apt"><a href="#loop与yum-apt" class="headerlink" title="loop与yum,apt"></a>loop与yum,apt</h4><p>有一些模块有自带列表循环功能,这比使用loop循环更好,例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$vim loop-yum.yaml</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">- hosts: all</span><br><span class="line">  tasks:</span><br><span class="line">   - name: optimal yum</span><br><span class="line">     yum:</span><br><span class="line">       name: [httpd,nginx,iotop]</span><br><span class="line">       state: present</span><br></pre></td></tr></table></figure>
-<p>这比使用下面的loop循环语句要更好,因为loop循环可能会有Yum安装软件的依赖问题</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- name: non optimal yum, not only slower but might cause issues with interdependencies</span><br><span class="line">  yum:</span><br><span class="line">    name: &quot;&#123;&#123;item&#125;&#125;&quot;</span><br><span class="line">    state: present</span><br><span class="line">  loop: &quot;&#123;&#123;list_of_packages&#125;&#125;&quot;</span><br></pre></td></tr></table></figure>
-<hr>
-<h4 id="with-items迭代"><a href="#with-items迭代" class="headerlink" title="with_items迭代"></a>with_items迭代</h4><p>ansible默认使用item作为循环迭代变量名,with_items列出了一个items的列表.迭代的传递值给变量.例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-name: install apt packages</span><br><span class="line"> apt: pkg=&#123;&#123;item&#125;&#125; update_cache=yes cache_valid_time=3600</span><br><span class="line"> sudo: True</span><br><span class="line"> with_items:</span><br><span class="line">    - git</span><br><span class="line">    - libjpeg-dev</span><br><span class="line">    - libpq-dev</span><br><span class="line">    - memcached</span><br><span class="line">    - nginx</span><br><span class="line">    - postgresql</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>在apt,yum等模块中,使用with_items语句安装软件包效率更高,这是因为ansible会将整个软件包的列表一起传递给apt,yum模块,相当于只调用一次apt,yum命令</p>
-</blockquote>
-<hr>
-<h4 id="嵌套循环"><a href="#嵌套循环" class="headerlink" title="嵌套循环"></a>嵌套循环</h4><p>如果一个模块要使用2个循环那该怎么办.在前一个循环的基础上,再进行一次循环时,就可以使用嵌套循环.</p>
-<p>例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- name: create project dir</span><br><span class="line">  file: path=/data/apps/msf-&#123;&#123; item[0] &#125;&#125;-api-&#123;&#123; dwd_env &#125;&#125;/&#123;&#123; item[1] &#125;&#125; recurse=yes owner=root group=root mode=0644 state=directory</span><br><span class="line">  with_nested:</span><br><span class="line">    - [&apos;open&apos;,&apos;internal&apos;]</span><br><span class="line">    - [&apos;releases&apos;,&apos;vendor&apos;,&apos;shared&apos;]</span><br></pre></td></tr></table></figure>
-<p>  item[0]表示循环’open’,’internal’.在每次循环item[0]时都循环一遍item[1],也就是’release,vendor,shared.<br>   上面的循环语句其实类似于shell的命令:<br>   mkdir -pv /data/apps/msf-{open,internal}-api/{releases,vendor,shared}</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/28/Ansible/ansible--loop循环/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1249,420 +861,12 @@
 
       
         
-          
-            <h2 id="Ansible-Roles"><a href="#Ansible-Roles" class="headerlink" title="Ansible-Roles"></a>Ansible-Roles</h2><p>  对于中小型项目来说playbook结合include就足以胜任,清晰,有效的完成自动化部署工作了.但是如果是对于大型的项目,几十个playbook来说,可能会造成文件繁多,目录结构不清晰,命名不规范,以及后期维护成本大大升高.</p>
+          <h2 id="Ansible-Roles"><a href="#Ansible-Roles" class="headerlink" title="Ansible-Roles"></a>Ansible-Roles</h2><p>  对于中小型项目来说playbook结合include就足以胜任,清晰,有效的完成自动化部署工作了.但是如果是对于大型的项目,几十个playbook来说,可能会造成文件繁多,目录结构不清晰,命名不规范,以及后期维护成本大大升高.</p>
 <p>ansible的roles功能就是为了解决这个问题应运而生.roles字面意思是”角色”,可以理解为各个不同模块功能的关联集合.roles主要包括以下功能模块:var_files,tasks,handlers,templates,files,等等</p>
 <p>但是需要注意的是,为了规范和维护期间.roles应该定义一个清晰,明确的目录结构以及文件名.不可随意更改.</p>
-<hr>
-<h4 id="roles目录结构"><a href="#roles目录结构" class="headerlink" title="roles目录结构"></a>roles目录结构</h4><p>常见的roles任务包含下列目录结构:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">playbook_role.yml #role的playbook入口</span><br><span class="line">roles/</span><br><span class="line">  role_name/</span><br><span class="line">      tasks/</span><br><span class="line">      files/</span><br><span class="line">      templates/</span><br><span class="line">      handlers/</span><br><span class="line">      vars/</span><br><span class="line">   role_name2/</span><br><span class="line">      tasks/</span><br><span class="line">      files/</span><br><span class="line">      templates/</span><br><span class="line">      handlers/</span><br><span class="line">      vars/</span><br></pre></td></tr></table></figure>
-<p>关于roles的目录结构有以下注意事项:</p>
-<ul>
-<li>一个role必须包含tasks目录.</li>
-<li>以上的目录结构各代表不同的功能组件,各司其职,不可随意更改目录名.</li>
-<li>每个目录下需要创建main.yml文件,作为改功能组件的入口.有点类似于Python的init.py文件</li>
-</ul>
-<p>下面解释了每个目录的功能含义:</p>
-<ul>
-<li>tasks: 包含一系列的Playbook文件,也就是roles要执行的一系列具体tasks</li>
-<li>handlers: 包含inotify需要执行的handlers任务</li>
-<li>defaults: roles的默认变量</li>
-<li>vars: 变量文件</li>
-<li>files: 文件</li>
-<li>templates: 模板文件</li>
-<li>meta: 元数据</li>
-</ul>
-<hr>
-<h4 id="main-yml文件"><a href="#main-yml文件" class="headerlink" title="main.yml文件"></a>main.yml文件</h4><p>main.yml文件是各目录代表的功能模块的入口,main.yml文件可以通过include或者import_task选项导入同目录下的其他yml文件(也就是其他playbook).例如下面的tasks/main.yml文件:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#下面是main.yml文件内容.main.yml文件作为tasks的入口,导入了同目录下的redhat和debian2个playbook</span><br><span class="line"># roles/example/tasks/main.yml</span><br><span class="line">- name: added in 2.4, previously you used &apos;include&apos;</span><br><span class="line">  import_tasks: redhat.yml</span><br><span class="line">  when: ansible_os_platform|lower == &apos;redhat&apos;</span><br><span class="line">- import_tasks: debian.yml</span><br><span class="line">  when: ansible_os_platform|lower == &apos;debian&apos;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#下面是tasks/redhat.yml文件,其实就是个独立的playbook</span><br><span class="line"># roles/example/tasks/redhat.yml</span><br><span class="line">- yum:</span><br><span class="line">    name: &quot;httpd&quot;</span><br><span class="line">    state: present</span><br><span class="line"></span><br><span class="line">#同理,下面是debian.yml文件</span><br><span class="line"># roles/example/tasks/debian.yml</span><br><span class="line">- apt:</span><br><span class="line">    name: &quot;apache2&quot;</span><br><span class="line">    state: present</span><br></pre></td></tr></table></figure>
-<h3 id="运行roles"><a href="#运行roles" class="headerlink" title="运行roles"></a>运行roles</h3><p>运行roles非常简单,只需要在最外层的Playbook上使用roles关键字,指定运行哪些roles目录即可:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">- hosts: webservers</span><br><span class="line">  roles:</span><br><span class="line">     - common</span><br><span class="line">     - webservers</span><br></pre></td></tr></table></figure>
-<p>一旦运行这个playbook,那么针对上面这2个roles(common和webservers),都会自动执行下面文件:</p>
-<ul>
-<li>roles/{common,webservers}/tasks/main.yml (如果该文件存在)</li>
-<li>roles/{common,webservers}/vars/main.yml .(如果该文件存在)</li>
-<li>roles/{common,webservers}/default/main.yml (如果该文件存在)</li>
-<li>roles/{common,webservers}/handlers/main.yml  (如果该文件存在,且tasks目录下的playbook调用了handlers)</li>
-<li>…….</li>
-</ul>
-<hr>
-
-          
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/26/Ansible/playbook高级特性/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/26/Ansible/playbook高级特性/" itemprop="url">Ansible playbook高级特性</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T22:59:58+08:00">
-                2018-08-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Ansible/" itemprop="url" rel="index">
-                    <span itemprop="name">Ansible</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/08/26/Ansible/playbook高级特性/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/26/Ansible/playbook高级特性/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="playbook高级特性"><a href="#playbook高级特性" class="headerlink" title="playbook高级特性"></a>playbook高级特性</h2><h3 id="tags-标签"><a href="#tags-标签" class="headerlink" title="tags 标签"></a>tags 标签</h3><p>给task打上标签可以允许playbook执行的时候使用–tags选项只执行某个task或者–skip-tags选项不执行某个task.例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">tasks:</span><br><span class="line"></span><br><span class="line">    - yum:</span><br><span class="line">        name: &quot;&#123;&#123; item &#125;&#125;&quot;</span><br><span class="line">        state: installed</span><br><span class="line">      loop:</span><br><span class="line">         - httpd</span><br><span class="line">         - memcached</span><br><span class="line">      tags:</span><br><span class="line">         - packages</span><br><span class="line"></span><br><span class="line">    - template:</span><br><span class="line">        src: templates/src.j2</span><br><span class="line">        dest: /etc/foo.conf</span><br><span class="line">      tags:</span><br><span class="line">         - configuration</span><br></pre></td></tr></table></figure>
-<p>如果只想执行”configuration”和”packags”标签的task,只需要执行:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-playbook example.yml --tags &quot;configuration,packages&quot;</span><br></pre></td></tr></table></figure>
-<p>或者如果想跳过configuration的task.只需要–skip-tags选项</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-playbook example.yml --skip-tags  &quot;configuration&quot;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>tags标签可以复用.可以为多个task打上同一个tags</p>
-</blockquote>
-<h4 id="tags继承性"><a href="#tags继承性" class="headerlink" title="tags继承性"></a>tags继承性</h4><p>tags可以定义在整个playbook中,或者roles中:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- hosts: all</span><br><span class="line">  tags:</span><br><span class="line">    - bar</span><br><span class="line">  tasks:</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">- hosts: all</span><br><span class="line">  tags: [&apos;foo&apos;]</span><br><span class="line">  tasks:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">roles:</span><br><span class="line">  - role: webserver</span><br><span class="line">    vars:</span><br><span class="line">      port: 5000</span><br><span class="line">    tags: [ &apos;web&apos;, &apos;foo&apos; ]</span><br></pre></td></tr></table></figure>
-<hr>
-<h3 id="Blocks-块功能"><a href="#Blocks-块功能" class="headerlink" title="Blocks 块功能"></a>Blocks 块功能</h3><p>Blocks块可以允许将一个或多个task归为一组,例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">tasks:</span><br><span class="line">  - name: Install Apache</span><br><span class="line">    block:</span><br><span class="line">      - yum:</span><br><span class="line">          name: &quot;&#123;&#123; item &#125;&#125;&quot;</span><br><span class="line">          state: installed</span><br><span class="line">        with_items:</span><br><span class="line">          - httpd</span><br><span class="line">          - memcached</span><br><span class="line">      - template:</span><br><span class="line">          src: templates/src.j2</span><br><span class="line">          dest: /etc/foo.conf</span><br><span class="line">      - service:</span><br><span class="line">          name: bar</span><br><span class="line">          state: started</span><br><span class="line">          enabled: True</span><br><span class="line">    when: ansible_distribution == &apos;CentOS&apos;</span><br><span class="line">    become: true</span><br><span class="line">    become_user: root</span><br></pre></td></tr></table></figure>
-<p>这些task都被放置与一个block中,而且在block中定义了一个whn条件判断语句.这样就不用再每个task中都定义一个相同的when语句.</p>
-<h4 id="block块处理异常任务"><a href="#block块处理异常任务" class="headerlink" title="block块处理异常任务."></a>block块处理异常任务.</h4><p>block可以用来处理任务的异常.有点类似于python编程语句的try exception…finally语句捕获异常.例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">tasks:</span><br><span class="line">- name: Attempt and graceful roll back demo</span><br><span class="line">  block:</span><br><span class="line">    - debug:</span><br><span class="line">        msg: &apos;I execute normally&apos;</span><br><span class="line">    - command: /bin/false</span><br><span class="line">    - debug:</span><br><span class="line">        msg: &apos;I never execute, due to the above task failing&apos;</span><br><span class="line">  rescue:</span><br><span class="line">    - debug:</span><br><span class="line">        msg: &apos;I caught an error&apos;</span><br><span class="line">    - command: /bin/false</span><br><span class="line">    - debug:</span><br><span class="line">        msg: &apos;I also never execute :-(&apos;</span><br><span class="line">  always:</span><br><span class="line">    - debug:</span><br><span class="line">        msg: &quot;This always executes&quot;</span><br></pre></td></tr></table></figure>
-<p>rescue表示上一个task(command:/bin/false)语句执行异常时就会执行rescue的task.</p>
-<p>而always表示无论command:/bin/false是否执行异常都会执行.</p>
-<hr>
-<h3 id="includes"><a href="#includes" class="headerlink" title="includes"></a>includes</h3><p>includes在Ansible中起引用功能,.其功能非常强大,可以引入一个Playbook文件,变量var文件等等.有时候多个task或者playbook需要进行一项重复的工作,则可以将这部分功能单独写入一个playbook文件,然后再通过includes调用.而不必每个playbook都去写同样一个功能的task.这有点类似于shell脚本的函数</p>
-<p>用法:</p>
-<p>比如下面定义了一个php的playbook:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- hosts: all</span><br><span class="line">  remote_user: root</span><br><span class="line">  tasks:</span><br><span class="line">    - name:PHP a project</span><br><span class="line">      command: A project</span><br><span class="line">- name: restart php</span><br><span class="line">  hosts: all</span><br><span class="line">  remote_user: root</span><br><span class="line">  tasks:</span><br><span class="line">    - include: restartphp.yml</span><br></pre></td></tr></table></figure>
-<p>然后定义restartphp.yml文件:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- name: restart php</span><br><span class="line">  server: name=php-fpm state=restarted</span><br></pre></td></tr></table></figure>
-<p>同样其他的playbook想要重启Php服务不必再写重复的playbook task.只需要include retartphp.yml文件即可.</p>
-<h4 id="动态includes"><a href="#动态includes" class="headerlink" title="动态includes"></a>动态includes</h4><p>includes还可以结合when语句.即只有当满足when条件时,才include文件执行.例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-name: check if file exist</span><br><span class="line"> stat: path=test.txt</span><br><span class="line"> register: check_file</span><br><span class="line"></span><br><span class="line">-include: task.yml</span><br><span class="line"> when: check_file.stat.exists</span><br></pre></td></tr></table></figure>
-<p>下面的一个简单的例子演示了include的用法:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$vim include.yml</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">  - hosts: all</span><br><span class="line">    remote_user: root</span><br><span class="line">    tasks:</span><br><span class="line">       - include: task.yml</span><br><span class="line">         when: ansible_default_ipv4.address == &quot;10.0.4.230&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@localhost playbook]$vim task.yml</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">    #这是include.yml文件导入的playbook</span><br><span class="line">  - name: create a file</span><br><span class="line">    file: path=/tmp/include.txt state=touch</span><br></pre></td></tr></table></figure>
-<p>执行结果可以显示这个include的task.yml文件只在10.0.4.230这台服务器上执行了:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$ansible-playbook include.yml</span><br><span class="line"></span><br><span class="line">TASK [create a file] *********************************************************************************************************************************************************************************************</span><br><span class="line">skipping: [10.0.4.231]</span><br><span class="line">changed: [10.0.4.230]</span><br><span class="line"></span><br><span class="line">PLAY RECAP *******************************************************************************************************************************************************************************************************</span><br><span class="line">10.0.4.230                 : ok=2    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.4.231                 : ok=1    changed=0    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
-<hr>
-<h3 id="template-模板"><a href="#template-模板" class="headerlink" title="template 模板"></a>template 模板</h3><p>template常被用来传输文件,但是template模板的强大之处就在于支持变量替换.template支持jinja2的渲染格式,.另外还支持for循环以及if判断语句.下面来一个简单的例子:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#编写一个简单的playbook</span><br><span class="line">[root@localhost playbook]$vim template.yml</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"> - hosts: all</span><br><span class="line">   vars:</span><br><span class="line">      - version: 1.3.5</span><br><span class="line">      - env_name: beta</span><br><span class="line">      - author: jesse</span><br><span class="line"></span><br><span class="line">   tasks:</span><br><span class="line">      - name: practise tempalte function</span><br><span class="line">        template: src=template/test_template.j2 dest=/tmp/test_template.txt</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">#编写test_template.j2模板文件:</span><br><span class="line">[root@localhost playbook]$vim template/test_template.j2</span><br><span class="line"></span><br><span class="line">project_env: &#123;&#123; env_name &#125;&#125;</span><br><span class="line">project_version: &#123;&#123; version &#125;&#125;</span><br><span class="line">project_author: &#123;&#123; author &#125;&#125;</span><br></pre></td></tr></table></figure>
-<p>执行template.yml这个playbook:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$ansible-playbook template.yml</span><br><span class="line"></span><br><span class="line">TASK [practise tempalte function] ********************************************************************************************************************************************************************************</span><br><span class="line">changed: [10.0.4.230]</span><br><span class="line">changed: [10.0.4.231]</span><br><span class="line"></span><br><span class="line">PLAY RECAP *******************************************************************************************************************************************************************************************************</span><br><span class="line">10.0.4.230                 : ok=2    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.4.231                 : ok=2    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
-<p>查看远程主机上的test_template.txt文件:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$cat /tmp/test_template.txt</span><br><span class="line">project_env: beta</span><br><span class="line">project_version: 1.3.5</span><br><span class="line">project_author: jesse</span><br></pre></td></tr></table></figure>
-<hr>
-<h4 id="template的jinja2-模板for循环"><a href="#template的jinja2-模板for循环" class="headerlink" title="template的jinja2 模板for循环"></a>template的jinja2 模板for循环</h4><p>模板for循环的格式如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for item in item_list %&#125;</span><br><span class="line">  ......</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-<p>渲染风格和python的django的模板渲染风格一模一样,. 大括号两边也要预留一个空格..</p>
-<p>例如稍微改一下上面例子中的test_template.j2模板文件:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$vim template/test_template.j2</span><br><span class="line"></span><br><span class="line">&#123;% for item in range(1,10) %&#125;</span><br><span class="line">   line &#123;&#123; item &#125;&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-<p>重新执行playbook后,在远程服务器节点上查看/tmp/test_template.txt文件内容:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$cat /tmp/test_template.txt</span><br><span class="line">   line 1</span><br><span class="line">   line 2</span><br><span class="line">   line 3</span><br><span class="line">   line 4</span><br><span class="line">   line 5</span><br><span class="line">   line 6</span><br><span class="line">   line 7</span><br><span class="line">   line 8</span><br><span class="line">   line 9</span><br><span class="line">[root@localhost ~]$</span><br></pre></td></tr></table></figure>
-<hr>
-<h4 id="template模板的-jinja2-If语句"><a href="#template模板的-jinja2-If语句" class="headerlink" title="template模板的 jinja2 If语句"></a>template模板的 jinja2 If语句</h4><p>if条件判断语句格式如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if condition %&#125;</span><br><span class="line">......</span><br><span class="line">&#123;% else%&#125;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-<p>继续稍微改一下上面例子的test_template.j2模板文件:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#下面的例子中先判断author值,以及myname变量是否定义.(我们的template.yml的playbook文件中定义了author变量,但是没有定义myname变量)</span><br><span class="line">[root@localhost playbook]$vim template/test_template.j2</span><br><span class="line"></span><br><span class="line">&#123;% if author == &quot;jesse&quot; %&#125;</span><br><span class="line">HI,my name is jesse</span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% if  myname  is defined %&#125;</span><br><span class="line">hi.myname is &#123;&#123; myname &#125;&#125;</span><br><span class="line">&#123;% else %&#125;</span><br><span class="line">sorry,myname is not defined.</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-<p>执行完毕后,远程服务器节点文件内容如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$cat /tmp/test_template.txt</span><br><span class="line">HI,my name is jesse</span><br><span class="line"></span><br><span class="line">sorry,myname is not defined.</span><br></pre></td></tr></table></figure>
-<hr>
-<h4 id="template-jinja2-default-语句"><a href="#template-jinja2-default-语句" class="headerlink" title="template jinja2 default()语句"></a>template jinja2 default()语句</h4><p>除了if条件判断外,还可以使用default()语句.顾名思义,这是表示一个默认值.</p>
-<p>用法格式:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; var | default(value) &#125;&#125; #如果变量var有定义则取用var的值,否则就使用默认值value</span><br></pre></td></tr></table></figure>
-<p>修改一下上述的template模板文件如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$vim template/test_template.j2</span><br><span class="line"></span><br><span class="line">my book is &#123;&#123; book | default(&apos;ansible&apos;) &#125;&#125;;</span><br><span class="line">my name is &#123;&#123; author | default(&apos;xiaoming&apos;) &#125;&#125;</span><br></pre></td></tr></table></figure>
-<p>执行后,远程服务器节点的文件内容输出如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$cat /tmp/test_template.txt</span><br><span class="line">my book is ansible;</span><br><span class="line">my name is jesse</span><br></pre></td></tr></table></figure>
-<h5 id="template的Jinja2特性还可以使用python的其他语法-比如合并变量值-过滤等等-这些高级用法以后面对复杂的大项目时再去研究-目前掌握这些基础语法已经组足够满足绝大多数的工作任务"><a href="#template的Jinja2特性还可以使用python的其他语法-比如合并变量值-过滤等等-这些高级用法以后面对复杂的大项目时再去研究-目前掌握这些基础语法已经组足够满足绝大多数的工作任务" class="headerlink" title="template的Jinja2特性还可以使用python的其他语法,比如合并变量值,过滤等等.这些高级用法以后面对复杂的大项目时再去研究.目前掌握这些基础语法已经组足够满足绝大多数的工作任务"></a>template的Jinja2特性还可以使用python的其他语法,比如合并变量值,过滤等等.这些高级用法以后面对复杂的大项目时再去研究.目前掌握这些基础语法已经组足够满足绝大多数的工作任务</h5>
-          
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/" itemprop="url">Ansible-Playbook</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T22:59:58+08:00">
-                2018-08-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Ansible/" itemprop="url" rel="index">
-                    <span itemprop="name">Ansible</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Ansible的Playbook介绍以及技巧"><a href="#Ansible的Playbook介绍以及技巧" class="headerlink" title="Ansible的Playbook介绍以及技巧"></a>Ansible的Playbook介绍以及技巧</h2><p>playbook的格式是YAML.以下是一个playbook的范例:</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/#more" rel="contents">
+            <a class="btn" href="/2018/08/27/Ansible/Ansible-Roles/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1824,6 +1028,326 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/08/26/Ansible/Ansible变量/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/26/Ansible/playbook高级特性/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/26/Ansible/playbook高级特性/" itemprop="url">Ansible playbook高级特性</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T22:59:58+08:00">
+                2018-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Ansible/" itemprop="url" rel="index">
+                    <span itemprop="name">Ansible</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/26/Ansible/playbook高级特性/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/26/Ansible/playbook高级特性/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="playbook高级特性"><a href="#playbook高级特性" class="headerlink" title="playbook高级特性"></a>playbook高级特性</h2><h3 id="tags-标签"><a href="#tags-标签" class="headerlink" title="tags 标签"></a>tags 标签</h3><p>给task打上标签可以允许playbook执行的时候使用–tags选项只执行某个task或者–skip-tags选项不执行某个task.例如:</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/26/Ansible/playbook高级特性/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/" itemprop="url">Ansible-Playbook</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T22:59:58+08:00">
+                2018-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Ansible/" itemprop="url" rel="index">
+                    <span itemprop="name">Ansible</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Ansible的Playbook介绍以及技巧"><a href="#Ansible的Playbook介绍以及技巧" class="headerlink" title="Ansible的Playbook介绍以及技巧"></a>Ansible的Playbook介绍以及技巧</h2><p>playbook的格式是YAML.以下是一个playbook的范例:</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2158,6 +1682,167 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/08/14/Linux-Service/docker运行DNS服务器/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/14/Linux-Service/DNS介绍/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/14/Linux-Service/DNS介绍/" itemprop="url">DNS介绍</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-14T09:59:58+08:00">
+                2018-08-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Service/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Service</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/14/Linux-Service/DNS介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/14/Linux-Service/DNS介绍/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="DNS介绍"><a href="#DNS介绍" class="headerlink" title="DNS介绍"></a>DNS介绍</h3><p>IP地址虽然采用了十分记数法.但是对于人脑来说还是非常难以记忆,但是访问互联网网站又一定需要IP,为了应对这个问题.早期的时候是通过hosts文件来绑定主机名和IP的对应关系,</p>
+<p>但是这种方法存在非常多的不足,特别是IP和主机名的对应关系越来越多的时候.hosts档案完全无法满足人们的需求.这个时候,伯克利大学发展出一套主机名IP对应系统.称为Berkeley Internet Name Domain, BIND  .也就是目前全世界使用最广泛的Domain Name System, DNS </p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/14/Linux-Service/DNS介绍/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
