@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/network/route/bgp/BGP-Concept/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/03-shell脚本模板/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/network/route/bgp/BGP-Concept/" itemprop="url">BGP  Concept</a></h1>
+                <a class="post-title-link" href="/2018/06/12/Linux-Basic/shell&shell脚本/03-shell脚本模板/" itemprop="url">shell脚本模板</a></h1>
         
 
         <div class="post-meta">
@@ -329,8 +329,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Network/" itemprop="url" rel="index">
-                    <span itemprop="name">Network</span>
+                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Basic</span>
                   </a>
                 </span>
 
@@ -340,19 +340,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Network/Route/" itemprop="url" rel="index">
-                    <span itemprop="name">Route</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Network/Route/BGP/" itemprop="url" rel="index">
-                    <span itemprop="name">BGP</span>
+                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
+                    <span itemprop="name">shell&shell脚本</span>
                   </a>
                 </span>
 
@@ -369,8 +358,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/12/network/route/bgp/BGP-Concept/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/network/route/bgp/BGP-Concept/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/Linux-Basic/shell&shell脚本/03-shell脚本模板/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/shell&shell脚本/03-shell脚本模板/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -399,20 +388,21 @@
 
       
         
-          <h2 id="BGP-Concept"><a href="#BGP-Concept" class="headerlink" title="BGP Concept"></a>BGP Concept</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p>BGP（border gateway protocol）边界网关路由协议。</p>
-<p><strong>内部网关路由协议（IGP)</strong>：这种协议用在自治系统内部，比如RIP,EIGRP,OSPF,ISIS，这些都术语IGP。IGP并不是一种路由协议，而是内部网关路由协议的统称。</p>
-<p><strong>外部网关路由协议(EGP)</strong>:BGP属于外部网关路由协议。</p>
-<p><strong>自治系统</strong>是个16位的数字，取值范围是1-65535.其中64512-65535保留给私用，类似于私有地址。</p>
-<p><strong>BGP</strong>是路径矢量路由协议，不要求采用像OSPF和ISIS那样的层次化网络设计。根据路径矢量属性来选择最优路径。</p>
-<p><strong>BGP</strong>是唯一一种使用<strong>TCP</strong>作为传输层协议的IP路由协议。端口号是179.OSPF和EIGRP直接运行在IP层之上，IS-IS位于网络层，RIP使用UDP传输。因为TCP是一对一的传输协议，所以BGP不使用广播或者组播更新，建立邻居也是neighbor指定的邻居路由器，而不是发送组播hello包与所有邻居路由器建立邻接关系。</p>
-<p><strong>BGP</strong>没有HELLO包，取而代之的是发送KEEPALIVE消息，没有周期性更新，只有触发更新。</p>
-<p>内部BGP（IBGP）<strong>管理距离</strong>是200.外部BGP(EBGP)管理距离是20</p>
-<p>和IGP一样，BGP也是采用下一跳的逐跳路由协议，只不过IGP路由协议是以<strong>下一台路由器</strong>作为下一跳，但是BGP的下一跳是以<strong>AS号自治系统</strong>为单位，一个自治系统内部可能包含非常多的路由器。BGP下一跳的地址是<strong>下一个AS号的入口接口IP</strong>。也就邻居路由器的IP.</p>
-<p>BGP路由有一个路径列表，记录了这条路由经过的所有AS号，BGP路由器不会接受路径列表中包含其AS号的路由选择更新，这种机制也被称为<strong>BGP的水平分割</strong>原则，用来防环</p>
+          <h2 id="shell脚本模板"><a href="#shell脚本模板" class="headerlink" title="shell脚本模板"></a>shell脚本模板</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>为了保持良好的脚本编写习惯,在编制一个脚本时,需要有以下参数:</p>
+<ul>
+<li>脚本用途描述  </li>
+<li>脚本作者  </li>
+<li>脚本版本</li>
+<li>脚本更新记录  </li>
+<li>脚本编写时间</li>
+</ul>
+<hr>
+<p>下面是一个常见的脚本头部内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#Description: this is the standard format for the head part of scripts</span><br><span class="line">#Author: Jesse</span><br><span class="line">#Version:0.1</span><br><span class="line">#Datetime:2016-10-31</span><br><span class="line">#Name:script.sh</span><br></pre></td></tr></table></figure>
 <hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/network/route/bgp/BGP-Concept/#more" rel="contents">
+            <a class="btn" href="/2018/06/12/Linux-Basic/shell&shell脚本/03-shell脚本模板/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -663,6 +653,179 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/正则表达式/正则表达式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/12/Linux-Basic/正则表达式/正则表达式/" itemprop="url">正则表达式-语法介绍</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-12T22:59:58+08:00">
+                2018-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/正则表达式/" itemprop="url" rel="index">
+                    <span itemprop="name">正则表达式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/12/Linux-Basic/正则表达式/正则表达式/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/正则表达式/正则表达式/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="正则表达式-语法介绍"><a href="#正则表达式-语法介绍" class="headerlink" title="正则表达式 - 语法介绍"></a>正则表达式 - 语法介绍</h1><p>正则表达式(regular expression)描述了一种字符串匹配的模式（pattern），可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等。 </p>
+<p>构造正则表达式的方法和创建数学表达式的方法一样。也就是用多种元字符与运算符可以将小的表达式结合在一起来创建更大的表达式。正则表达式的组件可以是单个的字符、字符集合、字符范围、字符间的选择或者所有这些组件的任意组合。</p>
+<p>正则表达式是由普通字符（例如字符 a 到 z）以及特殊字符（称为”元字符”）组成的文字模式。模式描述在搜索文本时要匹配的一个或多个字符串。正则表达式作为一个模板，将某个字符模式与所搜索的字符串进行匹配。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/12/Linux-Basic/正则表达式/正则表达式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -717,7 +880,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
