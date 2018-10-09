@@ -13,6 +13,8 @@ copyright: true
 
 给task打上标签可以允许playbook执行的时候使用--tags选项只执行某个task或者--skip-tags选项不执行某个task.例如:
 
+<!--more-->
+
 ```
 tasks:
 

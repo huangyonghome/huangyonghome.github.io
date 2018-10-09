@@ -1,3 +1,12 @@
+---
+title: Nginx 配置
+date: 2018-08-3 11:59:58
+tags:  [nginx, web ]
+categories: [Linux-Web]
+comments: true
+copyright: true
+---
+
 ## Nginx 配置
 
 
@@ -7,6 +16,8 @@
 ### ngx_http_core_module模块变量
 
 下列表格中列出了部分的变量名及其代表的意义
+
+<!--more-->
 
 |                     |                                                              |
 | :------------------ | ------------------------------------------------------------ |

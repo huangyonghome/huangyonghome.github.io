@@ -11,6 +11,8 @@ copyright: true
 
 playbook也可以像shell脚本的if语句那样,基于一个变量的结果来判断是否应该执行某个task.只是ansible的逻辑判断和语法上要别扭,复杂点.
 
+<!--more-->
+
 ---
 
 ### when语句

@@ -29,6 +29,8 @@ copyright: true
          - testuser2
 ```
 
+<!--more-->
+
 * 如果变量是一个Yaml列表,则可以循环这个列表:
 
 ```
