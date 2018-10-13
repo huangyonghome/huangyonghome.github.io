@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/正则表达式/正则表达式练习/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/05-Shell 脚本参数/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/Linux-Basic/正则表达式/正则表达式练习/" itemprop="url">正则表达式练习</a></h1>
+                <a class="post-title-link" href="/2018/06/12/Linux-Basic/shell&shell脚本/05-Shell 脚本参数/" itemprop="url">Shell的脚本参数</a></h1>
         
 
         <div class="post-meta">
@@ -340,8 +340,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/正则表达式/" itemprop="url" rel="index">
-                    <span itemprop="name">正则表达式</span>
+                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
+                    <span itemprop="name">shell&shell脚本</span>
                   </a>
                 </span>
 
@@ -358,8 +358,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/12/Linux-Basic/正则表达式/正则表达式练习/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/正则表达式/正则表达式练习/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/Linux-Basic/shell&shell脚本/05-Shell 脚本参数/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/shell&shell脚本/05-Shell 脚本参数/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -388,14 +388,80 @@
 
       
         
-          <h2 id="练习文本"><a href="#练习文本" class="headerlink" title="练习文本"></a>练习文本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&quot;Open Source&quot; is a good mechanism to develop programs.</span><br><span class="line">apple is my favorite food.</span><br><span class="line">Football game is not use feet only.</span><br><span class="line">this dress doesn&apos;t fit me.</span><br><span class="line">However, this dress is about $ 3183 dollars.</span><br><span class="line">GNU is free air not free beer.</span><br><span class="line">Her hair is very beauty.</span><br><span class="line">I can&apos;t finish the test.</span><br><span class="line">Oh! The soup taste good.</span><br><span class="line">motorcycle is cheap than car.</span><br><span class="line">This window is clear.</span><br><span class="line">the symbol &apos;*&apos; is represented as start.</span><br><span class="line">Oh!My god!</span><br><span class="line">The gd software is a library for drafting programs.</span><br><span class="line">You are the best is mean you are the no. 1.</span><br><span class="line">The world &lt;Happy&gt; is the same with &quot;glad&quot;.</span><br><span class="line">I like dog.</span><br><span class="line">google is the best tools for search keyword.</span><br><span class="line">goooooogle yes!</span><br><span class="line">go! go! Let&apos;s go.</span><br><span class="line"># I am VBird</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/Linux-Basic/正则表达式/正则表达式练习/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
+            <h2 id="Shell的脚本参数"><a href="#Shell的脚本参数" class="headerlink" title="Shell的脚本参数"></a>Shell的脚本参数</h2><p>本章主要介绍2个命令</p>
+<ul>
+<li><strong>shift</strong></li>
+<li><strong>getopts</strong></li>
+</ul>
+<hr>
+<h4 id="一-shift"><a href="#一-shift" class="headerlink" title="一.shift"></a>一.shift</h4><p>shift命令用于对参数的移动(左移)，通常用于在不知道传入参数个数的情况下依次遍历每个参数然后进行相应处理.</p>
+<p>在使用shift时,默认情况他会将参数变量向左移动一个位置,所以变量$3会移动到$2,$2移动到$1,$1会被删除.($0是脚本名)</p>
+<p>举个例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$vim shift.sh</span><br><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"></span><br><span class="line">while [ -n &quot;$1&quot; ];do</span><br><span class="line">   echo &quot;Parameter #$count = $1 &quot;</span><br><span class="line">   let count=$count+1</span><br><span class="line">   shift</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>加入一些参数去执行这个脚本:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash shift.sh jesse jerry jack tom tony</span><br><span class="line">Parameter #1 = jesse </span><br><span class="line">Parameter #2 = jerry </span><br><span class="line">Parameter #3 = jack </span><br><span class="line">Parameter #4 = tom </span><br><span class="line">Parameter #5 = tony</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可以看到每次echo一个参数后,shift就移掉最左边的一个参数,直到$1为空,退出循环</p>
+</blockquote>
+<p>当然也可以一次移动多个位置.</p>
+<p>稍微改动一下刚才的脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$vim shift.sh</span><br><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"></span><br><span class="line">while [ -n &quot;$1&quot; ];do</span><br><span class="line">   echo &quot;Parameter #$count = $1 &quot;</span><br><span class="line">   let count=$count+1</span><br><span class="line">   shift 2</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>执行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash shift.sh jesse jerry jack tom tony david</span><br><span class="line">Parameter #1 = jesse </span><br><span class="line">Parameter #2 = jack </span><br><span class="line">Parameter #3 = tony</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="二-getopts"><a href="#二-getopts" class="headerlink" title="二.getopts"></a>二.getopts</h3><p>getopts是getopt的升级版,增加了一些功能.getopts被shell程序用来分析位置参数，选项</p>
+<p>getopts的格式:</p>
+<p>getopts optstring variable</p>
+<p>optstring是选项参数.选项字母被包含进optstring中.并将选项携带的参数添加进variable中.</p>
+<p>getopts会用到2个环境变量.如果选项需要一个参数值,环境变量OPTARG就会保存这个值,OPTIND环境变量保存了参数列表中的getopts正在处理的参数位置.</p>
+<p>一个简单的例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$vim getopts.sh</span><br><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">while getopts :ab:c opt</span><br><span class="line">   do</span><br><span class="line"></span><br><span class="line">       case &quot;$opt&quot; in</span><br><span class="line">            a) echo &quot;found the -a option&quot;;;</span><br><span class="line">            b) echo &quot;found the -b option,with value $OPTARG&quot;;;</span><br><span class="line">            c) echo &quot;found the -c option&quot;;;</span><br><span class="line">            *) echo &quot;unknown option: $opt&quot;;;</span><br><span class="line">       esac</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>携带一些选项和参数来执行脚本.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash getopts.sh -b &quot;test&quot; -a </span><br><span class="line">found the -b option,with value test</span><br><span class="line">found the -a option</span><br></pre></td></tr></table></figure>
+<p>当然,也参数和选项之间也可以不用空格</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash getopts.sh -btest -a </span><br><span class="line">found the -b option,with value test</span><br><span class="line">found the -a option</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>getopts能从选项中识别出选项携带的值(test),除此之外还能将没有定义的选项输出成问号.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash getopts.sh -d</span><br><span class="line">unknown option: ?</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>note 选项如果后面携带参数则需要在选项后添加冒号:<br>换句话说,如果选项后面有冒号,则必须要携带一个参数值.</p>
+</blockquote>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$vim getopts1.sh</span><br><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">while getopts b: opt</span><br><span class="line">   do</span><br><span class="line"></span><br><span class="line">       case &quot;$opt&quot; in</span><br><span class="line">            b) echo &quot;found the -b option,with value $OPTARG&quot;;;</span><br><span class="line">            *) echo &quot;unknown option: $opt&quot;;;</span><br><span class="line">       esac</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>执行脚本,但是不携带参数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash getopts1.sh -b</span><br><span class="line">getopts1.sh: option requires an argument -- b</span><br><span class="line">unknown option: ?</span><br></pre></td></tr></table></figure>
+<p>携带一个参数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash getopts1.sh -b hello</span><br><span class="line">found the -b option,with value hello</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果没有携带参数,则脚本会报错,且提示-b选项需要一个参数.</p>
+</blockquote>
+<blockquote>
+<p>note.以上脚本中选项没有以冒号开头,这个时候invalid option错误和miss option argument错误都会使varname被设成?，$OPTARG是出问题的option。 </p>
+</blockquote>
+<p>再看一个例子.这次脚本的选项以:冒号开头</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">while getopts :b: opt  #这次b选项以:开头</span><br><span class="line">   do</span><br><span class="line"></span><br><span class="line">       case &quot;$opt&quot; in</span><br><span class="line">            b) echo &quot;found the -b option,with value $OPTARG&quot;;;</span><br><span class="line">            *) echo &quot;unknown option: $opt&quot;;;</span><br><span class="line">       esac</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>执行脚本,但是不携带参数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash getopts1.sh -b</span><br><span class="line">unknown option: :</span><br><span class="line">[root@localhost ~]$bash getopts1.sh -d</span><br><span class="line">unknown option: ?</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>当optstring以”:”开头时，getopts会区分invalid option错误和miss option argument错误。<br>invalid option时，varname会被设成?，$OPTARG是出问题的option；<br>miss option argument时，varname会被设成:，$OPTARG是出问题的option。 </p>
+</blockquote>
+<blockquote>
+<p>上个例子中,-b选项没有携带参数.varname被设置成冒号:. -d选项没有定义,被设置成?</p>
+</blockquote>
+<p>正常执行脚本,携带参数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash getopts1.sh -b hello</span><br><span class="line">found the -b option,with value hello</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="getopts命令使用的完整范例"><a href="#getopts命令使用的完整范例" class="headerlink" title="getopts命令使用的完整范例"></a>getopts命令使用的完整范例</h4><p>最后给出一个完整的脚本.次脚本完成了以下任务:</p>
+<p>1.接收参数i,I,a<br>2.-a选项的参数为interface接口,I选项参数为IP地址,-a选项不需要参数<br>3.当用户使用-i选项,显示指定网卡接口的IP地址<br>4.当用户使用-I选项,显示指定IP地址所属的网络接口<br>5.当用户单独使用-a选项,显示所有网络接口和IP地址(环回接口lo除外)  </p>
+<p>脚本内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line">#Description:</span><br><span class="line">#Author: Jesse</span><br><span class="line">#Version:0.1</span><br><span class="line">#Datetime:2018-06-21</span><br><span class="line">#Name:getinterface.sh</span><br><span class="line">export PATH=/usr/lib64/qt-3.3/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">function SHOWIP()&#123;</span><br><span class="line">  if ! `ifconfig $1 &amp;&gt;/dev/null`;then</span><br><span class="line">     return 11</span><br><span class="line">  fi</span><br><span class="line"></span><br><span class="line">  echo -n &quot;$1&apos;s ip address is:&quot;</span><br><span class="line">   ifconfig $1 | grep &quot;inet addr&quot; |awk &apos;&#123;print $2&#125;&apos;|awk -F: &apos;&#123;print $2&#125;&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">function SHOWET() &#123;</span><br><span class="line">  if ! `ifconfig | grep &quot;inet addr&quot; |awk &apos;&#123;print $2&#125;&apos;|awk -F: &apos;&#123;print $2&#125;&apos;| grep $1 &amp;&gt;/dev/null`;then</span><br><span class="line">     return 12</span><br><span class="line"></span><br><span class="line">  fi</span><br><span class="line"></span><br><span class="line">   echo -n &quot;$1&apos;s interface is:&quot;</span><br><span class="line">   ifconfig | grep -B 1 &quot;$1&quot; | head -1 | awk &apos;&#123;print $1&#125;&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function SHOWALL()&#123;</span><br><span class="line">  ETH=`ifconfig | grep ^[^[:space:]] | awk &apos;&#123;print $1&#125;&apos;|grep -v &quot;lo&quot; `</span><br><span class="line"></span><br><span class="line">  for INTER in $ETH;do</span><br><span class="line"></span><br><span class="line">      IP=`ifconfig $INTER| grep &quot;inet addr&quot; |awk &apos;&#123;print $2&#125;&apos;|awk -F: &apos;&#123;print $2&#125;&apos;`</span><br><span class="line">      echo &quot;$INTER:$IP&quot;</span><br><span class="line"></span><br><span class="line">  done</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">while getopts &quot;:i:I:a&quot; SWITCH;do</span><br><span class="line">    case $SWITCH in</span><br><span class="line"></span><br><span class="line">       i)</span><br><span class="line">         SHOWIP $OPTARG</span><br><span class="line">         [ $? -eq 11 ] &amp;&amp; echo &quot;you input the wrong Interface!&quot;</span><br><span class="line">         ;;</span><br><span class="line">        I)</span><br><span class="line">          echo $OPTARG | grep -E &quot;^[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;$&quot; &amp;&gt;/dev/null</span><br><span class="line">          [ $? -ne 0 ] &amp;&amp; echo &quot;please input an valid IP address!&quot; &amp;&amp; exit 1</span><br><span class="line"></span><br><span class="line">          SHOWET $OPTARG</span><br><span class="line">          [ $? -eq 12 ] &amp;&amp; echo &quot;sorry,you input a wrong IP address &quot;</span><br><span class="line">          ;;</span><br><span class="line">        a)</span><br><span class="line">          SHOWALL</span><br><span class="line">          ;;</span><br><span class="line">        *)</span><br><span class="line">          echo &quot;Usage $0&#123;-i interface|-I ip address|-a&#125;&quot;</span><br><span class="line">          ;;</span><br><span class="line">      esac</span><br><span class="line"></span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>执行结果:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@oracle ~]# bash  getopts2.sh -i eth1</span><br><span class="line">eth1&apos;s ip address is:172.16.1.17</span><br><span class="line">[root@oracle ~]# bash  getopts2.sh -i eth0</span><br><span class="line">you input the wrong Interface!</span><br><span class="line">[root@oracle ~]# bash  getopts2.sh -I 172.16.1.17</span><br><span class="line">172.16.1.17&apos;s interface is:eth1</span><br><span class="line">[root@oracle ~]# bash  getopts2.sh -a</span><br><span class="line">eth1:172.16.1.17</span><br><span class="line">[root@oracle ~]# bash  getopts2.sh -i eth1 -a</span><br><span class="line">eth1&apos;s ip address is:172.16.1.17</span><br><span class="line">eth1:172.16.1.17</span><br></pre></td></tr></table></figure>
+<hr>
+
+          
         
       
     </div>
@@ -446,7 +512,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/network/route/bgp/BGP-Concept/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/Bash数组/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -465,7 +531,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/network/route/bgp/BGP-Concept/" itemprop="url">BGP  Concept</a></h1>
+                <a class="post-title-link" href="/2018/06/12/Linux-Basic/shell&shell脚本/Bash数组/" itemprop="url">Bash数组</a></h1>
         
 
         <div class="post-meta">
@@ -500,8 +566,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Network/" itemprop="url" rel="index">
-                    <span itemprop="name">Network</span>
+                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Basic</span>
                   </a>
                 </span>
 
@@ -511,19 +577,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Network/Route/" itemprop="url" rel="index">
-                    <span itemprop="name">Route</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Network/Route/BGP/" itemprop="url" rel="index">
-                    <span itemprop="name">BGP</span>
+                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
+                    <span itemprop="name">shell&shell脚本</span>
                   </a>
                 </span>
 
@@ -540,8 +595,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/12/network/route/bgp/BGP-Concept/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/network/route/bgp/BGP-Concept/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/Linux-Basic/shell&shell脚本/Bash数组/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/shell&shell脚本/Bash数组/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -570,20 +625,12 @@
 
       
         
-          <h2 id="BGP-Concept"><a href="#BGP-Concept" class="headerlink" title="BGP Concept"></a>BGP Concept</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p>BGP（border gateway protocol）边界网关路由协议。</p>
-<p><strong>内部网关路由协议（IGP)</strong>：这种协议用在自治系统内部，比如RIP,EIGRP,OSPF,ISIS，这些都术语IGP。IGP并不是一种路由协议，而是内部网关路由协议的统称。</p>
-<p><strong>外部网关路由协议(EGP)</strong>:BGP属于外部网关路由协议。</p>
-<p><strong>自治系统</strong>是个16位的数字，取值范围是1-65535.其中64512-65535保留给私用，类似于私有地址。</p>
-<p><strong>BGP</strong>是路径矢量路由协议，不要求采用像OSPF和ISIS那样的层次化网络设计。根据路径矢量属性来选择最优路径。</p>
-<p><strong>BGP</strong>是唯一一种使用<strong>TCP</strong>作为传输层协议的IP路由协议。端口号是179.OSPF和EIGRP直接运行在IP层之上，IS-IS位于网络层，RIP使用UDP传输。因为TCP是一对一的传输协议，所以BGP不使用广播或者组播更新，建立邻居也是neighbor指定的邻居路由器，而不是发送组播hello包与所有邻居路由器建立邻接关系。</p>
-<p><strong>BGP</strong>没有HELLO包，取而代之的是发送KEEPALIVE消息，没有周期性更新，只有触发更新。</p>
-<p>内部BGP（IBGP）<strong>管理距离</strong>是200.外部BGP(EBGP)管理距离是20</p>
-<p>和IGP一样，BGP也是采用下一跳的逐跳路由协议，只不过IGP路由协议是以<strong>下一台路由器</strong>作为下一跳，但是BGP的下一跳是以<strong>AS号自治系统</strong>为单位，一个自治系统内部可能包含非常多的路由器。BGP下一跳的地址是<strong>下一个AS号的入口接口IP</strong>。也就邻居路由器的IP.</p>
-<p>BGP路由有一个路径列表，记录了这条路由经过的所有AS号，BGP路由器不会接受路径列表中包含其AS号的路由选择更新，这种机制也被称为<strong>BGP的水平分割</strong>原则，用来防环</p>
+          <h2 id="Bash数组"><a href="#Bash数组" class="headerlink" title="Bash数组"></a>Bash数组</h2><h3 id="Bash中的数组介绍"><a href="#Bash中的数组介绍" class="headerlink" title="Bash中的数组介绍"></a>Bash中的数组介绍</h3><p>数组中可以存放多个值。Bash Shell 只支持一维数组（不支持多维数组）。</p>
+<p>与大部分编程语言类似，数组元素的下标由0开始。</p>
 <hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/network/route/bgp/BGP-Concept/#more" rel="contents">
+            <a class="btn" href="/2018/06/12/Linux-Basic/shell&shell脚本/Bash数组/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -638,7 +685,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/文本处理/AWK/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -657,7 +704,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/Linux-Basic/文本处理/AWK/" itemprop="url">AWK介绍</a></h1>
+                <a class="post-title-link" href="/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/" itemprop="url">Shell脚本特殊变量</a></h1>
         
 
         <div class="post-meta">
@@ -703,8 +750,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/文本处理/" itemprop="url" rel="index">
-                    <span itemprop="name">文本处理</span>
+                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
+                    <span itemprop="name">shell&shell脚本</span>
                   </a>
                 </span>
 
@@ -721,8 +768,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/12/Linux-Basic/文本处理/AWK/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/文本处理/AWK/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -751,12 +798,48 @@
 
       
         
-          <h3 id="AWK"><a href="#AWK" class="headerlink" title="AWK"></a>AWK</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>1.概念<br>2.基础格式<br>3.输出,格式化输出<br>4.awk操作符<br>5.awk变量<br>6.awk模式<br>7.控制语句<br>8.数组<br>9.经典例子  </p>
-<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>awk是一个强大的文本分析工具，相对于grep的查找，sed的编辑，awk在其对数据分析并生成报告时，显得尤为强大。简单来说awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。</p>
-<p>awk有3个不同版本: awk、nawk和gawk，未作特别说明，一般指gawk，gawk 是 AWK 的 GNU 版本。</p>
+          <h2 id="shell脚本特殊变量"><a href="#shell脚本特殊变量" class="headerlink" title="shell脚本特殊变量"></a>shell脚本特殊变量</h2><table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$0</td>
+<td>当前脚本的文件名</td>
+</tr>
+<tr>
+<td>$n</td>
+<td>传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是$1，第二个参数是$2……第n个参数是$n</td>
+</tr>
+<tr>
+<td>$#</td>
+<td>传递给脚本或函数的参数个数</td>
+</tr>
+<tr>
+<td>$*</td>
+<td>传递给脚本或函数的所有参数。</td>
+</tr>
+<tr>
+<td>$@</td>
+<td>传递给脚本或函数的所有参数。被双引号(“ “)包含时，与 $* 稍有不同，下面将会讲到。</td>
+</tr>
+<tr>
+<td>$?</td>
+<td>上个命令的退出状态，或函数的返回值。一般情况下，执行成功会返回 0，失败返回 值是个大于1的整数</td>
+</tr>
+<tr>
+<td>$$</td>
+<td>当前Shell进程ID。对于 Shell 脚本，就是这些脚本所在的进程ID</td>
+</tr>
+</tbody>
+</table>
+<hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/Linux-Basic/文本处理/AWK/#more" rel="contents">
+            <a class="btn" href="/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
