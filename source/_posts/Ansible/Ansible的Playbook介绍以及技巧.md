@@ -42,7 +42,9 @@ playbook的格式是YAML.以下是一个playbook的范例:
 
 
 
-#### playbook的使用技巧
+### playbook的使用技巧
+
+#### sudo用户
 
 * remote_user表示playbook允许时以哪个用户运行,如果加上sudo:yes.表示以sudo方式运行:
 
@@ -63,7 +65,7 @@ playbook的格式是YAML.以下是一个playbook的范例:
         sudo: yes
   ```
 
-
+#### 模块和命令换行
 
 * k/v键值对(模块和命令)可以在写在一行,用:冒号隔开,也可以用> 符号换行:
 
@@ -81,6 +83,8 @@ playbook的格式是YAML.以下是一个playbook的范例:
       copy: src=/etc/ansible/hosts dest=/etc/ansible/hosts
               owner=root group=root mode=0644
   ```
+  
+#### 调用变量
 
 * 命令可以用变量,变量的引用方式为{{ 变量名 }}
 
@@ -90,7 +94,7 @@ playbook的格式是YAML.以下是一个playbook的范例:
       template: src=somefile.j2 dest=/etc/httpd/conf.d/{{ vhost }}
   ```
 
-
+#### 忽略错误,继续执行后续的task
 
 * 忽略错误,继续执行下一个task..默认情况下playbook如果执行命令失败就会终止整个Playbook的执行.使用ignore_erros参数可以在执行某个task失败时,自动忽略继续执行下一个task:
 
@@ -108,6 +112,8 @@ playbook的格式是YAML.以下是一个playbook的范例:
     - name: run this command and ignore the result
       shell: /usr/bin/somecommand || /bin/true
   ```
+
+#### limit限定执行的主机范围
 
 * limit参数 限定执行的主机范围.例如下面的例子限定在centos7这台主机上执行.当然也可以限定在一个组内的主机上执行
 
@@ -129,6 +135,8 @@ playbook的格式是YAML.以下是一个playbook的范例:
         centos7
         web
   ```
+
+#### 检测执行过程
 
 * -- check 检测模式,playbook定义的任务将在每台远程主机上进行检测,但是并不真正执行:
 
@@ -158,9 +166,11 @@ playbook的格式是YAML.以下是一个playbook的范例:
 > 
 > ```
 
-
+#### 执行并发数
 
 * --forks=数字.指定并发执行的任务数.默认是5.调高这个值可以加快ansible执行效率
+
+#### debug显示执行结果
 
 * 显示命令的执行返回结果.Asible默认并不会显示命令的执行结果,通过debug模块可以输出命令的执行结果.例如:
 

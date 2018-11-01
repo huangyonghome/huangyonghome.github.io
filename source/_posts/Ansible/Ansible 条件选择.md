@@ -5,6 +5,7 @@ tags:  Ansible
 categories: Ansible
 comments: true
 copyright: true
+
 ---
 
 ## Ansible 条件选择
@@ -141,4 +142,33 @@ lrwxrwxrwx 1 root root  9 Aug  3 10:57 tom -> /home/tom
 lrwxrwxrwx 1 root root 10 Aug  3 10:57 tony -> /home/tony
 
 ```
+---
+
+### when调用变量
+有时候when也需要对2个变量来进行比较,判断是否满足条件.例如:
+
+```
+- hosts: dev beta
+   remote_user: root
+   vars:
+     server_group: hsq
+      openapi: trade
+      internalapi:
+   
+       - name: create api site dir
+         file: path={{ nginx_site_dir }}/{{ project_name }}-{{ item[0] }}/{{ item[1] }} recurse=yes owner=work group=work mode=0775 state=directory
+         with_nested:
+              - [ "{{ openapi }}","{{ internalapi }}"]
+              - ['releases','vendor','shared']
+         when:  inventory_hostname in groups[ server_group ]
+```
+上面的when语句表示,只有在变量server_group主机组的主机才满足条件.这里不能像其他地方一样用{{ }} 双大括号的方式来调用变量.否则会出现如下错误:
+
+```
+[WARNING]: when statements should not include jinja2 templating delimiters such as {{ }} or {% %}. Found: inventory_hostname in groups[ '{{ server_group }}' ]
+```
+
+---
+
+
 

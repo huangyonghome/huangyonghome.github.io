@@ -103,6 +103,7 @@ Blocks块可以允许将一个或多个task归为一组,例如:
 
 这些task都被放置与一个block中,而且在block中定义了一个whn条件判断语句.这样就不用再每个task中都定义一个相同的when语句.
 
+
 #### block块处理异常任务.
 
 block可以用来处理任务的异常.有点类似于python编程语句的try exception...finally语句捕获异常.例如:
@@ -130,6 +131,41 @@ block可以用来处理任务的异常.有点类似于python编程语句的try e
 rescue表示上一个task(command:/bin/false)语句执行异常时就会执行rescue的task.
 
 而always表示无论command:/bin/false是否执行异常都会执行.
+
+---
+
+### block块或者l-方式功能--使notify对应多个handlers
+
+利用block块功能,可以将一个notify语句,对应多个handlers语句.例如:
+
+```
+        notify:
+            - restart nginx
+
+
+      handlers:
+
+         - name: restart nginx
+           block:
+             - command: docker restart web
+               when: inventory_hostname == 'docker'
+
+             - shell: nginx -s reload
+               when: inventory_hostname != 'docker'
+               
+```
+如此一来,可以分别针对不同服务器的重启方法来重启nginx.还可以利用下面的方式:
+
+```
+    notify:
+            - restart nginx
+
+
+handlers:
+   - name: restart nginx     shell: |-       {%- if inventoey == 'docker' -%}         docker restart web       {%- else -%}         nginx -s reload       [%- endif -%}
+
+```
+|- 表示不换行,下列的if控制语句内的真实command语句都在shell模块的本行执行.
 
 ---
 
@@ -316,7 +352,7 @@ project_author: jesse
 
 #### template模板的 jinja2 If语句
 
-if条件判断语句格式如下:
+* if条件判断语句格式如下:
 
 ```
 {% if condition %}
@@ -350,6 +386,40 @@ HI,my name is jesse
 
 sorry,myname is not defined.
 ```
+
+* if多重判断
+
+if语句执行逻辑与(and)和逻辑或(or)的多重判断.比如下面的例子:
+
+```
+{% if dwd_env is defined and https %}
+    listen 443 ssl http2;
+    ssl_protocols TLSV1 TLSV1.1  TLSv1.2 ;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+    ssl_ecdh_curve secp384r1;
+    ssl_session_cache shared:SSL:10m;
+    #ssl_session_tickets off;
+    ssl_session_timeout 60m;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 8.8.4.4 8.8.8.8 valid=300s;
+    resolver_timeout 5s;
+   #add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+    ssl_certificate /etc/letsencrypt/live/{{ dwd_env }}.{{ servername }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ dwd_env }}.{{ servername }}/privkey.pem;
+    ssl_trusted_certificate  /etc/letsencrypt/live/{{ dwd_env }}.{{ servername }}/chain.pem;
+
+   {% else %}
+
+    listen {{ listen | default(80) }};
+
+  {% endif %}
+```
+
+上面例子中变量dwd_env是字符串类型.值为beta,而https的变量类型是布尔型,值为True.
 
 ---
 
