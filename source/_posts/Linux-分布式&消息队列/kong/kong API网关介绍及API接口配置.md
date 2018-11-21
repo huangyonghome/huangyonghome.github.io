@@ -1,3 +1,12 @@
+---
+title: kong+casssandra集群环境部署
+date: 2018-11-20 12:59:58
+tags: kong
+categories: [Linux-分布式&消息队列 ]
+comments: true
+copyright: true
+---
+
 ## kong API网关介绍及API接口配置
 
 上一篇讲解了kong+cassandra的部署安装方法.接下来讲解一下kong的API配置.官网上也有详细的api介绍.
@@ -9,7 +18,7 @@
 Service 顾名思义，就是我们自己定义的上游服务，通过Kong匹配到相应的请求要转发的地方
 
 Service 可以与下面的Route进行关联，一个Service可以有很多Route，匹配到的Route就会转发到Service中.
-    
+​    
 当然中间也会通过Plugin的处理，增加或者减少一些相应的Header或者其他信息
 
 Service可以是一个实际的地址，也可以是定义的一个upstream
@@ -43,13 +52,13 @@ Route作为客户端的入口，通过将Route和Service的松耦合，可以通
 当我们部署集群时，一个单独的地址不足以满足我们的时候，我们可以使用Kong的upstream来进行设置
 
 upstream的功能和nginx也类似,可以指定后端真实的target服务器.还提供健康检查机制
-   
+
 ---
 
 #### * target
 
 target 就是在upstream进行负载均衡的终端，当我们部署集群时，需要将每个节点作为一个target，并设置负载的权重，当然也可以通过upstream的设置对target进行健康检查。
-    
+​    
 当我们使用upstream时，整个路线是 Route >> Service >> Upstream >> Target 
 
 ---

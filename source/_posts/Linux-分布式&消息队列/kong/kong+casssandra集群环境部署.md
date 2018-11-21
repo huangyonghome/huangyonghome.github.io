@@ -1,6 +1,6 @@
 ---
 title: kong+casssandra集群环境部署
-date: 2018-10-24 12:59:58
+date: 2018-11-21 5:22:58
 tags: kong
 categories: [Linux-分布式&消息队列 ]
 comments: true
@@ -14,7 +14,6 @@ Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司150
 
 有关kong的详细介绍请参考官网.
 
-<!--more-->
 --
 
 ### cassandra简介
@@ -178,6 +177,7 @@ kong@cqlsh> drop user cassandra;
 
 ```
 wget -O kong-community-edition-0.14.1.el7.noarch.rpm  https://bintray.com/kong/kong-community-edition-rpm/download_file?file_path=centos/7/kong-community-edition-0.14.1.el7.noarch.rpm
+
 sudo yum install epel-release
 sudo yum install kong-community-edition-0.14.1.el7.noarch.rpm
 ```
@@ -252,6 +252,9 @@ tcp        0      0 10.25.87.159:9042       0.0.0.0:*               LISTEN      
 tcp        0      0 10.25.87.159:7000       0.0.0.0:*               LISTEN      28598/java
 
 ```
+
+---
+
 
 ### 部署另外一台kong和cassandra
 
@@ -328,7 +331,6 @@ UN  10.80.229.244  339.93 KiB  256          51.3%             04a75f63-be99-4f3e
 UN  10.25.87.159   522.87 KiB  256          48.7%             4fe1df37-e69e-4a25-acdc-4b2d73a92225  rack1
 
 ```
-
 
 ---
 
@@ -596,7 +598,7 @@ Kong version is 0.14.1
 Starting Kong Dashboard on port 8081
 Kong Dashboard has started on port 8081
 ^C
-```    
+```
 
 查看supervisor启动日志文件:
 
@@ -675,6 +677,7 @@ lrwxrwxrwx 1 root root 24 Nov  3 11:25 /usr/bin/node -> /usr/local/node/bin/node
 [program:kong-dashboard]
 command=/usr/local/node/bin/kong-dashboard  start --kong-url http://127.0.0.1:8001 --port 8081
 numprocs=1
+priority=3
 user=root
 stdout_logfile = /data/logs/kong/kong-dashboard.log
 redirect_stderr = true
@@ -700,3 +703,152 @@ kong-dashboard                   RUNNING   pid 16635, uptime 0:05:02
 [root@DWD-BETA ~]# netstat -tulnp | grep 8081
 tcp6       0      0 :::8081                 :::*                    LISTEN      16635/node
 ```
+
+---
+
+### 将cassandra加入到supervisor进程管理
+
+cassandra加入supervisor进程托管遇到不少问题.踩过以下2个坑:
+
+1.启动报错,提示需要更高级版本的java.
+
+```
+Cassandra 3.0 and later require Java 8u40 or later.
+Cassandra 3.0 and later require Java 8u40 or later.
+Cassandra 3.0 and later require Java 8u40 or later.
+Cassandra 3.0 and later require Java 8u40 or later.
+Cassandra 3.0 and later require Java 8u40 or later.
+Cassandra 3.0 and later require Java 8u40 or later.
+Cassandra 3.0 and later require Java 8u40 or later.
+```
+
+我的解决方案:
+
+* 在cassandra的supervisor配置文件中加入环境变量:
+
+```
+environment=JAVA_HOME="/usr/local/java"  #这样cassandra会识别用户自定义安装的Java.
+```
+
+* 配置软链
+
+```
+sudo ln -s /usr/local/java/bin/java /usr/bin/java
+```
+
+2.仍然无法启动,因为命令行是以daemon方式启动.在cassandra的supervisor配置文件中的启动参数加入-f选项.
+
+最终的cassandra配置文件如下:
+
+```
+[program:cassandra]
+command=/usr/local/cassandra/bin/cassandra -f
+directory=/usr/local/cassandra/
+environment=JAVA_HOME="/usr/local/java"
+enviroment=PATH="$JAVA_HOME/bin:$PATH"
+priority=0
+numprocs=1
+user=work
+stdout_logfile = /data/logs/cassandra/cassandra_supervisor.log
+redirect_stderr = true
+autostart=true
+autorestart=true
+```
+
+---
+
+### 将kong加入到supervisor	
+
+1.由于默认kong启动是以daemon方式启动.所以修改/etc/kong/kong.conf配置文件
+
+```
+#将下列行修改为off,且取消注释
+nginx_daemon = off
+```
+
+2.编辑kong的supervisor配置文件
+
+```
+[program:kong]
+command=/usr/local/bin/kong start -c /etc/kong/kong.conf
+numprocs=1
+priority=0
+user=work
+stdout_logfile = /data/logs/kong/kong_supervisor.log
+redirect_stderr = true
+autostart=true
+autorestart=true
+```
+
+> 注意由于kong启动的时候会连接后端的cassandra数据库,所以需要先启动cassandra,再启动kong.这就是为什么supervisor里要加入priority参数.优先级越小,启动顺序越优先.停止顺序越靠后. 	
+
+**但是经过我的验证,发现priority参数没什么鸟用.当我start all,stop all时.永远是cassandra进程首先启动和关闭,无论priority优先级是大还是小.而不是supervisor官网介绍的那样效果**
+
+启动没问题:
+
+```
+[work@kong-node2 ~]$ supervisorctl status
+cassandra                        RUNNING   pid 13531, uptime 0:10:09
+kong                             RUNNING   pid 14460, uptime 0:00:35
+kong-dashboard                   RUNNING   pid 14496, uptime 0:00:17
+```
+
+
+
+但是发现supervisor管理kong进程有很严重的问题.
+
+因为kong启动后包括2个进程:kong和nginx
+
+```
+work@kong-node1 conf.d]$ ps aux | grep kong
+work      3198  0.2  0.0 130104  2700 ?        S    17:12   0:00 perl /usr/local/openresty/bin/resty /usr/local/bin/kong start -c /etc/kong/kong.conf
+work      3215  6.3  0.1 259600 11800 ?        S    17:12   0:00 nginx: master process /usr/local/openresty/nginx/sbin/nginx -p /data/kong -c nginx.conf
+```
+
+.这个时候如果用supervisorctl restart kong进程会出现无法启动的情况.这是因为supervisor kill掉了kong进程.但是没有kill Ningx进程.所以重新启动kong的时候,由于nginx进程仍然存在,故无法启动.例如:
+
+```
+[work@kong-node1 conf.d]$ ps aux | grep kong
+work      2917  0.0  0.1 259600 11820 ?        S    17:05   0:00 nginx: master process /usr/local/openresty/nginx/sbin/nginx -p /data/kong -c nginx.conf
+work      3191  0.0  0.0 112704   976 pts/0    S+   17:11   0:00 grep --color=auto kong
+[work@kong-node1 conf.d]$ kill 2917
+[work@kong-node1 conf.d]$ ps aux | grep kong
+work      3193  0.0  0.0 112704   976 pts/0    S+   17:11   0:00 grep --color=auto kong
+[work@kong-node1 conf.d]$ supervisorctl start kong
+kong: started
+
+#kong启动后包含2个进程
+[work@kong-node1 conf.d]$ ps aux | grep kong
+work      3198  0.2  0.0 130104  2700 ?        S    17:12   0:00 perl /usr/local/openresty/bin/resty /usr/local/bin/kong start -c /etc/kong/kong.conf
+work      3215  6.3  0.1 259600 11800 ?        S    17:12   0:00 nginx: master process /usr/local/openresty/nginx/sbin/nginx -p /data/kong -c nginx.conf
+work      3228  0.0  0.0 112704   976 pts/0    R+   17:12   0:00 grep --color=auto kong
+
+#supervisor关闭了Kong进程后,无法启动.
+[work@kong-node1 conf.d]$ supervisorctl restart kong
+kong: stopped
+kong: ERROR (spawn error)
+
+#因为虽然kong进程杀死了.但是nginx进程还在.所以kong的8000端口仍然被占用
+[work@kong-node1 conf.d]$ ps aux | grep kong
+work      3215  0.1  0.1 259600 11800 ?        S    17:12   0:00 nginx: master process /usr/local/openresty/nginx/sbin/nginx -p /data/kong -c nginx.conf
+work      3307  0.0  0.0 112704   976 pts/0    S+   17:15   0:00 grep --color=auto kong
+
+#查看启动日志,提示kong进程已经启动了.
+Error: Kong is already running in /data/kong
+
+  Run with --v (verbose) or --vv (debug) for more details
+```
+
+**暂时就不用supervisor管理了,采用命令行直接启动方式**
+
+---
+
+**命令行启动kong.只有一个Nginx进程.没有Perl进程.不知道何故**
+
+```
+[work@kong-node2 conf.d]$kong start -c /etc/kong/kong.conf
+Kong started
+[work@kong-node2 conf.d]$ps aux | grep kong
+work     15558  0.0  0.0 259600  6540 ?        Ss   17:29   0:00 nginx: master process /usr/local/openresty/nginx/sbin/nginx -p /data/kong -c nginx.conf
+```
+
