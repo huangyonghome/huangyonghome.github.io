@@ -218,7 +218,20 @@ methods[]=GET&methods[]=POST'
 }
 ```
 
+下面是定义了paths:
 
+```
+[work@DWD-BETA plugins]$ curl -i -XPOST --url http://localhost:8001/routes/ --data 'protocols[]=http' --data 'protocols[]=https' --data 'methods[]=GET&methods[]=POST' --data 'paths[]=/merchantapi' --data 'hosts[]=m.betapai.haoshiqi.net' --data 'service.id=bb45687e-7cf5-48b2-b3ae-6847e28736bf'
+HTTP/1.1 201 Created
+Date: Wed, 07 Nov 2018 10:26:00 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+Access-Control-Allow-Origin: *
+Server: kong/0.14.1
+Content-Length: 324
+
+{"created_at":1541586360,"strip_path":true,"hosts":["m.betapai.haoshiqi.net"],"preserve_host":false,"regex_priority":0,"updated_at":1541586360,"paths":["\/merchantapi"],"service":{"id":"bb45687e-7cf5-48b2-b3ae-6847e28736bf"},"methods":["GET","POST"],"protocols":["http","https"],"id":"a2bb14fd-6423-45bb-be60-5481bc5a3038"}
+```
 > route的hosts字段不仅可以指定具体的域名,还可以配置通配符域名,或者更高级的正则写法.
 
 ---
