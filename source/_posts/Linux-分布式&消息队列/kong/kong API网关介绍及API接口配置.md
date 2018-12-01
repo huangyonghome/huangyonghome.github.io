@@ -13,6 +13,8 @@ copyright: true
 
 下面简单讲解一下kong的各个api组件:
 
+<!--more-->
+
 #### * service
 
 Service 顾名思义，就是我们自己定义的上游服务，通过Kong匹配到相应的请求要转发的地方

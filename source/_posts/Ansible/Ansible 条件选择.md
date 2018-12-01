@@ -162,7 +162,7 @@ lrwxrwxrwx 1 root root 10 Aug  3 10:57 tony -> /home/tony
               - ['releases','vendor','shared']
          when:  inventory_hostname in groups[ server_group ]
 ```
-上面的when语句表示,只有在变量server_group主机组的主机才满足条件.这里不能像其他地方一样用{{ }} 双大括号的方式来调用变量.否则会出现如下错误:
+上面的when语句表示,只有在变量server_group主机组的主机才满足条件.这里不能像其他地方一样用双大括号的方式来调用变量.否则会出现如下错误:
 
 ```
 [WARNING]: when statements should not include jinja2 templating delimiters such as {{ }} or {% %}. Found: inventory_hostname in groups[ '{{ server_group }}' ]

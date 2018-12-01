@@ -19,6 +19,8 @@ copyright: true
 
 故障现象: 钉钉收到报警MQ服务器的rabbitmq进程挂了.手动启动后,过一会超时退出
 
+<!--more-->
+
 ---
 
 1.查看日志.提示delayed_message插件超时.无法启动.

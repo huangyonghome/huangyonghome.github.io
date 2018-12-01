@@ -14,6 +14,8 @@ Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司150
 
 有关kong的详细介绍请参考官网.
 
+<!--more-->
+
 --
 
 ### cassandra简介
