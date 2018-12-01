@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="ansible–loop循环标准循环 下面是一个简单的标准loop循环的例子:  12345678910111213[root@localhost playbook]$vim loop-useradd.yaml---- hosts: all  tasks:    - name: add several users      user:         name: &amp;quot;&amp;#123;&amp;#123">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-09T15:15:45.305Z">
+<meta property="og:updated_time" content="2018-12-01T13:56:41.287Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ansible--loop循环">
 <meta name="twitter:description" content="ansible–loop循环标准循环 下面是一个简单的标准loop循环的例子:  12345678910111213[root@localhost playbook]$vim loop-useradd.yaml---- hosts: all  tasks:    - name: add several users      user:         name: &amp;quot;&amp;#123;&amp;#123">
@@ -408,6 +408,15 @@
 <p>例如:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- name: create project dir</span><br><span class="line">  file: path=/data/apps/msf-&#123;&#123; item[0] &#125;&#125;-api-&#123;&#123; dwd_env &#125;&#125;/&#123;&#123; item[1] &#125;&#125; recurse=yes owner=root group=root mode=0644 state=directory</span><br><span class="line">  with_nested:</span><br><span class="line">    - [&apos;open&apos;,&apos;internal&apos;]</span><br><span class="line">    - [&apos;releases&apos;,&apos;vendor&apos;,&apos;shared&apos;]</span><br></pre></td></tr></table></figure>
 <p>  item[0]表示循环’open’,’internal’.在每次循环item[0]时都循环一遍item[1],也就是’release,vendor,shared.<br>   上面的循环语句其实类似于shell的命令:<br>   mkdir -pv /data/apps/msf-{open,internal}-api/{releases,vendor,shared}</p>
+<hr>
+<h3 id="列表循环"><a href="#列表循环" class="headerlink" title="列表循环"></a>列表循环</h3><p>有时候循环不适合写死变量.因为万一变量没有值的话,就需要改写playbook里的task.这是非常不方便的.</p>
+<p>比如:如果下面的openapi变量没有值,或者如果不需要新建这个目录,就需要修改这个task.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">file: path=&#123;&#123; nginx_site_dir &#125;&#125;/&#123;&#123; project_name &#125;&#125;-&#123;&#123; item[0] &#125;&#125;-&#123;&#123; dwd_env &#125;&#125;/&#123;&#123; item[1] &#125;&#125;/vendor recurse=yes owner=work group=work mode=0775 state=directory</span><br><span class="line">with_nested:</span><br><span class="line">      - [ &quot;&#123;&#123; openapi &#125;&#125;&quot;,&quot; &#123;&#123; xxx &#125;&#125;,&quot;&#123;&#123; haha &#125;&#125;&quot;&quot;]</span><br><span class="line">      - [&apos;releases&apos;,&apos;shared&apos;]</span><br></pre></td></tr></table></figure>
+<p>此时列表循环就非常有帮助.例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">vars:</span><br><span class="line">   api:</span><br><span class="line">     - openapi</span><br><span class="line">     - internal</span><br><span class="line">     - script</span><br><span class="line">     </span><br><span class="line">tasks:</span><br><span class="line"></span><br><span class="line">   - name: create dev beta project dir</span><br><span class="line">     file: path=/tmp/hsq-&#123;&#123; item[0] &#125;&#125;/&#123;&#123; item[1] &#125;&#125; recurse=yes owner=work group=work mode=0775 state=directory</span><br><span class="line">     with_nested:</span><br><span class="line">         - &quot;&#123;&#123; api &#125;&#125;&quot;</span><br><span class="line">         - [&apos;releases&apos;,&apos;shared&apos;]</span><br></pre></td></tr></table></figure>
+<p> 这样一来只需要修改api的变量,而不需要修改playbook的task.</p>
+<p> 执行结果如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">TASK [create dev beta project dir] *********************************************************************************************************************************************</span><br><span class="line">changed: [docker] =&gt; (item=[u&apos;openapi&apos;, u&apos;releases&apos;])</span><br><span class="line">changed: [docker] =&gt; (item=[u&apos;openapi&apos;, u&apos;shared&apos;])</span><br><span class="line">changed: [docker] =&gt; (item=[u&apos;internal&apos;, u&apos;releases&apos;])</span><br><span class="line">changed: [docker] =&gt; (item=[u&apos;internal&apos;, u&apos;shared&apos;])</span><br><span class="line">changed: [docker] =&gt; (item=[u&apos;script&apos;, u&apos;releases&apos;])</span><br><span class="line">changed: [docker] =&gt; (item=[u&apos;script&apos;, u&apos;shared&apos;])</span><br><span class="line"></span><br><span class="line">PLAY RECAP *********************************************************************************************************************************************************************</span><br><span class="line">docker                     : ok=2    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -427,7 +436,7 @@
   <p><span>本文标题:</span><a href="/2018/08/28/Ansible/ansible--loop循环/">ansible--loop循环</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年08月28日 - 22:08</p>
-  <p><span>最后更新:</span>2018年10月09日 - 23:10</p>
+  <p><span>最后更新:</span>2018年12月01日 - 21:12</p>
   <p><span>原始链接:</span><a href="/2018/08/28/Ansible/ansible--loop循环/" title="ansible--loop循环">https://jesse.top/2018/08/28/Ansible/ansible--loop循环/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/08/28/Ansible/ansible--loop循环/"  aria-label="复制成功！"></i></span>
   </p>
@@ -627,7 +636,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">70</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -649,7 +658,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -717,7 +726,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ansible–loop循环"><span class="nav-number">1.</span> <span class="nav-text">ansible–loop循环</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标准循环"><span class="nav-number">1.0.1.</span> <span class="nav-text">标准循环</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#loop与yum-apt"><span class="nav-number">1.0.2.</span> <span class="nav-text">loop与yum,apt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#with-items迭代"><span class="nav-number">1.0.3.</span> <span class="nav-text">with_items迭代</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#嵌套循环"><span class="nav-number">1.0.4.</span> <span class="nav-text">嵌套循环</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ansible–loop循环"><span class="nav-number">1.</span> <span class="nav-text">ansible–loop循环</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标准循环"><span class="nav-number">1.0.1.</span> <span class="nav-text">标准循环</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#loop与yum-apt"><span class="nav-number">1.0.2.</span> <span class="nav-text">loop与yum,apt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#with-items迭代"><span class="nav-number">1.0.3.</span> <span class="nav-text">with_items迭代</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#嵌套循环"><span class="nav-number">1.0.4.</span> <span class="nav-text">嵌套循环</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表循环"><span class="nav-number">1.1.</span> <span class="nav-text">列表循环</span></a></li></ol></li></ol></div>
             
 
           </div>

@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="Ansible的Playbook介绍以及技巧playbook的格式是YAML.以下是一个playbook的范例:">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-09T15:00:20.334Z">
+<meta property="og:updated_time" content="2018-12-01T13:56:41.287Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ansible-Playbook">
 <meta name="twitter:description" content="Ansible的Playbook介绍以及技巧playbook的格式是YAML.以下是一个playbook的范例:">
@@ -385,31 +385,41 @@
 <li>可以不使用双引号来括住字符串</li>
 <li>name是任务的描述,不是必需.但是为了playbook的易读性,建议name要有.一个name只能包含一个task.</li>
 </ul>
-<h4 id="playbook的使用技巧"><a href="#playbook的使用技巧" class="headerlink" title="playbook的使用技巧"></a>playbook的使用技巧</h4><ul>
+<h3 id="playbook的使用技巧"><a href="#playbook的使用技巧" class="headerlink" title="playbook的使用技巧"></a>playbook的使用技巧</h3><h4 id="sudo用户"><a href="#sudo用户" class="headerlink" title="sudo用户"></a>sudo用户</h4><ul>
 <li><p>remote_user表示playbook允许时以哪个用户运行,如果加上sudo:yes.表示以sudo方式运行:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- hosts: webservers</span><br><span class="line">  remote_user: yourname</span><br><span class="line">  sudo: yes</span><br></pre></td></tr></table></figure>
 <p>如果是仅仅在一个task中使用sudo.而不是在整个playbook中使用:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">- hosts: webservers</span><br><span class="line">  remote_user: yourname</span><br><span class="line">  tasks:</span><br><span class="line">    - service: name=nginx state=started</span><br><span class="line">      sudo: yes</span><br></pre></td></tr></table></figure>
 </li>
+</ul>
+<h4 id="模块和命令换行"><a href="#模块和命令换行" class="headerlink" title="模块和命令换行"></a>模块和命令换行</h4><ul>
 <li><p>k/v键值对(模块和命令)可以在写在一行,用:冒号隔开,也可以用&gt; 符号换行:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- name: test</span><br><span class="line">  command: &gt; </span><br><span class="line">  ls /home/</span><br></pre></td></tr></table></figure>
 <p>如果命令行太长,可以用空格或者缩进换行</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tasks:</span><br><span class="line">  - name: Copy ansible inventory file to client</span><br><span class="line">    copy: src=/etc/ansible/hosts dest=/etc/ansible/hosts</span><br><span class="line">            owner=root group=root mode=0644</span><br></pre></td></tr></table></figure>
 </li>
+</ul>
+<h4 id="调用变量"><a href="#调用变量" class="headerlink" title="调用变量"></a>调用变量</h4><ul>
 <li><p>命令可以用变量,变量的引用方式为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tasks:</span><br><span class="line">  - name: create a virtual host file for &#123;&#123; vhost &#125;&#125;</span><br><span class="line">    template: src=somefile.j2 dest=/etc/httpd/conf.d/&#123;&#123; vhost &#125;&#125;</span><br></pre></td></tr></table></figure>
 </li>
+</ul>
+<h4 id="忽略错误-继续执行后续的task"><a href="#忽略错误-继续执行后续的task" class="headerlink" title="忽略错误,继续执行后续的task"></a>忽略错误,继续执行后续的task</h4><ul>
 <li><p>忽略错误,继续执行下一个task..默认情况下playbook如果执行命令失败就会终止整个Playbook的执行.使用ignore_erros参数可以在执行某个task失败时,自动忽略继续执行下一个task:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tasks:</span><br><span class="line">  - name: run this command and ignore the result</span><br><span class="line">    shell: /usr/bin/somecommand</span><br><span class="line">    ignore_errors: True</span><br></pre></td></tr></table></figure>
 <p>或者采用下列方式.如果somecommand失败,则执行某个一定为true的命令:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tasks:</span><br><span class="line">  - name: run this command and ignore the result</span><br><span class="line">    shell: /usr/bin/somecommand || /bin/true</span><br></pre></td></tr></table></figure>
 </li>
+</ul>
+<h4 id="limit限定执行的主机范围"><a href="#limit限定执行的主机范围" class="headerlink" title="limit限定执行的主机范围"></a>limit限定执行的主机范围</h4><ul>
 <li><p>limit参数 限定执行的主机范围.例如下面的例子限定在centos7这台主机上执行.当然也可以限定在一个组内的主机上执行</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible ansible]$ansible-playbook test.yaml --limit centos7</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>–list-hosts参数查看一个Playbook影响的所有主机.例如下列命令可以看到Playbook将在哪些主机上执行:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible ansible]$ansible-playbook test.yaml --list-hosts</span><br><span class="line"></span><br><span class="line">playbook: test.yaml</span><br><span class="line"></span><br><span class="line">  play #1 (all): all	TAGS: []</span><br><span class="line">    pattern: [&apos;all&apos;]</span><br><span class="line">    hosts (3):</span><br><span class="line">      centos6</span><br><span class="line">      centos7</span><br><span class="line">      web</span><br></pre></td></tr></table></figure>
 </li>
+</ul>
+<h4 id="检测执行过程"><a href="#检测执行过程" class="headerlink" title="检测执行过程"></a>检测执行过程</h4><ul>
 <li><p>– check 检测模式,playbook定义的任务将在每台远程主机上进行检测,但是并不真正执行:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@ansible ansible]$ansible-playbook test.yaml --check</span><br></pre></td></tr></table></figure>
 </li>
@@ -418,11 +428,11 @@
 <p>list–tasks有相似的作用,它列出了playbook的task任务安排:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&gt; [root@localhost playbook]$ansible-playbook --list-tasks nginx.yaml</span><br><span class="line">&gt;  [WARNING]: Could not match supplied host pattern, ignoring: 10.0.4.240</span><br><span class="line">&gt; </span><br><span class="line">&gt; </span><br><span class="line">&gt; playbook: nginx.yaml</span><br><span class="line">&gt; </span><br><span class="line">&gt;   play #1 (10.0.4.240): 10.0.4.240	TAGS: []</span><br><span class="line">&gt;     tasks:</span><br><span class="line">&gt;       check if there is nginx repo on server	TAGS: []</span><br><span class="line">&gt;       install nginx yum repo,if there is no nginx repo	TAGS: []</span><br><span class="line">&gt;       install nginx	TAGS: []</span><br><span class="line">&gt;       create nginx document dir	TAGS: []</span><br><span class="line">&gt;       create nginx log dir	TAGS: []</span><br><span class="line">&gt;       copy nginx configure file	TAGS: []</span><br><span class="line">&gt;       copy nginx web file	TAGS: []</span><br><span class="line">&gt;       start nginx	TAGS: []</span><br><span class="line">&gt; </span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
 </blockquote>
-<ul>
-<li><p>–forks=数字.指定并发执行的任务数.默认是5.调高这个值可以加快ansible执行效率</p>
-</li>
-<li><p>显示命令的执行返回结果.Asible默认并不会显示命令的执行结果,通过debug模块可以输出命令的执行结果.例如:</p>
-</li>
+<h4 id="执行并发数"><a href="#执行并发数" class="headerlink" title="执行并发数"></a>执行并发数</h4><ul>
+<li>–forks=数字.指定并发执行的任务数.默认是5.调高这个值可以加快ansible执行效率</li>
+</ul>
+<h4 id="debug显示执行结果"><a href="#debug显示执行结果" class="headerlink" title="debug显示执行结果"></a>debug显示执行结果</h4><ul>
+<li>显示命令的执行返回结果.Asible默认并不会显示命令的执行结果,通过debug模块可以输出命令的执行结果.例如:</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line">  - hosts: all</span><br><span class="line">    remote_user: root</span><br><span class="line">    tasks:</span><br><span class="line">      - name: get variables</span><br><span class="line">        shell: cat /etc/redhat-release</span><br><span class="line">        register: foo</span><br><span class="line">      - name: print variable</span><br><span class="line">        debug: msg=&quot;the vairables is &#123;&#123; foo.stdout &#125;&#125;&quot;</span><br></pre></td></tr></table></figure>
 <p>执行结果:</p>
@@ -450,7 +460,7 @@
   <p><span>本文标题:</span><a href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/">Ansible-Playbook</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年08月26日 - 22:08</p>
-  <p><span>最后更新:</span>2018年10月09日 - 23:10</p>
+  <p><span>最后更新:</span>2018年12月01日 - 21:12</p>
   <p><span>原始链接:</span><a href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/" title="Ansible-Playbook">https://jesse.top/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/"  aria-label="复制成功！"></i></span>
   </p>
@@ -525,8 +535,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/22/mysql/mysql主从同步延时问题/" rel="next" title="mysql5.7主从同步延时问题">
-                <i class="fa fa-chevron-left"></i> mysql5.7主从同步延时问题
+              <a href="/2018/08/26/Ansible/playbook高级特性/" rel="next" title="Ansible playbook高级特性">
+                <i class="fa fa-chevron-left"></i> Ansible playbook高级特性
               </a>
             
           </div>
@@ -535,8 +545,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/26/Ansible/playbook高级特性/" rel="prev" title="Ansible playbook高级特性">
-                Ansible playbook高级特性 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/26/Ansible/Ansible变量/" rel="prev" title="Ansible变量">
+                Ansible变量 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -650,7 +660,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">70</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -672,7 +682,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -740,7 +750,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ansible的Playbook介绍以及技巧"><span class="nav-number">1.</span> <span class="nav-text">Ansible的Playbook介绍以及技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#playbook的使用技巧"><span class="nav-number">1.0.1.</span> <span class="nav-text">playbook的使用技巧</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ansible的Playbook介绍以及技巧"><span class="nav-number">1.</span> <span class="nav-text">Ansible的Playbook介绍以及技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#playbook的使用技巧"><span class="nav-number">1.1.</span> <span class="nav-text">playbook的使用技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sudo用户"><span class="nav-number">1.1.1.</span> <span class="nav-text">sudo用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模块和命令换行"><span class="nav-number">1.1.2.</span> <span class="nav-text">模块和命令换行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#调用变量"><span class="nav-number">1.1.3.</span> <span class="nav-text">调用变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#忽略错误-继续执行后续的task"><span class="nav-number">1.1.4.</span> <span class="nav-text">忽略错误,继续执行后续的task</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#limit限定执行的主机范围"><span class="nav-number">1.1.5.</span> <span class="nav-text">limit限定执行的主机范围</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#检测执行过程"><span class="nav-number">1.1.6.</span> <span class="nav-text">检测执行过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行并发数"><span class="nav-number">1.1.7.</span> <span class="nav-text">执行并发数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#debug显示执行结果"><span class="nav-number">1.1.8.</span> <span class="nav-text">debug显示执行结果</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

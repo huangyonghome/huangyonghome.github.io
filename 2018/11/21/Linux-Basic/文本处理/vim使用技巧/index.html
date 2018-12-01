@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'https:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vim," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="vim使用技巧移动光标  单行移动     w 移动光标到下一个单词开头     W 移动光标到下一个单词开头，长跳．比如／etc/letsencryt 被认为是一个单词   e 移动光标到下一个单词结尾   E 移动光标到下一个单词结尾,长跳   b 移动光标到上一个单词   B 移动光标到上一个单词,长跳   nw n代表数字,比如移动到下5个单词的头部,5w   ne n代表数字,比如移动到">
+<meta name="keywords" content="vim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vim使用技巧">
+<meta property="og:url" content="https://jesse.top/2018/11/21/Linux-Basic/文本处理/vim使用技巧/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="vim使用技巧移动光标  单行移动     w 移动光标到下一个单词开头     W 移动光标到下一个单词开头，长跳．比如／etc/letsencryt 被认为是一个单词   e 移动光标到下一个单词结尾   E 移动光标到下一个单词结尾,长跳   b 移动光标到上一个单词   B 移动光标到上一个单词,长跳   nw n代表数字,比如移动到下5个单词的头部,5w   ne n代表数字,比如移动到">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-01T13:56:41.289Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vim使用技巧">
+<meta name="twitter:description" content="vim使用技巧移动光标  单行移动     w 移动光标到下一个单词开头     W 移动光标到下一个单词开头，长跳．比如／etc/letsencryt 被认为是一个单词   e 移动光标到下一个单词结尾   E 移动光标到下一个单词结尾,长跳   b 移动光标到上一个单词   B 移动光标到上一个单词,长跳   nw n代表数字,比如移动到下5个单词的头部,5w   ne n代表数字,比如移动到">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2018/11/21/Linux-Basic/文本处理/vim使用技巧/"/>
+
+
+
+
+
+  <title>vim使用技巧 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/11/21/Linux-Basic/文本处理/vim使用技巧/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">vim使用技巧</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-21T12:59:58+08:00">
+                2018-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/文本处理/" itemprop="url" rel="index">
+                    <span itemprop="name">文本处理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/21/Linux-Basic/文本处理/vim使用技巧/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/11/21/Linux-Basic/文本处理/vim使用技巧/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="vim使用技巧"><a href="#vim使用技巧" class="headerlink" title="vim使用技巧"></a>vim使用技巧</h2><h3 id="移动光标"><a href="#移动光标" class="headerlink" title="移动光标"></a>移动光标</h3><hr>
+<ul>
+<li>单行移动</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>w</th>
+<th>移动光标到下一个单词开头</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W</td>
+<td>移动光标到下一个单词开头，长跳．比如／etc/letsencryt 被认为是一个单词</td>
+</tr>
+<tr>
+<td>e</td>
+<td>移动光标到下一个单词结尾</td>
+</tr>
+<tr>
+<td>E</td>
+<td>移动光标到下一个单词结尾,长跳</td>
+</tr>
+<tr>
+<td>b</td>
+<td>移动光标到上一个单词</td>
+</tr>
+<tr>
+<td>B</td>
+<td>移动光标到上一个单词,长跳</td>
+</tr>
+<tr>
+<td>nw</td>
+<td>n代表数字,比如移动到下5个单词的头部,5w</td>
+</tr>
+<tr>
+<td>ne</td>
+<td>n代表数字,比如移动到下5个单词的尾部,5e</td>
+</tr>
+</tbody>
+</table>
+<a id="more"></a>
+<ul>
+<li>行首行尾移动</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>0</th>
+<th>数字0,表示移动到本行最开头,不管有没有缩进都跳到最开头,作用等用于Home键</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>^</td>
+<td>移动光标到本行最开头的字符处</td>
+</tr>
+<tr>
+<td>$</td>
+<td>移动到本行结尾处.作用等同于End键</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>屏幕中移动</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>H</th>
+<th>移动光标到屏幕的首行.注意是当前屏幕窗口,而不是整个文件.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M</td>
+<td>移动光标到屏幕的中间一行.</td>
+</tr>
+<tr>
+<td>L</td>
+<td>移动光标到屏幕的尾行.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>文件范围移动</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>gg</th>
+<th>移动光标到文件首行.这个是移动到整个文件的第一行</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G</td>
+<td>移动光标到文件的最后一行. 这个是移动到整个文件的最后一行</td>
+</tr>
+<tr>
+<td>:n</td>
+<td>跳到第n行.比如跳到第5行,可以输入:5</td>
+</tr>
+<tr>
+<td>nG或ngg</td>
+<td>也是跳到n行,比如跳到第10行,输入10G,或者10gg</td>
+</tr>
+<tr>
+<td>:n</td>
+<td>n代表数字,比如移动到100行,输入:100</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>翻页</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>ctrl+f</th>
+<th>向下翻页,等同于page down</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ctrl+b</td>
+<td>向上翻页,等同于page up</td>
+</tr>
+<tr>
+<td>ctrl+d</td>
+<td>向下翻半页</td>
+</tr>
+<tr>
+<td>ctrl+u</td>
+<td>向上翻半页</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>特殊移动技巧</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>{</th>
+<th>跳到上一个空行</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>}</td>
+<td>跳到下一个空行</td>
+</tr>
+<tr>
+<td>*</td>
+<td>将光标停留在某个单词上，按下＊键，会搜索该单词，并跳到下一个这个单词处</td>
+</tr>
+<tr>
+<td>#</td>
+<td>将光标停留在某个单词上，按下#键，会搜索该单词，并跳到上一个这个单词处</td>
+</tr>
+<tr>
+<td>‘’</td>
+<td>两个单引号,移动光标到上一个标记处.比如跳转到他处后,输入此命令回到上一次光标停留的位置</td>
+</tr>
+<tr>
+<td>‘.</td>
+<td>一个单引号一个点，移动光标到上一次的修改行</td>
+</tr>
+<tr>
+<td>`.</td>
+<td>一个倒引号一个点．移动光标到上一次的修改点</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="删除复制—结合光标"><a href="#删除复制—结合光标" class="headerlink" title="删除复制—结合光标"></a>删除复制—结合光标</h3><p>在vim中,y表示拷贝,d表示删除,p表示粘贴.其中拷贝和删除和光标移动命令可以结合使用</p>
+<ul>
+<li>删除</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>dw</th>
+<th>w是移动到下一个单词开头．dw表示删除从当前光标到光标所在单词结尾的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dW</td>
+<td>同上，不过是长删除, /etc/letsencrypt被认为是一个单词</td>
+</tr>
+<tr>
+<td>daw</td>
+<td>删除光标所在的单词,无论光标是停留在哪里.例如/etc/letsencrypt/.如果光标停留在letsencrypt中的t字母上,则会删除letsencrypt这个单词.如果是dw则只删除tsencrypt,保留le</td>
+</tr>
+<tr>
+<td>daW</td>
+<td>同上，长删除</td>
+</tr>
+<tr>
+<td>d0</td>
+<td>数字0,删除从当前光标到光标所在行首的内容</td>
+</tr>
+<tr>
+<td>d$或dD</td>
+<td>删除从当前光标到光标所在行尾的内容</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>复制</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>yw</th>
+<th>同理,复制从光标所在字母到单词结尾的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>yW</td>
+<td>同上,长复制</td>
+</tr>
+<tr>
+<td>yaw/yaW</td>
+<td>同理，复制单词，无论光标停留在单词的哪个字母</td>
+</tr>
+<tr>
+<td>y0</td>
+<td>拷贝从当前光标到光标所在行首的内容，如果该行缩进，那么连行首的空格也一起复制</td>
+</tr>
+<tr>
+<td>ｙ^</td>
+<td>拷贝从当前光标到光标所在行首的内容，如果该行缩进，不包括行首空格，</td>
+</tr>
+<tr>
+<td>y$</td>
+<td>拷贝从当前光标到光标所在行尾的内容</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>整行复制删除</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>yy</th>
+<th>复制光标所在整行内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dd</td>
+<td>删除光标所在整行内容</td>
+</tr>
+<tr>
+<td>D</td>
+<td>删除从当前光标到光标所在行尾的内容</td>
+</tr>
+<tr>
+<td>J</td>
+<td>表示光标所在行和下一行合并</td>
+</tr>
+<tr>
+<td>:.,$d</td>
+<td>删除当前行到文件末尾,</td>
+</tr>
+<tr>
+<td>dG</td>
+<td>删除当前行到文件末尾,</td>
+</tr>
+<tr>
+<td>:/str1/,/str2/d</td>
+<td>删除从字符串str1到str2的所有行</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="删除复制—结合数字"><a href="#删除复制—结合数字" class="headerlink" title="删除复制—结合数字"></a>删除复制—结合数字</h3><table>
+<thead>
+<tr>
+<th>5yy或者y5y</th>
+<th>拷贝光标以下5行,包含光标所在行本身</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:n1,n2y</td>
+<td>n表示数字,例如:12,24y表示拷贝第12行到第24行的内容.</td>
+</tr>
+<tr>
+<td>:n,y</td>
+<td>n表示数字,例如:12,y表示拷贝第12行到光标所在行之间的内容.</td>
+</tr>
+<tr>
+<td>:,ny</td>
+<td>n表示数字,例如:,24y表示拷贝光标所在行到第24行之间的内容.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>5dd或者d5d</th>
+<th>删除光标以下5行,包含光标所在行本身</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:n1,n2d</td>
+<td>n表示数字,例如:12,24d表示删除第12行到第24行的内容.</td>
+</tr>
+<tr>
+<td>:n,d</td>
+<td>n表示数字,例如:12,d表示删除第12行到光标所在行之间的内容.</td>
+</tr>
+<tr>
+<td>:,nd</td>
+<td>n表示数字,例如:,24d表示删除光标所在行到第24行之间的内容.</td>
+</tr>
+<tr>
+<td>:nd</td>
+<td>n表示数字,例如:3d表示删除3行.注意和上个命令区分</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h3><table>
+<thead>
+<tr>
+<th>/xxx或者?xxx</th>
+<th>在整篇文档中搜索匹配xxx的字符串, / 表示向下查找, ? 表示向上查找.支持正则表达式.输入 n 查找下一个匹配处, 输入 N 反方向查找.注意查找字符串默认区分大小写</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*或者#</td>
+<td>光标停留在某个单词上时, 输入这条命令表示查找与该单词匹配的下(上)一个单词,同样,输入n查找下一个匹配,输入N反方向查找</td>
+</tr>
+<tr>
+<td>g*或者g#</td>
+<td>和上条相似,但是这个命令不完全匹配光标所在处的单词,而是匹配包含该单词的所有字符串</td>
+</tr>
+<tr>
+<td>gd</td>
+<td>查找与光标所在单词相匹配的单词, 并将光标停留在文档的非注释段中第一次出现这个单词的地方. 用于查找局部变量等</td>
+</tr>
+<tr>
+<td>%</td>
+<td>查找与光标所在处相匹配的反括号, 包括 () [] { }</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="替换"><a href="#替换" class="headerlink" title="替换"></a>替换</h3><p>一般结合s和g命令进行替换.一般格式为:  </p>
+<p>:%s/匹配模式/替换后的字符串/g.其中模式可以是正则表达式,以下是几个例子</p>
+<table>
+<thead>
+<tr>
+<th>:s/aa/bb/g</th>
+<th>将光标所在行出现的所有包含 aa 的字符串中的 aa 替换为 bb.注意是光标所在行,不是全文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:%s/aa/bb/g</td>
+<td>将文档中出现的所有包含 aa 的字符串中的 aa 替换为 bb.文件全局生效</td>
+</tr>
+<tr>
+<td>:12,23s/aa/bb/g</td>
+<td>将从12行到23行中出现的所有包含 aa 的字符串中的 aa 替换为 bb</td>
+</tr>
+<tr>
+<td>:12,23s/^/#/</td>
+<td>将从12行到23行的行首加入 # 字符</td>
+</tr>
+<tr>
+<td>:s/^/#/g</td>
+<td>全局所有行首插入#字符</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>还有一个方法可以批量在行首插入字符:</p>
+</blockquote>
+<p>1.ctrl+v批量选中要插入的行</p>
+<p>2.按大写字母I,输入要插入的字符</p>
+<p>3.连续按两次ESC键</p>
+<table>
+<thead>
+<tr>
+<th>:%s/\s+$//</th>
+<th>将所有行尾多余的空格删除.等同于”:%s= *$==”</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:g/^\s*$/d</td>
+<td>将所有空行删除</td>
+</tr>
+<tr>
+<td>:g/^\/\//d</td>
+<td>将所有//开头的行整行删除.(不仅仅是删除//)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>s配合g一般用来做替换,g单独使用一般用来删除匹配的行</p>
+</blockquote>
+<hr>
+<h3 id="编辑"><a href="#编辑" class="headerlink" title="编辑"></a>编辑</h3><table>
+<thead>
+<tr>
+<th>cc</th>
+<th>删除当前行并进入编辑模式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cw</td>
+<td>删除当前字，并进入编辑模式</td>
+</tr>
+<tr>
+<td>c$</td>
+<td>擦除从当前位置至行末的内容，并进入编辑模式</td>
+</tr>
+<tr>
+<td>S</td>
+<td>删除光标所在行并进入编辑模式</td>
+</tr>
+<tr>
+<td>s</td>
+<td>删除当前字符并进入编辑模式</td>
+</tr>
+<tr>
+<td>u</td>
+<td>撤销</td>
+</tr>
+<tr>
+<td>ctrl+r</td>
+<td>撤销上一个撤销.</td>
+</tr>
+<tr>
+<td>~</td>
+<td>将光标当前选中的字符切换大小写</td>
+</tr>
+<tr>
+<td>&gt;&gt;</td>
+<td>当前行右移一个tab</td>
+</tr>
+<tr>
+<td>&lt;&lt;</td>
+<td>当前行左移一个 tab</td>
+</tr>
+<tr>
+<td>5&gt;&gt;</td>
+<td>当前光标后5 行向右移动一个 tab.</td>
+</tr>
+<tr>
+<td>:12,24&gt;</td>
+<td>将12行到14行的数据都向右移动一个 tab</td>
+</tr>
+<tr>
+<td>:12,24&gt;&gt;</td>
+<td>将12行到14行的数据都向右移动两个 tab</td>
+</tr>
+<tr>
+<td>:w filename</td>
+<td>将当前文件所有内容写入新文件</td>
+</tr>
+<tr>
+<td>:5w filenmame</td>
+<td>将当前文件第5行内容写入新文件</td>
+</tr>
+<tr>
+<td>:1,10w filename</td>
+<td>将当前文件第1到第10行内容写入新文件</td>
+</tr>
+<tr>
+<td>:f filename</td>
+<td>将当前文件重命名为新文件</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="多文件编辑"><a href="#多文件编辑" class="headerlink" title="多文件编辑"></a>多文件编辑</h3><table>
+<thead>
+<tr>
+<th>vim file1 file2 …</th>
+<th>同时打开多个文件进行编辑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:n\:N (等同于:next\:prev)</td>
+<td>进入下一个文件(上一个文件)编辑.这个命令要求先保存当前编辑文件</td>
+</tr>
+<tr>
+<td>:n!\:N!</td>
+<td>不保存当前编辑文件,并且切换到下(上)文件编辑.</td>
+</tr>
+<tr>
+<td>:wn\wN</td>
+<td>保存当前编辑文件,并且切换到下(上)文件编辑</td>
+</tr>
+<tr>
+<td>ctrl+^</td>
+<td>在最近打开的2个文件之间快速切换</td>
+</tr>
+<tr>
+<td>:e 文件名</td>
+<td>指定对某个文件进行编辑</td>
+</tr>
+<tr>
+<td>:sp [file]</td>
+<td>把当前文件或者指定文件水平分隔</td>
+</tr>
+<tr>
+<td>:vsp [file]</td>
+<td>把当前文件或者指定文件垂直分隔</td>
+</tr>
+<tr>
+<td>:q\:close</td>
+<td>关闭当前文件窗口</td>
+</tr>
+<tr>
+<td>:only</td>
+<td>只保留当前文件窗口,关闭其他所有窗口</td>
+</tr>
+<tr>
+<td>:[q\</td>
+<td>wq]all</td>
+<td>对所有窗口执行q或者wq操作</td>
+</tr>
+<tr>
+<td>:[q\</td>
+<td>wq]all!</td>
+<td>对所有窗口执行q!或者wq!操作</td>
+</tr>
+<tr>
+<td>:vertical all</td>
+<td>打开所有窗口,垂直打开</td>
+</tr>
+<tr>
+<td>ctrl+w  w</td>
+<td>vim分隔了多个窗口后,光标循环定位到各个窗口中</td>
+</tr>
+<tr>
+<td>ctrl+w h/i</td>
+<td>vim分隔了多个窗口后,光标跳转到左边(右边)的窗口</td>
+</tr>
+<tr>
+<td>ctrl+w j/k</td>
+<td>vim分隔了多个窗口后,光标跳转到上边(下边)的窗口</td>
+</tr>
+<tr>
+<td>ctrl+W =</td>
+<td>让所有vim分隔后的多个窗口高度保持一样</td>
+</tr>
+<tr>
+<td>ctrl+W +/-</td>
+<td>增加/减少vim当前窗口高度</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="执行外部shell命令"><a href="#执行外部shell命令" class="headerlink" title="执行外部shell命令"></a>执行外部shell命令</h3><table>
+<thead>
+<tr>
+<th>:! command</th>
+<th>这是比较常用的执行命令方式,比如 :!ls 显示当前目录下的文件.执行完命令后按回车返回vim编辑窗口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:r! command</td>
+<td>比如:r!ls.和上面的命令类似,但是执行完的结果会保存在vim的缓存中,一直显示在当前vim编辑窗口</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="常用功能选项"><a href="#常用功能选项" class="headerlink" title="常用功能选项"></a>常用功能选项</h3><p>在启动的时候vim会读取 /etc/vimrc 和 ~/.vimrc ( 全局设置的vimrc 和用户设置).下面这些常见的功能选项可以直接定义在vimrc文件里,也可以在vim编辑窗口中输入: set xxx执行.</p>
+<p>常见的功能选项有:</p>
+<table>
+<thead>
+<tr>
+<th>:set nu/:set nonu</th>
+<th>显示/取消行号.nu是number的缩写</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:set ic/set noic</td>
+<td>显示/忽略大小写.ic是ignorecace的缩写</td>
+</tr>
+<tr>
+<td>:set ai/set noai</td>
+<td>自动/不自动缩进.ai是aotuindent缩写</td>
+</tr>
+<tr>
+<td>:set hlsearch/:set nohlsearch</td>
+<td>显示/不显示高亮.</td>
+</tr>
+<tr>
+<td>:syntax on / :syntax off</td>
+<td>语法高亮/关闭语法高亮</td>
+</tr>
+<tr>
+<td>set tabstop=4</td>
+<td>设置tab键为4个空格</td>
+</tr>
+<tr>
+<td>set ruler</td>
+<td>在右下角显示光标位置的状态行</td>
+</tr>
+<tr>
+<td>set incsearch</td>
+<td>查询的时候非常方便.比如搜索book单词.输入/bo时,就已经自动开始查找.</td>
+</tr>
+<tr>
+<td>set noswapfile</td>
+<td>不要交换文件</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="粘贴避免缩进"><a href="#粘贴避免缩进" class="headerlink" title="粘贴避免缩进"></a>粘贴避免缩进</h3><p>1.在粘贴之前,vim窗口中输入:set paste #vim就不会自动缩进,而是纯拷贝粘贴<br>2.在粘贴之后,vim窗口中输入:set nopaste #关闭paste</p>
+<p>还有一种方法是,即使粘贴后代码格式变的非常慢,只要执行gg=G就能自动编排格式.</p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/11/21/Linux-Basic/文本处理/vim使用技巧/">vim使用技巧</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2018年11月21日 - 12:11</p>
+  <p><span>最后更新:</span>2018年12月01日 - 21:12</p>
+  <p><span>原始链接:</span><a href="/2018/11/21/Linux-Basic/文本处理/vim使用技巧/" title="vim使用技巧">https://jesse.top/2018/11/21/Linux-Basic/文本处理/vim使用技巧/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/11/21/Linux-Basic/文本处理/vim使用技巧/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vim/" rel="tag"># vim</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/21/Linux-分布式&消息队列/kong/kong+casssandra集群环境部署/" rel="next" title="kong+casssandra集群环境部署">
+                <i class="fa fa-chevron-left"></i> kong+casssandra集群环境部署
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/" rel="prev" title="rabbitmq+haproxy 集群环境搭建">
+                rabbitmq+haproxy 集群环境搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div>
+<div class="-mob-share-ui" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-qzone"><p>QQ空间</p></li>
+        <li class="-mob-share-qq"><p>QQ好友</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-youdao"><p>有道云笔记</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="https://f1.webshare.mob.com/code/mob-share.js?appkey=266b0526b70f4"></script>
+<!--MOB SHARE END-->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/11/21/Linux-Basic/文本处理/vim使用技巧/"
+           data-title="vim使用技巧" data-url="https://jesse.top/2018/11/21/Linux-Basic/文本处理/vim使用技巧/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">保持饥渴,保持愚蠢.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/anselphilnos" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:mailhuangyong@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/jessehuang408" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/jessehuang408" target="_blank" title="FaceBook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FaceBook</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#vim使用技巧"><span class="nav-number">1.</span> <span class="nav-text">vim使用技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#移动光标"><span class="nav-number">1.1.</span> <span class="nav-text">移动光标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除复制—结合光标"><span class="nav-number">1.2.</span> <span class="nav-text">删除复制—结合光标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除复制—结合数字"><span class="nav-number">1.3.</span> <span class="nav-text">删除复制—结合数字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查找"><span class="nav-number">1.4.</span> <span class="nav-text">查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#替换"><span class="nav-number">1.5.</span> <span class="nav-text">替换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编辑"><span class="nav-number">1.6.</span> <span class="nav-text">编辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多文件编辑"><span class="nav-number">1.7.</span> <span class="nav-text">多文件编辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行外部shell命令"><span class="nav-number">1.8.</span> <span class="nav-text">执行外部shell命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用功能选项"><span class="nav-number">1.9.</span> <span class="nav-text">常用功能选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#粘贴避免缩进"><span class="nav-number">1.10.</span> <span class="nav-text">粘贴避免缩进</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+        $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+</body>
+</html>

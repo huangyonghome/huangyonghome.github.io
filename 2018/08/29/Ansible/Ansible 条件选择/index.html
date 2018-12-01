@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="Ansible 条件选择playbook也可以像shell脚本的if语句那样,基于一个变量的结果来判断是否应该执行某个task.只是ansible的逻辑判断和语法上要别扭,复杂点.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-09T15:15:25.760Z">
+<meta property="og:updated_time" content="2018-12-01T14:50:12.540Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ansible 条件选择">
 <meta name="twitter:description" content="Ansible 条件选择playbook也可以像shell脚本的if语句那样,基于一个变量的结果来判断是否应该执行某个task.只是ansible的逻辑判断和语法上要别扭,复杂点.">
@@ -399,6 +399,12 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- name: registered variable usage as a loop list</span><br><span class="line">  hosts: all</span><br><span class="line">  tasks:</span><br><span class="line"></span><br><span class="line">    - name: retrieve the list of home directories</span><br><span class="line">      command: ls /home</span><br><span class="line">      register: home_dirs</span><br><span class="line"></span><br><span class="line">    - name: add home dirs to the backup spooler</span><br><span class="line">      file:</span><br><span class="line">        path: /tmp/&#123;&#123; item &#125;&#125;</span><br><span class="line">        src: /home/&#123;&#123; item &#125;&#125;</span><br><span class="line">        state: link</span><br><span class="line">      loop: &quot;&#123;&#123; home_dirs.stdout_lines &#125;&#125;&quot;</span><br><span class="line">      # same as loop: &quot;&#123;&#123; home_dirs.stdout.split() &#125;&#125;&quot;</span><br></pre></td></tr></table></figure>
 <p>执行结果:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ls /home</span><br><span class="line">jesse  tom  tony</span><br><span class="line">[root@localhost ~]# ls /tmp -l</span><br><span class="line">total 0</span><br><span class="line">lrwxrwxrwx 1 root root 11 Aug  3 10:57 jesse -&gt; /home/jesse</span><br><span class="line">lrwxrwxrwx 1 root root  9 Aug  3 10:57 tom -&gt; /home/tom</span><br><span class="line">lrwxrwxrwx 1 root root 10 Aug  3 10:57 tony -&gt; /home/tony</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="when调用变量"><a href="#when调用变量" class="headerlink" title="when调用变量"></a>when调用变量</h3><p>有时候when也需要对2个变量来进行比较,判断是否满足条件.例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- hosts: dev beta</span><br><span class="line">   remote_user: root</span><br><span class="line">   vars:</span><br><span class="line">     server_group: hsq</span><br><span class="line">      openapi: trade</span><br><span class="line">      internalapi:</span><br><span class="line">   </span><br><span class="line">       - name: create api site dir</span><br><span class="line">         file: path=&#123;&#123; nginx_site_dir &#125;&#125;/&#123;&#123; project_name &#125;&#125;-&#123;&#123; item[0] &#125;&#125;/&#123;&#123; item[1] &#125;&#125; recurse=yes owner=work group=work mode=0775 state=directory</span><br><span class="line">         with_nested:</span><br><span class="line">              - [ &quot;&#123;&#123; openapi &#125;&#125;&quot;,&quot;&#123;&#123; internalapi &#125;&#125;&quot;]</span><br><span class="line">              - [&apos;releases&apos;,&apos;vendor&apos;,&apos;shared&apos;]</span><br><span class="line">         when:  inventory_hostname in groups[ server_group ]</span><br></pre></td></tr></table></figure>
+<p>上面的when语句表示,只有在变量server_group主机组的主机才满足条件.这里不能像其他地方一样用双大括号的方式来调用变量.否则会出现如下错误:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[WARNING]: when statements should not include jinja2 templating delimiters such as &#123;&#123; &#125;&#125; or &#123;% %&#125;. Found: inventory_hostname in groups[ &apos;&#123;&#123; server_group &#125;&#125;&apos; ]</span><br></pre></td></tr></table></figure>
+<hr>
 
       
     </div>
@@ -418,7 +424,7 @@
   <p><span>本文标题:</span><a href="/2018/08/29/Ansible/Ansible 条件选择/">Ansible 条件选择</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年08月29日 - 22:08</p>
-  <p><span>最后更新:</span>2018年10月09日 - 23:10</p>
+  <p><span>最后更新:</span>2018年12月01日 - 22:12</p>
   <p><span>原始链接:</span><a href="/2018/08/29/Ansible/Ansible 条件选择/" title="Ansible 条件选择">https://jesse.top/2018/08/29/Ansible/Ansible 条件选择/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/08/29/Ansible/Ansible 条件选择/"  aria-label="复制成功！"></i></span>
   </p>
@@ -618,7 +624,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">70</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -640,7 +646,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -708,7 +714,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ansible-条件选择"><span class="nav-number">1.</span> <span class="nav-text">Ansible 条件选择</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#when语句"><span class="nav-number">1.1.</span> <span class="nav-text">when语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#when结合loop循环"><span class="nav-number">1.2.</span> <span class="nav-text">when结合loop循环</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ansible-条件选择"><span class="nav-number">1.</span> <span class="nav-text">Ansible 条件选择</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#when语句"><span class="nav-number">1.1.</span> <span class="nav-text">when语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#when结合loop循环"><span class="nav-number">1.2.</span> <span class="nav-text">when结合loop循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#when调用变量"><span class="nav-number">1.3.</span> <span class="nav-text">when调用变量</span></a></li></ol></li></ol></div>
             
 
           </div>
