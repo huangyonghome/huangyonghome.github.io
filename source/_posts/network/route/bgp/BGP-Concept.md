@@ -155,7 +155,6 @@ network特点：
 
 例如:
 
-![BGP] {% qnimg network/BGP.png %}
 
 当R3通过IBGP学到位于R4的172.16.1.0这条路由的时候，默认不会通告给位于外部AS内的R5，除非是通过本地AS内的IGP（EIGRP）路由协议也学到172.16.1.0这条路由。 
 

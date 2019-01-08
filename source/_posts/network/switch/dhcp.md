@@ -15,7 +15,6 @@ copyright: true
 
 
 
-{% qnimg network/dhcp.png %}
 
 
 
@@ -54,7 +53,6 @@ R2(config-if)#ip address dhcp        # Get IP address by DHCP
 
 R2 succeeds in getting an IP address ,it shows 10.1.1.2:
 
-{% qnimg network/dhcp1.png %}
 
 ```
 *Mar  1 00:08:32.059: %DHCP-6-ADDRESS_ASSIGN: Interface Ethernet1/2 assigned DHCP address 10.1.1.2, mask 255.255.255.0, hostname R2
@@ -68,7 +66,6 @@ show DHCP lease , this command will show some information about the ip address a
 
 #### Now. Let's analyse the process of HDCP :
 
-{% qnimg network/dhcp3.png %}
 
 ---
 
@@ -76,7 +73,6 @@ show DHCP lease , this command will show some information about the ip address a
 
 **1.Client send a DHCP Discover massage :**
 
-![dhcp1]{% qnimg network/dhcp4.png %}
 
 the destination MAC address is broadcast address ,and the destination IP address is the broadcast address too.  
 R1 sends a Bootstrap Protocol (discover) with the message type :Boot Request 1
@@ -93,7 +89,6 @@ R1 sends a Bootstrap Protocol (discover) with the message type :Boot Request 1
 
 
 
-![dhcp1]{% qnimg network/dhcp5.png %}
 
 
 
@@ -101,7 +96,6 @@ R1 sends a Bootstrap Protocol (discover) with the message type :Boot Request 1
 
 
 
-{% qnimg network/dhcp6.png %}
 
 
 
@@ -109,7 +103,6 @@ R1 sends a Bootstrap Protocol (discover) with the message type :Boot Request 1
 
 
 
-{% qnimg network/dhcp7.png %}
 
 
 
@@ -117,14 +110,12 @@ R1 sends a Bootstrap Protocol (discover) with the message type :Boot Request 1
 
 
 
-{% qnimg network/dhcp8.png %}
 
 
 
 --------------------------------------------------------------------------------
 #### Summarize :
 
-{% qnimg network/dhcp9.png %}
 
 ---
 

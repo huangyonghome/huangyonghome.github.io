@@ -131,7 +131,6 @@ org.apache.coyote.http11.Http11AprProtocol - the APR/native connector.   #APR co
 
 下图显示了这几种connectors的区别
 
-{% qnimg web/tomcat.png %}
 
 - **proxyName**: 代理名,如果这个connector配置为代理,配置服务名用来返回调用request.getServerName()
 - **proxyPort**:    如果connector被配置为代理,则指定一个端口返回调用request.getServerName()

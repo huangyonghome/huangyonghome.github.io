@@ -158,7 +158,6 @@ backup@ ----表示用backup用户认证
 @ERROR: auth failed on module www
 ```
 
-{% qnimg linux/rsync.png %}
 
 这个坑,至少坑了我5个小时.反复的确认selinux是否关闭,配置文件是否错误,密码文件和密码文件权限等最后才发现,原来配置文件的配置语句不能用注释  
 

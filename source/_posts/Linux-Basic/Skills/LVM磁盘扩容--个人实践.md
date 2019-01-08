@@ -41,7 +41,6 @@ partprobe重载分区.
 
 reboot 重启(如果上一步没有生效)
 
-{% qnimg linux/lvm.png %}
 
 2.格式化分区:
 
@@ -55,7 +54,6 @@ mkfs -t ext4 /dev/sda3
 pvcreate /dev/sda3
 ```
 
-{% qnimg linux/lvm1.png %}
 
 4.查看当前VG信息 
 
@@ -63,7 +61,6 @@ pvcreate /dev/sda3
 vgdisplay
 ```
 
-{% qnimg linux/lvm2.png %}
 
 5.扩展vg 
 
@@ -71,11 +68,9 @@ vgdisplay
 vgextend VolGroup /dev/sda3 #将刚才创建的/dev/sda3的VG扩展到VolGroup的VG中
 ```
 
-{% qnimg linux/lvm3.png %}
 
 6.查看lvdisplay信息: 
 
-{% qnimg linux/lvm4.png %}
 
 
 
@@ -96,7 +91,6 @@ lvextend -l +100%free /dev/mapper/VolGroup-lv_root  #这个命令表示分配所
 
 扩充完可以看到lv_root这个lv已经从50G变成了89.9G
 
-{% qnimg linux/lvm5.png %}
 
 
 
@@ -110,7 +104,6 @@ resize2fs /dev/mapper/VolGroup-lv_root
 
 可见根目录从之前的50G扩展到89G.至此扩容成功.
 
-{% qnimg linux/lvm6.png %}
 
 
 

@@ -11,7 +11,6 @@ copyright: true
 
 ## BGP2. Black Hole
 
- {% qnimg network/bgp2-1.png %}
 
 <!--more-->
 
@@ -37,7 +36,6 @@ This is an interesting conclusion that Routes might could pass through between d
 
 We still use above topology and give them some IP address :
 
- {% qnimg network/bgp2-2.png %}
 
 
 

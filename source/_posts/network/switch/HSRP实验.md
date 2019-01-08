@@ -15,7 +15,6 @@ copyright: true
 
 ### 1.实验拓扑：
 
-{% qnimg network/hsrp.png %}
 
 ---
 
@@ -84,7 +83,6 @@ Switch(config-if)#standby 1 preempt
 
 Switch1经过speak,standby角色后成为了active网关，实际总共经过listen，speak,standby,active角色。
 
-{% qnimg network/hsrp1.png %}
 
 ---
 
@@ -107,7 +105,6 @@ Switch(config-if)#standby 1 ip 10.1.1.254
 
 
 
-{% qnimg network/hsrp2.png %}
 
 
 
@@ -115,7 +112,6 @@ Switch(config-if)#standby 1 ip 10.1.1.254
 
 
 
-{% qnimg network/hsrp3.png %}
 
 
 
@@ -131,13 +127,11 @@ Switch(config-if)#standby 1 ip 10.1.1.254
 
 * 主机配置虚拟IP地址为默认网关：
 
-{% qnimg network/hsrp4.png %}
 
 
 
 * 测试访问外部网络的路径
 
-![hsrp] {% qnimg network/hsrp5.png %}
 
 
 
@@ -147,7 +141,6 @@ Switch(config-if)#standby 1 ip 10.1.1.254
 
 * 查看主机的ARP记录表
 
-{% qnimg network/hsrp6.png %}
 
 
 
@@ -180,13 +173,11 @@ Switch(config-if)#standby 1 priority 150
 
 交换机角色马上从standby转变成active
 
-{% qnimg network/hsrp7.png %}
 
 
 
 显示本交换机成为了active，对端成为了standby，并且本机优先级变成了150
 
-{% qnimg network/hsrp8.png %}
 
 ------
 
@@ -202,7 +193,6 @@ Switch(config-if)#standby 1 priority 150
 
 实验显示只丢了一个包
 
-{% qnimg network/hsrp9.png %}
 
 ------
 
@@ -220,7 +210,6 @@ HSRP是一个网关冗余协议，这就意味着默认情况下网络中只能�
 
 #### 1.实验拓扑
 
-{% qnimg network/hsrp10.png %}
 
 ---
 
@@ -248,7 +237,6 @@ PC0和PC1分别模拟两个VLAN下的主机.
 
 在Switch1上的Vlan1接口下配置HSRP的VLAN1组，此台设备的优先级为150，设置虚拟IP,开启抢占特性
 
-{% qnimg network/hsrp11.png %}
 
 
 
@@ -285,9 +273,7 @@ Switch(config-if)#standby 2 preempt
 
 在Switch0上检查配置发现本台设备是VLAN1组的standby网关，Vlan2组的active网关
 
- {% qnimg network/hsrp12.png %}
 
- {% qnimg network/hsrp13.png %}
 
 ---
 
@@ -297,11 +283,9 @@ Switch(config-if)#standby 2 preempt
 
 在Vlan1的PC0上tracert 位于路由器的5.5.5.5地址。发现流量先经过10.1.1.2的网关，而10.1.1.2正是Vlan1的ACTIVE网关的真实IP
 
-![hsrp] {% qnimg network/hsrp14.png %}
 
 在Vlan2的PC1上tracert位于路由器的5.5.5.5地址：发现流量先经过10.1.2.3的网关，而10.1.2.3正是Vlan2的ACTIVE网关的真实IP
 
- {% qnimg network/hsrp15.png %}
 
 ------
 
@@ -315,13 +299,11 @@ HSRP的track功能可以追踪上行链路的情况，如果配置了track，一
 
 #### 1.配置命令：
 
-{% qnimg network/hsrp16.png %}
 
 真实的设备中，接口后面可以指定一旦上行链路失效，会降低多少优先级。但是模拟器中没有这个功能，默认是降低10个优先级
 
 把上面的Switch 1的上行接口F0/1 shutdown 之后，可以看到Switch的优先级变化：优先级从150降低到140
 
-{% qnimg network/hsrp17.png %}
 
 
 

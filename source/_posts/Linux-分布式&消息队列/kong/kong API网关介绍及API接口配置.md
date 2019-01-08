@@ -1,5 +1,5 @@
 ---
-title: kong+casssandra集群环境部署
+title: kong API网关介绍及API接口配置
 date: 2018-11-20 12:59:58
 tags: kong
 categories: [Linux-分布式&消息队列 ]

@@ -206,7 +206,6 @@ rabbitmqctl status
 
 <http://172.16.1.130:15672/#/>
 
-{% qnimg mq/rabbitmq.png %}
 
 ------
 
@@ -310,13 +309,11 @@ service haproxy start
 
 浏览器输入:http://172.16.1.140:1080/haproxy?stats  ---用户名和密码admin:admin
 
-{% qnimg mq/rabbitmq1.png %}
 
 [http://172.16.1.140:8004](http://172.16.1.140:8004/)  ---用户名密码:guest
 
 可以看到和rabbitmq主节点一样的页面
 
-{% qnimg mq/rabbitmq2.png %}
 
 
 
@@ -330,17 +327,13 @@ service haproxy start
 
 发送5条测试消息.
 
-{% qnimg mq/rabbitmq3.png %}
 
-{% qnimg mq/rabbitmq4.png %}
 
 **可以看到成功接收到5条消息**
 
-{% qnimg mq/rabbitmq5.png %}
 
  队列名为hello
 
-{% qnimg mq/rabbitmq6.png %}
 
 ------
 
@@ -355,9 +348,7 @@ Stopping rabbit application on node rabbit@rabbitmqnode2 ...
 
 haproxy和rabbitmq显示一个节点不可用:
 
-{% qnimg mq/rabbitmq7.png %}
 
-{% qnimg mq/rabbitmq8.png %}
 
 
 
@@ -373,9 +364,7 @@ completed with 3 plugins.
 
 回归正常:
 
-{% qnimg mq/rabbitmq9.png %}
 
-{% qnimg mq/rabbitmq10.png %}
 
 ---
 

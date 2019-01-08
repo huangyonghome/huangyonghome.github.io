@@ -40,13 +40,11 @@ agent会询问CA如何才能证明自己拥有example.com域名.Let's Encrypt会
 
 另外,lets encypt CA会提供一个临时场所,要求agent签署它的私钥 
 
-{% qnimg linux/letsencrypt.png %}
 
 Agent会在example.com站点上的一个指定路径内创建一个文件.同时签署自己私钥.一旦agent完成了这些配合工作.它会通知CA表示它已经完成了域名确认工作. 
 
 CA接下来会去检查agent是否完成了相关设置,CA会验证agent的私钥,并且尝试去该站点下载agent创建的文件.如果一切正常,由该公钥鉴定的agent会被授权为example域名的证书管理者, 
 
-{% qnimg linux/letsencrypt1.png %}
 
 ---
 
@@ -58,9 +56,7 @@ CA接下来会去检查agent是否完成了相关设置,CA会验证agent的私�
 
 2.当CA收到了请求,会检查签名.然后为域名发送一个证书 
 
-{% qnimg linux/letsencrypt2.png %}
 
 撤销的工作有点类似.agent签署一个撤销请求,当CA接受到请求,并且经过验证后,CA会发布撤销信息到正常撤销渠道(例如:CRLs,OCSP).所以网页浏览器便不会接受被撤销的证书 
 
-{% qnimg linux/letsencrypt3.png %}
 

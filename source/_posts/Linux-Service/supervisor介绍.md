@@ -225,7 +225,6 @@ autorestart还有个值是unexpected.并且默认是unexpected
 
 比如下面这个例子,supervisor反复的启动elasticsearch..注意观察elasticsearch的PID一直在变. : 
 
-{% qnimg linux/supervisor.png %}
 
 
 
@@ -233,7 +232,6 @@ autorestart还有个值是unexpected.并且默认是unexpected
 
 elasticsearch一直在不断的启动,异常退出,启动.并且看到elasticsearch的退出码为1 
 
-{% qnimg linux/supervisor1.png %}
 
 
 
@@ -241,7 +239,6 @@ elasticsearch一直在不断的启动,异常退出,启动.并且看到elasticsea
 
 可以看到elasticsearch一直在退出.然后被supervisor自动重启 
 
-{% qnimg linux/supervisor2.png %}
 
 
 
@@ -257,7 +254,6 @@ elasticsearch一直在不断的启动,异常退出,启动.并且看到elasticsea
 
 重载supervisor配置文件,可以发现supervisor并没有自动重启该应用 
 
-{% qnimg linux/supervisor3.png %}
 
 ---
 

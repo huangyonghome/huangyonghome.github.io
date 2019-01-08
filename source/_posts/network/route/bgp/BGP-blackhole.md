@@ -15,7 +15,6 @@ copyright: true
 
 ### LAB Topology 
 
- {% qnimg network/bgp3-1.png %}
 
 ---
 
