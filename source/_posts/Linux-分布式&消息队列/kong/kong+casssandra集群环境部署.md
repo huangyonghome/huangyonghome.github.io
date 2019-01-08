@@ -854,3 +854,134 @@ Kong started
 work     15558  0.0  0.0 259600  6540 ?        Ss   17:29   0:00 nginx: master process /usr/local/openresty/nginx/sbin/nginx -p /data/kong -c nginx.conf
 ```
 
+---
+
+### 将kong,Cassandra加入到systemctl管理工具
+
+* **cassandra**
+
+systemctl文件如下:
+
+```
+[work@kong-node1 ~]$cd /usr/lib/systemd/system
+[work@kong-node1 system]$vim cassandra.service
+
+[Unit]
+Description=Cassandra
+After=network.target
+Before=kong.target 
+
+[Service]
+User=work
+Group=work
+ExecStart=/usr/local/cassandra/bin/cassandra -f
+ExecStop=kill $(pgrep -f cassandra)
+Restart=always
+
+
+[Install]
+WantedBy=multi-user.target
+
+```
+
+> 注意.如果java是二进制包,则需要将Bin文件链接到系统环境变量目录下.因为systemctl不会读取profile环境,所以不能识别到java.
+
+```
+[work@kong-node1 system]$which java
+/usr/bin/java
+[work@kong-node1 system]$ll /usr/bin/java
+lrwxrwxrwx 1 root root 24 Nov 14 17:46 /usr/bin/java -> /usr/local/java/bin/java
+```
+
+第二种方法是在systemctl中指定环境变量.指定environment参数(这种方法理论可行,但是没有论证)
+
+例如:
+
+```
+
+[Unit]
+Description=Cassandra
+After=network.target
+Before=kong.target
+
+[Service]
+User=work
+Group=work
+environment=JAVA_HOME=/usr/local/java
+environment=PATH=$JAVA_HOME/bin:$PATH
+ExecStart=/usr/local/cassandra/bin/cassandra -f
+ExecStop=kill $(pgrep -f cassandra)
+Restart=always
+
+
+[Install]
+WantedBy=multi-user.target
+```
+
+---
+
+* **kong**
+
+在同目录下编辑kong服务配置.
+
+> 注意,需要在cassandra后端数据库启动后,才能启动kong服务
+
+```
+[work@kong-node1 system]$vim kong.service
+
+[Unit]
+Description= kong service
+After=syslog.target network.target cassandra.target
+
+
+[Service]
+User=work
+Group=work
+Type=forking
+ExecStart=/usr/local/bin/kong start -c /etc/kong/kong.conf
+ExecReload=/usr/local/bin/kong reload -c /etc/kong/kong.conf
+ExecStop=/usr/local/bin/kong stop
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+* **在kong-node2上启动kong-dashbaord**
+
+> dashbaord服务启动需要在cassandra,kong服务启动之后
+
+```
+[work@kong-node2 system]$vim kong-dashboard.service
+
+[Unit]
+Description=kong-dashboard
+After=network.target cassandra.target kong.target
+
+[Service]
+User=work
+Group=work
+ExecStart=/usr/local/bin/kong-dashboard start --kong-url http://10.111.30.158:8001
+ExecStop=kill $(pgrep -f kong-dashboard)
+Restart=always
+
+
+[Install]
+WantedBy=multi-user.target
+```
+
+
+
+* 加入到开启自启动
+
+```
+systemctl enable cassandra
+systemctl enable kong
+systemctl enable kong-dashboard
+```
+
+
+
+经过反复论证,systemctl可以管理以上服务.
+
+----

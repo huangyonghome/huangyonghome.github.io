@@ -1,7 +1,7 @@
 ---
 title: lets encrypt学习
 date: 2018-06-24 11:59:58
-tags:  [ linux,ssl ]
+tags:  SSL
 categories: [Linux-Basic,SSL ]
 comments: true
 copyright: true

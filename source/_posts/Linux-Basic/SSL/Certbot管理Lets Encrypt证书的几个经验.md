@@ -1,7 +1,7 @@
 ---
 title: Certbot管理Lets Encrypt证书的几个经验  
 date: 2018-10-15 17:59:58  
-tags:  [ linux,ssl ]  
+tags:  SSL
 categories: [Linux-Basic,SSL ]  
 comments: true  
 copyright: true  

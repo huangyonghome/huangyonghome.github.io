@@ -1,7 +1,7 @@
 ---
 title: letsencrypt配置通配符域名证书
 date: 2018-10-15 11:59:58
-tags:  [ linux,ssl ]
+tags:  SSL
 categories: [Linux-Basic,SSL ]
 comments: true
 copyright: true
