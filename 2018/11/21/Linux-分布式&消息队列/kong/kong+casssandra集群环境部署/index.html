@@ -101,7 +101,7 @@
 <meta property="og:description" content="kong+casssandra集群环境部署kong简介Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和API之间的中间">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/kong-flow.png">
-<meta property="og:updated_time" content="2018-12-01T14:51:15.588Z">
+<meta property="og:updated_time" content="2019-02-17T09:31:38.016Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kong+casssandra集群环境部署">
 <meta name="twitter:description" content="kong+casssandra集群环境部署kong简介Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和API之间的中间">
@@ -547,6 +547,41 @@
 <hr>
 <p><strong>命令行启动kong.只有一个Nginx进程.没有Perl进程.不知道何故</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[work@kong-node2 conf.d]$kong start -c /etc/kong/kong.conf</span><br><span class="line">Kong started</span><br><span class="line">[work@kong-node2 conf.d]$ps aux | grep kong</span><br><span class="line">work     15558  0.0  0.0 259600  6540 ?        Ss   17:29   0:00 nginx: master process /usr/local/openresty/nginx/sbin/nginx -p /data/kong -c nginx.conf</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="将kong-Cassandra加入到systemctl管理工具"><a href="#将kong-Cassandra加入到systemctl管理工具" class="headerlink" title="将kong,Cassandra加入到systemctl管理工具"></a>将kong,Cassandra加入到systemctl管理工具</h3><ul>
+<li><strong>cassandra</strong></li>
+</ul>
+<p>systemctl文件如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[work@kong-node1 ~]$cd /usr/lib/systemd/system</span><br><span class="line">[work@kong-node1 system]$vim cassandra.service</span><br><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">Description=Cassandra</span><br><span class="line">After=network.target</span><br><span class="line">Before=kong.target </span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=work</span><br><span class="line">Group=work</span><br><span class="line">ExecStart=/usr/local/cassandra/bin/cassandra -f</span><br><span class="line">ExecStop=kill $(pgrep -f cassandra)</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意.如果java是二进制包,则需要将Bin文件链接到系统环境变量目录下.因为systemctl不会读取profile环境,所以不能识别到java.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[work@kong-node1 system]$which java</span><br><span class="line">/usr/bin/java</span><br><span class="line">[work@kong-node1 system]$ll /usr/bin/java</span><br><span class="line">lrwxrwxrwx 1 root root 24 Nov 14 17:46 /usr/bin/java -&gt; /usr/local/java/bin/java</span><br></pre></td></tr></table></figure>
+<p>第二种方法是在systemctl中指定环境变量.指定environment参数(这种方法理论可行,但是没有论证)</p>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">Description=Cassandra</span><br><span class="line">After=network.target</span><br><span class="line">Before=kong.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=work</span><br><span class="line">Group=work</span><br><span class="line">environment=JAVA_HOME=/usr/local/java</span><br><span class="line">environment=PATH=$JAVA_HOME/bin:$PATH</span><br><span class="line">ExecStart=/usr/local/cassandra/bin/cassandra -f</span><br><span class="line">ExecStop=kill $(pgrep -f cassandra)</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<hr>
+<ul>
+<li><strong>kong</strong></li>
+</ul>
+<p>在同目录下编辑kong服务配置.</p>
+<blockquote>
+<p>注意,需要在cassandra后端数据库启动后,才能启动kong服务</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[work@kong-node1 system]$vim kong.service</span><br><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">Description= kong service</span><br><span class="line">After=syslog.target network.target cassandra.target</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=work</span><br><span class="line">Group=work</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/usr/local/bin/kong start -c /etc/kong/kong.conf</span><br><span class="line">ExecReload=/usr/local/bin/kong reload -c /etc/kong/kong.conf</span><br><span class="line">ExecStop=/usr/local/bin/kong stop</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>在kong-node2上启动kong-dashbaord</strong></li>
+</ul>
+<blockquote>
+<p>dashbaord服务启动需要在cassandra,kong服务启动之后</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[work@kong-node2 system]$vim kong-dashboard.service</span><br><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">Description=kong-dashboard</span><br><span class="line">After=network.target cassandra.target kong.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=work</span><br><span class="line">Group=work</span><br><span class="line">ExecStart=/usr/local/bin/kong-dashboard start --kong-url http://10.111.30.158:8001</span><br><span class="line">ExecStop=kill $(pgrep -f kong-dashboard)</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<ul>
+<li>加入到开启自启动</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable cassandra</span><br><span class="line">systemctl enable kong</span><br><span class="line">systemctl enable kong-dashboard</span><br></pre></td></tr></table></figure>
+<p>经过反复论证,systemctl可以管理以上服务.</p>
+<hr>
 
       
     </div>
@@ -566,7 +601,7 @@
   <p><span>本文标题:</span><a href="/2018/11/21/Linux-分布式&消息队列/kong/kong+casssandra集群环境部署/">kong+casssandra集群环境部署</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年11月21日 - 05:11</p>
-  <p><span>最后更新:</span>2018年12月01日 - 22:12</p>
+  <p><span>最后更新:</span>2019年02月17日 - 17:02</p>
   <p><span>原始链接:</span><a href="/2018/11/21/Linux-分布式&消息队列/kong/kong+casssandra集群环境部署/" title="kong+casssandra集群环境部署">https://jesse.top/2018/11/21/Linux-分布式&消息队列/kong/kong+casssandra集群环境部署/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/11/21/Linux-分布式&消息队列/kong/kong+casssandra集群环境部署/"  aria-label="复制成功！"></i></span>
   </p>
@@ -641,8 +676,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/20/Linux-分布式&消息队列/kong/kong API网关介绍及API接口配置/" rel="next" title="kong+casssandra集群环境部署">
-                <i class="fa fa-chevron-left"></i> kong+casssandra集群环境部署
+              <a href="/2018/11/20/Linux-分布式&消息队列/kong/kong API网关介绍及API接口配置/" rel="next" title="kong API网关介绍及API接口配置">
+                <i class="fa fa-chevron-left"></i> kong API网关介绍及API接口配置
               </a>
             
           </div>
@@ -766,7 +801,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">73</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -777,7 +812,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -788,7 +823,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -856,7 +891,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#kong-casssandra集群环境部署"><span class="nav-number">1.</span> <span class="nav-text">kong+casssandra集群环境部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#kong简介"><span class="nav-number">1.1.</span> <span class="nav-text">kong简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cassandra简介"><span class="nav-number">1.2.</span> <span class="nav-text">cassandra简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群架构"><span class="nav-number">1.3.</span> <span class="nav-text">集群架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署步骤"><span class="nav-number">1.4.</span> <span class="nav-text">部署步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装Cassandra"><span class="nav-number">1.4.1.</span> <span class="nav-text">安装Cassandra</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置Cassandra-以及cassandra集群"><span class="nav-number">1.4.2.</span> <span class="nav-text">配置Cassandra,以及cassandra集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装Kong"><span class="nav-number">1.4.3.</span> <span class="nav-text">安装Kong</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署另外一台kong和cassandra"><span class="nav-number">1.5.</span> <span class="nav-text">部署另外一台kong和cassandra</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#修改node1和node2上的cassandra配置"><span class="nav-number">1.5.0.1.</span> <span class="nav-text">修改node1和node2上的cassandra配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在node2上修改kong的配置文件"><span class="nav-number">1.5.0.2.</span> <span class="nav-text">在node2上修改kong的配置文件:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在node2上删除cassandra的数据库-这一步非常重要-因为这是从node1镜像过来的-所以node2上的数据库是node1的数据"><span class="nav-number">1.5.0.3.</span> <span class="nav-text">在node2上删除cassandra的数据库.这一步非常重要.因为这是从node1镜像过来的.所以node2上的数据库是node1的数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#启动node2上的数据库"><span class="nav-number">1.5.0.4.</span> <span class="nav-text">启动node2上的数据库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看cassandra的单台服务器状态"><span class="nav-number">1.5.0.5.</span> <span class="nav-text">查看cassandra的单台服务器状态</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看cassandra集群状态-可以看到集群中2台服务器"><span class="nav-number">1.5.0.6.</span> <span class="nav-text">查看cassandra集群状态.可以看到集群中2台服务器</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#以下是我踩过的坑-在没有删除node2上的数据库文件情况下-直接启动cassnadra"><span class="nav-number">1.5.1.</span> <span class="nav-text">以下是我踩过的坑.在没有删除node2上的数据库文件情况下,直接启动cassnadra.</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#解决方法"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">解决方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建kong-dashboard"><span class="nav-number">1.6.</span> <span class="nav-text">搭建kong-dashboard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将cassandra加入到supervisor进程管理"><span class="nav-number">1.7.</span> <span class="nav-text">将cassandra加入到supervisor进程管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将kong加入到supervisor"><span class="nav-number">1.8.</span> <span class="nav-text">将kong加入到supervisor</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#kong-casssandra集群环境部署"><span class="nav-number">1.</span> <span class="nav-text">kong+casssandra集群环境部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#kong简介"><span class="nav-number">1.1.</span> <span class="nav-text">kong简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cassandra简介"><span class="nav-number">1.2.</span> <span class="nav-text">cassandra简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群架构"><span class="nav-number">1.3.</span> <span class="nav-text">集群架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署步骤"><span class="nav-number">1.4.</span> <span class="nav-text">部署步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装Cassandra"><span class="nav-number">1.4.1.</span> <span class="nav-text">安装Cassandra</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置Cassandra-以及cassandra集群"><span class="nav-number">1.4.2.</span> <span class="nav-text">配置Cassandra,以及cassandra集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装Kong"><span class="nav-number">1.4.3.</span> <span class="nav-text">安装Kong</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署另外一台kong和cassandra"><span class="nav-number">1.5.</span> <span class="nav-text">部署另外一台kong和cassandra</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#修改node1和node2上的cassandra配置"><span class="nav-number">1.5.0.1.</span> <span class="nav-text">修改node1和node2上的cassandra配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在node2上修改kong的配置文件"><span class="nav-number">1.5.0.2.</span> <span class="nav-text">在node2上修改kong的配置文件:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在node2上删除cassandra的数据库-这一步非常重要-因为这是从node1镜像过来的-所以node2上的数据库是node1的数据"><span class="nav-number">1.5.0.3.</span> <span class="nav-text">在node2上删除cassandra的数据库.这一步非常重要.因为这是从node1镜像过来的.所以node2上的数据库是node1的数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#启动node2上的数据库"><span class="nav-number">1.5.0.4.</span> <span class="nav-text">启动node2上的数据库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看cassandra的单台服务器状态"><span class="nav-number">1.5.0.5.</span> <span class="nav-text">查看cassandra的单台服务器状态</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看cassandra集群状态-可以看到集群中2台服务器"><span class="nav-number">1.5.0.6.</span> <span class="nav-text">查看cassandra集群状态.可以看到集群中2台服务器</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#以下是我踩过的坑-在没有删除node2上的数据库文件情况下-直接启动cassnadra"><span class="nav-number">1.5.1.</span> <span class="nav-text">以下是我踩过的坑.在没有删除node2上的数据库文件情况下,直接启动cassnadra.</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#解决方法"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">解决方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建kong-dashboard"><span class="nav-number">1.6.</span> <span class="nav-text">搭建kong-dashboard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将cassandra加入到supervisor进程管理"><span class="nav-number">1.7.</span> <span class="nav-text">将cassandra加入到supervisor进程管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将kong加入到supervisor"><span class="nav-number">1.8.</span> <span class="nav-text">将kong加入到supervisor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将kong-Cassandra加入到systemctl管理工具"><span class="nav-number">1.9.</span> <span class="nav-text">将kong,Cassandra加入到systemctl管理工具</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -876,7 +911,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

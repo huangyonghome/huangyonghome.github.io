@@ -100,18 +100,10 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="Linux LVM磁盘扩容–个人实践磁盘扩容可以分2种:1.虚拟机原有磁盘上扩充 2.添加新磁盘,  这里讨论的是第一种情况.    实践背景:虚拟机模板的磁盘为80G.在部署虚拟机的时候把磁盘修改为120G.(但是进入系统仍然是80G分区)">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm1.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm2.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm3.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm4.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm5.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm6.png">
-<meta property="og:updated_time" content="2018-12-01T14:27:37.284Z">
+<meta property="og:updated_time" content="2019-02-17T09:31:38.013Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux LVM磁盘扩容--个人实践">
 <meta name="twitter:description" content="Linux LVM磁盘扩容–个人实践磁盘扩容可以分2种:1.虚拟机原有磁盘上扩充 2.添加新磁盘,  这里讨论的是第一种情况.    实践背景:虚拟机模板的磁盘为80G.在部署虚拟机的时候把磁盘修改为120G.(但是进入系统仍然是80G分区)">
-<meta name="twitter:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm.png">
 
 
 
@@ -407,30 +399,23 @@
 <p>分区完后.输入w保存分区修改.</p>
 <p>partprobe重载分区.</p>
 <p>reboot 重启(如果上一步没有生效)</p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm.png">
 <p>2.格式化分区:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs -t ext4 /dev/sda3</span><br></pre></td></tr></table></figure>
 <p>3.创建PV </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pvcreate /dev/sda3</span><br></pre></td></tr></table></figure>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm1.png">
 <p>4.查看当前VG信息 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vgdisplay</span><br></pre></td></tr></table></figure>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm2.png">
 <p>5.扩展vg </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vgextend VolGroup /dev/sda3 #将刚才创建的/dev/sda3的VG扩展到VolGroup的VG中</span><br></pre></td></tr></table></figure>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm3.png">
 <p>6.查看lvdisplay信息: </p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm4.png">
 <p>7.扩展lv </p>
 <p>在这里我将新建的VG扩展到VolGroup-lv_root这个LV下.也就是根目录下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">lvextend -L 89.9G /dev/mapper/VolGroup-lv_root  #这个命令表示讲lv_root这个lv扩充到89.9G(注意是扩展到)</span><br><span class="line"></span><br><span class="line">还可以使用这个命令:</span><br><span class="line">lvextend -L +39.9G /dev/mapper/VolGroup-lv_root  #这个命令表示将lv_root增加39.9G</span><br><span class="line">(注意一个是增加到XXX.一个是增加XX)</span><br><span class="line"></span><br><span class="line">或者使用如下命令:</span><br><span class="line">lvextend -l +100%free /dev/mapper/VolGroup-lv_root  #这个命令表示分配所有可用容量,注意参数是小写l</span><br></pre></td></tr></table></figure>
 <p>扩充完可以看到lv_root这个lv已经从50G变成了89.9G</p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm5.png">
 <p>8.重设分区大小</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">resize2fs /dev/mapper/VolGroup-lv_root</span><br></pre></td></tr></table></figure>
 <p>9.查看是否成功扩容.</p>
 <p>可见根目录从之前的50G扩展到89G.至此扩容成功.</p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/lvm6.png">
 
       
     </div>
@@ -450,7 +435,7 @@
   <p><span>本文标题:</span><a href="/2018/06/23/Linux-Basic/Skills/LVM磁盘扩容--个人实践/">Linux LVM磁盘扩容--个人实践</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月23日 - 22:06</p>
-  <p><span>最后更新:</span>2018年12月01日 - 22:12</p>
+  <p><span>最后更新:</span>2019年02月17日 - 17:02</p>
   <p><span>原始链接:</span><a href="/2018/06/23/Linux-Basic/Skills/LVM磁盘扩容--个人实践/" title="Linux LVM磁盘扩容--个人实践">https://jesse.top/2018/06/23/Linux-Basic/Skills/LVM磁盘扩容--个人实践/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/06/23/Linux-Basic/Skills/LVM磁盘扩容--个人实践/"  aria-label="复制成功！"></i></span>
   </p>
@@ -525,8 +510,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/23/mysql/mysql5.7 gtid主从复制/" rel="next" title="mysql5.7 GTID主从复制">
-                <i class="fa fa-chevron-left"></i> mysql5.7 GTID主从复制
+              <a href="/2018/06/22/mysql/mysql-DDL操作/" rel="next" title="DDL操作命令">
+                <i class="fa fa-chevron-left"></i> DDL操作命令
               </a>
             
           </div>
@@ -535,8 +520,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/23/Linux-Service/Openvpn服务搭建/" rel="prev" title="OpenVpn 搭建教程">
-                OpenVpn 搭建教程 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/23/mysql/mysql备份工具介绍/" rel="prev" title="mysql备份工具介绍">
+                mysql备份工具介绍 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -650,7 +635,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">73</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -661,7 +646,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -672,7 +657,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -760,7 +745,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

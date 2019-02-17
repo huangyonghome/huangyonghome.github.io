@@ -101,18 +101,7 @@
 <meta property="og:description" content="rabbitmq+haproxy 集群环境搭建实验环境:4台centos6服务器: 172.16.1.130  rabbitmqnode0 主rabbitmq服务器 172.16.1.131  rabbitmqnode1  节点2 172.16.1.132  rabbitmqnode2  节点3 172.16.1.140 haproxy  负载代理服务器">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="h:/%E6%9C%89%E9%81%93%E4%BA%91%E7%AC%94%E8%AE%B0%E6%96%87%E4%BB%B6/mailhuangyong@163.com/459fe491005c438b954e4633a04ae74a/untitle.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq1.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq2.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq3.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq4.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq5.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq6.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq7.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq8.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq9.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq10.png">
-<meta property="og:updated_time" content="2018-12-01T14:27:37.295Z">
+<meta property="og:updated_time" content="2019-02-17T09:31:38.017Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rabbitmq+haproxy 集群环境搭建">
 <meta name="twitter:description" content="rabbitmq+haproxy 集群环境搭建实验环境:4台centos6服务器: 172.16.1.130  rabbitmqnode0 主rabbitmq服务器 172.16.1.131  rabbitmqnode1  节点2 172.16.1.132  rabbitmqnode2  节点3 172.16.1.140 haproxy  负载代理服务器">
@@ -465,37 +454,26 @@
 <hr>
 <p>访问主节点页面可以看到rabbitmq集群状态,使用默认的用户密码:guest登录</p>
 <p><a href="http://172.16.1.130:15672/#/" target="_blank" rel="noopener">http://172.16.1.130:15672/#/</a></p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq.png">
 <hr>
 <h3 id="三-配置haproxy服务"><a href="#三-配置haproxy服务" class="headerlink" title="三.配置haproxy服务"></a>三.配置haproxy服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/haproxy/haproxy.cfg</span><br><span class="line">###########全局配置#########</span><br><span class="line">global</span><br><span class="line">    log /dev/log    local0</span><br><span class="line">    log /dev/log    local1 notice</span><br><span class="line">    chroot /var/lib/haproxy     # 改变当前工作目录</span><br><span class="line">    stats socket /run/haproxy/admin.sock mode 660 level admin   # 创建监控所用的套接字目录</span><br><span class="line">    pidfile  /var/run/haproxy.pid   # haproxy的pid存放路径,启动进程的用户必须有权限访问此文件</span><br><span class="line">    maxconn  4000                   # 最大连接数，默认4000</span><br><span class="line">    user   haproxy                  # 默认用户</span><br><span class="line">    group   haproxy                 # 默认用户组</span><br><span class="line">    daemon                          # 创建1个进程进入deamon模式运行。此参数要求将运行模式设置为&quot;daemon</span><br><span class="line">    # Default SSL material locations</span><br><span class="line">    ca-base /etc/ssl/certs</span><br><span class="line">    crt-base /etc/ssl/private</span><br><span class="line">    # Default ciphers to use on SSL-enabled listening sockets.</span><br><span class="line">    # For more information, see ciphers(1SSL). This list is from:</span><br><span class="line">    #  https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/</span><br><span class="line">    ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS</span><br><span class="line">    ssl-default-bind-options no-sslv3</span><br><span class="line">###########默认配置#########</span><br><span class="line">defaults</span><br><span class="line">    log global</span><br><span class="line">    mode    http                                # 默认的模式mode &#123; tcp|http|health &#125;，tcp是4层，http是7层，health只会返回OK</span><br><span class="line">    option  httplog                             # 采用http日志格式</span><br><span class="line">    option  dontlognull                         # 启用该项，日志中将不会记录空连接。所谓空连接就是在上游的负载均衡器</span><br><span class="line">                                                # 或者监控系统为了探测该 服务是否存活可用时，需要定期的连接或者获取某</span><br><span class="line">                                                # 一固定的组件或页面，或者探测扫描端口是否在监听或开放等动作被称为空连接；</span><br><span class="line">                                                # 官方文档中标注，如果该服务上游没有其他的负载均衡器的话，建议不要使用</span><br><span class="line">                                                # 该参数，因为互联网上的恶意扫描或其他动作就不会被记录下来</span><br><span class="line">    timeout connect 5000                    # 连接超时时间</span><br><span class="line">    timeout client  50000                   # 客户端连接超时时间</span><br><span class="line">    timeout server  50000                   # 服务器端连接超时时间</span><br><span class="line">    option  httpclose       # 每次请求完毕后主动关闭http通道</span><br><span class="line">    option  httplog         # 日志类别http日志格式</span><br><span class="line">    #option  forwardfor      # 如果后端服务器需要获得客户端真实ip需要配置的参数，可以从Http Header中获得客户端ip  </span><br><span class="line">    option  redispatch      # serverId对应的服务器挂掉后,强制定向到其他健康的服务器</span><br><span class="line">    timeout connect 10000   # default 10 second timeout if a backend is not found</span><br><span class="line">    maxconn     60000       # 最大连接数</span><br><span class="line">    retries     3           # 3次连接失败就认为服务不可用，也可以通过后面设置</span><br><span class="line">    errorfile 400 /etc/haproxy/errors/400.http</span><br><span class="line">    errorfile 403 /etc/haproxy/errors/403.http</span><br><span class="line">    errorfile 408 /etc/haproxy/errors/408.http</span><br><span class="line">    errorfile 500 /etc/haproxy/errors/500.http</span><br><span class="line">    errorfile 502 /etc/haproxy/errors/502.http</span><br><span class="line">    errorfile 503 /etc/haproxy/errors/503.http</span><br><span class="line">    errorfile 504 /etc/haproxy/errors/504.http</span><br><span class="line">####################################################################</span><br><span class="line">listen http_front</span><br><span class="line">        bind 0.0.0.0:1080           #监听端口  </span><br><span class="line">        stats refresh 30s           #统计页面自动刷新时间  </span><br><span class="line">        stats uri /haproxy?stats            #统计页面url  </span><br><span class="line">        stats realm Haproxy Manager #统计页面密码框上提示文本  </span><br><span class="line">        stats auth admin:admin      #统计页面用户名和密码设置  </span><br><span class="line">        #stats hide-version         #隐藏统计页面上HAProxy的版本信息</span><br><span class="line">#####################我把RabbitMQ的管理界面也放在HAProxy后面了###############################</span><br><span class="line">listen rabbitmq_admin</span><br><span class="line">    bind 0.0.0.0:8004</span><br><span class="line">    server node1 172.16.1.130:15672</span><br><span class="line">    server node2 172.16.1.131:15672</span><br><span class="line">    server node3 172.16.1.132:15672</span><br><span class="line">####################################################################</span><br><span class="line">listen rabbitmq_cluster</span><br><span class="line">    bind 0.0.0.0:5672</span><br><span class="line">    option tcplog</span><br><span class="line">    mode tcp</span><br><span class="line">    timeout client  3h</span><br><span class="line">    timeout server  3h</span><br><span class="line">    option          clitcpka</span><br><span class="line">    balance roundrobin      #负载均衡算法（#banlance roundrobin 轮询，balance source 保存session值，支持static-rr，leastconn，first，uri等参数）</span><br><span class="line">    #balance url_param userid</span><br><span class="line">    #balance url_param session_id check_post 64</span><br><span class="line">    #balance hdr(User-Agent)</span><br><span class="line">    #balance hdr(host)</span><br><span class="line">    #balance hdr(Host) use_domain_only</span><br><span class="line">    #balance rdp-cookie</span><br><span class="line">    #balance leastconn</span><br><span class="line">    #balance source //ip</span><br><span class="line">    server   node1 172.16.1.130:5672 check inter 5s rise 2 fall 3   #check inter 2000 是检测心跳频率，rise 2是2次正确认为服务器可用，fall 3是3次失败认为服务器不可用</span><br><span class="line">    server   node2 172.16.1.131:5672 check inter 5s rise 2 fall 3</span><br><span class="line">    server   node3 172.16.1.132:5672 check inter 5s rise 2 fall 3</span><br></pre></td></tr></table></figure>
 <p>启动haproxy</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service haproxy start</span><br></pre></td></tr></table></figure>
 <p>浏览器输入:<a href="http://172.16.1.140:1080/haproxy?stats" target="_blank" rel="noopener">http://172.16.1.140:1080/haproxy?stats</a>  —用户名和密码admin:admin</p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq1.png">
 <p><a href="http://172.16.1.140:8004/" target="_blank" rel="noopener">http://172.16.1.140:8004</a>  —用户名密码:guest</p>
 <p>可以看到和rabbitmq主节点一样的页面</p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq2.png">
 <p><strong>至此haproxy+rabbitmq集群成功搭建完成</strong></p>
 <hr>
 <h3 id="四-代码测试"><a href="#四-代码测试" class="headerlink" title="四.代码测试:"></a>四.代码测试:</h3><p>在python上编写producer和consumer代码.连接到Haproxy.端口默认5672不用指定.</p>
 <p>发送5条测试消息.</p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq3.png">
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq4.png">
 <p><strong>可以看到成功接收到5条消息</strong></p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq5.png">
 <p> 队列名为hello</p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq6.png">
 <hr>
 <p><strong>模拟一个节点down掉:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@rabbitmqnode2 ~]# rabbitmqctl stop_app</span><br><span class="line">Stopping rabbit application on node rabbit@rabbitmqnode2 ...</span><br></pre></td></tr></table></figure>
 <p>haproxy和rabbitmq显示一个节点不可用:</p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq7.png">
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq8.png">
 <p>节点启动:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@rabbitmqnode2 ~]# rabbitmqctl start_app</span><br><span class="line">Starting node rabbit@rabbitmqnode2 ...</span><br><span class="line">completed with 3 plugins.</span><br></pre></td></tr></table></figure>
 <p>回归正常:</p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq9.png">
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/mq/rabbitmq10.png">
 <hr>
 
       
@@ -516,7 +494,7 @@
   <p><span>本文标题:</span><a href="/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/">rabbitmq+haproxy 集群环境搭建</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月24日 - 12:06</p>
-  <p><span>最后更新:</span>2018年12月01日 - 22:12</p>
+  <p><span>最后更新:</span>2019年02月17日 - 17:02</p>
   <p><span>原始链接:</span><a href="/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/" title="rabbitmq+haproxy 集群环境搭建">https://jesse.top/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/"  aria-label="复制成功！"></i></span>
   </p>
@@ -591,8 +569,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/24/Linux-Service/rsync实战演练/" rel="next" title="rsync实战演练">
-                <i class="fa fa-chevron-left"></i> rsync实战演练
+              <a href="/2018/06/24/Linux-Web/tomcat 翻译官方文档的server配置/" rel="next" title="tomcat 翻译官方文档">
+                <i class="fa fa-chevron-left"></i> tomcat 翻译官方文档
               </a>
             
           </div>
@@ -601,8 +579,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/01/mysql/pt-heartbeat+zabbix监控mysql主从延时/" rel="prev" title="pt-heartbeat+zabbix监控mysql主从延时">
-                pt-heartbeat+zabbix监控mysql主从延时 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/24/Linux-Service/rsync实战演练/" rel="prev" title="rsync实战演练">
+                rsync实战演练 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -716,7 +694,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">73</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -727,7 +705,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -738,7 +716,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -826,7 +804,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

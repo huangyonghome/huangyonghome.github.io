@@ -100,15 +100,10 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="supervisor介绍官网地址:supervisor ) 一.概述supervisor是一个client/server架构,允许用户监控和控制一系列的Linux操作系统进程. 二.安装supervisor是基于Python2开发的.所以安装很简单.只需要以下步骤">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/supervisor.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/supervisor1.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/supervisor2.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/supervisor3.png">
-<meta property="og:updated_time" content="2018-12-01T14:27:37.292Z">
+<meta property="og:updated_time" content="2019-02-17T09:31:38.014Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="supervisor介绍">
 <meta name="twitter:description" content="supervisor介绍官网地址:supervisor ) 一.概述supervisor是一个client/server架构,允许用户监控和控制一系列的Linux操作系统进程. 二.安装supervisor是基于Python2开发的.所以安装很简单.只需要以下步骤">
-<meta name="twitter:image" content="http://pabkmteb4.bkt.clouddn.com/static/images/linux/supervisor.png">
 
 
 
@@ -466,13 +461,10 @@
 <p>如果程序的退出码在exitcodes指定中.那么不会自动重启该程序.</p>
 <p>白话解释就是:明确指定的退出状态码,supervisor不会自动启动该程序..如果程序的退出码没有手动指定(也就是意料之外的unexpected),那么supervisor会自动重启该程序 </p>
 <p>比如下面这个例子,supervisor反复的启动elasticsearch..注意观察elasticsearch的PID一直在变. : </p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/supervisor.png">
 <p> 查看supervisor的日志: </p>
 <p>elasticsearch一直在不断的启动,异常退出,启动.并且看到elasticsearch的退出码为1 </p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/supervisor1.png">
 <p>查看elasticsearch的日志: </p>
 <p>可以看到elasticsearch一直在退出.然后被supervisor自动重启 </p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/supervisor2.png">
 <p>修改supervisord.conf配置文件中的elasticsearch配置文件</p>
 <p>将autostart=true改成unexpected,</p>
 <p>并且加入exitcodes属性.值设为1. </p>
@@ -481,7 +473,6 @@
 <p>note:重启supervisord进程前.需要kill掉所有supervisord管理的应用程序 </p>
 </blockquote>
 <p>重载supervisor配置文件,可以发现supervisor并没有自动重启该应用 </p>
-<img src="http://pabkmteb4.bkt.clouddn.com/static/images/linux/supervisor3.png">
 <hr>
 
       
@@ -502,7 +493,7 @@
   <p><span>本文标题:</span><a href="/2018/06/15/Linux-Service/supervisor介绍/">supervisor介绍</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月15日 - 15:06</p>
-  <p><span>最后更新:</span>2018年12月01日 - 22:12</p>
+  <p><span>最后更新:</span>2019年02月17日 - 17:02</p>
   <p><span>原始链接:</span><a href="/2018/06/15/Linux-Service/supervisor介绍/" title="supervisor介绍">https://jesse.top/2018/06/15/Linux-Service/supervisor介绍/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/06/15/Linux-Service/supervisor介绍/"  aria-label="复制成功！"></i></span>
   </p>
@@ -702,7 +693,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">73</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -713,7 +704,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -724,7 +715,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -812,7 +803,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
