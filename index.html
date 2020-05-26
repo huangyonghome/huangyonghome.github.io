@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/26/python/01-basic/01-Python之路 - Python基础/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/26/python/01-basic/01-Python之路-Python基础/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/05/26/python/01-basic/01-Python之路 - Python基础/" itemprop="url">01.Python之路 - Python基础</a></h1>
+                <a class="post-title-link" href="/2020/05/26/python/01-basic/01-Python之路-Python基础/" itemprop="url">01.Python之路 - Python基础</a></h1>
         
 
         <div class="post-meta">
@@ -358,8 +358,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/05/26/python/01-basic/01-Python之路 - Python基础/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/26/python/01-basic/01-Python之路 - Python基础/" itemprop="commentCount"></span>
+                <a href="/2020/05/26/python/01-basic/01-Python之路-Python基础/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/26/python/01-basic/01-Python之路-Python基础/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -388,488 +388,198 @@
 
       
         
-          
-            <h1 id="Python之路-Python基础"><a href="#Python之路-Python基础" class="headerlink" title="Python之路 - Python基础"></a>Python之路 - Python基础</h1><h2 id="Hello-World-🍀"><a href="#Hello-World-🍀" class="headerlink" title="Hello World  🍀"></a>Hello World  🍀</h2><p>学一门语言基本都是从Hello World开始的 , 如下一个最简单的Hello World程序</p>
+          <h1 id="Python之路-Python基础"><a href="#Python之路-Python基础" class="headerlink" title="Python之路 - Python基础"></a>Python之路 - Python基础</h1><h2 id="Hello-World-🍀"><a href="#Hello-World-🍀" class="headerlink" title="Hello World  🍀"></a>Hello World  🍀</h2><p>学一门语言基本都是从Hello World开始的 , 如下一个最简单的Hello World程序</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Python <span class="number">3.5</span><span class="number">.2</span> (v3<span class="number">.5</span><span class="number">.2</span>:<span class="number">4</span>def2a2901a5, Jun <span class="number">25</span> <span class="number">2016</span>, <span class="number">22</span>:<span class="number">18</span>:<span class="number">55</span>) [MSC v<span class="number">.1900</span> <span class="number">64</span> bit (AMD64)] on win32</span><br><span class="line">Type <span class="string">"help"</span>, <span class="string">"copyright"</span>, <span class="string">"credits"</span> <span class="keyword">or</span> <span class="string">"license"</span> <span class="keyword">for</span> more information.</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Hello World"</span>)</span><br><span class="line">Hello World</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
 <p>此为Python 3.5.2版本 , 上述代码为在Windows环境命令行中执行 , 即以管理员身份运行 “命令提示符”</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 已添加环境变量</span></span><br><span class="line">C:\Windows\system32&gt;python</span><br></pre></td></tr></table></figure>
 <p>Python 2.7.x 版本的Hello World程序</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Python <span class="number">2.7</span><span class="number">.13</span> (v2<span class="number">.7</span><span class="number">.13</span>:a06454b1afa1, Dec <span class="number">17</span> <span class="number">2016</span>, <span class="number">20</span>:<span class="number">53</span>:<span class="number">40</span>) [MSC v<span class="number">.1500</span> <span class="number">64</span> bit (AMD64)] on win32</span><br><span class="line">Type <span class="string">"help"</span>, <span class="string">"copyright"</span>, <span class="string">"credits"</span> <span class="keyword">or</span> <span class="string">"license"</span> <span class="keyword">for</span> more information.</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> <span class="string">"Hello World"</span></span><br><span class="line">Hello World</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
 <p>当然使用<code>Python shell</code> 仅仅适合处理一些非常简单的小程序 , 对于比较复杂 , 代码量稍微大一点的就不适合了</p>
-<h2 id="变量-🍀"><a href="#变量-🍀" class="headerlink" title="变量  🍀"></a>变量  🍀</h2><p>变量用于存储在计算机程序中被引用和操作的信息</p>
-<p>变量可能被明确为是能表示可变状态、具有存储空间的抽象(如在Java和Visual Basic中) , 变量的唯一目的是在内存中标记和存储数据 , 这些数据可以在整个程序中使用</p>
-<p>声明变量</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 声明一个变量name,并绑定值"Lyon"</span></span><br><span class="line">name = <span class="string">"Lyon"</span></span><br><span class="line"><span class="comment"># 同时为多个变量赋值</span></span><br><span class="line">a = b = c = <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>Python变量定义的规则 : </p>
-<ol>
-<li><p>变量名只能是 字母、数字或者下划线的任意组合</p>
-</li>
-<li><p>变量名的第一个字符不能是数字</p>
-</li>
-<li><p>以下关键字不能声明为变量名 , 属于Python中的保留字and</p>
-</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>and</th>
-<th>exec</th>
-<th>not</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>assert</td>
-<td>finally</td>
-<td>or</td>
-</tr>
-<tr>
-<td>break</td>
-<td>for</td>
-<td>pass</td>
-</tr>
-<tr>
-<td>class</td>
-<td>from</td>
-<td>print</td>
-</tr>
-<tr>
-<td>continue</td>
-<td>global</td>
-<td>raise</td>
-</tr>
-<tr>
-<td>def</td>
-<td>if</td>
-<td>return</td>
-</tr>
-<tr>
-<td>del</td>
-<td>import</td>
-<td>try</td>
-</tr>
-<tr>
-<td>elif</td>
-<td>in</td>
-<td>while</td>
-</tr>
-<tr>
-<td>else</td>
-<td>is</td>
-<td>with</td>
-</tr>
-<tr>
-<td>except</td>
-<td>lambda</td>
-<td>yield</td>
-</tr>
-</tbody>
-</table>
-<h2 id="行和缩进-🍀"><a href="#行和缩进-🍀" class="headerlink" title="行和缩进  🍀"></a>行和缩进  🍀</h2><p>Python 与其他语言最大的区别就是 , Python 的代码块不使用大括号 <code>{}</code> 来控制类 , 函数以及其他逻辑判断 ,  Python 最具特色的就是用缩进来写模块</p>
-<p>缩进的空白数量是可变的 , 但是所有代码块语句必须包含相同的缩进空白数量 , 这个必须严格执行</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">True</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"True"</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="keyword">print</span> <span class="string">"False"</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">执行会出现错误提醒:</span></span><br><span class="line"><span class="string">IndentationError: unexpected indent</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<p><code>IndentationError: unexpected indent</code> 错误是Python编译器在告诉你 , 你的文件里格式有问题 , 可能是tab和空格没对齐的问题</p>
-<p>还有<code>IndentationError: unindent does not match any outer indentation level</code> 错误表明 , 你使用的缩进方式不一致 , 有的是 tab 键缩进 , 有的是空格缩进 , 改为一致即可。</p>
-<p>因此 , 在 Python 的代码块中必须使用相同数目的行首缩进空格数</p>
-<p>建议你在每个缩进层次使用 <strong>单个制表符</strong> 或 <strong>两个空格</strong> 或 <strong>四个空格</strong> , 切记不能混用</p>
-<h2 id="多行语句-🍀"><a href="#多行语句-🍀" class="headerlink" title="多行语句  🍀"></a>多行语句  🍀</h2><p>Python语句中一般以新作为为语句的结束符</p>
-<p>但是我们可以使用斜杠 <code>\</code> 将一行的语句分为多行显示 , 如下 :</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">total = item_one + \</span><br><span class="line">        item_two + \</span><br><span class="line">        item_three</span><br></pre></td></tr></table></figure>
-<p>语句中包含 [], {} 或 () 括号就不需要使用多行连接符 , 如下实例 : </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">days = [<span class="string">'Monday'</span>, <span class="string">'Tuesday'</span>, <span class="string">'Wednesday'</span>,</span><br><span class="line">        <span class="string">'Thursday'</span>, <span class="string">'Friday'</span>]</span><br></pre></td></tr></table></figure>
-<p><strong>同一行使用多条语句</strong></p>
-<p>Python可以在同一行中使用多条语句 , 语句之间使用分号 <code>;</code>  分割 , 如下 :</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> sys; x = <span class="string">'runoob'</span>; sys.stdout.write(x + <span class="string">'\n'</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="字符串-🍀"><a href="#字符串-🍀" class="headerlink" title="字符串  🍀"></a>字符串  🍀</h2><p>Python 可以使用引号( <strong>‘</strong> )、双引号( <strong>“</strong> )、三引号( <strong>‘’’</strong> 或 <strong>“””</strong> ) 来表示字符串 , 引号的开始与结束必须的相同类型的</p>
-<p>其中三引号可以由多行组成 , 编写多行文本的快捷语法 , 常用于文档字符串 , 在文件的特定地点 , 被当做注释</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">word = <span class="string">'word'</span></span><br><span class="line">sentence = <span class="string">"This is a sentence"</span></span><br><span class="line">paragraph = <span class="string">"""This is a paragraph</span></span><br><span class="line"><span class="string">			   Contains multiple statements"""</span></span><br></pre></td></tr></table></figure>
-<h2 id="注释-🍀"><a href="#注释-🍀" class="headerlink" title="注释  🍀"></a>注释  🍀</h2><p>Python中单行注释采用 <code>#</code> 开头</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一个注释</span></span><br><span class="line">print(<span class="string">"Hello,Python"</span>)  <span class="comment"># 第二个注释</span></span><br></pre></td></tr></table></figure>
-<p>Python中多行注释采用三个单引号 <code>&#39;&#39;&#39;</code> 或三个双引号 <code>&quot;&quot;&quot;</code> </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">这是多行注释，使用单引号。</span></span><br><span class="line"><span class="string">这是多行注释，使用单引号。</span></span><br><span class="line"><span class="string">这是多行注释，使用单引号。</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">这是多行注释，使用双引号。</span></span><br><span class="line"><span class="string">这是多行注释，使用双引号。</span></span><br><span class="line"><span class="string">这是多行注释，使用双引号。</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
-<h2 id="字符编码-🍀"><a href="#字符编码-🍀" class="headerlink" title="字符编码  🍀"></a>字符编码  🍀</h2><p>Python解释器在加载 <code>.py</code> 文件中的代码时 , 会对内容进行编码 (默认ASCII)</p>
-<p>然而ASCII是无法处理中文的 , 所以如果我们的代码中出现了中文 , 那么需要在代码的顶端加上一句声明</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">第一行,为脚本语言指定解释器</span></span><br><span class="line"><span class="string">第二行,告诉Python解释器,用utf-8编码来进行编码</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<h2 id="用户输入-🍀"><a href="#用户输入-🍀" class="headerlink" title="用户输入  🍀"></a>用户输入  🍀</h2><p>当我们需要用户自己输入信息时 , 就可以使用<code>input</code> 语句 , 如下 : </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 让用户进行输入,并用变量name接收用户输入的值</span></span><br><span class="line">name = input(<span class="string">"Please input your name:"</span>)</span><br></pre></td></tr></table></figure>
-<p>上述代码 , 会一直等待用户输入 , 直到用户按回车键后才会退出</p>
-<h2 id="输出-🍀"><a href="#输出-🍀" class="headerlink" title="输出  🍀"></a>输出  🍀</h2><p>当我们需要让控制台输出一些我们想要的信息时 , 可以使用<code>print</code> 语句 , 在Hello World里我们已经见到了</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="comment"># Author:Lyon</span></span><br><span class="line">x = <span class="string">"a"</span></span><br><span class="line">y = <span class="string">"b"</span></span><br><span class="line"><span class="comment"># 换行输出</span></span><br><span class="line">print(x)</span><br><span class="line">print(y)</span><br><span class="line">print(<span class="string">'---------'</span>)</span><br><span class="line"><span class="comment"># 不换行输出</span></span><br><span class="line">print(x,)</span><br><span class="line">print(y,)</span><br><span class="line"><span class="comment"># 不换行输出</span></span><br><span class="line">print(x, y)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">执行结果:</span></span><br><span class="line"><span class="string">a</span></span><br><span class="line"><span class="string">b</span></span><br><span class="line"><span class="string">---------</span></span><br><span class="line"><span class="string">a b a b</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<h2 id="数据类型-🍀"><a href="#数据类型-🍀" class="headerlink" title="数据类型  🍀"></a>数据类型  🍀</h2><p>我们知道在变量创建时 , 会在内存中开辟一个空间 , 用来存放变量的值 , 而这些变量的值可以是各种各样的类型 ,  如 : 数字 , 字符串 , 列表 , 元组 , 字典 , 集合等等</p>
-<p><strong>数字类型</strong></p>
-<ol>
-<li><p>int (整型)</p>
-<p>整数的大小范围由计算机字长确定</p>
-</li>
-<li><p>long (长整型)</p>
-<p>跟C语言不同 , Python的长整数没有指定位宽 , 即 : Python没有限制长整数数值的大小 , 但实际上由于机器内存有限 , 我们使用的长整数数值不可能无限大</p>
-<p>注意 , 自从Python 2.2 起 , 如果整数发生溢出 , Python会自动将整数数据转换为长整数 , 所以如今在长整数数据后面不加字母 L 也不会导致严重后果了</p>
-</li>
-<li><p>float (浮点型)</p>
-<p>浮点数用来处理实数 , 即带有小数的数字 , 类似于C语言中的double类型 , 占8个字节(64位) , 其中52位表示底 , 11位表示指数 , 剩下的一位表示符号</p>
-</li>
-<li><p>complex (复数)</p>
-<p>复数由实数部分和虚数部分组成，一般形式为x+yh，其中的x是复数的实数部分，y是复数的虚数部分，这里的x和y都是实数</p>
-</li>
-</ol>
-<p>注 : Python中存在整数小数字池 : -5~257 , 在此范围的整数数字共享</p>
-<p><strong>布尔值</strong></p>
-<p>即真或假 , 1或0</p>
-<p>更多数据类型 , 后续文章中详细整理</p>
-<h2 id="数据运算-🍀"><a href="#数据运算-🍀" class="headerlink" title="数据运算  🍀"></a>数据运算  🍀</h2><p>算术运算符</p>
-<table>
-<thead>
-<tr>
-<th>运算符</th>
-<th>描述</th>
-<th>实例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>+</td>
-<td>加 - 两个对象相加</td>
-<td>a + b 输出结果 30</td>
-</tr>
-<tr>
-<td>-</td>
-<td>减 - 得到负数或是一个数减去另一个数</td>
-<td>a - b 输出结果 -10</td>
-</tr>
-<tr>
-<td>*</td>
-<td>乘 - 两个数相乘或是返回一个被重复若干次的字符串</td>
-<td>a * b 输出结果 200</td>
-</tr>
-<tr>
-<td>/</td>
-<td>除 - x除以y</td>
-<td>b / a 输出结果 2</td>
-</tr>
-<tr>
-<td>%</td>
-<td>取模 - 返回除法的余数</td>
-<td>b % a 输出结果 0</td>
-</tr>
-<tr>
-<td>**</td>
-<td>幂 - 返回x的y次幂</td>
-<td>a**b 为10的20次方 ,  输出结果 100000000000000000000</td>
-</tr>
-<tr>
-<td>//</td>
-<td>取整除 - 返回商的整数部分</td>
-<td>9//2 输出结果 4 , 9.0//2.0 输出结果 4.0</td>
-</tr>
-</tbody>
-</table>
-<p>比较运算符</p>
-<table>
-<thead>
-<tr>
-<th>运算符</th>
-<th>描述</th>
-<th>实例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>==</td>
-<td>等于 - 比较对象是否相等</td>
-<td>(a == b) 返回 False</td>
-</tr>
-<tr>
-<td>!=</td>
-<td>不等于 - 比较两个对象是否不相等</td>
-<td>(a != b) 返回 True</td>
-</tr>
-<tr>
-<td>&lt;&gt;</td>
-<td>不等于 - 比较两个对象是否不相等</td>
-<td>(a &lt;&gt; b) 返回 True这个运算符类似 !=</td>
-</tr>
-<tr>
-<td>&gt;</td>
-<td>大于 - 返回x是否大于y</td>
-<td>(a &gt; b) 返回 False</td>
-</tr>
-<tr>
-<td>&lt;</td>
-<td>小于 - 返回x是否小于y , 所有比较运算符返回1表示真 , 返回0表示假<br>这分别与特殊的变量True和False等价 , 注意 , 这些变量名的大写</td>
-<td>(a &lt; b) 返回 True</td>
-</tr>
-<tr>
-<td>&gt;=</td>
-<td>大于等于    - 返回x是否大于等于y。</td>
-<td>(a &gt;= b) 返回 False</td>
-</tr>
-<tr>
-<td>&lt;=</td>
-<td>小于等于 - 返回x是否小于等于y。</td>
-<td>(a &lt;= b) 返回 True</td>
-</tr>
-</tbody>
-</table>
-<p>赋值运算符</p>
-<table>
-<thead>
-<tr>
-<th>运算符</th>
-<th>描述</th>
-<th>实例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>=</td>
-<td>简单的赋值运算符</td>
-<td>c = a + b 将 a + b 的运算结果赋值为 c</td>
-</tr>
-<tr>
-<td>+=</td>
-<td>加法赋值运算符</td>
-<td>c += a 等效于 c = c + a</td>
-</tr>
-<tr>
-<td>-=</td>
-<td>减法赋值运算符</td>
-<td>c -= a 等效于 c = c - a</td>
-</tr>
-<tr>
-<td>*=</td>
-<td>乘法赋值运算符</td>
-<td>c <em>= a 等效于 c = c </em> a</td>
-</tr>
-<tr>
-<td>/=</td>
-<td>除法赋值运算符</td>
-<td>c /= a 等效于 c = c / a</td>
-</tr>
-<tr>
-<td>%=</td>
-<td>取模赋值运算符</td>
-<td>c %= a 等效于 c = c % a</td>
-</tr>
-<tr>
-<td>**=</td>
-<td>幂赋值运算符</td>
-<td>c **= a 等效于 c = c ** a</td>
-</tr>
-<tr>
-<td>//=</td>
-<td>取整除赋值运算符</td>
-<td>c //= a 等效于 c = c // a</td>
-</tr>
-</tbody>
-</table>
-<p>位运算符</p>
-<table>
-<thead>
-<tr>
-<th>运算符</th>
-<th>描述</th>
-<th>实例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>&amp;</td>
-<td>按位与运算符 : 参与运算的两个值 , 如果两个相应位都为1 , 则该位的结果为1 , 否则为0</td>
-<td>(a &amp; b) 输出结果 12  , 二进制解释 :  0000 1100</td>
-</tr>
-<tr>
-<td>\</td>
-<td>按位或运算符 : 只要对应的二个二进位有一个为1时 , 结果位就为1</td>
-<td>(a  丨 b) 输出结果 61  , 二进制解释 :  0011 1101</td>
-</tr>
-<tr>
-<td>^</td>
-<td>按位异或运算符 : 当两对应的二进位相异时 , 结果为1</td>
-<td>(a ^ b) 输出结果 49  , 二进制解释 :  0011 0001</td>
-</tr>
-<tr>
-<td>~</td>
-<td>按位取反运算符 : 对数据的每个二进制位取反 , 即把1变为0 , 把0变为1  , ~x 类似于 -x-1</td>
-<td>(~a ) 输出结果 -61  , 二进制解释 :  1100 0011 , 在一个有符号二进制数的补码形式</td>
-</tr>
-<tr>
-<td>&lt;&lt;</td>
-<td>左移动运算符 : 运算数的各二进位全部左移若干位 , 由 &lt;&lt; 右边的数字指定了移动的位数 , 高位丢弃 , 低位补0</td>
-<td>a &lt;&lt; 2 输出结果 240 , 二进制解释 :  1111 0000</td>
-</tr>
-<tr>
-<td>&gt;&gt;</td>
-<td>右移动运算符 : 把”&gt;&gt;”左边的运算数的各二进位全部右移若干位 , &gt;&gt; 右边的数字指定了移动的位数</td>
-<td>a &gt;&gt; 2 输出结果 15  , 二进制解释 :  0000 1111</td>
-</tr>
-</tbody>
-</table>
-<p>逻辑运算符</p>
-<table>
-<thead>
-<tr>
-<th>运算符</th>
-<th>逻辑表达式</th>
-<th>描述</th>
-<th>实例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>and</td>
-<td>x and y</td>
-<td>布尔”与” - 如果 x 为 False , x and y 返回 False , 否则它返回 y 的计算值</td>
-<td>(a and b) 返回 20</td>
-</tr>
-<tr>
-<td>or</td>
-<td>x or y</td>
-<td>布尔”或”    - 如果 x 是非 0 , 它返回 x 的值 , 否则它返回 y 的计算值</td>
-<td>(a or b) 返回 10</td>
-</tr>
-<tr>
-<td>not</td>
-<td>not x</td>
-<td>布尔”非” - 如果 x 为 True , 返回 False  , 如果 x 为 False , 它返回 True</td>
-<td>not(a and b) 返回 False</td>
-</tr>
-</tbody>
-</table>
-<p>成员运算符</p>
-<table>
-<thead>
-<tr>
-<th>运算符</th>
-<th>描述</th>
-<th>实例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>in</td>
-<td>如果在指定的序列中找到值返回 True , 否则返回 False</td>
-<td>x 在 y 序列中 , 如果 x 在 y 序列中返回 True</td>
-</tr>
-<tr>
-<td>not in</td>
-<td>如果在指定的序列中没有找到值返回 True , 否则返回 False</td>
-<td>x 不在 y 序列中 , 如果 x 不在 y 序列中返回 True</td>
-</tr>
-</tbody>
-</table>
-<p>身份运算符</p>
-<table>
-<thead>
-<tr>
-<th>运算符</th>
-<th>描述</th>
-<th>实例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>is</td>
-<td>is 是判断两个标识符是不是引用自一个对象</td>
-<td><strong>x is y </strong> , 类似 <strong>id(x) == id(y)</strong> , 如果引用的是同一个对象则返回 True , 否则返回 False</td>
-</tr>
-<tr>
-<td>is not</td>
-<td>is not 是判断两个标识符是不是引用自不同对象</td>
-<td><strong>x is not y</strong>  ,  类似 **id(a) != id(b) , 如果引用的不是同一个对象则返回结果 True , 否则返回 False</td>
-</tr>
-</tbody>
-</table>
-<p>运算符优先级表 , 从上到下优先级依次增高</p>
-<table>
-<thead>
-<tr>
-<th>Operator</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://docs.python.org/3/reference/expressions.html?highlight=operator%20precedence#lambda" target="_blank" rel="noopener"><code>lambda</code></a></td>
-<td>Lambda expression</td>
-</tr>
-<tr>
-<td><a href="https://docs.python.org/3/reference/compound_stmts.html#if" target="_blank" rel="noopener"><code>if</code></a> – <a href="https://docs.python.org/3/reference/compound_stmts.html#else" target="_blank" rel="noopener"><code>else</code></a></td>
-<td>Conditional expression</td>
-</tr>
-<tr>
-<td><a href="https://docs.python.org/3/reference/expressions.html?highlight=operator%20precedence#or" target="_blank" rel="noopener"><code>or</code></a></td>
-<td>Boolean OR</td>
-</tr>
-<tr>
-<td><a href="https://docs.python.org/3/reference/expressions.html?highlight=operator%20precedence#and" target="_blank" rel="noopener"><code>and</code></a></td>
-<td>Boolean AND</td>
-</tr>
-<tr>
-<td><a href="https://docs.python.org/3/reference/expressions.html?highlight=operator%20precedence#not" target="_blank" rel="noopener"><code>not</code></a> <code>x</code></td>
-<td>Boolean NOT</td>
-</tr>
-<tr>
-<td><a href="https://docs.python.org/3/reference/expressions.html?highlight=operator%20precedence#in" target="_blank" rel="noopener"><code>in</code></a>, <a href="https://docs.python.org/3/reference/expressions.html?highlight=operator%20precedence#not-in" target="_blank" rel="noopener"><code>not in</code></a>, <a href="https://docs.python.org/3/reference/expressions.html?highlight=operator%20precedence#is" target="_blank" rel="noopener"><code>is</code></a>, <a href="https://docs.python.org/3/reference/expressions.html?highlight=operator%20precedence#is-not" target="_blank" rel="noopener"><code>is not</code></a>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>!=</code>, <code>==</code></td>
-<td>Comparisons, including membership tests and identity tests</td>
-</tr>
-<tr>
-<td><code>丨</code></td>
-<td>Bitwise OR</td>
-</tr>
-<tr>
-<td><code>^</code></td>
-<td>Bitwise XOR</td>
-</tr>
-<tr>
-<td><code>&amp;</code></td>
-<td>Bitwise AND</td>
-</tr>
-<tr>
-<td><code>&lt;&lt;</code>, <code>&gt;&gt;</code></td>
-<td>Shifts</td>
-</tr>
-<tr>
-<td><code>+</code>, <code>-</code></td>
-<td>Addition and subtraction</td>
-</tr>
-<tr>
-<td><code>*</code>, <code>@</code>, <code>/</code>, <code>//</code>, <code>%</code></td>
-<td>Multiplication, matrix multiplication, division, floor division, remainder <a href="https://docs.python.org/3/reference/expressions.html?highlight=operator%20precedence#id21" target="_blank" rel="noopener">[5]</a></td>
-</tr>
-<tr>
-<td><code>+x</code>, <code>-x</code>, <code>~x</code></td>
-<td>Positive, negative, bitwise NOT</td>
-</tr>
-<tr>
-<td><code>**</code></td>
-<td>Exponentiation <a href="https://docs.python.org/3/reference/expressions.html?highlight=operator%20precedence#id22" target="_blank" rel="noopener">[6]</a></td>
-</tr>
-<tr>
-<td><code>await</code> <code>x</code></td>
-<td>Await expression</td>
-</tr>
-<tr>
-<td><code>x[index]</code>, <code>x[index:index]</code>, <code>x(arguments...)</code>, <code>x.attribute</code></td>
-<td>Subscription, slicing, call, attribute reference</td>
-</tr>
-<tr>
-<td><code>(expressions...)</code>, <code>[expressions...]</code>, <code>{key: value...}</code>, <code>{expressions...}</code></td>
-<td>Binding or tuple display, list display, dictionary display, set display</td>
-</tr>
-</tbody>
-</table>
-<h2 id="if-…-else-🍀"><a href="#if-…-else-🍀" class="headerlink" title="if … else  🍀"></a>if … else  🍀</h2><p>场景一 : 用户登录验证</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入getpass模块</span></span><br><span class="line"><span class="keyword">import</span> getpass</span><br><span class="line"><span class="comment"># 等待用户输入</span></span><br><span class="line">name = input(<span class="string">"请输入用户名："</span>)</span><br><span class="line"><span class="comment"># 等待用户输入密码,密码不可见</span></span><br><span class="line">password = getpass.getpass(<span class="string">"请输入密码："</span>)</span><br><span class="line"><span class="comment"># 如果用户密码正确,执行如下</span></span><br><span class="line"><span class="keyword">if</span> name ==<span class="string">"Lyon"</span> <span class="keyword">and</span> password ==<span class="string">"yang"</span>:</span><br><span class="line">    print(<span class="string">"欢迎你!"</span>)</span><br><span class="line"><span class="comment"># 否则执行如下</span></span><br><span class="line"><span class="keyword">else</span>：</span><br><span class="line">    print(<span class="string">"用户名或密码错误"</span>)</span><br></pre></td></tr></table></figure>
-<p>场景二 : 猜年龄游戏</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义一个年龄</span></span><br><span class="line">age =<span class="number">21</span> </span><br><span class="line"><span class="comment"># 用户输入</span></span><br><span class="line">user_input = int(input(<span class="string">"input your guess num:"</span>))</span><br><span class="line"><span class="keyword">if</span> user_input == age:</span><br><span class="line">    print(<span class="string">"Congratulations, you got it !"</span>)</span><br><span class="line"><span class="keyword">elif</span> user_input &lt; age:</span><br><span class="line">    print(<span class="string">"Oops,think bigger!"</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    print(<span class="string">"think smaller!"</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="for循环-🍀"><a href="#for循环-🍀" class="headerlink" title="for循环  🍀"></a>for循环  🍀</h2><p>循环10次</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">    print(<span class="string">"loop:"</span>, i )</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">执行结果:</span></span><br><span class="line"><span class="string">loop: 0</span></span><br><span class="line"><span class="string">loop: 1</span></span><br><span class="line"><span class="string">loop: 2</span></span><br><span class="line"><span class="string">loop: 3</span></span><br><span class="line"><span class="string">loop: 4</span></span><br><span class="line"><span class="string">loop: 5</span></span><br><span class="line"><span class="string">loop: 6</span></span><br><span class="line"><span class="string">loop: 7</span></span><br><span class="line"><span class="string">loop: 8</span></span><br><span class="line"><span class="string">loop: 9</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<p>小于5就跳入下一次循环</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">    <span class="keyword">if</span> i&lt;<span class="number">5</span>:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    print(<span class="string">"loop:"</span>, i)</span><br></pre></td></tr></table></figure>
-<h2 id="while循环-🍀"><a href="#while循环-🍀" class="headerlink" title="while循环  🍀"></a>while循环  🍀</h2><p>写一个死循环</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">count = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>：</span><br><span class="line">    print(<span class="string">"你是风儿我是沙，缠缠绵绵走天涯"</span>, count)</span><br><span class="line">    count += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/26/python/01-basic/01-Python之路-Python基础/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/26/python/01-basic/02-Python之路-数据类型概述/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/26/python/01-basic/02-Python之路-数据类型概述/" itemprop="url">02.Python之路 - python数据类型和变量</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-26T22:59:58+08:00">
+                2020-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/basic/" itemprop="url" rel="index">
+                    <span itemprop="name">basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/26/python/01-basic/02-Python之路-数据类型概述/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/26/python/01-basic/02-Python之路-数据类型概述/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="python数据类型和变量"><a href="#python数据类型和变量" class="headerlink" title="python数据类型和变量"></a>python数据类型和变量</h3><h4 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h4><p>表示数字,包括负数,例如: <code>1</code>，<code>100</code>，<code>-8080</code>，<code>0</code>，等等。</p>
+<h4 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h4><p>浮点数也就是小数,可以用数字写法,例如<code>1.23</code>，<code>3.14</code>，<code>-9.01</code>，等等.要注意的是在Python中,除法的结果都是浮点数,即使是被整除,例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 9/3</span><br><span class="line">3.0</span><br><span class="line">&gt;&gt;&gt; type(9/3)</span><br><span class="line">&lt;class &apos;float&apos;&gt;</span><br></pre></td></tr></table></figure>
+<p>在python中,还有一种除法是<code>//</code>，称为地板除，两个整数的除法仍然是整数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 10 / 3</span><br><span class="line">3.3333333333333335</span><br><span class="line">&gt;&gt;&gt; 10 // 3</span><br><span class="line">3</span><br><span class="line">&gt;&gt;&gt; type(10 // 3)</span><br><span class="line">&lt;class &apos;int&apos;&gt;</span><br></pre></td></tr></table></figure>
+<p><code>//</code>除法只取结果的整数部分，%则表示取余，可以得到两个整数相除的余数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 10 % 3</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<hr>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/26/python/01-basic/02-Python之路-数据类型概述/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2117,179 +1827,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="url">letsencrypt配置通配符域名证书</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-15T11:59:58+08:00">
-                2018-10-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/SSL/" itemprop="url" rel="index">
-                    <span itemprop="name">SSL</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="letsencrypt配置通配符域名证书"><a href="#letsencrypt配置通配符域名证书" class="headerlink" title="letsencrypt配置通配符域名证书"></a>letsencrypt配置通配符域名证书</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在今年稍早些的时候,letsencrypt终于开始免费支持通配符域名证书了.但是只支持一个层级的通配主机域名.</p>
-<p>比如我曾经踩过的坑:*.dev.xxx.com通配符域名证书并不能支持api.v3.dev.xxx.com这种三层子域名.</p>
-<p>如果需要为api.v3.dev.xxx.com申请通配符证书,则还需要申请*.v3.dev.xxx.com通配符证书</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/letsencrypt证书上传到阿里云SLB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2504,7 +2041,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">74</span>
+                  <span class="site-state-item-count">75</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
