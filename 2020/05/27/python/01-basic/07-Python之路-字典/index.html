@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'https:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Python之路 - 字典介绍  🍀字典是一种key - value 的数据类型 , 用 冒号 (“ : “) 来分割 , 每个对象之间用逗号(“ , “)分割 , 整个字典包括在花括号(“{ }”)中 字典中的键(key)是唯一的 , 但值(value)则不必 字典是可变的数据类型 , 并且是无序的  从python3.6版本开始.字典是有序的  基本操作如下 : 创建、增加、修改、删除、查找">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="07.Python之路-字典">
+<meta property="og:url" content="https://jesse.top/2020/05/27/python/01-basic/07-Python之路-字典/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="Python之路 - 字典介绍  🍀字典是一种key - value 的数据类型 , 用 冒号 (“ : “) 来分割 , 每个对象之间用逗号(“ , “)分割 , 整个字典包括在花括号(“{ }”)中 字典中的键(key)是唯一的 , 但值(value)则不必 字典是可变的数据类型 , 并且是无序的  从python3.6版本开始.字典是有序的  基本操作如下 : 创建、增加、修改、删除、查找">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-05-27T15:19:32.675Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="07.Python之路-字典">
+<meta name="twitter:description" content="Python之路 - 字典介绍  🍀字典是一种key - value 的数据类型 , 用 冒号 (“ : “) 来分割 , 每个对象之间用逗号(“ , “)分割 , 整个字典包括在花括号(“{ }”)中 字典中的键(key)是唯一的 , 但值(value)则不必 字典是可变的数据类型 , 并且是无序的  从python3.6版本开始.字典是有序的  基本操作如下 : 创建、增加、修改、删除、查找">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/05/27/python/01-basic/07-Python之路-字典/"/>
+
+
+
+
+
+  <title>07.Python之路-字典 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/27/python/01-basic/07-Python之路-字典/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">07.Python之路-字典</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-27T22:59:58+08:00">
+                2020-05-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/basic/" itemprop="url" rel="index">
+                    <span itemprop="name">basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/27/python/01-basic/07-Python之路-字典/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/27/python/01-basic/07-Python之路-字典/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Python之路-字典"><a href="#Python之路-字典" class="headerlink" title="Python之路 - 字典"></a>Python之路 - 字典</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>字典是一种key - value 的数据类型 , 用 冒号 (“ : “) 来分割 , 每个对象之间用逗号(“ , “)分割 , 整个字典包括在花括号(“{ }”)中</p>
+<p>字典中的键(key)是唯一的 , 但值(value)则不必</p>
+<p><strong>字典是可变的数据类型 , 并且是无序的</strong></p>
+<blockquote>
+<p>从python3.6版本开始.字典是有序的</p>
+</blockquote>
+<p>基本操作如下 : <strong>创建、增加、修改、删除、查找、遍历、多级嵌套</strong>等</p>
+<p>注意 : 字典中key是唯一的 , 如果出现多个相同的key被赋值 , 那么值为最后一个赋的值 ; key是不可变的 , 所以可变的数据类型是不能用的 , 如 : list , 对于不可变的数据类型则可以 , 如 : str、int、tuple</p>
+<p>2）key是不可变的 , 所以可变的数据类型是不能用的 , 如 : list , 对于不可变的数据类型则可以 , 如 : str、int、tuple</p>
+<a id="more"></a>
+<h2 id="创建-🍀"><a href="#创建-🍀" class="headerlink" title="创建  🍀"></a>创建  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个空字典</span></span><br><span class="line">empty_info = &#123;&#125;</span><br><span class="line"><span class="comment"># 创建一个字典</span></span><br><span class="line">info = &#123;<span class="string">"name"</span>:<span class="string">"Lyon"</span>,<span class="string">"age"</span>:<span class="number">21</span>&#125;</span><br><span class="line"><span class="comment"># 也可调用dict()方法</span></span><br><span class="line">info = dict()</span><br></pre></td></tr></table></figure>
+<h2 id="增加-🍀"><a href="#增加-🍀" class="headerlink" title="增加  🍀"></a>增加  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#创建字典</span></span><br><span class="line">dic = &#123;<span class="string">"name"</span>:<span class="string">"jesse"</span>,<span class="string">"age"</span>:<span class="number">33</span>,<span class="string">"job"</span>:<span class="string">"it"</span>,<span class="string">"sex"</span>:<span class="string">"male"</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加键值对</span></span><br><span class="line"><span class="comment">#给字典增加一个新的键值对.如果键不存在,则添加</span></span><br><span class="line">dic[<span class="string">'company'</span>] = <span class="string">'dwd'</span></span><br><span class="line">print(dic)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>&#123;<span class="string">'name'</span>: <span class="string">'jesse'</span>, <span class="string">'age'</span>: <span class="number">33</span>, <span class="string">'job'</span>: <span class="string">'it'</span>, <span class="string">'sex'</span>: <span class="string">'male'</span>, <span class="string">'company'</span>: <span class="string">'dwd'</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#如果字典已经存在了这个键.则用新的值替代</span></span><br><span class="line">dic[<span class="string">'company'</span>] = <span class="string">'hsq'</span></span><br><span class="line">print(dic)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>&#123;<span class="string">'name'</span>: <span class="string">'jesse'</span>, <span class="string">'age'</span>: <span class="number">33</span>, <span class="string">'job'</span>: <span class="string">'it'</span>, <span class="string">'sex'</span>: <span class="string">'male'</span>, <span class="string">'company'</span>: <span class="string">'hsq'</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#通过setdefault方法也可以增加一个值</span></span><br><span class="line">dic.setdefault(<span class="string">'school'</span>,<span class="string">"college"</span>)</span><br><span class="line">print(dic)</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt;&#123;<span class="string">'name'</span>: <span class="string">'jesse'</span>, <span class="string">'age'</span>: <span class="number">33</span>, <span class="string">'job'</span>: <span class="string">'it'</span>, <span class="string">'sex'</span>: <span class="string">'male'</span>, <span class="string">'company'</span>: <span class="string">'hsq'</span>, <span class="string">'school'</span>: <span class="string">'college'</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#和刚才相反.如果键已经存在,则新值不会生效.</span></span><br><span class="line">dic.setdefault(<span class="string">'school'</span>,<span class="string">'primary'</span>)</span><br><span class="line">print(dic)</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt;&#123;<span class="string">'name'</span>: <span class="string">'jesse'</span>, <span class="string">'age'</span>: <span class="number">33</span>, <span class="string">'job'</span>: <span class="string">'it'</span>, <span class="string">'sex'</span>: <span class="string">'male'</span>, <span class="string">'company'</span>: <span class="string">'hsq'</span>, <span class="string">'school'</span>: <span class="string">'college'</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#update方法也可以修改字典键值对.如果键已经存在,则修改值,如果不存在,则添加</span></span><br><span class="line">dic.update(&#123;<span class="string">"name"</span>:<span class="string">"Lyon"</span>,<span class="string">"company"</span>:<span class="string">"internet"</span>&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="修改-🍀"><a href="#修改-🍀" class="headerlink" title="修改  🍀"></a>修改  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个字典</span></span><br><span class="line">info = &#123;<span class="string">"name"</span>:<span class="string">"Lyon"</span>,<span class="string">"age"</span>:<span class="number">21</span>,<span class="string">"school"</span>:<span class="string">"university"</span>&#125;</span><br><span class="line"><span class="comment"># 修改age</span></span><br><span class="line">info[<span class="string">"age"</span>] = <span class="number">18</span></span><br><span class="line"><span class="comment"># 打印info</span></span><br><span class="line">print(info)     </span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">执行结果:</span></span><br><span class="line"><span class="string">&#123;'age': 18, 'school': 'university', 'name': 'Lyon'&#125;</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<h2 id="删除-🍀"><a href="#删除-🍀" class="headerlink" title="删除  🍀"></a>删除  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个字典</span></span><br><span class="line">dic = &#123;<span class="string">"name"</span>:<span class="string">"jesse"</span>,<span class="string">"age"</span>:<span class="number">33</span>,<span class="string">"job"</span>:<span class="string">"it"</span>,<span class="string">"sex"</span>:<span class="string">"male"</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1.pop()删除法</span></span><br><span class="line">dic.pop(<span class="string">'name'</span>)</span><br><span class="line">print(dic)</span><br><span class="line"><span class="comment"># 注意pop方法有返回值</span></span><br><span class="line">print(dic.pop(<span class="string">'name'</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>jesse</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span><span class="keyword">del</span>删除方法</span><br><span class="line"><span class="keyword">del</span> dic[<span class="string">'name'</span>]</span><br><span class="line">print(dic)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>&#123;<span class="string">'age'</span>: <span class="number">33</span>, <span class="string">'job'</span>: <span class="string">'it'</span>, <span class="string">'sex'</span>: <span class="string">'male'</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># popitem删除法.(默认只删除最后一个)</span></span><br><span class="line">dic.popitem()</span><br><span class="line">print(dic)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>&#123;<span class="string">'name'</span>: <span class="string">'jesse'</span>, <span class="string">'age'</span>: <span class="number">33</span>, <span class="string">'job'</span>: <span class="string">'it'</span>&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="查找-🍀"><a href="#查找-🍀" class="headerlink" title="查找  🍀"></a>查找  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个字典</span></span><br><span class="line">info = &#123;<span class="string">"name"</span>:<span class="string">"Lyon"</span>,<span class="string">"age"</span>:<span class="number">21</span>,<span class="string">"school"</span>:<span class="string">"university"</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#1.查找键是否存在于字典中</span></span><br><span class="line">print(<span class="string">'name'</span> <span class="keyword">in</span> dic)</span><br><span class="line">print(<span class="string">'jesse'</span> <span class="keyword">in</span> dic)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">True</span></span><br><span class="line"><span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#2.获取键的值</span></span><br><span class="line">print(dic[<span class="string">'name'</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>jesse</span><br><span class="line"><span class="comment">#注意.如果字典中没有这个键,程序会报错</span></span><br><span class="line">print(dic[<span class="string">'jesse'</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>KeyError: <span class="string">'jesse'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># get方法优雅的获取字典中某个键的值</span></span><br><span class="line">print(dic.get(<span class="string">'name'</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>jesse</span><br><span class="line"></span><br><span class="line"><span class="comment">#如果没有这个键,则返回none.但是程序不会报错</span></span><br><span class="line">print(dic.get(<span class="string">'jesse'</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">None</span></span><br></pre></td></tr></table></figure>
+<h2 id="遍历-🍀"><a href="#遍历-🍀" class="headerlink" title="遍历  🍀"></a>遍历  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个字典</span></span><br><span class="line">info = &#123;<span class="string">"name"</span>:<span class="string">"Lyon"</span>,<span class="string">"age"</span>:<span class="number">21</span>,<span class="string">"school"</span>:<span class="string">"university"</span>&#125;</span><br><span class="line"><span class="comment"># 方法1,推荐</span></span><br><span class="line"><span class="keyword">for</span> key <span class="keyword">in</span> info:</span><br><span class="line">  print(key,info[key])</span><br><span class="line">  </span><br><span class="line"><span class="comment"># 方法2</span></span><br><span class="line"><span class="keyword">for</span> k,v <span class="keyword">in</span> info.items():</span><br><span class="line">  print(k,v)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">执行结果:</span></span><br><span class="line"><span class="string">school university</span></span><br><span class="line"><span class="string">name Lyon</span></span><br><span class="line"><span class="string">age 21</span></span><br><span class="line"><span class="string">school university</span></span><br><span class="line"><span class="string">name Lyon</span></span><br><span class="line"><span class="string">age 21</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<h2 id="嵌套-🍀"><a href="#嵌套-🍀" class="headerlink" title="嵌套  🍀"></a>嵌套  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个多级嵌套字典</span></span><br><span class="line">dics = &#123;</span><br><span class="line">    <span class="string">'name'</span>:&#123;</span><br><span class="line">        <span class="string">'jesse'</span>:&#123;</span><br><span class="line">            <span class="string">'age'</span>:<span class="number">22</span>,</span><br><span class="line">            <span class="string">'job'</span>:<span class="string">'it'</span>,</span><br><span class="line">            <span class="string">'sex'</span>:<span class="string">'male'</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">'jerry'</span>:&#123;</span><br><span class="line">            <span class="string">'age'</span>:<span class="number">23</span>,</span><br><span class="line">            <span class="string">'job'</span>:<span class="string">'it'</span>,</span><br><span class="line">            <span class="string">'sex'</span>:<span class="string">'female'</span></span><br><span class="line">        &#125;,</span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'home'</span>: &#123;</span><br><span class="line">        <span class="string">'jesse'</span>:&#123;</span><br><span class="line">            <span class="string">'live'</span>:<span class="string">'shanghai'</span>,</span><br><span class="line">            <span class="string">'hometown'</span>:<span class="string">'jiangxi'</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">'jerry'</span>:&#123;</span><br><span class="line">            <span class="string">'live'</span>:<span class="string">'beijing'</span>,</span><br><span class="line">            <span class="string">'hometown'</span>:<span class="string">'wuhan'</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'company'</span>:&#123;</span><br><span class="line">        <span class="string">'jesse'</span>:&#123;</span><br><span class="line">            <span class="string">'name'</span>:<span class="string">'dwd'</span>,</span><br><span class="line">            <span class="string">'industry'</span>: <span class="string">'internet'</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">'jerry'</span>:&#123;</span><br><span class="line">            <span class="string">'name'</span>: <span class="string">'bat'</span>,</span><br><span class="line">            <span class="string">'industry'</span>: <span class="string">'internet'</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 修改最里层的value</span></span><br><span class="line">dics[<span class="string">'name'</span>][<span class="string">'jesse'</span>][<span class="string">'age'</span>] = <span class="number">33</span></span><br><span class="line">print(dics[<span class="string">'name'</span>][<span class="string">'jesse'</span>])</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt;&#123;<span class="string">'age'</span>: <span class="number">33</span>, <span class="string">'job'</span>: <span class="string">'it'</span>, <span class="string">'sex'</span>: <span class="string">'male'</span>&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="更多-🍀"><a href="#更多-🍀" class="headerlink" title="更多  🍀"></a>更多  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">len(dict)        <span class="comment"># 计算字典元素个数</span></span><br><span class="line">dict.clear()     <span class="comment"># 清空词典所有条目</span></span><br><span class="line">dict.fromkeys(seq, val))  <span class="comment"># 创建一个新字典,以列表 seq 中元素做字典的键,val 为字典所有键对应的初始值</span></span><br><span class="line">dict.has_key(key)  <span class="comment"># 如果键在字典dict里返回true,否则返回false</span></span><br><span class="line">dict.items()       <span class="comment"># 以列表返回可遍历的(键, 值) 元组数组</span></span><br><span class="line">dict.keys()        <span class="comment"># 以列表返回一个字典所有的键</span></span><br><span class="line">dict.values()      <span class="comment"># 以列表返回字典中的所有值</span></span><br><span class="line">dict.setdefault(key, default=<span class="keyword">None</span>) <span class="comment"># 和get()类似, 但如果键不存在于字典中,将会添加键并将值设为default</span></span><br><span class="line">dict.update(dict2)                 <span class="comment"># 把字典dict2的键/值对更新到dict里</span></span><br></pre></td></tr></table></figure>
+<p>方法合集</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">|  clear(...)</span><br><span class="line">|      D.clear() -&gt; None.  Remove all items from D.</span><br><span class="line">|</span><br><span class="line">|  copy(...)</span><br><span class="line">|      D.copy() -&gt; a shallow copy of D</span><br><span class="line">|</span><br><span class="line">|  fromkeys(iterable, value=<span class="keyword">None</span>, /) <span class="keyword">from</span> builtins.type</span><br><span class="line">|      Returns a new dict <span class="keyword">with</span> keys <span class="keyword">from</span> iterable <span class="keyword">and</span> values equal to value.</span><br><span class="line">|</span><br><span class="line">|  get(...)</span><br><span class="line">|      D.get(k[,d]) -&gt; D[k] if k in D, else d.  d defaults to None.</span><br><span class="line">|</span><br><span class="line">|  items(...)</span><br><span class="line">|      D.items() -&gt; a set-like object providing a view on D's items</span><br><span class="line">|</span><br><span class="line">|  keys(...)</span><br><span class="line">|      D.keys() -&gt; a set-like object providing a view on D's keys</span><br><span class="line">|</span><br><span class="line">|  pop(...)</span><br><span class="line">|      D.pop(k[,d]) -&gt; v, remove specified key and return the corresponding value.</span><br><span class="line">|      If key <span class="keyword">is</span> <span class="keyword">not</span> found, d <span class="keyword">is</span> returned <span class="keyword">if</span> given, otherwise KeyError <span class="keyword">is</span> raised</span><br><span class="line">|</span><br><span class="line">|  popitem(...)</span><br><span class="line">|      D.popitem() -&gt; (k, v), remove and return some (key, value) pair as a</span><br><span class="line">|      <span class="number">2</span>-tuple; but <span class="keyword">raise</span> KeyError <span class="keyword">if</span> D <span class="keyword">is</span> empty.</span><br><span class="line">|</span><br><span class="line">|  setdefault(...)</span><br><span class="line">|      D.setdefault(k[,d]) -&gt; D.get(k,d), also set D[k]=d if k not in D</span><br><span class="line">|</span><br><span class="line">|  update(...)</span><br><span class="line">|      D.update([E, ]**F) -&gt; None.  Update D from dict/iterable E and F.</span><br><span class="line">|      If E <span class="keyword">is</span> present <span class="keyword">and</span> has a .keys() method, then does:  <span class="keyword">for</span> k <span class="keyword">in</span> E: D[k] = E[k]</span><br><span class="line">|      If E <span class="keyword">is</span> present <span class="keyword">and</span> lacks a .keys() method, then does:  <span class="keyword">for</span> k, v <span class="keyword">in</span> E: D[k] = v</span><br><span class="line">|      In either case, this <span class="keyword">is</span> followed by: <span class="keyword">for</span> k <span class="keyword">in</span> F:  D[k] = F[k]</span><br><span class="line">|</span><br><span class="line">|  values(...)</span><br><span class="line">|      D.values() -&gt; an object providing a view on D's values</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="作业"><a href="#作业" class="headerlink" title="作业"></a>作业</h3><h5 id="1-将下列字典中的key键含有’k’元素的所有键值对删除"><a href="#1-将下列字典中的key键含有’k’元素的所有键值对删除" class="headerlink" title="1.将下列字典中的key键含有’k’元素的所有键值对删除"></a>1.将下列字典中的key键含有’k’元素的所有键值对删除</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#下面的方法报错...&quot;RuntimeError: dictionary changed size during iteration&quot;</span><br><span class="line">#注意,字典在循环或者迭代的时候,不能修改该字典的内容.</span><br><span class="line"></span><br><span class="line">dic = &#123;&apos;k1&apos;:&apos;v1&apos;,&quot;k2&quot;:&apos;v2&apos;,&quot;k3&quot;:&apos;v3&apos;,&apos;name&apos;:&apos;jesse&apos;&#125;</span><br><span class="line"></span><br><span class="line">for k in dic:</span><br><span class="line">    if &apos;k&apos; in k:</span><br><span class="line">        del dic[k]</span><br><span class="line"></span><br><span class="line">print(dic)</span><br><span class="line"></span><br><span class="line">#但是可以在循环一个列表的时候修改该字典</span><br><span class="line"></span><br><span class="line">#新建一个空列表</span><br><span class="line">l1 = []</span><br><span class="line"></span><br><span class="line">#循环列表,将满足要求的key键添加进一个列表</span><br><span class="line">for k in dic:</span><br><span class="line">    if &apos;k&apos; in k:</span><br><span class="line">        l1.append(k)</span><br><span class="line"></span><br><span class="line">#循环列表,这里就是循环字典的KEY..然后删除dic的键</span><br><span class="line">for keys in l1:</span><br><span class="line">    del dic[keys]</span><br><span class="line"></span><br><span class="line">print(dic)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/05/27/python/01-basic/07-Python之路-字典/">07.Python之路-字典</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年05月27日 - 22:05</p>
+  <p><span>最后更新:</span>2020年05月27日 - 23:05</p>
+  <p><span>原始链接:</span><a href="/2020/05/27/python/01-basic/07-Python之路-字典/" title="07.Python之路-字典">https://jesse.top/2020/05/27/python/01-basic/07-Python之路-字典/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/05/27/python/01-basic/07-Python之路-字典/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/27/python/01-basic/05-Python之路 - 元组/" rel="next" title="05.Python之路 - 元组">
+                <i class="fa fa-chevron-left"></i> 05.Python之路 - 元组
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div>
+<div class="-mob-share-ui" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-qzone"><p>QQ空间</p></li>
+        <li class="-mob-share-qq"><p>QQ好友</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-youdao"><p>有道云笔记</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="https://f1.webshare.mob.com/code/mob-share.js?appkey=266b0526b70f4"></script>
+<!--MOB SHARE END-->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/05/27/python/01-basic/07-Python之路-字典/"
+           data-title="07.Python之路-字典" data-url="https://jesse.top/2020/05/27/python/01-basic/07-Python之路-字典/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">保持饥渴,保持愚蠢.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">83</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/anselphilnos" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:mailhuangyong@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/jessehuang408" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/jessehuang408" target="_blank" title="FaceBook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FaceBook</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python之路-字典"><span class="nav-number">1.</span> <span class="nav-text">Python之路 - 字典</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍-🍀"><span class="nav-number">1.1.</span> <span class="nav-text">介绍  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建-🍀"><span class="nav-number">1.2.</span> <span class="nav-text">创建  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增加-🍀"><span class="nav-number">1.3.</span> <span class="nav-text">增加  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改-🍀"><span class="nav-number">1.4.</span> <span class="nav-text">修改  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除-🍀"><span class="nav-number">1.5.</span> <span class="nav-text">删除  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查找-🍀"><span class="nav-number">1.6.</span> <span class="nav-text">查找  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遍历-🍀"><span class="nav-number">1.7.</span> <span class="nav-text">遍历  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#嵌套-🍀"><span class="nav-number">1.8.</span> <span class="nav-text">嵌套  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多-🍀"><span class="nav-number">1.9.</span> <span class="nav-text">更多  🍀</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#作业"><span class="nav-number">1.9.1.</span> <span class="nav-text">作业</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-将下列字典中的key键含有’k’元素的所有键值对删除"><span class="nav-number">1.9.1.0.1.</span> <span class="nav-text">1.将下列字典中的key键含有’k’元素的所有键值对删除</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+        $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+</body>
+</html>
