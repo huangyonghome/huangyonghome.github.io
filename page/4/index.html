@@ -92,16 +92,16 @@
 
 
 
-<meta name="description" content="保持饥渴,保持愚蠢.">
+<meta name="description" content="求知若饥,虚心若愚.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Jesse&#39;s home">
 <meta property="og:url" content="https://jesse.top/page/4/index.html">
 <meta property="og:site_name" content="Jesse&#39;s home">
-<meta property="og:description" content="保持饥渴,保持愚蠢.">
+<meta property="og:description" content="求知若饥,虚心若愚.">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jesse&#39;s home">
-<meta name="twitter:description" content="保持饥渴,保持愚蠢.">
+<meta name="twitter:description" content="求知若饥,虚心若愚.">
 
 
 
@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/03/Linux-Web/nginx针对单个IP限制并发连接,限流功能介绍/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/03/Linux-Web/Nginx 的ngx_http_core_module模块变量/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/03/Linux-Web/nginx针对单个IP限制并发连接,限流功能介绍/" itemprop="url">nginx针对单个IP限制并发连接,限流</a></h1>
+                <a class="post-title-link" href="/2018/08/03/Linux-Web/Nginx 的ngx_http_core_module模块变量/" itemprop="url">Nginx 配置</a></h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/08/03/Linux-Web/nginx针对单个IP限制并发连接,限流功能介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/03/Linux-Web/nginx针对单个IP限制并发连接,限流功能介绍/" itemprop="commentCount"></span>
+                <a href="/2018/08/03/Linux-Web/Nginx 的ngx_http_core_module模块变量/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/03/Linux-Web/Nginx 的ngx_http_core_module模块变量/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,11 +377,10 @@
 
       
         
-          <h2 id="nginx针对单个IP限制并发连接-限流实战"><a href="#nginx针对单个IP限制并发连接-限流实战" class="headerlink" title="nginx针对单个IP限制并发连接,限流实战"></a>nginx针对单个IP限制并发连接,限流实战</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>最近在流量高峰期时,后端数据库服务器面临非常大的压力.mysql被大量的update.select语句挤爆,慢查询记录能瞬间达千条以上.导致业务不能正常访问.监控平台不断报警.</p>
-<p>nginx有自带的模块可以针对每一个IP限制并发连接数..还可以限制每一个IP在单位时间内的request请求频率.</p>
+          <h2 id="Nginx-配置"><a href="#Nginx-配置" class="headerlink" title="Nginx 配置"></a>Nginx 配置</h2><h3 id="ngx-http-core-module模块变量"><a href="#ngx-http-core-module模块变量" class="headerlink" title="ngx_http_core_module模块变量"></a>ngx_http_core_module模块变量</h3><p>下列表格中列出了部分的变量名及其代表的意义</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/08/03/Linux-Web/nginx针对单个IP限制并发连接,限流功能介绍/#more" rel="contents">
+            <a class="btn" href="/2018/08/03/Linux-Web/Nginx 的ngx_http_core_module模块变量/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1270,6 +1269,336 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/24/Linux-Service/rsync实战演练/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/24/Linux-Service/rsync实战演练/" itemprop="url">rsync实战演练</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T12:59:58+08:00">
+                2018-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Service/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Service</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/24/Linux-Service/rsync实战演练/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/Linux-Service/rsync实战演练/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="rsync实战演练"><a href="#rsync实战演练" class="headerlink" title="rsync实战演练"></a>rsync实战演练</h2><p>rsync是一个远程数据同步工具,可以快速同步多台主机的文件,且只同步有差异的部分.非常强大的工具 </p>
+<h4 id="实战环境"><a href="#实战环境" class="headerlink" title="实战环境:"></a>实战环境:</h4><p>服务端:192.168.10.89<br>客户端:192.168.10.103 </p>
+<p>rsync不需要安装,默认就自带.</p>
+<p>关于rsync的命令想法,可以参考其他笔记.</p>
+<blockquote>
+<p>note: 以下教程都是讲述客户端从远程服务器同步数据到本地.类似于下载行为. 如果需要将本地的文件同步到远程服务器.有点类似于上传行为.则需要改变命令.   </p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/24/Linux-Service/rsync实战演练/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/" itemprop="url">rabbitmq+haproxy 集群环境搭建</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T12:59:58+08:00">
+                2018-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="rabbitmq-haproxy-集群环境搭建"><a href="#rabbitmq-haproxy-集群环境搭建" class="headerlink" title="rabbitmq+haproxy 集群环境搭建"></a>rabbitmq+haproxy 集群环境搭建</h2><h3 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境:"></a>实验环境:</h3><p>4台centos6服务器:</p>
+<p>172.16.1.130  rabbitmqnode0 主rabbitmq服务器</p>
+<p>172.16.1.131  rabbitmqnode1  节点2</p>
+<p>172.16.1.132  rabbitmqnode2  节点3</p>
+<p>172.16.1.140 haproxy  负载代理服务器</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/24/Linux-Service/inotify+rsync实战演练/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1586,336 +1915,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/" itemprop="url">rabbitmq+haproxy 集群环境搭建</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T12:59:58+08:00">
-                2018-06-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="rabbitmq-haproxy-集群环境搭建"><a href="#rabbitmq-haproxy-集群环境搭建" class="headerlink" title="rabbitmq+haproxy 集群环境搭建"></a>rabbitmq+haproxy 集群环境搭建</h2><h3 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境:"></a>实验环境:</h3><p>4台centos6服务器:</p>
-<p>172.16.1.130  rabbitmqnode0 主rabbitmq服务器</p>
-<p>172.16.1.131  rabbitmqnode1  节点2</p>
-<p>172.16.1.132  rabbitmqnode2  节点3</p>
-<p>172.16.1.140 haproxy  负载代理服务器</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/24/Linux-Service/rsync实战演练/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/24/Linux-Service/rsync实战演练/" itemprop="url">rsync实战演练</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T12:59:58+08:00">
-                2018-06-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Service/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Service</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/06/24/Linux-Service/rsync实战演练/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/24/Linux-Service/rsync实战演练/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="rsync实战演练"><a href="#rsync实战演练" class="headerlink" title="rsync实战演练"></a>rsync实战演练</h2><p>rsync是一个远程数据同步工具,可以快速同步多台主机的文件,且只同步有差异的部分.非常强大的工具 </p>
-<h4 id="实战环境"><a href="#实战环境" class="headerlink" title="实战环境:"></a>实战环境:</h4><p>服务端:192.168.10.89<br>客户端:192.168.10.103 </p>
-<p>rsync不需要安装,默认就自带.</p>
-<p>关于rsync的命令想法,可以参考其他笔记.</p>
-<blockquote>
-<p>note: 以下教程都是讲述客户端从远程服务器同步数据到本地.类似于下载行为. 如果需要将本地的文件同步到远程服务器.有点类似于上传行为.则需要改变命令.   </p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/24/Linux-Service/rsync实战演练/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1960,7 +1959,7 @@
                 alt="Jesse" />
             
               <p class="site-author-name" itemprop="name">Jesse</p>
-              <p class="site-description motion-element" itemprop="description">保持饥渴,保持愚蠢.</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
           </div>
 
           <nav class="site-state motion-element">
