@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  出租一间次卧,房间虽然不大,但是储物空间丰富,干净清爽.适合一人入住(目前住的一个女孩子,月底工作原因搬家,所以看起来房间有点凌乱)
+房间位于灵岩南路凌兆路路口,离6号线灵岩南路较近,离8号线凌兆新村也不算太远.
+主卧住一对情侣,工作,作息稳定,社交简单.
+希望能找到一个和我们一样有固定工作,生活作息简单在上海奋斗打拼的有缘人.
+  <title>15.Python之路 - Python迭代器和生成器 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">15.Python之路 - Python迭代器和生成器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-07T17:20:58+08:00">
+                2020-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Advanced/" itemprop="url" rel="index">
+                    <span itemprop="name">Advanced</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Python之路-迭代器和生成器"><a href="#Python之路-迭代器和生成器" class="headerlink" title="Python之路 - 迭代器和生成器"></a>Python之路 - 迭代器和生成器</h1><h2 id="可迭代对象-🍀"><a href="#可迭代对象-🍀" class="headerlink" title="可迭代对象  🍀"></a>可迭代对象  🍀</h2><p>在Python中一切皆对象</p>
+<p>迭代是重复反馈过程的活动 , 其目的通常是为了逼近所需目标或结果 </p>
+<p>可迭代对象 , 即可以按照迭代的方式进行存取数据的对象 , 在python中我们可以理解为可以用for循环遍历的对象就是可迭代对象</p>
+<p><strong>for循环做的那些事</strong> :  for循环是我们用来遍历一个数据集合的方法 , 其实就是根据一定的要求 (这个要求叫做’协议’ ) 进行一次次的迭代的效果 . 当我们用for循环去遍历时 , 它做的第一件事就是判断对象是否是可迭代对象 , 如果是 , 那么它就会将该对象转换成一个迭代器 , 最后利用<code>__next__()</code>方法将迭代器中的内容一个接一个的取出来</p>
+<p>可迭代对象的标志是 , 它具有<code>__iter__()</code>方法</p>
+<p>判断对象是否为可迭代对象方法如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入模块</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> Iterable</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>l = [<span class="string">'lyon'</span>,<span class="string">'oldboy'</span>]</span><br><span class="line"><span class="comment"># 判断是否为Iterable , 即可迭代对象</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>isinstance(l,Iterable)</span><br><span class="line"><span class="comment"># 返回bool值</span></span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#或者下面这个方法也可以判断</span></span><br><span class="line">l = [<span class="string">'lyon'</span>,<span class="string">'oldboy'</span>]</span><br><span class="line">print(<span class="string">"__iter__"</span> <span class="keyword">in</span> dir(l))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">True</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="迭代器-🍀"><a href="#迭代器-🍀" class="headerlink" title="迭代器  🍀"></a>迭代器  🍀</h2><p>通过上面的内容已经知道<code>for循环</code>有一个生成迭代器的过程 , 迭代器是啥 ?</p>
+<p>迭代器是访问集合元素的一种方式</p>
+<p>特点:</p>
+<ol>
+<li>不依赖索引取值 , 访问者不需要关心迭代器内部的结构 , 仅需通过next()方法去访问</li>
+<li>不能随机访问集合中的某个值 , 只能从头到尾依次访问 , 不可返回访问</li>
+<li>惰性计算 , 只有在需要访问时才会生成值 , 节省内存</li>
+</ol>
+<p>在python中有一个<code>iter()</code>方法 , 作用就是将可迭代对象变成一个迭代器 , 实质上iter()是去调用了<code>__iter__()</code>方法 ,  看代码:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>l = [<span class="string">'lyon'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>l.__iter__()</span><br><span class="line"><span class="comment"># iterator即迭代器</span></span><br><span class="line">&lt;list_iterator object at <span class="number">0x0000026DA649D320</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>可迭代对象与迭代器的区别:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用dir方法查看对象中的所有方法</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir_list = dir([<span class="number">1</span>,<span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir_iter = dir([<span class="number">1</span>,<span class="number">2</span>].__iter__())</span><br><span class="line"><span class="comment"># 筛选出不同点</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>set(dir_iter) - set(dir_list)</span><br><span class="line">&#123;<span class="string">'__length_hint__'</span>, <span class="string">'__setstate__'</span>, <span class="string">'__next__'</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以看出迭代器比可迭代对象多出了三个方法 , 所以我们可以根据这一点来判断一个对象到底是可迭代对象还是一个迭代器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个迭代器</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>i = iter([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>])</span><br><span class="line"><span class="comment"># 查看迭代器中元素的长度</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>i.__length_hint__()</span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="comment"># 根据索引指定迭代开始位置</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>i.__setstate__(<span class="number">3</span>)</span><br><span class="line"><span class="comment"># 进行取值</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>i.__next__()</span><br><span class="line"><span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p><em>判断方法:</em> </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入Iterable类</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> Iterable</span><br><span class="line"><span class="comment"># 导入Iterator类</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> Iterator</span><br><span class="line"><span class="comment"># 是否为可迭代对象</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>isinstance(obj,Iterable)</span><br><span class="line"><span class="comment"># 是否为迭代器</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>isinstance(obj,Iterator)</span><br><span class="line"><span class="comment"># 注意:迭代器也是可迭代对象</span></span><br></pre></td></tr></table></figure>
+<p><strong><em> 在迭代时 ,  我们需要注意迭代器中是否有值的问题 ,  即当我们一直调用<code>__next__</code> 方法取值时 , 如果值都取完了 , 而此时我们再执行 <code>__next__</code> 方法 , 解释器就会抛出 StopIteration , 因为已经没有值可以取了 </em></strong></p>
+<h2 id="生成器-🍀"><a href="#生成器-🍀" class="headerlink" title="生成器  🍀"></a>生成器  🍀</h2><p>自定义的一个能够实现迭代器功能的就是生成器</p>
+<p>本质: 迭代器(所以自带了<code>__iter__</code> 方法和<code>__next__</code> 不需要我们去实现</p>
+<p>特点: 惰性运算 , 开发者自定义</p>
+<h3 id="生成器函数-🍀"><a href="#生成器函数-🍀" class="headerlink" title="生成器函数  🍀"></a>生成器函数  🍀</h3><p>一个函数调用时返回一个迭代器 , 那么这个函数就叫做生成器函数</p>
+<p>利用生成器做一个range( 2.x中的xrange ) 的功能</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义函数</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">range</span><span class="params">(n)</span>:</span></span><br><span class="line">...		start = <span class="number">0</span></span><br><span class="line"><span class="meta">... </span>	<span class="keyword">while</span> start &lt; n:</span><br><span class="line"><span class="meta">... </span>		<span class="keyword">yield</span> start</span><br><span class="line">...			start += <span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj = range(<span class="number">5</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj.__next__()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj.__next__()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj.__next__()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj.__next__()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj.__next__()</span><br></pre></td></tr></table></figure>
+<p>yield的作用 :  yield的作用是中断函数的执行并记录中断的位置 , 等下次重新调用这个函数时 , 就会接着上次继续执行</p>
+<p>PS : 调用生成器函数时 , 仅仅会返回一个生成器 , 并不会执行函数的内容 , 生成器只能由next() 进行调用执行 , 实质上next()方法就是调用的<code>__next__()</code>  方法</p>
+<p><strong><em>yield from</em></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="string">'AB'</span>:</span><br><span class="line">        <span class="keyword">yield</span> i</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">3</span>):</span><br><span class="line">        <span class="keyword">yield</span> j</span><br><span class="line">print(list(func()))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func2</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">from</span> <span class="string">'AB'</span></span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">from</span> range(<span class="number">3</span>)</span><br><span class="line">    </span><br><span class="line">print(list(func2()))</span><br></pre></td></tr></table></figure>
+<p><strong>生成器应用</strong></p>
+<p>监听文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tail</span><span class="params">(filename)</span>:</span></span><br><span class="line">    <span class="comment"># 打开文件</span></span><br><span class="line">    f = open(filename,encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">    <span class="comment"># 从文件末尾算起</span></span><br><span class="line">    f.seek(<span class="number">0</span>, <span class="number">2</span>) </span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="comment"># 读取文件中新的文本行</span></span><br><span class="line">        line = f.readline()  </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> line:</span><br><span class="line">            time.sleep(<span class="number">0.1</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">yield</span> line</span><br><span class="line">tail_g = tail(<span class="string">'tmp'</span>)</span><br><span class="line"><span class="comment"># 生成器也是可迭代对象</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> tail_g:</span><br><span class="line">    print(line)</span><br></pre></td></tr></table></figure>
+<p>计算动态平均值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">averager</span><span class="params">()</span>:</span></span><br><span class="line">	total = <span class="number">0</span></span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    average = <span class="keyword">None</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        term = <span class="keyword">yield</span> average</span><br><span class="line">        total += term</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line">        average = total/count</span><br><span class="line"><span class="comment"># 生成生成器</span></span><br><span class="line">g_avg = averager()</span><br><span class="line"><span class="comment"># 激活生成器,不激活无法send</span></span><br><span class="line">next(g_avg)</span><br><span class="line"><span class="comment"># send相当于先传参,后调用next()</span></span><br><span class="line">print(g_avg.send(<span class="number">10</span>))</span><br><span class="line">print(g_avg.send(<span class="number">30</span>))</span><br><span class="line">print(g_avg.send(<span class="number">50</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="列表推导式和生成器表达式-🍀"><a href="#列表推导式和生成器表达式-🍀" class="headerlink" title="列表推导式和生成器表达式  🍀"></a>列表推导式和生成器表达式  🍀</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列表解析</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>num = [i <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>num</span><br><span class="line">[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>]</span><br><span class="line"><span class="comment"># 生成器表达式</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>num_iter = (i <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>num_iter</span><br><span class="line">&lt;generator object &lt;genexpr&gt; at <span class="number">0x0000021C41003258</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>next(num_iter)</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>next(num_iter)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>next(num_iter)</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>next(num_iter)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>next(num_iter)</span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>next(num_iter)</span><br></pre></td></tr></table></figure>
+<p>对于推导式会有另一篇专门来写</p>
+<h4 id="列表推导式练习"><a href="#列表推导式练习" class="headerlink" title="列表推导式练习"></a>列表推导式练习</h4><p>10以内所有数的平方的列表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">l1=[i**2 for i in range(1,11)]</span><br><span class="line">print(l1)</span><br></pre></td></tr></table></figure>
+<p>30以内能被3整除的数的平方</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">l2 = [i**2 for i in range(1,31) if i % 3 == 0]</span><br><span class="line">print(l2)</span><br></pre></td></tr></table></figure>
+<p>3.下面是个列表.过滤掉长度小于3的字符串,并将剩下的转换成大写字母</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">l3 = [&apos;alex&apos;,&apos;jesse&apos;,&apos;taibai&apos;,&apos;re&apos;,&apos;ab&apos;]</span><br><span class="line">l4 = [i.upper() for i in l3 if len(i)&gt;= 3]</span><br><span class="line">print(l4)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/">15.Python之路 - Python迭代器和生成器</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年06月07日 - 17:06</p>
+  <p><span>最后更新:</span>2020年06月07日 - 17:06</p>
+  <p><span>原始链接:</span><a href="/2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/" title="15.Python之路 - Python迭代器和生成器">https://jesse.top/2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/07/python/02-Advanced/06-Python之路 - 递归/" rel="next" title="16.Python之路 - Python递归函数">
+                <i class="fa fa-chevron-left"></i> 16.Python之路 - Python递归函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/07/python/02-Advanced/01-Python之路 - 函数/" rel="prev" title="11.Python之路 - Python函数">
+                11.Python之路 - Python函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div>
+<div class="-mob-share-ui" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-qzone"><p>QQ空间</p></li>
+        <li class="-mob-share-qq"><p>QQ好友</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-youdao"><p>有道云笔记</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="https://f1.webshare.mob.com/code/mob-share.js?appkey=266b0526b70f4"></script>
+<!--MOB SHARE END-->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/"
+           data-title="15.Python之路 - Python迭代器和生成器" data-url="https://jesse.top/2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">89</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/anselphilnos" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:mailhuangyong@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/jessehuang408" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/jessehuang408" target="_blank" title="FaceBook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FaceBook</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python之路-迭代器和生成器"><span class="nav-number">1.</span> <span class="nav-text">Python之路 - 迭代器和生成器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#可迭代对象-🍀"><span class="nav-number">1.1.</span> <span class="nav-text">可迭代对象  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#迭代器-🍀"><span class="nav-number">1.2.</span> <span class="nav-text">迭代器  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成器-🍀"><span class="nav-number">1.3.</span> <span class="nav-text">生成器  🍀</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成器函数-🍀"><span class="nav-number">1.3.1.</span> <span class="nav-text">生成器函数  🍀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表推导式和生成器表达式-🍀"><span class="nav-number">1.3.2.</span> <span class="nav-text">列表推导式和生成器表达式  🍀</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#列表推导式练习"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">列表推导式练习</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+        $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+</body>
+</html>

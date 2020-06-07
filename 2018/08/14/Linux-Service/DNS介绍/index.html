@@ -7,140 +7,10 @@
 
 <html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-  <script>
-  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'https:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
-  daovoice('init', {
-      app_id: "59f7787a"
-    });
-  daovoice('update');
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="DNS," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
-
-
-
-
-
-
-<meta name="description" content="DNS介绍IP地址虽然采用了十分记数法.但是对于人脑来说还是非常难以记忆,但是访问互联网网站又一定需要IP,为了应对这个问题.早期的时候是通过hosts文件来绑定主机名和IP的对应关系, 但是这种方法存在非常多的不足,特别是IP和主机名的对应关系越来越多的时候.hosts档案完全无法满足人们的需求.这个时候,伯克利大学发展出一套主机名IP对应系统.称为Berkeley Internet Name">
-<meta name="keywords" content="DNS">
-<meta property="og:type" content="article">
-<meta property="og:title" content="DNS介绍">
-<meta property="og:url" content="https://jesse.top/2018/08/14/Linux-Service/DNS介绍/index.html">
-<meta property="og:site_name" content="Jesse&#39;s home">
-<meta property="og:description" content="DNS介绍IP地址虽然采用了十分记数法.但是对于人脑来说还是非常难以记忆,但是访问互联网网站又一定需要IP,为了应对这个问题.早期的时候是通过hosts文件来绑定主机名和IP的对应关系, 但是这种方法存在非常多的不足,特别是IP和主机名的对应关系越来越多的时候.hosts档案完全无法满足人们的需求.这个时候,伯克利大学发展出一套主机名IP对应系统.称为Berkeley Internet Name">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/dns.png">
-<meta property="og:updated_time" content="2018-12-01T14:27:37.288Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="DNS介绍">
-<meta name="twitter:description" content="DNS介绍IP地址虽然采用了十分记数法.但是对于人脑来说还是非常难以记忆,但是访问互联网网站又一定需要IP,为了应对这个问题.早期的时候是通过hosts文件来绑定主机名和IP的对应关系, 但是这种方法存在非常多的不足,特别是IP和主机名的对应关系越来越多的时候.hosts档案完全无法满足人们的需求.这个时候,伯克利大学发展出一套主机名IP对应系统.称为Berkeley Internet Name">
-<meta name="twitter:image" content="http://pabkmteb4.bkt.clouddn.com/dns.png">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="https://jesse.top/2018/08/14/Linux-Service/DNS介绍/"/>
-
-
-
-
-
+  出租一间次卧,房间虽然不大,但是储物空间丰富,干净清爽.适合一人入住(目前住的一个女孩子,月底工作原因搬家,所以看起来房间有点凌乱)
+房间位于灵岩南路凌兆路路口,离6号线灵岩南路较近,离8号线凌兆新村也不算太远.
+主卧住一对情侣,工作,作息稳定,社交简单.
+希望能找到一个和我们一样有固定工作,生活作息简单在上海奋斗打拼的有缘人.
   <title>DNS介绍 | Jesse's home</title>
   
 
@@ -679,7 +549,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">83</span>
+                  <span class="site-state-item-count">89</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -690,7 +560,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
