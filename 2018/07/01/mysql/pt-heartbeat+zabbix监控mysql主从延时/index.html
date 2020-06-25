@@ -100,17 +100,17 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="pt-heartbeat+zabbix监控mysql主从延时前言传统上,大家查看和监控mysql的主从延时都是通过执行show slave status命令来观察Slave_IO_Running和Slave_SQL_Running这两个线程的运行情况.以及Seconds_Behind_Master参数值来判断从库同步是否有延时.但是.这些参数其实上并不准确. 笔者在实际工作就遇到这个问题.这个故障">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat1.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat2.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat3.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat4.png">
-<meta property="og:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat5.png">
-<meta property="og:updated_time" content="2018-12-01T14:27:37.298Z">
+<meta property="og:image" content="https://img1.jesse.top/mysql-heartbeat.png">
+<meta property="og:image" content="https://img1.jesse.top/mysql-heartbeat1.png">
+<meta property="og:image" content="https://img1.jesse.top/mysql-heartbeat2.png">
+<meta property="og:image" content="https://img1.jesse.top/mysql-heartbeat3.png">
+<meta property="og:image" content="https://img1.jesse.top/mysql-heartbeat4.png">
+<meta property="og:image" content="https://img1.jesse.top/mysql-heartbeat5.png">
+<meta property="og:updated_time" content="2020-06-25T01:48:07.921Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pt-heartbeat+zabbix监控mysql主从延时">
 <meta name="twitter:description" content="pt-heartbeat+zabbix监控mysql主从延时前言传统上,大家查看和监控mysql的主从延时都是通过执行show slave status命令来观察Slave_IO_Running和Slave_SQL_Running这两个线程的运行情况.以及Seconds_Behind_Master参数值来判断从库同步是否有延时.但是.这些参数其实上并不准确. 笔者在实际工作就遇到这个问题.这个故障">
-<meta name="twitter:image" content="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat.png">
+<meta name="twitter:image" content="https://img1.jesse.top/mysql-heartbeat.png">
 
 
 
@@ -521,22 +521,22 @@
 <hr>
 <p>既然zabbix server通过命令行可以获取到监控项的数据,接下来只要配置zabbix的web界面就可以了.</p>
 <p>1.在slave库配置监控项</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat.png" alt=""></p>
+<p><img src="https://img1.jesse.top/mysql-heartbeat.png" alt=""></p>
 <p>2.配置图形</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat1.png" alt=""></p>
+<p><img src="https://img1.jesse.top/mysql-heartbeat1.png" alt=""></p>
 <p>3.配置触发器</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat2.png" alt=""></p>
+<p><img src="https://img1.jesse.top/mysql-heartbeat2.png" alt=""></p>
 <blockquote>
 <p>note: 为了防止因为网络抖动造成的频繁的延时报警.这里表达式设置为连续3次采集的数据都大于10秒才报警.也可以换成另外一种表达式:</p>
 <p>{server-6:heartbeat.delay.last(0)}&gt;30</p>
 <p>这个表达式表示监控项的最新数据只要大于30秒就报警.大于30秒就意味着连续3次报警都延时.我认为这种效果更好</p>
 </blockquote>
 <p>另外.再设置一档报警.比如5分钟延时报警,此时报警等级为严重.</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat3.png" alt=""></p>
+<p><img src="https://img1.jesse.top/mysql-heartbeat3.png" alt=""></p>
 <p>4.查看监控数据</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat4.png" alt=""></p>
+<p><img src="https://img1.jesse.top/mysql-heartbeat4.png" alt=""></p>
 <p>5.测试触发器是否工作正常</p>
-<p><img src="http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat5.png" alt=""></p>
+<p><img src="https://img1.jesse.top/mysql-heartbeat5.png" alt=""></p>
 <hr>
 <p>至此.成功利用zabbix来监控mysql的主从复制同步情况.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">install_driver(mysql) failed: Attempt to reload DBD/mysql.pm aborted.</span><br><span class="line">Compilation failed in require at (eval 31) line 3, &lt;STDIN&gt; line 1.</span><br><span class="line"></span><br><span class="line"> at /usr/bin/pt-heartbeat line 2888.</span><br></pre></td></tr></table></figure>
@@ -560,7 +560,7 @@
   <p><span>本文标题:</span><a href="/2018/07/01/mysql/pt-heartbeat+zabbix监控mysql主从延时/">pt-heartbeat+zabbix监控mysql主从延时</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年07月01日 - 22:07</p>
-  <p><span>最后更新:</span>2018年12月01日 - 22:12</p>
+  <p><span>最后更新:</span>2020年06月25日 - 09:06</p>
   <p><span>原始链接:</span><a href="/2018/07/01/mysql/pt-heartbeat+zabbix监控mysql主从延时/" title="pt-heartbeat+zabbix监控mysql主从延时">https://jesse.top/2018/07/01/mysql/pt-heartbeat+zabbix监控mysql主从延时/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/07/01/mysql/pt-heartbeat+zabbix监控mysql主从延时/"  aria-label="复制成功！"></i></span>
   </p>
@@ -637,8 +637,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/24/Linux-分布式&消息队列/mq/rabbitmq+haproxy-集群环境搭建/" rel="next" title="rabbitmq+haproxy 集群环境搭建">
-                <i class="fa fa-chevron-left"></i> rabbitmq+haproxy 集群环境搭建
+              <a href="/2018/06/24/Linux-Service/rsync实战演练/" rel="next" title="rsync实战演练">
+                <i class="fa fa-chevron-left"></i> rsync实战演练
               </a>
             
           </div>

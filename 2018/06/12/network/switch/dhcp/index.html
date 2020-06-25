@@ -100,10 +100,20 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="How does DHCP workLab Topology">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-17T09:31:38.020Z">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/dhcp.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/dhcp1.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/dhcp3.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/dhcp4.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/dhcp5.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/dhcp6.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/dhcp7.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/dhcp8.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/dhcp9.png">
+<meta property="og:updated_time" content="2020-06-25T01:56:25.967Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DHCP process">
 <meta name="twitter:description" content="How does DHCP workLab Topology">
+<meta name="twitter:image" content="https://img1.jesse.top/static/images/network/dhcp.png">
 
 
 
@@ -386,7 +396,8 @@
       
 
       
-        <h2 id="How-does-DHCP-work"><a href="#How-does-DHCP-work" class="headerlink" title="How does DHCP work"></a>How does DHCP work</h2><h3 id="Lab-Topology"><a href="#Lab-Topology" class="headerlink" title="Lab Topology"></a>Lab Topology</h3><a id="more"></a>
+        <h2 id="How-does-DHCP-work"><a href="#How-does-DHCP-work" class="headerlink" title="How does DHCP work"></a>How does DHCP work</h2><h3 id="Lab-Topology"><a href="#Lab-Topology" class="headerlink" title="Lab Topology"></a>Lab Topology</h3><p><img src="https://img1.jesse.top/static/images/network/dhcp.png" alt="dhcp"></p>
+<a id="more"></a>
 <p>R1 simulates a DHCP server ,R2 simulates a client which get IP address from the R1 DHCP server</p>
 <p><strong>R1 configure:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DHCP(config)#ip dhcp pool CCIE                    # define a name of address Pool</span><br><span class="line">DHCP(dhcp-config)#network 10.1.1.0 255.255.255.0  # define a  subnet </span><br><span class="line">DHCP(dhcp-config)#default-router 10.1.1.1         # define default gataway</span><br><span class="line">DHCP(dhcp-config)#DNS-server 8.8.8.8              # define primary DNS server</span><br><span class="line">DHCP(dhcp-config)#dns-server 114.114.114.114      # define the Backup DNS server</span><br><span class="line">DHCP(dhcp-config)#lease 3                         # define lease time  </span><br><span class="line"></span><br><span class="line">DHCP(config)#ip dhcp excluded-address 10.1.1.1 ?  # define a range of address that won&apos;t assign to Clients</span><br></pre></td></tr></table></figure>
@@ -394,20 +405,27 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">R2(config)#int e1/2</span><br><span class="line">R2(config-if)#ip address ?</span><br><span class="line">  A.B.C.D  IP address</span><br><span class="line">  dhcp     IP Address negotiated via DHCP</span><br><span class="line">  pool     IP Address autoconfigured from a local DHCP pool</span><br><span class="line"></span><br><span class="line">R2(config-if)#ip address dhcp        # Get IP address by DHCP</span><br></pre></td></tr></table></figure>
 <p>R2 succeeds in getting an IP address ,it shows 10.1.1.2:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">*Mar  1 00:08:32.059: %DHCP-6-ADDRESS_ASSIGN: Interface Ethernet1/2 assigned DHCP address 10.1.1.2, mask 255.255.255.0, hostname R2</span><br><span class="line"></span><br><span class="line">show DHCP lease , this command will show some information about the ip address and the server of DHCP</span><br></pre></td></tr></table></figure>
-<hr>
+<p><img src="https://img1.jesse.top/static/images/network/dhcp1.png" alt="dhcp1"></p>
 <h4 id="Now-Let’s-analyse-the-process-of-HDCP"><a href="#Now-Let’s-analyse-the-process-of-HDCP" class="headerlink" title="Now. Let’s analyse the process of HDCP :"></a>Now. Let’s analyse the process of HDCP :</h4><hr>
+<p><img src="https://img1.jesse.top/static/images/network/dhcp3.png" alt="dhcp3"></p>
 <p><strong>1.Client send a DHCP Discover massage :</strong></p>
 <p>the destination MAC address is broadcast address ,and the destination IP address is the broadcast address too.<br>R1 sends a Bootstrap Protocol (discover) with the message type :Boot Request 1</p>
+<p><img src="https://img1.jesse.top/static/images/network/dhcp4.png" alt="dhcp4"></p>
 <p><strong>2.DHCP server send an ARP request message  before assing the ip address .to make sure this address is available.</strong></p>
 <p><strong>3.DHCP Server send an offer message to reply the client . This offer package contains all information about the ip address </strong></p>
 <blockquote>
 <p>Tips: The experiment shows that the DHCP send the offer package to broadcast . But it should bu an unicast pacakage</p>
 </blockquote>
+<p><img src="https://img1.jesse.top/static/images/network/dhcp5.png" alt="dhcp5"></p>
 <p><strong>4.Clinet send a Request massage to Server to choose an ip address (there could be more than one servers in the network )</strong></p>
+<p><img src="https://img1.jesse.top/static/images/network/dhcp6.png" alt="dhcp6"></p>
 <p><strong>5.DHCP server send an ACK message to make sure this IP address was accepted by Client. this is a Reply pacakge</strong></p>
+<p><img src="https://img1.jesse.top/static/images/network/dhcp7.png" alt="dhcp7"></p>
 <p><strong>6.At the end . Client will send a gratuitous ARP (无故ARP) to broadcast address . to inform all others about its own IP address and ARP address :</strong></p>
+<p><img src="https://img1.jesse.top/static/images/network/dhcp8.png" alt="dhcp8"></p>
 <hr>
-<h4 id="Summarize"><a href="#Summarize" class="headerlink" title="Summarize :"></a>Summarize :</h4><hr>
+<h4 id="Summarize"><a href="#Summarize" class="headerlink" title="Summarize :"></a>Summarize :</h4><p><img src="https://img1.jesse.top/static/images/network/dhcp9.png" alt="dhcp9"></p>
+<hr>
 <p><strong>DHCP mainly contains below five steps :</strong></p>
 <p>1.Client send a Discover message to broadcast address          #apply for an ip address<br>2.DHCP server send an ARP package to broadcast address     #to see if the ip address which is gonna assign to client exists in network<br>3.DHCP send an offer package                                                      #assign this ip address to Client<br>4.Client send a Request package                                                   #to announce that it chooses the ip address (there could be more than one server in network)<br>5.DHCP Server sends a ACK pacckage                                          #acknowledge this IP address was assigned to client</p>
 <p>6.Client send an ARP to tell others about its ip and MAC addree     #this is not about the DHCP process .  </p>
@@ -437,7 +455,7 @@
   <p><span>本文标题:</span><a href="/2018/06/12/network/switch/dhcp/">DHCP process</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月12日 - 22:06</p>
-  <p><span>最后更新:</span>2019年02月17日 - 17:02</p>
+  <p><span>最后更新:</span>2020年06月25日 - 09:06</p>
   <p><span>原始链接:</span><a href="/2018/06/12/network/switch/dhcp/" title="DHCP process">https://jesse.top/2018/06/12/network/switch/dhcp/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/06/12/network/switch/dhcp/"  aria-label="复制成功！"></i></span>
   </p>
@@ -516,8 +534,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/12/Linux-Basic/shell&shell脚本/Bash数组/" rel="next" title="Bash数组">
-                <i class="fa fa-chevron-left"></i> Bash数组
+              <a href="/2018/06/12/Linux-Basic/正则表达式/正则表达式练习/" rel="next" title="正则表达式练习">
+                <i class="fa fa-chevron-left"></i> 正则表达式练习
               </a>
             
           </div>
@@ -526,8 +544,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/12/Linux-Basic/shell&shell脚本/04-shell导入外部文件/" rel="prev" title="shell脚本导入外部文件">
-                shell脚本导入外部文件 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/14/Linux-Basic/shell&shell脚本/01-bash变量基础知识/" rel="prev" title="bash变量基础知识">
+                bash变量基础知识 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

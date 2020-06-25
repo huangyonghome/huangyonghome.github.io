@@ -100,10 +100,28 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="HSRP实验1.实验拓扑：">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-17T09:31:38.020Z">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp1.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp2.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp3.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp4.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp5.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp6.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp7.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp8.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp9.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp10.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp11.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp12.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp13.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp14.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp15.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/network/hsrp16.png">
+<meta property="og:updated_time" content="2020-06-25T02:02:11.395Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HSRP实验">
 <meta name="twitter:description" content="HSRP实验1.实验拓扑：">
+<meta name="twitter:image" content="https://img1.jesse.top/static/images/network/hsrp.png">
 
 
 
@@ -386,7 +404,8 @@
       
 
       
-        <h2 id="HSRP实验"><a href="#HSRP实验" class="headerlink" title="HSRP实验"></a>HSRP实验</h2><h3 id="1-实验拓扑："><a href="#1-实验拓扑：" class="headerlink" title="1.实验拓扑："></a>1.实验拓扑：</h3><hr>
+        <h2 id="HSRP实验"><a href="#HSRP实验" class="headerlink" title="HSRP实验"></a>HSRP实验</h2><h3 id="1-实验拓扑："><a href="#1-实验拓扑：" class="headerlink" title="1.实验拓扑："></a>1.实验拓扑：</h3><p><img src="https://img1.jesse.top/static/images/network/hsrp.png" alt="hsrp"></p>
+<hr>
 <a id="more"></a>
 <h3 id="2-实验环境"><a href="#2-实验环境" class="headerlink" title="2.实验环境"></a>2.实验环境</h3><p>主机属于VLAN1，IP地址：10.1.1.1  </p>
 <p>2960为一台2层交换机，上行两条TRUNK链路连接2台三层交换机</p>
@@ -402,42 +421,51 @@
 <p><strong>以下是一些可选设置：</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">1.设置优先级。默认优先级为100.优先级越高，路由器越可能成为ACTIVE</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 priority ?</span><br><span class="line"></span><br><span class="line">&lt;0-255&gt; Priority value</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 priority</span><br><span class="line"></span><br><span class="line">2.设置HELLO时间，以及HELLO间隔。默认是3秒，间隔10秒</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 timers ?</span><br><span class="line"></span><br><span class="line">&lt;1-254&gt; Hello interval in seconds</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 timers</span><br><span class="line"></span><br><span class="line">3.设置抢占特性。默认情况下，HSRP不抢占。开启preempt参数后，优先级路由器高的可以抢占ACTIVE角色</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 preempt</span><br></pre></td></tr></table></figure>
 <p>Switch1经过speak,standby角色后成为了active网关，实际总共经过listen，speak,standby,active角色。</p>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp1.png" alt="hsrp"></p>
 <hr>
 <ul>
 <li>在另外一台3560上配置：</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)#int vlan 1</span><br><span class="line"></span><br><span class="line">Switch(config-if)#standby 1 ip 10.1.1.254</span><br><span class="line"></span><br><span class="line">%HSRP-6-STATECHANGE: Vlan1 Grp 1 state Speak -&gt; Standby</span><br></pre></td></tr></table></figure>
 <p>配置基本完成。show standby和show standby brief 查看HSRP信息:</p>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp2.png" alt="hsrp2"></p>
 <blockquote>
 <p>通过show standby可以看到HSRP组号，虚拟IP网关，虚拟MAC地址。Hello时间和间隔。抢占特性是否开启。活跃网关路由器，备份网关路由器，优先级等</p>
 </blockquote>
 <blockquote>
 <p>通过show standby brief 可以更加直观的看到组号，优先级，角色状态，路由器角色，网关IP等信息</p>
 </blockquote>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp3.png" alt="hsrp3"></p>
 <hr>
 <h4 id="5-测试主机访问外部网络："><a href="#5-测试主机访问外部网络：" class="headerlink" title="5.测试主机访问外部网络："></a>5.测试主机访问外部网络：</h4><ul>
 <li>主机配置虚拟IP地址为默认网关：</li>
 </ul>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp4.png" alt="hsrp4"></p>
 <ul>
 <li>测试访问外部网络的路径</li>
 </ul>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp5.png" alt="hsrp5"></p>
 <p>实验显示R1可以正常通过默认网关访问外部网络，并且经过的是10.1.1.2这台活跃路由器</p>
 <ul>
 <li>查看主机的ARP记录表</li>
 </ul>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp6.png" alt="hsrp6"></p>
 <p>实验显示主机是通过虚拟IP和虚拟MAC地址通信。</p>
 <hr>
 <h4 id="6-测试抢占特性"><a href="#6-测试抢占特性" class="headerlink" title="6.测试抢占特性"></a>6.测试抢占特性</h4><h5 id="1-开启抢占特性"><a href="#1-开启抢占特性" class="headerlink" title="1.开启抢占特性"></a>1.开启抢占特性</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)#int vlan 1</span><br><span class="line">Switch(config-if)#standby 1 preempt</span><br></pre></td></tr></table></figure>
 <h5 id="2-把Standby交换机的优先级设置成150"><a href="#2-把Standby交换机的优先级设置成150" class="headerlink" title="2.把Standby交换机的优先级设置成150"></a>2.把Standby交换机的优先级设置成150</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Switch(config-if)#standby 1 priority ?</span><br><span class="line">&lt;0-255&gt; Priority value</span><br><span class="line">Switch(config-if)#standby 1 priority 150</span><br></pre></td></tr></table></figure>
 <h5 id="3-观察HSRP的角色状态变化"><a href="#3-观察HSRP的角色状态变化" class="headerlink" title="3.观察HSRP的角色状态变化"></a>3.观察HSRP的角色状态变化</h5><p>交换机角色马上从standby转变成active</p>
-<p>显示本交换机成为了active，对端成为了standby，并且本机优先级变成了150</p>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp7.png" alt="hsrp7"></p>
+<p>显示本交换机成为了active，对端成为了standby，并且本机优先级变成了150<br><img src="https://img1.jesse.top/static/images/network/hsrp8.png" alt="hsrp8"></p>
 <hr>
-<h4 id="7-当active路由器出现问题时，查看主机所受的影响"><a href="#7-当active路由器出现问题时，查看主机所受的影响" class="headerlink" title="7.当active路由器出现问题时，查看主机所受的影响"></a>7.当active路由器出现问题时，查看主机所受的影响</h4><h5 id="1-在主机连续ping-远端路由器-5-5-5-5-1000个数据包"><a href="#1-在主机连续ping-远端路由器-5-5-5-5-1000个数据包" class="headerlink" title="1.在主机连续ping 远端路由器 5.5.5.5 1000个数据包"></a>1.在主机连续ping 远端路由器 5.5.5.5 1000个数据包</h5><h5 id="2-关闭ACTIVE交换机的VLAN1端口"><a href="#2-关闭ACTIVE交换机的VLAN1端口" class="headerlink" title="2.关闭ACTIVE交换机的VLAN1端口"></a>2.关闭ACTIVE交换机的VLAN1端口</h5><p>实验显示只丢了一个包</p>
+<h4 id="7-当active路由器出现问题时，查看主机所受的影响"><a href="#7-当active路由器出现问题时，查看主机所受的影响" class="headerlink" title="7.当active路由器出现问题时，查看主机所受的影响"></a>7.当active路由器出现问题时，查看主机所受的影响</h4><h5 id="1-在主机连续ping-远端路由器-5-5-5-5-1000个数据包"><a href="#1-在主机连续ping-远端路由器-5-5-5-5-1000个数据包" class="headerlink" title="1.在主机连续ping 远端路由器 5.5.5.5 1000个数据包"></a>1.在主机连续ping 远端路由器 5.5.5.5 1000个数据包</h5><h5 id="2-关闭ACTIVE交换机的VLAN1端口"><a href="#2-关闭ACTIVE交换机的VLAN1端口" class="headerlink" title="2.关闭ACTIVE交换机的VLAN1端口"></a>2.关闭ACTIVE交换机的VLAN1端口</h5><p><img src="https://img1.jesse.top/static/images/network/hsrp9.png" alt="hsrp8"></p>
+<p>实验显示只丢了一个包</p>
 <hr>
 <h3 id="第二部分-多组HSRP配置"><a href="#第二部分-多组HSRP配置" class="headerlink" title="第二部分 多组HSRP配置"></a>第二部分 多组HSRP配置</h3><p>HSRP是一个网关冗余协议，这就意味着默认情况下网络中只能有一台在工作，虽然达到了冗余的目的，但是如果所有流量都全部经由同一台网关，而另外一台网关设备完全不工作，这就造成了一种资源的浪费，以及可能带来网络中流量的拥挤。</p>
 <p>通过配置多个HSRP组，为每组流量设置一个不同的ACTIVE网关，</p>
 <hr>
-<h4 id="1-实验拓扑"><a href="#1-实验拓扑" class="headerlink" title="1.实验拓扑"></a>1.实验拓扑</h4><hr>
+<h4 id="1-实验拓扑"><a href="#1-实验拓扑" class="headerlink" title="1.实验拓扑"></a>1.实验拓扑</h4><p><img src="https://img1.jesse.top/static/images/network/hsrp10.png" alt="hsrp10"></p>
+<hr>
 <h4 id="2-环境说明："><a href="#2-环境说明：" class="headerlink" title="2.环境说明："></a>2.环境说明：</h4><p>PC0和PC1分别模拟两个VLAN下的主机.</p>
 <p>上面的三层3560交换机1作为Vlan1的根网桥以及active网关，虚拟网关IP是10.1.1.254</p>
 <p>下面的三层3560交换机0作为Vlan2的根网桥以及active网关，虚拟网关IP是10.1.2.254</p>
@@ -446,6 +474,7 @@
 </blockquote>
 <hr>
 <h4 id="3-配置步骤"><a href="#3-配置步骤" class="headerlink" title="3.配置步骤:"></a>3.配置步骤:</h4><h5 id="1-配置VLAN1的HSRP"><a href="#1-配置VLAN1的HSRP" class="headerlink" title="1.配置VLAN1的HSRP"></a>1.配置VLAN1的HSRP</h5><p>在Switch1上的Vlan1接口下配置HSRP的VLAN1组，此台设备的优先级为150，设置虚拟IP,开启抢占特性</p>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp11.png" alt="hsrp11"></p>
 <h5 id="2-在Switch0的Vlan1接口下配置HSRP的vlan1组，此台设备的优先级保留默认设置，设置虚拟IP-开启抢占特性"><a href="#2-在Switch0的Vlan1接口下配置HSRP的vlan1组，此台设备的优先级保留默认设置，设置虚拟IP-开启抢占特性" class="headerlink" title="2.在Switch0的Vlan1接口下配置HSRP的vlan1组，此台设备的优先级保留默认设置，设置虚拟IP,开启抢占特性"></a>2.在Switch0的Vlan1接口下配置HSRP的vlan1组，此台设备的优先级保留默认设置，设置虚拟IP,开启抢占特性</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)#int vlan 1</span><br><span class="line">Switch(config-if)#standby 1 ip 10.1.1.254</span><br><span class="line">Switch(config-if)#standby 1 preempt</span><br><span class="line"></span><br><span class="line">%HSRP-6-STATECHANGE: Vlan1 Grp 1 state Speak -&gt; Standby</span><br></pre></td></tr></table></figure>
 <h5 id="3-配置VLAN的HSRP"><a href="#3-配置VLAN的HSRP" class="headerlink" title="3.配置VLAN的HSRP"></a>3.配置VLAN的HSRP</h5><ul>
 <li>在Switch1上的Vlan2接口下配置HSRP的VLAN2组，此台设备的优先级保留默认设置 ，设置虚拟IP,开启抢占特性</li>
@@ -456,12 +485,17 @@
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)#int vlan 2</span><br><span class="line">Switch(config-if)#standby 2 ip 10.1.2.254</span><br><span class="line">Switch(config-if)#standby 2 priority 150</span><br><span class="line">Switch(config-if)#standby 2 preempt</span><br></pre></td></tr></table></figure>
 <h5 id="4-检查配置"><a href="#4-检查配置" class="headerlink" title="4.检查配置"></a>4.检查配置</h5><p>在Switch0上检查配置发现本台设备是VLAN1组的standby网关，Vlan2组的active网关</p>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp12.png" alt="hsrp12"></p>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp13.png" alt="hsrp13"></p>
 <hr>
 <h5 id="5-查看每台PC的流量路径"><a href="#5-查看每台PC的流量路径" class="headerlink" title="5.查看每台PC的流量路径"></a>5.查看每台PC的流量路径</h5><p>在Vlan1的PC0上tracert 位于路由器的5.5.5.5地址。发现流量先经过10.1.1.2的网关，而10.1.1.2正是Vlan1的ACTIVE网关的真实IP</p>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp14.png" alt="hsrp14"></p>
 <p>在Vlan2的PC1上tracert位于路由器的5.5.5.5地址：发现流量先经过10.1.2.3的网关，而10.1.2.3正是Vlan2的ACTIVE网关的真实IP</p>
+<p><img src="https://img1.jesse.top/static/images/network/hsrp15.png" alt="hsrp15"></p>
 <hr>
 <h3 id="第三部分-HSRP-的Track-功能配置"><a href="#第三部分-HSRP-的Track-功能配置" class="headerlink" title="第三部分: HSRP 的Track 功能配置"></a>第三部分: HSRP 的Track 功能配置</h3><p>HSRP的track功能可以追踪上行链路的情况，如果配置了track，一旦上行链路失效，则默认情况下HSRP的路由器降低10个优先级。</p>
-<h4 id="1-配置命令："><a href="#1-配置命令：" class="headerlink" title="1.配置命令："></a>1.配置命令：</h4><p>真实的设备中，接口后面可以指定一旦上行链路失效，会降低多少优先级。但是模拟器中没有这个功能，默认是降低10个优先级</p>
+<h4 id="1-配置命令："><a href="#1-配置命令：" class="headerlink" title="1.配置命令："></a>1.配置命令：</h4><p><img src="https://img1.jesse.top/static/images/network/hsrp16.png" alt="hsrp16"></p>
+<p>真实的设备中，接口后面可以指定一旦上行链路失效，会降低多少优先级。但是模拟器中没有这个功能，默认是降低10个优先级</p>
 <p>把上面的Switch 1的上行接口F0/1 shutdown 之后，可以看到Switch的优先级变化：优先级从150降低到140</p>
 <blockquote>
 <p>Tips:真实的设备中，还可以track路由，既一条指定的路由失效后，HSRP的优先级会降低。</p>
@@ -485,7 +519,7 @@
   <p><span>本文标题:</span><a href="/2018/06/16/network/switch/HSRP实验/">HSRP实验</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月16日 - 07:06</p>
-  <p><span>最后更新:</span>2019年02月17日 - 17:02</p>
+  <p><span>最后更新:</span>2020年06月25日 - 10:06</p>
   <p><span>原始链接:</span><a href="/2018/06/16/network/switch/HSRP实验/" title="HSRP实验">https://jesse.top/2018/06/16/network/switch/HSRP实验/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/06/16/network/switch/HSRP实验/"  aria-label="复制成功！"></i></span>
   </p>
@@ -572,8 +606,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/16/network/route/bgp/BGP-blackhole/" rel="prev" title="03-BGP Lab BGP black hole">
-                03-BGP Lab BGP black hole <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/16/network/route/bgp/BGP-Black-Hole/" rel="prev" title="03-BGP-Black Hole">
+                03-BGP-Black Hole <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
