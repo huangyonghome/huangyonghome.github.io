@@ -275,607 +275,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T14:27:16+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Zabbix-通过Dell-Idrac监控服务器硬件状态"><a href="#Zabbix-通过Dell-Idrac监控服务器硬件状态" class="headerlink" title="Zabbix 通过Dell Idrac监控服务器硬件状态"></a>Zabbix 通过Dell Idrac监控服务器硬件状态</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近登陆vsphere控制台发现一台Dell服务器告警,已经损坏了.于是想通过zabbix监控Dell服务器的硬件状态.</p>
-<p>有2种方法可以监控dell服务器的硬件状态</p>
-<ul>
-<li>通过Dell的OMSA工具监控</li>
-<li>通过Dell的Idrac模块的SNMP协议监控</li>
-</ul>
-<p>Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没办法获取到硬件状态.而且OMSA工具从Dell官网下载太慢.安装很麻烦</p>
-<p>所以本文主要介绍如何通过idrac模块的snmp协议监控硬件状态.监控方法非常的简单</p>
-<hr>
-<h3 id="1-登陆服务器的idrac平台-开启snmp协议-v2版本"><a href="#1-登陆服务器的idrac平台-开启snmp协议-v2版本" class="headerlink" title="1.登陆服务器的idrac平台.开启snmp协议(v2版本)."></a>1.登陆服务器的idrac平台.开启snmp协议(v2版本).</h3><p>如果是idrac8版本,SNMP配置在左侧菜单栏<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">如果是idrac9版本,SNMP配置在菜单栏```iDRAC设置```---```服务```---```SNMP代理</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>根据我们的实际情况来看,无论是8还是9版本,SNMP都默认开启,端口是161,团体名是public</p>
-</blockquote>
-<h3 id="2-在zabbix服务端通过snmp命令检查是否能正确获取到服务器的snmp-oid"><a href="#2-在zabbix服务端通过snmp命令检查是否能正确获取到服务器的snmp-oid" class="headerlink" title="2.在zabbix服务端通过snmp命令检查是否能正确获取到服务器的snmp oid:"></a>2.在zabbix服务端通过snmp命令检查是否能正确获取到服务器的snmp oid:</h3><p>命令: <figure class="highlight plain"><figcaption><span>-v 2c -c 团体名 idrac IP地址```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<p>[work@server-4 ~]$ snmpwalk -v 2c -c public 172.16.250.53<br>SNMPv2-MIB::sysDescr.0 = STRING:<br>SNMPv2-MIB::sysObjectID.0 = OID: SNMPv2-SMI::enterprises.674.10892.5<br>DISMAN-EVENT-MIB::sysUpTimeInstance = Timeticks: (596160991) 69 days, 0:00:09.91<br>SNMPv2-MIB::sysContact.0 = STRING: \”<a href="mailto:support@dell.com" target="_blank" rel="noopener">support@dell.com</a>\”<br>SNMPv2-MIB::sysName.0 = STRING: iDRAC-3D38Y23<br>SNMPv2-MIB::sysLocation.0 = STRING: \”unknown\”<br>SNMPv2-MIB::sysORLastChange.0 = Timeticks: (1) 0:00:00.01<br>SNMPv2-MIB::sysORID.1 = OID: SNMPv2-MIB::snmpMIB<br>SNMPv2-MIB::sysORID.2 = OID: SNMP-VIEW-BASED-ACM-MIB::vacmBasicGroup<br>SNMPv2-MIB::sysORID.3 = OID: TCP-MIB::tcpMIB<br>SNMPv2-MIB::sysORID.4 = OID: IP-MIB::ip<br>SNMPv2-MIB::sysORID.5 = OID: UDP-MIB::udpMIB<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 3. 去github上下载idrac snmp监控模板</span><br><span class="line"></span><br><span class="line">地址: [idrac template](https://github.com/endersonmaia/zabbix-templates/tree/master/dell/idrac)</span><br><span class="line"></span><br><span class="line">模板文件我已经fork到了我自己的github仓库:[zabbix-templates](https://github.com/huangyonghome/zabbix-templates)</span><br><span class="line"></span><br><span class="line">**在dell/idrac下有3个文件:**</span><br><span class="line"></span><br><span class="line">```ValueMaps_Dell_iDRAC.zbx.xml```-------导入键值对映射 (需要zabbix3.0版本以上)</span><br><span class="line"></span><br><span class="line">```Template_Dell_iDRAC_SNMPv&#123;23&#125;.zbx.xml```-----监控模板(我们的idrac snmp协议是v2版本.所以采用snmpv2版本的模板)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 4.配置全局变量</span><br><span class="line"></span><br><span class="line">在Zabbix的```Administration```----```General```---右上角下拉框中选择宏Macros,新增宏定义:</span><br></pre></td></tr></table></figure></p>
-<p>#我这里Idrac的snmp团体名是public<br>{$SNMP_COMMUNITY_IDRAC} =&gt; public<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 5.导入模板</span><br><span class="line"></span><br><span class="line">1.导入键值对映射```ValueMaps_Dell_iDRAC.zbx.xml</span><br></pre></td></tr></table></figure></p>
-<p>2.导入监控模板<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 6.配置主机</span><br><span class="line"></span><br><span class="line">主机名和随意定义.定义snmp接口的地址为idrac接口IP地址,端口默认161.</span><br><span class="line"></span><br><span class="line">添加Template_Dell_iDRAC_SNMPv2模板</span><br><span class="line"></span><br><span class="line">&gt; 注意,snmp的地址是idrac地址,不是服务器iP地址</span><br><span class="line"></span><br><span class="line">模板里没有配置图形,如果有需要可以自己添加.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 7.验证</span><br><span class="line"></span><br><span class="line">刚好这台服务器的物理磁盘有问题.可以看到Zabbix成功的监控到这个问题,并且发送给钉钉告警.</span><br></pre></td></tr></table></figure></p>
-<p>[故障]RAID Controller Error<br>告警级别：High<br>故障时间：2020.04.29 16:45:35<br>故障时长：1h 0m<br>IP地址：172.16.250.53<br>检测项：RAIDControllerStatus<br><em>NonCritical (4) </em><br>[exsi-idrac-53·故障 (31724858)]</p>
-<p>[故障]Storage System Status Error<br>告警级别：Warning<br>故障时间：2020.04.29 16:45:35<br>故障时长：1h 0m<br>IP地址：172.16.250.53<br>检测项：GlobalSystemStorageStatus<br><em>NonCritical (4) </em><br>[exsi-idrac-53·故障 (31724857)]</p>
-<p>[故障]Overall System Rollup Status Error<br>告警级别：Warning<br>故障时间：2020.04.29 16:45:35<br>故障时长：1h 0m<br>IP地址：172.16.250.53<br>检测项：GlobalSystemRollupStatus<br><em>NonCritical (4) </em><br>[exsi-idrac-53·故障 (31724855)]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">服务器磁盘修复以后,监控回复正常.监控各项指标的结果不再是4(NonCritical) 而是3(OK)</span><br></pre></td></tr></table></figure></p>
-<p>work@server-4 ~]$ snmpwalk -v 2c -c public 172.16.250.53 1.3.6.1.4.1.674.10892.5.2.3.0<br>SNMPv2-SMI::enterprises.674.10892.5.2.3.0 = INTEGER: 3</p>
-<p>[work@server-4 ~]$ snmpwalk -v 2c -c public 172.16.250.53 1.3.6.1.4.1.674.10892.5.5.1.20.130.1.1.37.1<br>SNMPv2-SMI::enterprises.674.10892.5.5.1.20.130.1.1.37.1 = INTEGER: 3<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 问题</span><br><span class="line"></span><br><span class="line">目前发现一个模板的问题,在键值对映射中,Dell的OMSA(Open Manage System Status)键值对是这样映射的:</span><br></pre></td></tr></table></figure></p>
-<p>Dell Open Manage System Status<br>1  Other<br>2  Unknown<br>3  OK<br>4  NonCritical<br>5  Critical<br>6  NonRecoverable<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">在模板中,有一个触发器的名称是:Overall System Status Error</span><br><span class="line"></span><br><span class="line">表达式为```&#123;exsi-idrac-53:GlobalSystemStatus.last()&#125;&lt;&gt;3</span><br></pre></td></tr></table></figure></p>
-<p>用意是监控系统状态,如果值不为3(OK)则告警.但是根据实际情况来看,这个监控项GlobalSystemStatus.SNMP OID:1.3.6.1.4.1.674.10892.2.2.1.0正常情况下的值为0</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[work@server-4 ~]$ snmpwalk -v 2c -c public 172.16.250.53 1.3.6.1.4.1.674.10892.2.2.1.0</span><br><span class="line">SNMPv2-SMI::enterprises.674.10892.2.2.1.0 = INTEGER: 0</span><br></pre></td></tr></table></figure>
-<p>所以在模板中修改Overall System Status Error触发器的表达式为:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">原表达式:</span><br><span class="line">&#123;Template Dell iDrac SNMPV2:GlobalSystemStatus.last()&#125;&lt;&gt;3 </span><br><span class="line"></span><br><span class="line">修改为:</span><br><span class="line">&#123;Template Dell iDrac SNMPV2:GlobalSystemStatus.last()&#125;&lt;&gt;3 and </span><br><span class="line">&#123;Template Dell iDrac SNMPV2:GlobalSystemStatus.last()&#125;&lt;&gt;0</span><br></pre></td></tr></table></figure>
-<p>用意是这个监控项的结果既不等于3,又不等于0</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Service/systemd详解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/Linux-Service/systemd详解/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T13:04:18+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/Linux-Service/systemd详解/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Service/systemd详解/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <hr>
-<p>title:systemd介绍<br>date:2018-06-15 15:59:58<br>tags:systemd<br>categories:[Linux-Service ]<br>comments:true</p>
-<h2 id="copyright-true"><a href="#copyright-true" class="headerlink" title="copyright:true"></a>copyright:true</h2><h1 id="systemd介绍"><a href="#systemd介绍" class="headerlink" title="systemd介绍"></a>systemd介绍</h1><p>systemd并不是一个命令,而是一组命令,涉及到系统管理的方方面面.以下是systemd的架构图</p>
-<p><img src="http://www.ruanyifeng.com/blogimg/asset/2016/bg2016030703.png" alt=""></p>
-<hr>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/Linux-Service/systemd详解/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/nginx安装Lua模块/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/Linux-Web/nginx安装Lua模块/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T12:13:21+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/Linux-Web/nginx安装Lua模块/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/nginx安装Lua模块/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="安装Lua模块"><a href="#安装Lua模块" class="headerlink" title="安装Lua模块"></a>安装Lua模块</h2><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>nginx编译安装lua模块方法,在网上能搜到许多的文档.但是都千篇一律.根据笔者的实际配置经历,网上的文档在我们的服务器上编译会报错,原因是nginx的lua模块版本(网上文档都是采用v0.10.11版本的lua-nginx-module模块)和nginx不兼容,我尝试过Nginx1.12,1.13,1.17等多个版本均无法安装.</p>
-<p>所以笔者最终采用的的lua-nginx-module模块是0.10.9rc7版本,这才成功编译安装lua模块.</p>
-<blockquote>
-<p> 编译过程中虽然会覆盖现有Nginx,但是基本上属于平滑过渡,不会影响Nginx正常运行.</p>
-</blockquote>
-<hr>
-<h4 id="服务器现有环境介绍"><a href="#服务器现有环境介绍" class="headerlink" title="服务器现有环境介绍:"></a>服务器现有环境介绍:</h4><p>1.nginx版本:1.12</p>
-<p>2.nginx安装方式: yum安装</p>
-<hr>
-<h4 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤:"></a>安装步骤:</h4><h5 id="1-安装luaJIT模块"><a href="#1-安装luaJIT模块" class="headerlink" title="1.安装luaJIT模块"></a>1.安装luaJIT模块</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br><span class="line">wget http://luajit.org/download/LuaJIT-2.1.0-beta2.tar.gz</span><br><span class="line">tar zxf LuaJIT-2.1.0-beta2.tar.gz</span><br><span class="line">cd LuaJIT-2.1.0-beta2</span><br><span class="line"></span><br><span class="line">make PREFIX=/usr/local/luajit</span><br><span class="line">make install PREFIX=/usr/local/luajit</span><br></pre></td></tr></table></figure>
-<h5 id="2-安装ngx-devel-kit模块"><a href="#2-安装ngx-devel-kit模块" class="headerlink" title="2.安装ngx_devel_kit模块"></a>2.安装ngx_devel_kit模块</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br><span class="line">wget https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz</span><br><span class="line">tar -xzvf v0.2.19.tar.gz</span><br></pre></td></tr></table></figure>
-<h5 id="3-安装nginx-lua模块-注意-最好是0-10-9rc7版本"><a href="#3-安装nginx-lua模块-注意-最好是0-10-9rc7版本" class="headerlink" title="3. 安装nginx_lua模块,注意,最好是0.10.9rc7版本"></a>3. 安装nginx_lua模块,注意,最好是0.10.9rc7版本</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br><span class="line">wget https://github.com/openresty/lua-nginx-module/archive/v0.10.9rc7tar.gz</span><br><span class="line">tar -zxvf v0.10.9rc7.tar.gz</span><br></pre></td></tr></table></figure>
-<h5 id="4-执行下列命令"><a href="#4-执行下列命令" class="headerlink" title="4. 执行下列命令"></a>4. 执行下列命令</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo echo &quot;export LUAJIT_LIB=/usr/local/luajit/lib&quot; &gt;&gt; /etc/profile</span><br><span class="line">sudo echo &quot;export LUAJIT_INC=/usr/local/luajit/include/luajit-2.1&quot; &gt;&gt; /etc/profile</span><br></pre></td></tr></table></figure>
-<h5 id="5-查看当前nginx模块环境"><a href="#5-查看当前nginx模块环境" class="headerlink" title="5.查看当前nginx模块环境"></a>5.查看当前nginx模块环境</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx -V</span><br><span class="line"></span><br><span class="line">configure arguments: --prefix=/etc/nginx --sbin-path=/usr/sbin/nginx --modules-path=/usr/lib64/nginx/modules --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --pid-path=/var/run/nginx.pid --lock-path=/var/run/nginx.lock --http-client-body-temp-path=/var/cache/nginx/client_temp --http-proxy-temp-path=/var/cache/nginx/proxy_temp --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp --http-scgi-temp-path=/var/cache/nginx/scgi_temp --user=nginx --group=nginx --with-compat --with-file-aio --with-threads --with-http_addition_module --with-http_auth_request_module --with-http_dav_module --with-http_flv_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_mp4_module --with-http_random_index_module --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-mail --with-mail_ssl_module --with-stream --with-stream_realip_module --with-stream_ssl_module --with-stream_ssl_preread_module --with-cc-opt=&apos;-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -fPIC&apos; --with-ld-opt=&apos;-Wl,-z,relro -Wl,-z,now -pie&apos;</span><br></pre></td></tr></table></figure>
-<h5 id="6-下载1-17版本的nginx源码-也可以使用其他版本的Nginx"><a href="#6-下载1-17版本的nginx源码-也可以使用其他版本的Nginx" class="headerlink" title="6.下载1.17版本的nginx源码(也可以使用其他版本的Nginx)"></a>6.下载1.17版本的nginx源码(也可以使用其他版本的Nginx)</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd ~/</span><br><span class="line">wget &apos;http://nginx.org/download/nginx-1.17.0.tar.gz&apos;</span><br><span class="line">tar -zxvf nginx-1.17.0.tar.gz</span><br><span class="line">cd nginx-1.17.0</span><br></pre></td></tr></table></figure>
-<h5 id="7-重新编译nginx-在第五步的nginx编译参数最后加上下面lua编译参数"><a href="#7-重新编译nginx-在第五步的nginx编译参数最后加上下面lua编译参数" class="headerlink" title="7.重新编译nginx.在第五步的nginx编译参数最后加上下面lua编译参数"></a>7.重新编译nginx.在第五步的nginx编译参数最后加上下面lua编译参数</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--add-module=/usr/local/src/ngx_devel_kit-0.2.19 --add-module=/usr/local/src/lua-nginx-module-0.10.9rc7</span><br><span class="line"></span><br><span class="line">#编译完后开始安装</span><br><span class="line">make -j2</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-<h5 id="8-检查nginx-版本和模块"><a href="#8-检查nginx-版本和模块" class="headerlink" title="8 检查nginx 版本和模块"></a>8 检查nginx 版本和模块</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#检查Nginx新版本</span><br><span class="line">[work@rainbow ~]$ nginx -v</span><br><span class="line">nginx version: nginx/1.17.0</span><br><span class="line"></span><br><span class="line">#检查lua模块是否生效.最后2行表示lua模块已经编译到Nginx中</span><br><span class="line">[work@rainbow ~]$ nginx -V</span><br><span class="line">nginx version: nginx/1.17.0</span><br><span class="line">built by gcc 4.8.5 20150623 (Red Hat 4.8.5-36) (GCC)</span><br><span class="line">built with OpenSSL 1.0.2k-fips  26 Jan 2017</span><br><span class="line">TLS SNI support enabled</span><br><span class="line">configure arguments: --prefix=/etc/nginx --sbin-path=/usr/sbin/nginx --modules-path=/usr/lib64/nginx/modules --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --pid-path=/var/run/nginx.pid --lock-path=/var/run/nginx.lock --http-client-body-temp-path=/var/cache/nginx/client_temp --http-proxy-temp-path=/var/cache/nginx/proxy_temp --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp --http-scgi-temp-path=/var/cache/nginx/scgi_temp --user=nginx --group=nginx --with-compat --with-file-aio --with-threads --with-http_addition_module --with-http_auth_request_module --with-http_dav_module --with-http_flv_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_mp4_module --with-http_random_index_module --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-mail --with-mail_ssl_module --with-stream --with-stream_realip_module --with-stream_ssl_module --with-stream_ssl_preread_module --with-cc-opt=&apos;-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -fPIC&apos; --with-ld-opt=&apos;-Wl,-z,relro -Wl,-z,now -pie&apos; --add-module=/usr/local/src/ngx_devel_kit-0.2.19 --add-module=/usr/local/lua-nginx-module-0.10.9rc7</span><br></pre></td></tr></table></figure>
-<h5 id="9-如果上一步执行有问题则执行下列命令"><a href="#9-如果上一步执行有问题则执行下列命令" class="headerlink" title="9.如果上一步执行有问题则执行下列命令"></a>9.如果上一步执行有问题则执行下列命令</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;/usr/local/LuaJIT/lib&quot; &gt;&gt; /etc/ld.so.conf</span><br><span class="line">ldconfig</span><br></pre></td></tr></table></figure>
-<h5 id="10-测试lua是否支持"><a href="#10-测试lua是否支持" class="headerlink" title="10.测试lua是否支持"></a>10.测试lua是否支持</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">在Nginx配置文件中加入下列配置</span><br><span class="line"></span><br><span class="line">location /hello_lua &#123; </span><br><span class="line">      default_type &apos;text/plain&apos;; </span><br><span class="line">      content_by_lua &apos;ngx.say(&quot;hello, lua&quot;)&apos;; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#访问nginx测试是否返回hello lua</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T12:09:07+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <hr>
-<p>title:net.ipv4.tcp_tw_recycle踩的坑<br>date:2019-01-7 09:59:58<br>tags:experence<br>categories:experence<br>comments:true</p>
-<h2 id="copyright-true"><a href="#copyright-true" class="headerlink" title="copyright:true"></a>copyright:true</h2><h2 id="net-ipv4-tcp-tw-recycle踩的坑"><a href="#net-ipv4-tcp-tw-recycle踩的坑" class="headerlink" title="net.ipv4.tcp_tw_recycle踩的坑"></a>net.ipv4.tcp_tw_recycle踩的坑</h2><p>参考博文:<a href="https://www.cnxct.com/coping-with-the-tcp-time_wait-state-on-busy-linux-servers-in-chinese-and-dont-enable-tcp_tw_recycle/" target="_blank" rel="noopener">https://www.cnxct.com/coping-with-the-tcp-time_wait-state-on-busy-linux-servers-in-chinese-and-dont-enable-tcp_tw_recycle/</a></p>
-<p>在做系统调优的时候希望能加快<code>TIME_WAIT</code>状态的回收，通常将<code>net.ipv4.tcp_tw_recycle</code>选项开启，但是,请注意这里有个坑</p>
-<h3 id="故障现象"><a href="#故障现象" class="headerlink" title="故障现象"></a>故障现象</h3><p>我们阿里云上有一台BETA测试服务器自从上次将CPU配置从4核升级到8核,然后重启服务器以后..访问该服务器上的web网站经常出现卡顿的现象,大概是每隔几分钟出现一次,很快又恢复.</p>
-<p>1.初步怀疑是BETA服务器性能不行,包括后端数据库拥挤导致</p>
-<p>但是经过排查发现,故障发生时,服务器性能没有任何压力,后端数据库也正常.</p>
-<p>2.在服务器上创建一个hello world 的静态网站,发现连静态网站都无法访问.</p>
-<p>在访问网站的时候,长时间停留在TCP_NODELAY set阶段:</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1058,180 +457,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" itemprop="url">docker安装最新版Kong(v1.0)+konga</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Web</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="docker安装最新版Kong-v1-0-konga"><a href="#docker安装最新版Kong-v1-0-konga" class="headerlink" title="docker安装最新版Kong(v1.0)+konga"></a>docker安装最新版Kong(v1.0)+konga</h3><p>参考以下文档:</p>
-<p><a href="https://docs.konghq.com/install/docker/?_ga=2.167535422.1288669860.1553147426-917309945.1539077269" target="_blank" rel="noopener">Kong installation</a></p>
-<p><a href="https://github.com/pantsel/konga#installation" target="_blank" rel="noopener">konga github</a></p>
-<hr>
-<h4 id="docker安装kong-postgresql"><a href="#docker安装kong-postgresql" class="headerlink" title="docker安装kong+postgresql"></a>docker安装kong+postgresql</h4><p>1.创建一个docker网络用于docker,postgresql和konga容器间通信</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create kong-net</span><br></pre></td></tr></table></figure>
-<p>2.启动posgtresql容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name kong-database \</span><br><span class="line">               --network=kong-net \</span><br><span class="line">               -p 5432:5432 \</span><br><span class="line">               -e &quot;POSTGRES_USER=kong&quot; \</span><br><span class="line">               -e &quot;POSTGRES_DB=kong&quot; \</span><br><span class="line">               postgres:9.6</span><br></pre></td></tr></table></figure>
-<p>3.初始化postgresql数据库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm \</span><br><span class="line">    --network=kong-net \</span><br><span class="line">    -e &quot;KONG_DATABASE=postgres&quot; \</span><br><span class="line">    -e &quot;KONG_PG_HOST=kong-database&quot; \</span><br><span class="line">    -e &quot;KONG_CASSANDRA_CONTACT_POINTS=kong-database&quot; \</span><br><span class="line">    kong:latest kong migrations bootstrap</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意两点:</p>
-<p>1.最好是先删除本地的kong镜像.因为本地的Kong:lastest镜像不一定就是最新版</p>
-<p>2.如果本地的kong:latest镜像地域0.15版本,则不支持bootstrap命令.可以将bootstrap命令替换成up</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/docker/harbor私有仓库部署/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1356,6 +581,180 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/06/26/docker/harbor私有仓库部署/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" itemprop="url">docker安装最新版Kong(v1.0)+konga</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="docker安装最新版Kong-v1-0-konga"><a href="#docker安装最新版Kong-v1-0-konga" class="headerlink" title="docker安装最新版Kong(v1.0)+konga"></a>docker安装最新版Kong(v1.0)+konga</h3><p>参考以下文档:</p>
+<p><a href="https://docs.konghq.com/install/docker/?_ga=2.167535422.1288669860.1553147426-917309945.1539077269" target="_blank" rel="noopener">Kong installation</a></p>
+<p><a href="https://github.com/pantsel/konga#installation" target="_blank" rel="noopener">konga github</a></p>
+<hr>
+<h4 id="docker安装kong-postgresql"><a href="#docker安装kong-postgresql" class="headerlink" title="docker安装kong+postgresql"></a>docker安装kong+postgresql</h4><p>1.创建一个docker网络用于docker,postgresql和konga容器间通信</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create kong-net</span><br></pre></td></tr></table></figure>
+<p>2.启动posgtresql容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name kong-database \</span><br><span class="line">               --network=kong-net \</span><br><span class="line">               -p 5432:5432 \</span><br><span class="line">               -e &quot;POSTGRES_USER=kong&quot; \</span><br><span class="line">               -e &quot;POSTGRES_DB=kong&quot; \</span><br><span class="line">               postgres:9.6</span><br></pre></td></tr></table></figure>
+<p>3.初始化postgresql数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm \</span><br><span class="line">    --network=kong-net \</span><br><span class="line">    -e &quot;KONG_DATABASE=postgres&quot; \</span><br><span class="line">    -e &quot;KONG_PG_HOST=kong-database&quot; \</span><br><span class="line">    -e &quot;KONG_CASSANDRA_CONTACT_POINTS=kong-database&quot; \</span><br><span class="line">    kong:latest kong migrations bootstrap</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意两点:</p>
+<p>1.最好是先删除本地的kong镜像.因为本地的Kong:lastest镜像不一定就是最新版</p>
+<p>2.如果本地的kong:latest镜像地域0.15版本,则不支持bootstrap命令.可以将bootstrap命令替换成up</p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1747,7 +1146,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/kong API网关介绍及API接口配置/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1766,7 +1165,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/Linux-Web/kong API网关介绍及API接口配置/" itemprop="url">未命名</a></h1>
+                <a class="post-title-link" href="/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/" itemprop="url">Linux 使用parted+LVM分区</a></h1>
         
 
         <div class="post-meta">
@@ -1778,7 +1177,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:05:39+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T10:59:58+08:00">
                 2020-06-26
               </time>
             
@@ -1789,6 +1188,39 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/Skills/" itemprop="url" rel="index">
+                    <span itemprop="name">Skills</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -1797,8 +1229,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/Linux-Web/kong API网关介绍及API接口配置/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/kong API网关介绍及API接口配置/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1827,9 +1259,822 @@
 
       
         
+          <h2 id="Linux-使用parted-LVM分区"><a href="#Linux-使用parted-LVM分区" class="headerlink" title="Linux 使用parted+LVM分区"></a>Linux 使用parted+LVM分区</h2><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>fdisk使用MBR分区硬盘,但是最大只能识别到2T的磁盘,如果单块磁盘超过2T则需要使用GPT分区格式</p>
+<hr>
+<h4 id="分区步骤"><a href="#分区步骤" class="headerlink" title="分区步骤"></a>分区步骤</h4><p>分区方法和fdisk大同小异</p>
+<ul>
+<li>1.parted 磁盘名 .进入交互式界面</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@archiver-mysql ~]# parted /dev/vdb</span><br><span class="line">GNU Parted 3.1</span><br><span class="line">Using /dev/vdb</span><br><span class="line">Welcome to GNU Parted! Type &apos;help&apos; to view a list of commands.</span><br></pre></td></tr></table></figure>
+<ul>
+<li>2.mklabel gpt 转换为gpt分区</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(parted) mklabel gpt</span><br><span class="line">Warning: The existing disk label on /dev/vdb will be destroyed and all data on this disk will be lost. Do you want to continue?</span><br><span class="line">Yes/No? yes</span><br></pre></td></tr></table></figure>
+<p>3.mkpart分区</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/" itemprop="url">33.Python之路 - 特殊操作符</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-            <h2 id="kong-API网关介绍及API接口配置"><a href="#kong-API网关介绍及API接口配置" class="headerlink" title="kong API网关介绍及API接口配置"></a>kong API网关介绍及API接口配置</h2>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">Object-Oriented</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-特殊操作符"><a href="#Python之路-特殊操作符" class="headerlink" title="Python之路 - 特殊操作符"></a>Python之路 - 特殊操作符</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在 Python 中 , 我们自定义类都是基于 Object 对象实现的 , 而在 Object 对象中有一些特殊的操作符 (<code>__method__</code>) 控制着整个对象的行为 , 所以 , 如果我们想对对象的行为进行控制 , 我们就需要自己来实现这些方法 ; 当然很多人称这些方法为 Python 魔法方法 (魔术方法) </p>
+<p>下面 , 看看这些方法吧</p>
+<h2 id="基本行为-🍀"><a href="#基本行为-🍀" class="headerlink" title="基本行为  🍀"></a>基本行为  🍀</h2><table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>控制行为</th>
+<th>调用说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__new__</code></td>
+<td>对象创建</td>
+<td><code>__init__</code> 只是用处初始化 , <code>__new__</code> 调用的结果会交给 <code>__init__</code> 进一步处理</td>
+</tr>
+<tr>
+<td><code>__init__</code></td>
+<td>对象初始化</td>
+<td>构造函数 , 进行属性设置</td>
+</tr>
+<tr>
+<td><code>__del__</code></td>
+<td>对象删除</td>
+<td>析构函数 , 进行对象的销毁</td>
+</tr>
+<tr>
+<td><code>__repr__</code></td>
+<td>对象显示 , 针对对象</td>
+<td>终端显示 , 返回值必须为字符串 , 实例见表下方</td>
+</tr>
+<tr>
+<td><code>__str__</code></td>
+<td>对象显示 , 针对 <code>print</code></td>
+<td><code>print</code> 显示结果 , 返回值必须为字符串 , 如果未实现该方法 , <code>print</code> 将使用 <code>__repr__</code></td>
+</tr>
+<tr>
+<td><code>__bytes__</code></td>
+<td>字节对象转换</td>
+<td>返回值必须为一个bytes对象 , bytes(obj)</td>
+</tr>
+<tr>
+<td><code>__format__</code></td>
+<td>格式化字符串</td>
+<td>返回值必须为字符串对象 , format(obj)</td>
+</tr>
+<tr>
+<td><code>__lt__</code></td>
+<td><code>&lt;</code> 运算</td>
+<td><code>x &lt; y</code> , 返回布尔值 , 下同</td>
+</tr>
+<tr>
+<td><code>__le__</code></td>
+<td><code>&lt;=</code> 运算</td>
+<td><code>x &lt;= y</code></td>
+</tr>
+<tr>
+<td><code>__eq__</code></td>
+<td><code>=</code> 运算</td>
+<td><code>x == y</code></td>
+</tr>
+<tr>
+<td><code>__ne__</code></td>
+<td><code>!=</code> 运算</td>
+<td><code>x != y</code></td>
+</tr>
+<tr>
+<td><code>__gt__</code></td>
+<td><code>&gt;</code> 运算</td>
+<td><code>x &gt; y</code></td>
+</tr>
+<tr>
+<td><code>__ge__</code></td>
+<td><code>&gt;=</code> 运算</td>
+<td><code>x &gt;= y</code></td>
+</tr>
+<tr>
+<td><code>__hash__</code></td>
+<td>可哈希</td>
+<td>返回一个哈希对象 , hash(obj) , 注意 : 定义该方法同时应该定义 <code>__eq__</code></td>
+</tr>
+<tr>
+<td><code>__bool__</code></td>
+<td>真假测试</td>
+<td>返回布尔值</td>
+</tr>
+<tr>
+<td><code>__call__</code></td>
+<td>对象调用</td>
+<td>在对象被调用时执行</td>
+</tr>
+<tr>
+<td><code>__len__</code></td>
+<td><code>len()</code></td>
+<td>使用 <code>len(obj)</code> 时被调用 , 为防止值测试抛出 <code>OverflowError</code> , 必须定义 <code>__bool__()</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>__repr__</code> 与 <code>__str__</code> 对比实例 : </p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/" itemprop="url">29.Python之路 - 属性方法,类方法,静态方法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">Object-Oriented</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-属性方法-类方法-静态方法"><a href="#Python之路-属性方法-类方法-静态方法" class="headerlink" title="Python之路 - 属性方法,类方法,静态方法"></a>Python之路 - 属性方法,类方法,静态方法</h1><h2 id="属性方法-🍀"><a href="#属性方法-🍀" class="headerlink" title="属性方法  🍀"></a>属性方法  🍀</h2><p>属性方法就是通过使用装饰器 <code>@property</code> , 将一个方法变成一个静态属性 , 于是我们就可以通过访问属性 , 来或得一个方法的返回值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlopen</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Web_page</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, url)</span>:</span></span><br><span class="line">        self.url = url</span><br><span class="line">        self.__content = <span class="keyword">None</span></span><br><span class="line">    <span class="comment"># 将content方法变成属性</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">content</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 返回私有属性</span></span><br><span class="line">        <span class="keyword">return</span> self.__content <span class="keyword">if</span> self.__content <span class="keyword">else</span> urlopen(self.url).read()</span><br><span class="line">con = Web_page(<span class="string">'www.baidu.com'</span>)</span><br><span class="line">res = con.content</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/" itemprop="url">28.Python之路 - 面向对象特性之封装</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">Object-Oriented</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-面向对象特性之封装"><a href="#Python之路-面向对象特性之封装" class="headerlink" title="Python之路 - 面向对象特性之封装"></a>Python之路 - 面向对象特性之封装</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>封装就是把客观事物封装成抽象的类 , 并且类可以把自己的数据和方法只让可信的类或者对象操作 , 对不可信的进行信息隐藏</p>
+<h2 id="私有问题-🍀"><a href="#私有问题-🍀" class="headerlink" title="私有问题  🍀"></a>私有问题  🍀</h2><p>当我们类中的一些属性或者方法想要对不可信的类或者对象隐藏时 , 我们就可以将这些属性或者方法 , 定义成私有属性或者私有方法</p>
+<p>在Python中用双下划线开头的方式将属性隐藏起来 , 即带双下划线就为私有属性或者私有方法</p>
+<ul>
+<li>私有属性</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,name)</span>:</span></span><br><span class="line">        <span class="comment"># 定义私有属性</span></span><br><span class="line">        self.__name = name</span><br><span class="line"><span class="comment"># 实例化</span></span><br><span class="line">a = A(<span class="string">"Lyon"</span>)</span><br><span class="line"><span class="comment"># 访问a中的__name属性</span></span><br><span class="line">print(a.__name)</span><br><span class="line"><span class="comment"># 执行结果 : AttributeError: 'A' object has no attribute '__name'</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">结果报错,意思是对象A中没有__name这个属性</span></span><br><span class="line"><span class="string">也就是说,外部已经不能直接利用 .__name 来访问这个属性了</span></span><br><span class="line"><span class="string">因为此时它是一个私有属性</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/06-Python之路 - 序列化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/" itemprop="url">21.Python之路 - 序列化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Modules/" itemprop="url" rel="index">
+                    <span itemprop="name">Modules</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/06-Python之路 - 序列化/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-序列化"><a href="#Python之路-序列化" class="headerlink" title="Python之路 - 序列化"></a>Python之路 - 序列化</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>先说个例子 , 当我们将一个字典或者列表再或者变量存入磁盘中 , 而存入磁盘后原本数据类型就得不到保持了 . 这个时候我们就得用序列化和反序列化了</p>
+<p>序列化是将对象进行存储时保持当时对象的状态 , 实现其生命周期的延长 </p>
+<p>反序列化则是将存储的对象读取出来并转成原本的数据类型</p>
+<p>序列化的目的</p>
+<ol>
+<li>以某种存储形式使自定义对象持久化</li>
+<li>将对象从一个地方传递到另一个地方</li>
+<li>使程序更具维护性</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1921,7 +2166,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-count">142</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1932,7 +2177,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1943,7 +2188,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

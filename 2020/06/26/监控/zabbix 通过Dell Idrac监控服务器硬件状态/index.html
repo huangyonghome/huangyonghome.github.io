@@ -79,7 +79,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="zabbix监控," />
 
 
 
@@ -93,15 +93,16 @@
 
 
 <meta name="description" content="Zabbix 通过Dell Idrac监控服务器硬件状态背景最近登陆vsphere控制台发现一台Dell服务器告警,已经损坏了.于是想通过zabbix监控Dell服务器的硬件状态. 有2种方法可以监控dell服务器的硬件状态  通过Dell的OMSA工具监控 通过Dell的Idrac模块的SNMP协议监控  Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没">
+<meta name="keywords" content="zabbix监控">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Jesse&#39;s home">
+<meta property="og:title" content="Zabbix通过Idrac监控Dell服务器硬件状态">
 <meta property="og:url" content="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/index.html">
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="Zabbix 通过Dell Idrac监控服务器硬件状态背景最近登陆vsphere控制台发现一台Dell服务器告警,已经损坏了.于是想通过zabbix监控Dell服务器的硬件状态. 有2种方法可以监控dell服务器的硬件状态  通过Dell的OMSA工具监控 通过Dell的Idrac模块的SNMP协议监控  Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-26T02:51:49.405Z">
+<meta property="og:updated_time" content="2020-06-26T07:05:09.562Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jesse&#39;s home">
+<meta name="twitter:title" content="Zabbix通过Idrac监控Dell服务器硬件状态">
 <meta name="twitter:description" content="Zabbix 通过Dell Idrac监控服务器硬件状态背景最近登陆vsphere控制台发现一台Dell服务器告警,已经损坏了.于是想通过zabbix监控Dell服务器的硬件状态. 有2种方法可以监控dell服务器的硬件状态  通过Dell的OMSA工具监控 通过Dell的Idrac模块的SNMP协议监控  Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没">
 
 
@@ -138,7 +139,7 @@
 
 
 
-  <title> | Jesse's home</title>
+  <title>Zabbix通过Idrac监控Dell服务器硬件状态 | Jesse's home</title>
   
 
 
@@ -292,7 +293,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Zabbix通过Idrac监控Dell服务器硬件状态</h1>
         
 
         <div class="post-meta">
@@ -304,7 +305,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T14:27:16+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
                 2020-06-26
               </time>
             
@@ -314,6 +315,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/监控/" itemprop="url" rel="index">
+                    <span itemprop="name">监控</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -361,6 +384,7 @@
 <p>Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没办法获取到硬件状态.而且OMSA工具从Dell官网下载太慢.安装很麻烦</p>
 <p>所以本文主要介绍如何通过idrac模块的snmp协议监控硬件状态.监控方法非常的简单</p>
 <hr>
+<a id="more"></a>
 <h3 id="1-登陆服务器的idrac平台-开启snmp协议-v2版本"><a href="#1-登陆服务器的idrac平台-开启snmp协议-v2版本" class="headerlink" title="1.登陆服务器的idrac平台.开启snmp协议(v2版本)."></a>1.登陆服务器的idrac平台.开启snmp协议(v2版本).</h3><p>如果是idrac8版本,SNMP配置在左侧菜单栏<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">如果是idrac9版本,SNMP配置在菜单栏```iDRAC设置```---```服务```---```SNMP代理</span><br></pre></td></tr></table></figure></p>
 <blockquote>
 <p>根据我们的实际情况来看,无论是8还是9版本,SNMP都默认开启,端口是161,团体名是public</p>
@@ -390,6 +414,35 @@
     <div>
       
         
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/">Zabbix通过Idrac监控Dell服务器硬件状态</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年06月26日 - 09:06</p>
+  <p><span>最后更新:</span>2020年06月26日 - 15:06</p>
+  <p><span>原始链接:</span><a href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/" title="Zabbix通过Idrac监控Dell服务器硬件状态">https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
       
     </div>
 
@@ -430,6 +483,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/zabbix监控/" rel="tag"># zabbix监控</a>
+          
+        </div>
+      
 
       
       
@@ -439,8 +498,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/26/Linux-Service/systemd详解/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2020/06/26/监控/Zabbix 监控Rabbitmq集群/" rel="next" title="Zabbix 监控Rabbitmq集群">
+                <i class="fa fa-chevron-left"></i> Zabbix 监控Rabbitmq集群
               </a>
             
           </div>
@@ -448,6 +507,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/26/监控/zabbix监控ES集群/" rel="prev" title="zabbix监控ES集群">
+                zabbix监控ES集群 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -479,7 +542,7 @@
   
     <div class="comments" id="comments">
       <div class="ds-thread" data-thread-key="2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/"
-           data-title="" data-url="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/">
+           data-title="Zabbix通过Idrac监控Dell服务器硬件状态" data-url="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/">
       </div>
     </div>
 
@@ -535,7 +598,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-count">142</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -546,7 +609,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -557,7 +620,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
