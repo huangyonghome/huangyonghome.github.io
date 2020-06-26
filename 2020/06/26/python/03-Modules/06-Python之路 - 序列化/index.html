@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Python之路 - 序列化介绍  🍀先说个例子 , 当我们将一个字典或者列表再或者变量存入磁盘中 , 而存入磁盘后原本数据类型就得不到保持了 . 这个时候我们就得用序列化和反序列化了 序列化是将对象进行存储时保持当时对象的状态 , 实现其生命周期的延长  反序列化则是将存储的对象读取出来并转成原本的数据类型 序列化的目的  以某种存储形式使自定义对象持久化 将对象从一个地方传递到另一个地方 使">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="21.Python之路 - 序列化">
+<meta property="og:url" content="https://jesse.top/2020/06/26/python/03-Modules/06-Python之路 - 序列化/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="Python之路 - 序列化介绍  🍀先说个例子 , 当我们将一个字典或者列表再或者变量存入磁盘中 , 而存入磁盘后原本数据类型就得不到保持了 . 这个时候我们就得用序列化和反序列化了 序列化是将对象进行存储时保持当时对象的状态 , 实现其生命周期的延长  反序列化则是将存储的对象读取出来并转成原本的数据类型 序列化的目的  以某种存储形式使自定义对象持久化 将对象从一个地方传递到另一个地方 使">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-26T02:04:42.183Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="21.Python之路 - 序列化">
+<meta name="twitter:description" content="Python之路 - 序列化介绍  🍀先说个例子 , 当我们将一个字典或者列表再或者变量存入磁盘中 , 而存入磁盘后原本数据类型就得不到保持了 . 这个时候我们就得用序列化和反序列化了 序列化是将对象进行存储时保持当时对象的状态 , 实现其生命周期的延长  反序列化则是将存储的对象读取出来并转成原本的数据类型 序列化的目的  以某种存储形式使自定义对象持久化 将对象从一个地方传递到另一个地方 使">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/06/26/python/03-Modules/06-Python之路 - 序列化/"/>
+
+
+
+
+
+  <title>21.Python之路 - 序列化 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/06-Python之路 - 序列化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">21.Python之路 - 序列化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Modules/" itemprop="url" rel="index">
+                    <span itemprop="name">Modules</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/06-Python之路 - 序列化/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Python之路-序列化"><a href="#Python之路-序列化" class="headerlink" title="Python之路 - 序列化"></a>Python之路 - 序列化</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>先说个例子 , 当我们将一个字典或者列表再或者变量存入磁盘中 , 而存入磁盘后原本数据类型就得不到保持了 . 这个时候我们就得用序列化和反序列化了</p>
+<p>序列化是将对象进行存储时保持当时对象的状态 , 实现其生命周期的延长 </p>
+<p>反序列化则是将存储的对象读取出来并转成原本的数据类型</p>
+<p>序列化的目的</p>
+<ol>
+<li>以某种存储形式使自定义对象持久化</li>
+<li>将对象从一个地方传递到另一个地方</li>
+<li>使程序更具维护性</li>
+</ol>
+<a id="more"></a>
+<p><strong><em>此时应该想到 eval :</em></strong>那么问题来了 , 序列化所达到的功能我用eval()也能达到啊 , eval()直接就可以把字符串转换成python解释器能解释的代码 , 即可以直接将字符串中的字典 , 列表都转成原来的数据类型 . 但是要注意的是 , eval本来就是将字符串内容转换成python可以执行的代码 , 并执行它 , 这样看来eval就不安全了 , 因为如果在我能读取的内容中含有一些其他的 ‘ 危险代码 ‘ 如 ‘ 删除文件 ‘ , 于是造成了毁灭性的打击 , 所以eval是存在风险的 </p>
+<p>Python为我们提供了三个序列化工具 , 分别是 json , pickle , shelve</p>
+<h2 id="json-🍀"><a href="#json-🍀" class="headerlink" title="json  🍀"></a>json  🍀</h2><p>用于字符串和python数据类型之间进行转换 , 因为json表示出来就是一个字符串</p>
+<p>json模块提供了四个方法</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dump</td>
+<td>接收一个文件句柄 , 将原数据类型转换成字符串写入文件</td>
+</tr>
+<tr>
+<td>load</td>
+<td>接收一个文件句柄 , 将文件中的字符串转换成原数据类型返回</td>
+</tr>
+<tr>
+<td>dumps</td>
+<td>接收一个数据类型 , 将其转换成字符串</td>
+</tr>
+<tr>
+<td>loads</td>
+<td>接收一个字符串 , 将其转换成原数据类型</td>
+</tr>
+</tbody>
+</table>
+<p>dump 和 load 实例</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入json模块</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="comment"># 创建一个文件句柄</span></span><br><span class="line">f = open(<span class="string">'json_file'</span>,<span class="string">'w'</span>)</span><br><span class="line"><span class="comment"># 创建一个字典</span></span><br><span class="line">dic = &#123;<span class="string">'k1'</span>:<span class="string">'v1'</span>,<span class="string">'k2'</span>:<span class="string">'v2'</span>&#125;</span><br><span class="line"><span class="comment"># 将字典转换成字符串写入文件</span></span><br><span class="line">json.dump(dic,f)</span><br><span class="line"><span class="comment"># 关闭文件</span></span><br><span class="line">f.close()</span><br><span class="line"><span class="comment"># 创建一个文件句柄</span></span><br><span class="line">f = open(<span class="string">'json_file'</span>)</span><br><span class="line"><span class="comment"># 将文件中的字符串读出并转换成原数据类型</span></span><br><span class="line">dic2 = json.load(f)</span><br><span class="line"><span class="comment"># 关闭文件句柄</span></span><br><span class="line">f.close()</span><br><span class="line"><span class="comment"># 打印类型和结果</span></span><br><span class="line">print(type(dic2),dic2)</span><br><span class="line"><span class="comment"># &lt;class 'dict'&gt; &#123;'k1': 'v1', 'k2': 'v2'&#125;</span></span><br></pre></td></tr></table></figure>
+<p>dumps 和 loads 实例</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入json模块</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="comment"># 创建一个新列表</span></span><br><span class="line">lst = [<span class="string">'1'</span>,<span class="string">'2'</span>,<span class="string">'3'</span>,<span class="string">'4'</span>]</span><br><span class="line"><span class="comment"># 将列表转换成字符串,用j_d来接收返回值</span></span><br><span class="line">j_d = json.dumps(lst)</span><br><span class="line"><span class="comment"># 将字符串转换成原数据类型,用j_s来接收返回值</span></span><br><span class="line">j_s = json.loads(j_d)</span><br><span class="line"><span class="comment"># 打印j_d的值以及类型</span></span><br><span class="line">print(j_d,type(j_d))</span><br><span class="line"><span class="comment"># ["1", "2", "3", "4"] &lt;class 'str'&gt;</span></span><br><span class="line"><span class="comment"># 打印j_s的值以及类型</span></span><br><span class="line">print(j_s,type(j_s))</span><br><span class="line"><span class="comment"># ['1', '2', '3', '4'] &lt;class 'list'&gt;</span></span><br></pre></td></tr></table></figure>
+<p>loads的特殊情况</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入json模块</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="comment"># 创建一个字符串,内部为一个字典</span></span><br><span class="line">dic_s = <span class="string">"&#123;'k1':'v1','k2':'v2','k3':3&#125;"</span></span><br><span class="line"><span class="comment"># 将字符串转换成字典</span></span><br><span class="line">json.loads(dic_s)</span><br><span class="line"><span class="comment"># 解释器出现报错</span></span><br><span class="line"><span class="comment"># json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">报错原因,用json的loads功能时,字符串类型的字典中的字符串必须由 "" 表示</span></span><br><span class="line"><span class="string">即上面的dic_s应该改为 '&#123;"k1":"v1","k2":"v2","k3":3&#125;'</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">结论:用json的loads功能时,字符串类型的字典中的字符串必须由 "" 表示</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<p>PS : json可用于不同语言之间的数据交换</p>
+<h2 id="pickle-🍀"><a href="#pickle-🍀" class="headerlink" title="pickle   🍀"></a>pickle   🍀</h2><p>用于python特有的类型和python的数据类型间进行转换</p>
+<p>pickle模块也提供了四个方法 , 与json一样 dumps , dump , loads , load</p>
+<p>由于pickle是对于python特有的类型 , 所以 load 和 loads方法不仅支持字典 , 列表  , 它还能把python中任意的数据类型进行序列化</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">-------dumps和loads--------</span><br><span class="line"><span class="comment"># 导入pickle模块</span></span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="comment"># 创建一个字典</span></span><br><span class="line">dic = &#123;<span class="string">'k1'</span>:<span class="string">'v1'</span>,<span class="string">'k2'</span>:<span class="string">'v2'</span>&#125;</span><br><span class="line"><span class="comment"># 将字典转换成二进制内容</span></span><br><span class="line">p_d = pickle.dumps(dic)</span><br><span class="line"><span class="comment"># 将二进制内容转换成字典</span></span><br><span class="line">p_l = pickle.loads(p_d)</span><br><span class="line"><span class="comment"># 打印p_d</span></span><br><span class="line">print(p_d)  </span><br><span class="line"><span class="comment"># b'\x80\x03&#125;q\x00(X\x02\x00\x00\x00k2q\x01X\x02\x00\x00\x00v2q\x02X\x02\x00\x00\x00k1q\x03X\x02\x00\x00\x00v1q\x04u.'</span></span><br><span class="line"><span class="comment"># 打印p_d的类型</span></span><br><span class="line">print(type(p_d))</span><br><span class="line"><span class="comment"># &lt;class 'bytes'&gt;</span></span><br><span class="line"><span class="comment"># 打印p_l</span></span><br><span class="line">print(p_l)</span><br><span class="line"><span class="comment"># &#123;'k2': 'v2', 'k1': 'v1'&#125;</span></span><br><span class="line"><span class="comment"># 打印p_l的类型</span></span><br><span class="line">print(type(p_l))</span><br><span class="line"><span class="comment"># &lt;class 'dict'&gt;</span></span><br><span class="line">---------dump 和 load---------</span><br><span class="line"><span class="comment"># 创建一个文件句柄</span></span><br><span class="line">f = open(<span class="string">'pickle_file'</span>,<span class="string">'wb'</span>)</span><br><span class="line"><span class="comment"># 写入内容</span></span><br><span class="line">pickle.dump(<span class="string">'lyon'</span>,f)</span><br><span class="line"><span class="comment"># 关闭文件</span></span><br><span class="line">f.close()</span><br><span class="line"><span class="comment"># 创建一个文件句柄</span></span><br><span class="line">f = open(<span class="string">'pickle_file'</span>,<span class="string">'rb'</span>)</span><br><span class="line"><span class="comment"># 读出内容</span></span><br><span class="line">p_f = pickle.load(f)</span><br><span class="line"><span class="comment"># 关闭文件</span></span><br><span class="line">f.close()</span><br><span class="line"><span class="comment"># 打印</span></span><br><span class="line">print(p_f)</span><br><span class="line"><span class="comment"># lyon</span></span><br></pre></td></tr></table></figure>
+<p><strong>但是pickle仅仅只能对python中的数据进行序列化 , 反序列化时其他语言就无法读懂了这是什么了</strong> , 所以我们一般用推荐使用json</p>
+<h2 id="shelve-🍀"><a href="#shelve-🍀" class="headerlink" title="shelve  🍀"></a>shelve  🍀</h2><p>shelve也是python提供给我们的序列化工具 , 比pickle用起来简单一些</p>
+<p>shelve只提供给我们一个open方法 , 是用key来访问的 ,  使用起来和字典类似</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入shelve模块</span></span><br><span class="line"><span class="keyword">import</span> shelve</span><br><span class="line"><span class="comment"># shelve提供open方法</span></span><br><span class="line">f = shelve.open(<span class="string">'shelve_file'</span>)</span><br><span class="line"><span class="comment"># 直接对文件句柄进行操作,就可以写入文件中</span></span><br><span class="line">f[<span class="string">'key'</span>] = &#123;<span class="string">'int'</span>:<span class="number">10</span>, <span class="string">'float'</span>:<span class="number">9.5</span>, <span class="string">'string'</span>:<span class="string">'Sample data'</span>&#125;  </span><br><span class="line"><span class="comment"># 关闭文件</span></span><br><span class="line">f.close()</span><br><span class="line"><span class="comment"># 打开文件</span></span><br><span class="line">f1 = shelve.open(<span class="string">'shelve_file'</span>)</span><br><span class="line"><span class="comment"># 直接用key取值,key不存在就报错</span></span><br><span class="line">existing = f1[<span class="string">'key'</span>]</span><br><span class="line"><span class="comment"># 关闭文件</span></span><br><span class="line">f1.close()</span><br><span class="line"><span class="comment"># 打印结果</span></span><br><span class="line">print(existing)</span><br><span class="line"><span class="comment"># &#123;'float': 9.5, 'int': 10, 'string': 'Sample data'&#125;</span></span><br></pre></td></tr></table></figure>
+<p>shelve不支持多个应用同时往一个数据库进行操作 , 所以当我们知道我们的应用如果只进行操作 , 我们可以设置shelve.open() 方法的参数来进行</p>
+<p> shelve.open(filename, flag=’c’, protocol=None, writeback=False)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> shelve</span><br><span class="line"><span class="comment"># flag参数为设置操作模式,r 设置只读模式</span></span><br><span class="line">f = shelve.open(<span class="string">'shelve_file'</span>, flag=<span class="string">'r'</span>)</span><br><span class="line">existing = f[<span class="string">'key'</span>]</span><br><span class="line">f.close()</span><br><span class="line">print(existing)</span><br></pre></td></tr></table></figure>
+<p><code>writeback</code>参数 , 可以减少我们出错的概率 , 并且让对象的持久化对用户更加的透明了 ; 但这种方式并不是所有的情况下都需要 , 首先 , 使用writeback以后 , shelf在open()的时候会增加额外的内存消耗 , 并且当数据库在close()的时候会将缓存中的每一个对象都写入到数据库 , 这也会带来额外的等待时间 , 因为shelve没有办法知道缓存中哪些对象修改了 , 哪些对象没有修改 , 因此所有的对象都会被写入</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> shelve</span><br><span class="line">f1 = shelve.open(<span class="string">'shelve_file'</span>)</span><br><span class="line">print(f1[<span class="string">'key'</span>])</span><br><span class="line">f1[<span class="string">'key'</span>][<span class="string">'new_value'</span>] = <span class="string">'this was not here before'</span></span><br><span class="line">f1.close()</span><br><span class="line"><span class="comment"># 设置writeback</span></span><br><span class="line">f2 = shelve.open(<span class="string">'shelve_file'</span>, writeback=<span class="keyword">True</span>)</span><br><span class="line">print(f2[<span class="string">'key'</span>])</span><br><span class="line">f2[<span class="string">'key'</span>][<span class="string">'new_value'</span>] = <span class="string">'this was not here before'</span></span><br><span class="line">f2.close()</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/">21.Python之路 - 序列化</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年06月26日 - 09:06</p>
+  <p><span>最后更新:</span>2020年06月26日 - 10:06</p>
+  <p><span>原始链接:</span><a href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/" title="21.Python之路 - 序列化">https://jesse.top/2020/06/26/python/03-Modules/06-Python之路 - 序列化/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/python/03-Modules/06-Python之路 - 序列化/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/" rel="next" title="44.Python之路 - 并发编程之协程">
+                <i class="fa fa-chevron-left"></i> 44.Python之路 - 并发编程之协程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/26/python/06-Concurrent/04-Python之路 - 多进程实例及回调函数/" rel="prev" title="43.Python之路 - 多进程实例及回调函数">
+                43.Python之路 - 多进程实例及回调函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/06/26/python/03-Modules/06-Python之路 - 序列化/"
+           data-title="21.Python之路 - 序列化" data-url="https://jesse.top/2020/06/26/python/03-Modules/06-Python之路 - 序列化/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python之路-序列化"><span class="nav-number">1.</span> <span class="nav-text">Python之路 - 序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍-🍀"><span class="nav-number">1.1.</span> <span class="nav-text">介绍  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#json-🍀"><span class="nav-number">1.2.</span> <span class="nav-text">json  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pickle-🍀"><span class="nav-number">1.3.</span> <span class="nav-text">pickle   🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shelve-🍀"><span class="nav-number">1.4.</span> <span class="nav-text">shelve  🍀</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="kong," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="kong+postgresql+konga集群环境部署kong简介Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和AP">
+<meta name="keywords" content="kong">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kong+postgresql+konga集群环境部署">
+<meta property="og:url" content="https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="kong+postgresql+konga集群环境部署kong简介Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和AP">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img1.jesse.top/kong-flow.png">
+<meta property="og:updated_time" content="2020-06-26T03:09:18.121Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kong+postgresql+konga集群环境部署">
+<meta name="twitter:description" content="kong+postgresql+konga集群环境部署kong简介Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和AP">
+<meta name="twitter:image" content="https://img1.jesse.top/kong-flow.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/"/>
+
+
+
+
+
+  <title>kong+postgresql+konga集群环境部署 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kong+postgresql+konga集群环境部署</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Web</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
+                    <span itemprop="name">kong</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/Linux-Web/kong postgresql konga/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/kong postgresql konga/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="kong-postgresql-konga集群环境部署"><a href="#kong-postgresql-konga集群环境部署" class="headerlink" title="kong+postgresql+konga集群环境部署"></a>kong+postgresql+konga集群环境部署</h2><h3 id="kong简介"><a href="#kong简介" class="headerlink" title="kong简介"></a>kong简介</h3><p>Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和API之间的中间层，加上众多功能强大的插件，可以实现认证授权、访问控制等功能。并且提供易于使用的RESTful API来操作和配置系统。</p>
+<p>有关kong的详细介绍请参考官网.</p>
+<p>–</p>
+<h3 id="postgreSQL简介"><a href="#postgreSQL简介" class="headerlink" title="postgreSQL简介"></a>postgreSQL简介</h3><p><a href="https://baike.baidu.com/item/PostgreSQL/530240" target="_blank" rel="noopener">PostgreSQL</a> 是一个免费的对象-关系数据库服务器(数据库管理系统)，它在灵活的 BSD-风格许可证下发行。它提供了相对其他开放源代码数据库系统(比如 MySQL 和 Firebird)，和专有系统(比如 Oracle、Sybase、IBM 的 DB2 和 Microsoft SQL Server)之外的另一种选择。</p>
+<p>–</p>
+<h3 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h3><ul>
+<li><strong>kong cluster</strong></li>
+</ul>
+<p>kong 集群并不意味着客户端请求将会负载均衡到kong集群中的每个节点上，kong集群并不是开箱即用，仍然需要在kong集群多节点上层搭建负载均衡，以便分发请求。 一个kong集群只是意味着集群内的节点，都共享同样的配置。</p>
+<p>有关Kong cluster集群的详细介绍请参考官网:<a href="https://docs.konghq.com/0.14.x/clustering/" target="_blank" rel="noopener">Kong cluser document</a></p>
+<p>为了提高冗余性和健壮性.我们对kong的每个环节都进行了冗余设计.一个基本的kong集群架构大概如下图所示:</p>
+<p><img src="https://img1.jesse.top/kong-flow.png" alt=""></p>
+<a id="more"></a>
+<p>–</p>
+<h3 id="部署步骤"><a href="#部署步骤" class="headerlink" title="部署步骤"></a>部署步骤</h3><p><strong>环境</strong>: </p>
+<p>阿里云ECS Centos7.4操作系统<br>Kong: 1.0最新版<br>postgresql 9.6</p>
+<p>konga 最新版</p>
+<p><strong>集群架构说明:</strong></p>
+<p>dwd-kong-node1节点服务器部署postgresql master主库</p>
+<p>dwd-kong-node2节点服务器部署postgresql slave从库</p>
+<p>在两个Kong节点服务器上都部署konga,但是konga指向postgresql master主库</p>
+<p>–</p>
+<h4 id="安装postgresql"><a href="#安装postgresql" class="headerlink" title="安装postgresql"></a>安装postgresql</h4><p>安装方式官网参考: <a href="https://www.postgresql.org/" target="_blank" rel="noopener">Installing Postgresql</a></p>
+<p><strong>安装步骤</strong></p>
+<p>1.安装Postgre9.6版本的Yum源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>2.安装postgresql</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install postgresql96 postgresql96-server -y</span><br></pre></td></tr></table></figure>
+<p>3.切换到root用户下,初始化数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /usr/pgsql-9.6/bin/postgresql96-setup initdb</span><br></pre></td></tr></table></figure>
+<p>4.修改数据库的配置文件,监听所有接口</p>
+<p>postgresql的配置文件默认路径在:/var/lib/pgsql/9.6/data/postgresql.conf</p>
+<p>修改下列配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">listen_addresses = &apos;*&apos; #监听所有接口.由于我服务器只有内网地址,所有可以侦听在所有接口,(如果有公网地址,最好不要只样做)</span><br><span class="line">log_directory = &apos;/data/logs/postgre&apos; #指定日志文件的父目录</span><br></pre></td></tr></table></figure>
+<p>5.修改数据库远程访问配置文件.开启远程访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /var/lib/pgsql/9.6/data/postgresql.conf/pg_hba.conf</span><br><span class="line"></span><br><span class="line">修改下列两项:</span><br><span class="line">#修改为md5认证,下列10.0.0.0/8是内网地址段</span><br><span class="line">host    all             all             127.0.0.1/32            md5</span><br><span class="line">host    all             all             10.0.0.0/8           md5</span><br></pre></td></tr></table></figure>
+<p>6.创建日志目录,并且赋权给postgres用户(安装postgresql后默认会创建这个用户)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@dwd-kong-node1 data]# mkdir /data/logs/postgre</span><br><span class="line">[root@dwd-kong-node1 data]# chown -R postgre.postgre /data/logs/postgre</span><br></pre></td></tr></table></figure>
+<p>7.启动postgresql数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable postgresql-9.6</span><br><span class="line">systemctl start postgresql-9.6</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="创建数据库用户密码"><a href="#创建数据库用户密码" class="headerlink" title="创建数据库用户密码"></a>创建数据库用户密码</h3><p>1.切换到postgres用户,输入psql登陆数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@dwd-kong-node1 data]# su - postgres</span><br><span class="line">Last login: Mon Apr  8 09:27:12 CST 2019 on pts/0</span><br><span class="line">-bash-4.2$</span><br><span class="line">-bash-4.2$ psql</span><br><span class="line">psql (11.2, server 9.6.12)</span><br><span class="line">Type &quot;help&quot; for help.</span><br><span class="line"></span><br><span class="line">postgres=#</span><br></pre></td></tr></table></figure>
+<p>2.创建kong用户和kong数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER kong; </span><br><span class="line">CREATE DATABASE kong OWNER kong;</span><br></pre></td></tr></table></figure>
+<p>3.创建konga的数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE konga OWNER kong;</span><br></pre></td></tr></table></figure>
+<p>4.为kong用户创建一个密码,密码也是kong</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter user kong with password &apos;kong&apos;;</span><br></pre></td></tr></table></figure>
+<p>5.输入\l,可以看到当前的数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">postgres=# \l</span><br><span class="line">                                  List of databases</span><br><span class="line">   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges</span><br><span class="line">-----------+----------+----------+-------------+-------------+-----------------------</span><br><span class="line"> kong      | kong     | UTF8     | en_US.UTF-8 | en_US.UTF-8 |</span><br><span class="line"> konga     | kong     | UTF8     | en_US.UTF-8 | en_US.UTF-8 |</span><br><span class="line"> postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |</span><br><span class="line"> template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +</span><br><span class="line">           |          |          |             |             | postgres=CTc/postgres</span><br><span class="line"> template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +</span><br><span class="line">           |          |          |             |             | postgres=CTc/postgres</span><br><span class="line">(5 rows)</span><br></pre></td></tr></table></figure>
+<p>6.查看当前数据库有哪些用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">postgres=# select * from pg_roles;</span><br><span class="line">      rolname      | rolsuper | rolinherit | rolcreaterole | rolcreatedb | rolcanlogin | rolreplication | rolconnlimit | rolpassword | rolvaliduntil | rolbypassrls | rolconfig |  oid</span><br><span class="line">-------------------+----------+------------+---------------+-------------+-------------+----------------+--------------+-------------+---------------+--------------+-----------+-------</span><br><span class="line"> postgres          | t        | t          | t             | t           | t           | t              |           -1 | ********    |               | t            |           |    10</span><br><span class="line"> pg_signal_backend | f        | t          | f             | f           | f           | f              |           -1 | ********    |               | f            |           |  4200</span><br><span class="line"> kong              | f        | t          | f             | f           | t           | f              |           -1 | ********    |               | f            |           | 16384</span><br><span class="line">(3 rows)</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="安装Kong"><a href="#安装Kong" class="headerlink" title="安装Kong"></a>安装Kong</h4><p>安装方法可以参考官网:<a href="https://docs.konghq.com/install/centos/?_ga=2.110797315.728319704.1539597667-917309945.1539077269#packages" target="_blank" rel="noopener">Install Kong</a></p>
+<p>1.下载,安装rpm安装包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -O kong-community-edition-1.0.0.el7.noarch.rpm  https://kong.bintray.com/kong-community-edition-rpm/centos/7/:kong-community-edition-1.0.0.el7.noarch.rpm</span><br><span class="line"></span><br><span class="line">sudo yum install epel-release</span><br><span class="line">sudo yum install kong-community-edition-1.0.0.el7.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>2.dwd-kong-node1修改kong配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/kong</span><br><span class="line">sudo cp kong.conf.default kong.conf</span><br><span class="line"></span><br><span class="line">[root@dwd-kong-node1 data]#  sed -r &apos;/^[[:space:]]+#*/d&apos; /etc/kong/kong.conf | sed &apos;/^#/d&apos; | sed &apos;/^$/d&apos;</span><br><span class="line"></span><br><span class="line">prefix = /data/logs/kong/       # Working directory. Equivalent to Nginx&apos;s</span><br><span class="line">proxy_access_log = access.log       # Path for proxy port request access</span><br><span class="line">proxy_error_log = error.log         # Path for proxy port request error</span><br><span class="line">admin_listen = 0.0.0.0:8001     # Address and port on which Kong will expose</span><br><span class="line">database = postgres             # Determines which of PostgreSQL or Cassandra</span><br><span class="line">pg_host = 127.0.0.1             # The PostgreSQL host to connect to.</span><br><span class="line">pg_port = 5432                  # The port to connect to.</span><br><span class="line">pg_user = kong                  # The username to authenticate if required.</span><br><span class="line">pg_password = kong                 # The password to authenticate if required.</span><br><span class="line">pg_database = kong              # The database name to connect to.</span><br><span class="line">cluster_listen = 0.0.0.0:7946   # Address and port used to communicate with</span><br><span class="line">cluster_listen_rpc = 127.0.0.1:7373  # Address and port used to communicate</span><br></pre></td></tr></table></figure>
+<p>3.dwd-kong-node2修改kong配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@dwd-kong-node2 system]# clear</span><br><span class="line">[root@dwd-kong-node2 system]# sed -r &apos;/^[[:space:]]+#*/d&apos; /etc/kong/kong.conf | sed &apos;/^#/d&apos; | sed &apos;/^$/d&apos;</span><br><span class="line">prefix = /data/logs/kong/       # Working directory. Equivalent to Nginx&apos;s</span><br><span class="line">proxy_access_log = access.log       # Path for proxy port request access</span><br><span class="line">proxy_error_log = error.log         # Path for proxy port request error</span><br><span class="line">database = postgres             # Determines which of PostgreSQL or Cassandra</span><br><span class="line">pg_host = 10.111.30.174             # The PostgreSQL host to connect to.</span><br><span class="line">pg_port = 5432                  # The port to connect to.</span><br><span class="line">pg_user = kong                  # The username to authenticate if required.</span><br><span class="line">pg_password = kong                 # The password to authenticate if required.</span><br><span class="line">pg_database = kong              # The database name to connect to.</span><br><span class="line">pg_ssl = off                    # Toggles client-server TLS connections</span><br><span class="line">pg_ssl_verify = off             # Toggles server certificate verification if</span><br><span class="line">cluster_listen = 0.0.0.0:7946   # Address and port used to communicate with</span><br><span class="line">cluster_listen_rpc = 127.0.0.1:7373  # Address and port used to communicate</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>唯一区别就是这里的数据库指向dwd-kong-node1上的postgresql(IP:10.111.30.174),而非本机.</p>
+</blockquote>
+<p>3.创建kong目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir /data/logs/kong/</span><br></pre></td></tr></table></figure>
+<p>4.在dwd-kong-node1上准备数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kong migrations bootstrap -c /etc/kong/kong.conf</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>由于dwd-kong-node2上指向了node1的数据库,所以在node2上不需要执行这个命令</p>
+</blockquote>
+<p>5.启动kong</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kong start -c /etc/kong/kong.conf</span><br></pre></td></tr></table></figure>
+<p>查看端口.可以看到postgresql和kong的侦听端口都已经成功启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@dwd-kong-node1 data]# netstat -tulpn</span><br><span class="line">Active Internet connections (only servers)</span><br><span class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name</span><br><span class="line">tcp        0      0 0.0.0.0:5432            0.0.0.0:*               LISTEN      26580/postmaster</span><br><span class="line">tcp        0      0 0.0.0.0:8443            0.0.0.0:*               LISTEN      24746/nginx: master</span><br><span class="line">tcp        0      0 0.0.0.0:5822            0.0.0.0:*               LISTEN      29688/sshd</span><br><span class="line">tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      24746/nginx: master</span><br><span class="line">tcp        0      0 0.0.0.0:8001            0.0.0.0:*               LISTEN      24746/nginx: master</span><br><span class="line">tcp6       0      0 :::5432                 :::*                    LISTEN      26580/postmaster</span><br><span class="line">udp        0      0 0.0.0.0:68              0.0.0.0:*                           748/dhclient</span><br><span class="line">udp        0      0 10.111.30.174:123       0.0.0.0:*                           6290/ntpd</span><br><span class="line">udp        0      0 127.0.0.1:123           0.0.0.0:*                           6290/ntpd</span><br><span class="line">udp        0      0 0.0.0.0:123             0.0.0.0:*                           6290/ntpd</span><br><span class="line">udp        0      0 0.0.0.0:34019           0.0.0.0:*                           748/dhclient</span><br><span class="line">udp6       0      0 :::31421                :::*                                748/dhclient</span><br><span class="line">udp6       0      0 :::123                  :::*                                6290/ntpd</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="搭建konga"><a href="#搭建konga" class="headerlink" title="搭建konga"></a>搭建konga</h3><p>konga是管理kong各个组件(serveice,route,plugin,upstream,consumer)的可视化UI管理工具.在增删改查各个组件的配置时非常方便.</p>
+<p>个人觉得UI界面比kong-dashboard要漂亮</p>
+<p>konga的github参考:<a href="https://github.com/pantsel/konga" target="_blank" rel="noopener">konga</a></p>
+<hr>
+<p>1.确保需要有node.js环境.如果没有npm工具,必须先安装nodejs</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[work@DWD-BETA kong]$ npm -v</span><br><span class="line">6.4.1</span><br><span class="line">[work@DWD-BETA kong]$ node -v</span><br><span class="line">v10.15.3</span><br></pre></td></tr></table></figure>
+<p>2.安装bower,gulp包.安装git软件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install bower</span><br><span class="line">npm install gulp</span><br><span class="line">yum install git</span><br></pre></td></tr></table></figure>
+<p>3.work用户下安装konga</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/pantsel/konga.git</span><br><span class="line">$ cd konga</span><br><span class="line">$ npm i</span><br></pre></td></tr></table></figure>
+<p>4.编辑.env环境文件(dwd-kong-node2的文件内容中将下列的localhost修改为node1服务器的IP:10.111.30.174)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">work@dwd-kong-node1 konga]$ cat .env_example</span><br><span class="line">PORT=1337</span><br><span class="line">NODE_ENV=production</span><br><span class="line">KONGA_HOOK_TIMEOUT=120000</span><br><span class="line">DB_ADAPTER=postgres</span><br><span class="line">DB_URI=postgresql://localhost:5432/konga</span><br><span class="line">KONGA_LOG_LEVEL=warn</span><br><span class="line">TOKEN_SECRET=some_secret_token</span><br><span class="line">DB_USER=kong</span><br><span class="line">DB_PASSWORD=kong</span><br><span class="line">DB_DATABASE=konga</span><br></pre></td></tr></table></figure>
+<p>5.启动konga</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">work@dwd-kong-node1 konga]$ npm start</span><br></pre></td></tr></table></figure>
+<p>6.如果启动报错,则安装依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">work@dwd-kong-node1 konga]$ npm run bower-deps</span><br></pre></td></tr></table></figure>
+<p>这个程序默认是前台启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[work@dwd-kong-node1 konga]$ npm start</span><br><span class="line"></span><br><span class="line">&gt; kongadmin@0.14.3 start /home/work/konga</span><br><span class="line">&gt; node --harmony app.js</span><br><span class="line"></span><br><span class="line">No DB Adapter defined. Using localDB...</span><br><span class="line">debug: Hook:api_health_checks:process() called</span><br><span class="line">debug: Hook:health_checks:process() called</span><br><span class="line">debug: Hook:start-scheduled-snapshots:process() called</span><br><span class="line">debug: Hook:upstream_health_checks:process() called</span><br><span class="line">debug: Hook:user_events_hook:process() called</span><br><span class="line">debug: User had models, so no seed needed</span><br><span class="line">debug: Kongnode had models, so no seed needed</span><br><span class="line">debug: Emailtransport seeds updated</span><br><span class="line">debug: -------------------------------------------------------</span><br><span class="line">debug: :: Mon Apr 08 2019 18:34:31 GMT+0800 (China Standard Time)</span><br><span class="line">debug: Environment : development</span><br><span class="line">debug: Port        : 1337</span><br><span class="line">debug: -------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<p>此时在浏览器输入:<a href="http://10.111.30.174:1337" target="_blank" rel="noopener">http://10.111.30.174:1337</a> 就能访问konga了.</p>
+<hr>
+<h3 id="systemctl管理kong和konga进程"><a href="#systemctl管理kong和konga进程" class="headerlink" title="systemctl管理kong和konga进程"></a>systemctl管理kong和konga进程</h3><ul>
+<li>kong</li>
+</ul>
+<p>在/usr/lib/systemd/system路径下编辑kong.service文件.内容如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">work@dwd-kong-node1 system]$ pwd</span><br><span class="line">/usr/lib/systemd/system</span><br><span class="line">[work@dwd-kong-node1 system]$ cat kong.service</span><br><span class="line">[Unit]</span><br><span class="line">Description= kong service</span><br><span class="line">After=syslog.target network.target postgresql-9.6.target</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=work</span><br><span class="line">Group=work</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/usr/local/bin/kong start -c /etc/kong/kong.conf</span><br><span class="line">ExecReload=/usr/local/bin/kong reload -c /etc/kong/kong.conf</span><br><span class="line">ExecStop=/usr/local/bin/kong stop</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<ul>
+<li>konga</li>
+</ul>
+<p>在/usr/lib/systemd/system路径下编辑konga.service文件.内容如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[work@dwd-kong-node1 system]$ cat konga.service</span><br><span class="line">[Unit]</span><br><span class="line">Description= konga service</span><br><span class="line">After=syslog.target network.target postgresql-9.6.target  kong.target</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=work</span><br><span class="line">Group=work</span><br><span class="line">Type=forking</span><br><span class="line">#需要指定工作目录,因为npm命令要在konga的目录下执行</span><br><span class="line">WorkingDirectory=/home/work/konga</span><br><span class="line">ExecStart=/usr/local/bin/npm start</span><br><span class="line">ExecStop=kill $(netstat -tlnp |grep 1337|  awk &apos;&#123;print $NF&#125;&apos; | awk -F &quot;/&quot; &apos;&#123;print $1&#125;&apos;)</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<ul>
+<li>启动进程,且设置开机启动</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[work@dwd-kong-node2 ~]$ sudo systemctl enable kong</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/kong.service to /usr/lib/systemd/system/kong.service.</span><br><span class="line">[work@dwd-kong-node2 ~]$ sudo systemctl enable konga.service</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/konga.service to /usr/lib/systemd/system/konga.service.</span><br><span class="line">[work@dwd-kong-node2 ~]$ sudo systemctl start kong.service</span><br><span class="line">[work@dwd-kong-node2 ~]$ sudo systemctl start konga.service</span><br></pre></td></tr></table></figure>
+<hr>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/06/26/Linux-Web/kong postgresql konga/">kong+postgresql+konga集群环境部署</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年06月26日 - 11:06</p>
+  <p><span>最后更新:</span>2020年06月26日 - 11:06</p>
+  <p><span>原始链接:</span><a href="/2020/06/26/Linux-Web/kong postgresql konga/" title="kong+postgresql+konga集群环境部署">https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kong/" rel="tag"># kong</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/26/Linux-Web/kong API网关介绍及API接口配置/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/26/docker/harbor私有仓库部署/" rel="prev" title="harbor私有仓库部署">
+                harbor私有仓库部署 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/06/26/Linux-Web/kong postgresql konga/"
+           data-title="kong+postgresql+konga集群环境部署" data-url="https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#kong-postgresql-konga集群环境部署"><span class="nav-number">1.</span> <span class="nav-text">kong+postgresql+konga集群环境部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#kong简介"><span class="nav-number">1.1.</span> <span class="nav-text">kong简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#postgreSQL简介"><span class="nav-number">1.2.</span> <span class="nav-text">postgreSQL简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群架构"><span class="nav-number">1.3.</span> <span class="nav-text">集群架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署步骤"><span class="nav-number">1.4.</span> <span class="nav-text">部署步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装postgresql"><span class="nav-number">1.4.1.</span> <span class="nav-text">安装postgresql</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建数据库用户密码"><span class="nav-number">1.5.</span> <span class="nav-text">创建数据库用户密码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装Kong"><span class="nav-number">1.5.1.</span> <span class="nav-text">安装Kong</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建konga"><span class="nav-number">1.6.</span> <span class="nav-text">搭建konga</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemctl管理kong和konga进程"><span class="nav-number">1.7.</span> <span class="nav-text">systemctl管理kong和konga进程</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

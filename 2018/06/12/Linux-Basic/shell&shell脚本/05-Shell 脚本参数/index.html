@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="Shell的脚本参数本章主要介绍2个命令  shift getopts   一.shiftshift命令用于对参数的移动(左移)，通常用于在不知道传入参数个数的情况下依次遍历每个参数然后进行相应处理. 在使用shift时,默认情况他会将参数变量向左移动一个位置,所以变量$3会移动到$2,$2移动到$1,$1会被删除.($0是脚本名) 举个例子: 1234567891011[root@localho">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-01T14:27:37.285Z">
+<meta property="og:updated_time" content="2020-06-26T06:35:16.444Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Shell的脚本参数">
 <meta name="twitter:description" content="Shell的脚本参数本章主要介绍2个命令  shift getopts   一.shiftshift命令用于对参数的移动(左移)，通常用于在不知道传入参数个数的情况下依次遍历每个参数然后进行相应处理. 在使用shift时,默认情况他会将参数变量向左移动一个位置,所以变量$3会移动到$2,$2移动到$1,$1会被删除.($0是脚本名) 举个例子: 1234567891011[root@localho">
@@ -403,6 +403,7 @@
 </blockquote>
 <p>当然也可以一次移动多个位置.</p>
 <p>稍微改动一下刚才的脚本</p>
+<a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$vim shift.sh</span><br><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"></span><br><span class="line">while [ -n &quot;$1&quot; ];do</span><br><span class="line">   echo &quot;Parameter #$count = $1 &quot;</span><br><span class="line">   let count=$count+1</span><br><span class="line">   shift 2</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
 <p>执行:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$bash shift.sh jesse jerry jack tom tony david</span><br><span class="line">Parameter #1 = jesse </span><br><span class="line">Parameter #2 = jack </span><br><span class="line">Parameter #3 = tony</span><br></pre></td></tr></table></figure>
@@ -476,7 +477,7 @@
   <p><span>本文标题:</span><a href="/2018/06/12/Linux-Basic/shell&shell脚本/05-Shell 脚本参数/">Shell的脚本参数</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月12日 - 22:06</p>
-  <p><span>最后更新:</span>2018年12月01日 - 22:12</p>
+  <p><span>最后更新:</span>2020年06月26日 - 14:06</p>
   <p><span>原始链接:</span><a href="/2018/06/12/Linux-Basic/shell&shell脚本/05-Shell 脚本参数/" title="Shell的脚本参数">https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/05-Shell 脚本参数/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/05-Shell 脚本参数/"  aria-label="复制成功！"></i></span>
   </p>
@@ -551,8 +552,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/12/Linux-Basic/正则表达式/正则表达式分类/" rel="next" title="正则表达式分类">
-                <i class="fa fa-chevron-left"></i> 正则表达式分类
+              <a href="/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/" rel="next" title="Shell脚本特殊变量">
+                <i class="fa fa-chevron-left"></i> Shell脚本特殊变量
               </a>
             
           </div>
@@ -561,8 +562,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/12/Linux-Basic/shell&shell脚本/Bash数组/" rel="prev" title="Bash数组">
-                Bash数组 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/12/Linux-Basic/文本处理/AWK/" rel="prev" title="AWK介绍">
+                AWK介绍 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -651,7 +652,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">89</span>
+                  <span class="site-state-item-count">143</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -662,7 +663,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -673,7 +674,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Zabbix 通过Dell Idrac监控服务器硬件状态背景最近登陆vsphere控制台发现一台Dell服务器告警,已经损坏了.于是想通过zabbix监控Dell服务器的硬件状态. 有2种方法可以监控dell服务器的硬件状态  通过Dell的OMSA工具监控 通过Dell的Idrac模块的SNMP协议监控  Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jesse&#39;s home">
+<meta property="og:url" content="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="Zabbix 通过Dell Idrac监控服务器硬件状态背景最近登陆vsphere控制台发现一台Dell服务器告警,已经损坏了.于是想通过zabbix监控Dell服务器的硬件状态. 有2种方法可以监控dell服务器的硬件状态  通过Dell的OMSA工具监控 通过Dell的Idrac模块的SNMP协议监控  Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-26T02:51:49.405Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Jesse&#39;s home">
+<meta name="twitter:description" content="Zabbix 通过Dell Idrac监控服务器硬件状态背景最近登陆vsphere控制台发现一台Dell服务器告警,已经损坏了.于是想通过zabbix监控Dell服务器的硬件状态. 有2种方法可以监控dell服务器的硬件状态  通过Dell的OMSA工具监控 通过Dell的Idrac模块的SNMP协议监控  Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/"/>
+
+
+
+
+
+  <title> | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T14:27:16+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Zabbix-通过Dell-Idrac监控服务器硬件状态"><a href="#Zabbix-通过Dell-Idrac监控服务器硬件状态" class="headerlink" title="Zabbix 通过Dell Idrac监控服务器硬件状态"></a>Zabbix 通过Dell Idrac监控服务器硬件状态</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近登陆vsphere控制台发现一台Dell服务器告警,已经损坏了.于是想通过zabbix监控Dell服务器的硬件状态.</p>
+<p>有2种方法可以监控dell服务器的硬件状态</p>
+<ul>
+<li>通过Dell的OMSA工具监控</li>
+<li>通过Dell的Idrac模块的SNMP协议监控</li>
+</ul>
+<p>Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没办法获取到硬件状态.而且OMSA工具从Dell官网下载太慢.安装很麻烦</p>
+<p>所以本文主要介绍如何通过idrac模块的snmp协议监控硬件状态.监控方法非常的简单</p>
+<hr>
+<h3 id="1-登陆服务器的idrac平台-开启snmp协议-v2版本"><a href="#1-登陆服务器的idrac平台-开启snmp协议-v2版本" class="headerlink" title="1.登陆服务器的idrac平台.开启snmp协议(v2版本)."></a>1.登陆服务器的idrac平台.开启snmp协议(v2版本).</h3><p>如果是idrac8版本,SNMP配置在左侧菜单栏<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">如果是idrac9版本,SNMP配置在菜单栏```iDRAC设置```---```服务```---```SNMP代理</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>根据我们的实际情况来看,无论是8还是9版本,SNMP都默认开启,端口是161,团体名是public</p>
+</blockquote>
+<h3 id="2-在zabbix服务端通过snmp命令检查是否能正确获取到服务器的snmp-oid"><a href="#2-在zabbix服务端通过snmp命令检查是否能正确获取到服务器的snmp-oid" class="headerlink" title="2.在zabbix服务端通过snmp命令检查是否能正确获取到服务器的snmp oid:"></a>2.在zabbix服务端通过snmp命令检查是否能正确获取到服务器的snmp oid:</h3><p>命令: <figure class="highlight plain"><figcaption><span>-v 2c -c 团体名 idrac IP地址```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>[work@server-4 ~]$ snmpwalk -v 2c -c public 172.16.250.53<br>SNMPv2-MIB::sysDescr.0 = STRING:<br>SNMPv2-MIB::sysObjectID.0 = OID: SNMPv2-SMI::enterprises.674.10892.5<br>DISMAN-EVENT-MIB::sysUpTimeInstance = Timeticks: (596160991) 69 days, 0:00:09.91<br>SNMPv2-MIB::sysContact.0 = STRING: \”<a href="mailto:support@dell.com" target="_blank" rel="noopener">support@dell.com</a>\”<br>SNMPv2-MIB::sysName.0 = STRING: iDRAC-3D38Y23<br>SNMPv2-MIB::sysLocation.0 = STRING: \”unknown\”<br>SNMPv2-MIB::sysORLastChange.0 = Timeticks: (1) 0:00:00.01<br>SNMPv2-MIB::sysORID.1 = OID: SNMPv2-MIB::snmpMIB<br>SNMPv2-MIB::sysORID.2 = OID: SNMP-VIEW-BASED-ACM-MIB::vacmBasicGroup<br>SNMPv2-MIB::sysORID.3 = OID: TCP-MIB::tcpMIB<br>SNMPv2-MIB::sysORID.4 = OID: IP-MIB::ip<br>SNMPv2-MIB::sysORID.5 = OID: UDP-MIB::udpMIB<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 3. 去github上下载idrac snmp监控模板</span><br><span class="line"></span><br><span class="line">地址: [idrac template](https://github.com/endersonmaia/zabbix-templates/tree/master/dell/idrac)</span><br><span class="line"></span><br><span class="line">模板文件我已经fork到了我自己的github仓库:[zabbix-templates](https://github.com/huangyonghome/zabbix-templates)</span><br><span class="line"></span><br><span class="line">**在dell/idrac下有3个文件:**</span><br><span class="line"></span><br><span class="line">```ValueMaps_Dell_iDRAC.zbx.xml```-------导入键值对映射 (需要zabbix3.0版本以上)</span><br><span class="line"></span><br><span class="line">```Template_Dell_iDRAC_SNMPv&#123;23&#125;.zbx.xml```-----监控模板(我们的idrac snmp协议是v2版本.所以采用snmpv2版本的模板)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 4.配置全局变量</span><br><span class="line"></span><br><span class="line">在Zabbix的```Administration```----```General```---右上角下拉框中选择宏Macros,新增宏定义:</span><br></pre></td></tr></table></figure></p>
+<p>#我这里Idrac的snmp团体名是public<br>{$SNMP_COMMUNITY_IDRAC} =&gt; public<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 5.导入模板</span><br><span class="line"></span><br><span class="line">1.导入键值对映射```ValueMaps_Dell_iDRAC.zbx.xml</span><br></pre></td></tr></table></figure></p>
+<p>2.导入监控模板<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 6.配置主机</span><br><span class="line"></span><br><span class="line">主机名和随意定义.定义snmp接口的地址为idrac接口IP地址,端口默认161.</span><br><span class="line"></span><br><span class="line">添加Template_Dell_iDRAC_SNMPv2模板</span><br><span class="line"></span><br><span class="line">&gt; 注意,snmp的地址是idrac地址,不是服务器iP地址</span><br><span class="line"></span><br><span class="line">模板里没有配置图形,如果有需要可以自己添加.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 7.验证</span><br><span class="line"></span><br><span class="line">刚好这台服务器的物理磁盘有问题.可以看到Zabbix成功的监控到这个问题,并且发送给钉钉告警.</span><br></pre></td></tr></table></figure></p>
+<p>[故障]RAID Controller Error<br>告警级别：High<br>故障时间：2020.04.29 16:45:35<br>故障时长：1h 0m<br>IP地址：172.16.250.53<br>检测项：RAIDControllerStatus<br><em>NonCritical (4) </em><br>[exsi-idrac-53·故障 (31724858)]</p>
+<p>[故障]Storage System Status Error<br>告警级别：Warning<br>故障时间：2020.04.29 16:45:35<br>故障时长：1h 0m<br>IP地址：172.16.250.53<br>检测项：GlobalSystemStorageStatus<br><em>NonCritical (4) </em><br>[exsi-idrac-53·故障 (31724857)]</p>
+<p>[故障]Overall System Rollup Status Error<br>告警级别：Warning<br>故障时间：2020.04.29 16:45:35<br>故障时长：1h 0m<br>IP地址：172.16.250.53<br>检测项：GlobalSystemRollupStatus<br><em>NonCritical (4) </em><br>[exsi-idrac-53·故障 (31724855)]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">服务器磁盘修复以后,监控回复正常.监控各项指标的结果不再是4(NonCritical) 而是3(OK)</span><br></pre></td></tr></table></figure></p>
+<p>work@server-4 ~]$ snmpwalk -v 2c -c public 172.16.250.53 1.3.6.1.4.1.674.10892.5.2.3.0<br>SNMPv2-SMI::enterprises.674.10892.5.2.3.0 = INTEGER: 3</p>
+<p>[work@server-4 ~]$ snmpwalk -v 2c -c public 172.16.250.53 1.3.6.1.4.1.674.10892.5.5.1.20.130.1.1.37.1<br>SNMPv2-SMI::enterprises.674.10892.5.5.1.20.130.1.1.37.1 = INTEGER: 3<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 问题</span><br><span class="line"></span><br><span class="line">目前发现一个模板的问题,在键值对映射中,Dell的OMSA(Open Manage System Status)键值对是这样映射的:</span><br></pre></td></tr></table></figure></p>
+<p>Dell Open Manage System Status<br>1  Other<br>2  Unknown<br>3  OK<br>4  NonCritical<br>5  Critical<br>6  NonRecoverable<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">在模板中,有一个触发器的名称是:Overall System Status Error</span><br><span class="line"></span><br><span class="line">表达式为```&#123;exsi-idrac-53:GlobalSystemStatus.last()&#125;&lt;&gt;3</span><br></pre></td></tr></table></figure></p>
+<p>用意是监控系统状态,如果值不为3(OK)则告警.但是根据实际情况来看,这个监控项GlobalSystemStatus.SNMP OID:1.3.6.1.4.1.674.10892.2.2.1.0正常情况下的值为0</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[work@server-4 ~]$ snmpwalk -v 2c -c public 172.16.250.53 1.3.6.1.4.1.674.10892.2.2.1.0</span><br><span class="line">SNMPv2-SMI::enterprises.674.10892.2.2.1.0 = INTEGER: 0</span><br></pre></td></tr></table></figure>
+<p>所以在模板中修改Overall System Status Error触发器的表达式为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">原表达式:</span><br><span class="line">&#123;Template Dell iDrac SNMPV2:GlobalSystemStatus.last()&#125;&lt;&gt;3 </span><br><span class="line"></span><br><span class="line">修改为:</span><br><span class="line">&#123;Template Dell iDrac SNMPV2:GlobalSystemStatus.last()&#125;&lt;&gt;3 and </span><br><span class="line">&#123;Template Dell iDrac SNMPV2:GlobalSystemStatus.last()&#125;&lt;&gt;0</span><br></pre></td></tr></table></figure>
+<p>用意是这个监控项的结果既不等于3,又不等于0</p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/26/Linux-Service/systemd详解/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/26/Linux-Service/使用supervisor托管elasticsearch进程/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/"
+           data-title="" data-url="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Zabbix-通过Dell-Idrac监控服务器硬件状态"><span class="nav-number">1.</span> <span class="nav-text">Zabbix 通过Dell Idrac监控服务器硬件状态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-登陆服务器的idrac平台-开启snmp协议-v2版本"><span class="nav-number">1.2.</span> <span class="nav-text">1.登陆服务器的idrac平台.开启snmp协议(v2版本).</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-在zabbix服务端通过snmp命令检查是否能正确获取到服务器的snmp-oid"><span class="nav-number">1.3.</span> <span class="nav-text">2.在zabbix服务端通过snmp命令检查是否能正确获取到服务器的snmp oid:</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
