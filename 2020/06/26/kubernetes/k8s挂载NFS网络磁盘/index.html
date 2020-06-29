@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="k8s挂载NFS网络磁盘按照这本书NFS做持久化存储的例子,发现了一个坑.,启动pod失败,报如下错误 1chown: changing ownership of &amp;apos;/data/db&amp;apos;: Operation not permitted 网上也有人遇到这个问题.可以参考这篇文档: Kubernetes 集群挂载NFS Volume">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-26T03:04:46.695Z">
+<meta property="og:updated_time" content="2020-06-29T14:45:54.747Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s挂载NFS网络磁盘">
 <meta name="twitter:description" content="k8s挂载NFS网络磁盘按照这本书NFS做持久化存储的例子,发现了一个坑.,启动pod失败,报如下错误 1chown: changing ownership of &amp;apos;/data/db&amp;apos;: Operation not permitted 网上也有人遇到这个问题.可以参考这篇文档: Kubernetes 集群挂载NFS Volume">
@@ -381,8 +381,9 @@
 <a id="more"></a>
 <p>以下是pod的yaml文件:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-m01 ~]# cat mongodb-pod-nfs.yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: mongodb</span><br><span class="line">spec:</span><br><span class="line">  volumes:</span><br><span class="line">     - name: mongodb-data</span><br><span class="line">       nfs:</span><br><span class="line">         server: 10.111.5.184</span><br><span class="line">         path: /data/k8s/</span><br><span class="line"></span><br><span class="line">  containers:</span><br><span class="line">     - image: mongo</span><br><span class="line">       name: mongodb</span><br><span class="line">       volumeMounts:</span><br><span class="line">         - name: mongodb-data</span><br><span class="line">           mountPath: /data/db</span><br><span class="line">       ports:</span><br><span class="line">         - containerPort: 27017</span><br><span class="line">           protocol: TCP</span><br></pre></td></tr></table></figure>
-<p>出现这种<figure class="highlight plain"><figcaption><span>not permitted```的权限类问题,肯定是NFS的挂载有问题.但是在所有k8s的节点上往NFS共享磁盘写文件,又是正常的.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">解决这个问题需要在NFS服务器的```/etx/exports```配置文件修改成如下配置</span><br></pre></td></tr></table></figure></p>
-<p>[work@hsq-beta-rpc ~]$cat /etc/exports<br>/data/k8s/ 10.111.0.0/16(rw,fsid=0,async,no_subtree_check,no_auth_nlm,insecure,no_root_squash)<br><code>`</code></p>
+<p>出现这种<code>Operation not permitted</code>的权限类问题,肯定是NFS的挂载有问题.但是在所有k8s的节点上往NFS共享磁盘写文件,又是正常的.</p>
+<p>解决这个问题需要在NFS服务器的<code>/etx/exports</code>配置文件修改成如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[work@hsq-beta-rpc ~]$cat /etc/exports</span><br><span class="line">/data/k8s/ 10.111.0.0/16(rw,fsid=0,async,no_subtree_check,no_auth_nlm,insecure,no_root_squash)</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>注意,以上配置其实是一行.没有换行</p>
 </blockquote>
@@ -405,7 +406,7 @@
   <p><span>本文标题:</span><a href="/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/">k8s挂载NFS网络磁盘</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2020年06月26日 - 11:06</p>
-  <p><span>最后更新:</span>2020年06月26日 - 11:06</p>
+  <p><span>最后更新:</span>2020年06月29日 - 22:06</p>
   <p><span>原始链接:</span><a href="/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/" title="k8s挂载NFS网络磁盘">https://jesse.top/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/"  aria-label="复制成功！"></i></span>
   </p>
@@ -480,8 +481,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/26/docker/harbor私有仓库部署/" rel="next" title="harbor私有仓库部署">
-                <i class="fa fa-chevron-left"></i> harbor私有仓库部署
+              <a href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/" rel="next" title="kubernetes API服务器权限(ServiceAccount && RBAC)">
+                <i class="fa fa-chevron-left"></i> kubernetes API服务器权限(ServiceAccount && RBAC)
               </a>
             
           </div>
@@ -490,8 +491,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" rel="prev" title="docker安装最新版Kong(v1.0)+konga">
-                docker安装最新版Kong(v1.0)+konga <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/26/kubernetes/kubernetes Ingress/" rel="prev" title="kuberentes Ingress">
+                kuberentes Ingress <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
