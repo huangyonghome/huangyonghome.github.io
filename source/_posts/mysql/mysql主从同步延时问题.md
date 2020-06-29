@@ -11,7 +11,7 @@ copyright: true
 
 最近领导将MASTER的主库清空了最近几个月的数据,进行了大并发的操作.这导致了mysql的从库延时非常高的问题.zabbix报警如下:
 
-![mysql-zabbix](http://pabkmteb4.bkt.clouddn.com/mysql-monitor.png)
+![mysql-zabbix](https://img1.jesse.top/mysql-monitor.png)
 
 延时一直飙升到23个小时.
 

@@ -17,6 +17,7 @@ copyright: true
 
 配置三个AS，运行BGP协议。 
 
+![bgp1](https://img1.jesse.top/static/images/network/bgp1.png)
 
 ---
 
@@ -26,6 +27,8 @@ copyright: true
 ### 2.BGP配置
 
 R1配置： 
+
+![bgp1](https://img1.jesse.top/static/images/network/bgp2.png)
 
 
 no synchronization：同步默认被关闭
@@ -44,7 +47,7 @@ neighbor 12.1.1.2 remote-as 65100：指定邻居，并且指定邻居所在的AS
 
 R2配置： 
 
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp3.png)
 
 
 利用环回口和R3.R4.R5建立邻居。即便没有和R5直接相连。同时和R1建立EBGP邻居关系。
@@ -53,21 +56,21 @@ R2配置：
 
 R3配置： 
 
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp4.png)
 
 
 R4配置： 
 
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp5.png)
 
 
 R5配置： 
 
-
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp6.png)
 
 R6配置： 
 
+![bgp1](https://img1.jesse.top/static/images/network/bgp7.png)
 
 ---
 
@@ -77,8 +80,7 @@ R6配置：
 
 ##### 1.查看R1的BGP表：show  ip bgp 
 
-
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp8.png)
 
 *：星号代表路由可达。
 
@@ -102,12 +104,12 @@ i:表示始发路由器是通过network命令，将该路由通告到BGP中。
 
 ##### 2.查看R1的路由表 show ip route：将BGP表中最优路由放入路由表 
 
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp9.png)
 
 
 ##### 3.查看R2的BGP表：show  ip bgp
 
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp10.png)
 
 
 > 在R2上我们并没有看到R3,R4.R5的信息。 
@@ -116,6 +118,8 @@ i:表示始发路由器是通过network命令，将该路由通告到BGP中。
 
 ##### 4.查看R3的BGP表：show  ip bgp
 
+![bgp1](https://img1.jesse.top/static/images/network/bgp11.png)
+
 
 > 在这只能看到自己本台路由器通告的路由，看不到任何邻居 
 
@@ -123,7 +127,7 @@ i:表示始发路由器是通过network命令，将该路由通告到BGP中。
 
 ##### 5.去R2看看邻居表：show ip bgp neighbors.以下是部分输出： 
 
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp12.png)
 
 
 从这里看到和R1的邻居关系状态是established.表示邻居已经成功建立。
@@ -134,9 +138,7 @@ keepalive间隔60秒，Hold time是三倍间隔，
 
 显示发送和接收了open,notifications,updates,keepalives,route refresh的数据包。
 
-
-
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp13.png)
 
 
 在这里看到邻居3.3.3.3的状态是active。内部链路，AS号是65100.或许不到对方的路由器ID。并且没有任何报文收发。
@@ -152,10 +154,11 @@ keepalive间隔60秒，Hold time是三倍间隔，
 
 4.4.4.4邻居也是如此。 
 
-
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp14.png)
 
 ##### 6.在R2上show ip bgp summary 
+
+![bgp1](https://img1.jesse.top/static/images/network/bgp15.png)
 
 
 可以看到只有R1的邻居有收发报文，其他邻居的状态是ACTIVE。 
@@ -163,6 +166,8 @@ keepalive间隔60秒，Hold time是三倍间隔，
 
 
 ##### 7.在R2和R3上debug ip bgp: 
+
+![bgp1](https://img1.jesse.top/static/images/network/bgp16.png)
 
 
 显示OPEN消息被拒绝，没有路由。
@@ -173,6 +178,8 @@ keepalive间隔60秒，Hold time是三倍间隔，
 
 ##### 8.在R2上配置EIGRP 
 
+![bgp1](https://img1.jesse.top/static/images/network/bgp17.png)
+
 
 >  在这，我仅仅列出了R2的配置，R3.R4.R5也做了同样的配置。需要注意的是R2连接R1的接口不需要运行EIGRP协议。 
 
@@ -180,13 +187,16 @@ keepalive间隔60秒，Hold time是三倍间隔，
 
 查看R2的路由表： 
 
+![bgp1](https://img1.jesse.top/static/images/network/bgp18.png)
+
 
 再次查看R2的BGP表： 
 
-
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp19.png)
 
 邻居仍然还未建立。
+
+![bgp1](https://img1.jesse.top/static/images/network/bgp20.png)
 
 debug ip bgp:
 
@@ -199,10 +209,14 @@ debug ip bgp:
 
 在R2上配置:
 
+![bgp1](https://img1.jesse.top/static/images/network/bgp21.png)
+
 
 在指定邻居的时候说明自己的源地址是环回0口，如果不指定源地址，路由器会查找路由表然后按路由表到对方目的地的物理接口作为出口也就是源地址。
 
 同样，需要在R3.R4.R5路由器上做同样的配置，这里仅列入了R3的配置:
+
+![bgp1](https://img1.jesse.top/static/images/network/bgp22.png)
 
 
 R3指定R2的地址是2.2.2.2。将自己的3.3.3.3作为源地址
@@ -215,6 +229,8 @@ R2指定R3的地址是3.3.3.3。将自己的2.2.2.2作为源地址
 
 再次查看R2的BGP表:
 
+![bgp1](https://img1.jesse.top/static/images/network/bgp23.png)
+
 
 至此,所有邻居已经建立.
 
@@ -224,15 +240,20 @@ R2指定R3的地址是3.3.3.3。将自己的2.2.2.2作为源地址
 
 在R3上看BGP表 
 
+![bgp1](https://img1.jesse.top/static/images/network/bgp24.png)
+
 
 同样，去往R1和R6的路由并不是最优，而且下一跳是路由通告者的接口 
 
 查看R3路由表： 
 
+![bgp1](https://img1.jesse.top/static/images/network/bgp25.png)
+
 
 发现没有1.1.1.0/24和6.6.6.0/24这两条路由。这说明不是最优的路由不会放进路由表。
 
 查看R1的BGP表：
+![bgp1](https://img1.jesse.top/static/images/network/bgp26.png)
 
 
 发现没有去往R6的路由.
@@ -249,10 +270,13 @@ BGP最优路由的条件：
 
 查看R3的BGP表 
 
+![bgp1](https://img1.jesse.top/static/images/network/bgp27.png)
+
 
 因为去往1.1.1.0/24的下一跳是12.1.1.1.是R1的物理接口，而R1是位于其他自治系统，所以没有运行IGP协议，所以R3没有到12.1.1.1的路由，也就是去往1.1.1.0/24不可达。同理6.6.6.0/24网络也是如此。
 
  同理，在R2上,去往R6路由器的下一跳也不可达
+![bgp1](https://img1.jesse.top/static/images/network/bgp28.png)
 
 
 所以，必须要改变下一跳地址：
@@ -261,23 +285,23 @@ BGP最优路由的条件：
 
 在R2上配置:
 
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp29.png)
 
 
 在R5上配置： 
 
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp30.png)
 
 
 查看R2的BGP表和路由表.去往R6的路由已经变成最优，且放进了路由表。
 
- 
+ ![bgp1](https://img1.jesse.top/static/images/network/bgp31.png)
 
-
-
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp32.png)
 
 查看R3的BGP表 
+
+![bgp1](https://img1.jesse.top/static/images/network/bgp33.png)
 
 
 发现去往R1的路由下一跳已经变成了R2。去往R6的路由下一跳变成了R5。
@@ -290,7 +314,7 @@ BGP最优路由的条件：
 
 查看R1,R2的BGP表
 
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp34.png)
 
 
 locprf是本地性能值，默认为100.该值仅在IBGP内部有效。
@@ -299,13 +323,14 @@ locprf是本地性能值，默认为100.该值仅在IBGP内部有效。
 
 前面的r表示该BGP学来的路由没有进入路由表，在rib-failure列表里。查看rib-failure：
 
-
+![bgp1](https://img1.jesse.top/static/images/network/bgp35.png)
 
 
 显示3条BGP路由没有进入路由表，原因是相比IGP协议，BGP路由有更高的管理距离，所以没有进入路由表。
 
 查看R2的路由表，发现通过EIGRP学到的路由被放进了路由表，因为管理距离更小（90）,而IGBP的管理距离是200.
 
+![bgp1](https://img1.jesse.top/static/images/network/bgp36.png)
 
 ---
 

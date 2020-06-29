@@ -15,6 +15,7 @@ copyright: true
 
 ### 1.实验拓扑：
 
+![hsrp](https://img1.jesse.top/static/images/network/hsrp.png)
 
 ---
 
@@ -83,6 +84,7 @@ Switch(config-if)#standby 1 preempt
 
 Switch1经过speak,standby角色后成为了active网关，实际总共经过listen，speak,standby,active角色。
 
+![hsrp](https://img1.jesse.top/static/images/network/hsrp1.png)
 
 ---
 
@@ -105,17 +107,15 @@ Switch(config-if)#standby 1 ip 10.1.1.254
 
 
 
-
+![hsrp2](https://img1.jesse.top/static/images/network/hsrp2.png)
 
 
 > 通过show standby可以看到HSRP组号，虚拟IP网关，虚拟MAC地址。Hello时间和间隔。抢占特性是否开启。活跃网关路由器，备份网关路由器，优先级等
 
 
-
-
-
-
 > 通过show standby brief 可以更加直观的看到组号，优先级，角色状态，路由器角色，网关IP等信息
+
+![hsrp3](https://img1.jesse.top/static/images/network/hsrp3.png)
 
 ---
 
@@ -127,12 +127,12 @@ Switch(config-if)#standby 1 ip 10.1.1.254
 
 * 主机配置虚拟IP地址为默认网关：
 
-
+![hsrp4](https://img1.jesse.top/static/images/network/hsrp4.png)
 
 
 * 测试访问外部网络的路径
 
-
+![hsrp5](https://img1.jesse.top/static/images/network/hsrp5.png)
 
 
 实验显示R1可以正常通过默认网关访问外部网络，并且经过的是10.1.1.2这台活跃路由器
@@ -141,7 +141,7 @@ Switch(config-if)#standby 1 ip 10.1.1.254
 
 * 查看主机的ARP记录表
 
-
+![hsrp6](https://img1.jesse.top/static/images/network/hsrp6.png)
 
 
 实验显示主机是通过虚拟IP和虚拟MAC地址通信。
@@ -173,11 +173,10 @@ Switch(config-if)#standby 1 priority 150
 
 交换机角色马上从standby转变成active
 
-
-
+![hsrp7](https://img1.jesse.top/static/images/network/hsrp7.png)
 
 显示本交换机成为了active，对端成为了standby，并且本机优先级变成了150
-
+![hsrp8](https://img1.jesse.top/static/images/network/hsrp8.png)
 
 ------
 
@@ -187,12 +186,11 @@ Switch(config-if)#standby 1 priority 150
 
 ##### 1.在主机连续ping 远端路由器 5.5.5.5 1000个数据包
 
-
-
 ##### 2.关闭ACTIVE交换机的VLAN1端口
 
-实验显示只丢了一个包
+![hsrp8](https://img1.jesse.top/static/images/network/hsrp9.png)
 
+实验显示只丢了一个包
 
 ------
 
@@ -210,6 +208,7 @@ HSRP是一个网关冗余协议，这就意味着默认情况下网络中只能�
 
 #### 1.实验拓扑
 
+![hsrp10](https://img1.jesse.top/static/images/network/hsrp10.png)
 
 ---
 
@@ -236,6 +235,8 @@ PC0和PC1分别模拟两个VLAN下的主机.
 ##### 1.配置VLAN1的HSRP
 
 在Switch1上的Vlan1接口下配置HSRP的VLAN1组，此台设备的优先级为150，设置虚拟IP,开启抢占特性
+
+![hsrp11](https://img1.jesse.top/static/images/network/hsrp11.png)
 
 
 
@@ -273,7 +274,9 @@ Switch(config-if)#standby 2 preempt
 
 在Switch0上检查配置发现本台设备是VLAN1组的standby网关，Vlan2组的active网关
 
+![hsrp12](https://img1.jesse.top/static/images/network/hsrp12.png)
 
+![hsrp13](https://img1.jesse.top/static/images/network/hsrp13.png)
 
 ---
 
@@ -283,9 +286,11 @@ Switch(config-if)#standby 2 preempt
 
 在Vlan1的PC0上tracert 位于路由器的5.5.5.5地址。发现流量先经过10.1.1.2的网关，而10.1.1.2正是Vlan1的ACTIVE网关的真实IP
 
+![hsrp14](https://img1.jesse.top/static/images/network/hsrp14.png)
 
 在Vlan2的PC1上tracert位于路由器的5.5.5.5地址：发现流量先经过10.1.2.3的网关，而10.1.2.3正是Vlan2的ACTIVE网关的真实IP
 
+![hsrp15](https://img1.jesse.top/static/images/network/hsrp15.png)
 
 ------
 
@@ -298,6 +303,8 @@ HSRP的track功能可以追踪上行链路的情况，如果配置了track，一
 
 
 #### 1.配置命令：
+
+![hsrp16](https://img1.jesse.top/static/images/network/hsrp16.png)
 
 
 真实的设备中，接口后面可以指定一旦上行链路失效，会降低多少优先级。但是模拟器中没有这个功能，默认是降低10个优先级

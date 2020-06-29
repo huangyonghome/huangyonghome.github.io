@@ -7,10 +7,6 @@ comments: true
 copyright: true
 ---
 
-
-
-
-
 ## Shell的脚本参数
 
 本章主要介绍2个命令
@@ -57,6 +53,8 @@ Parameter #5 = tony
 当然也可以一次移动多个位置.
 
 稍微改动一下刚才的脚本
+
+<!--more-->
 
 ```
 [root@localhost ~]$vim shift.sh

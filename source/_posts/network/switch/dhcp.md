@@ -1,4 +1,5 @@
 ---
+
 title: DHCP process
 date: 2018-06-12 22:59:58
 tags: [network,DHCP,Cisco ]
@@ -15,7 +16,7 @@ copyright: true
 
 
 
-
+![dhcp](https://img1.jesse.top/static/images/network/dhcp.png)
 
 
 <!--more-->
@@ -60,24 +61,20 @@ R2 succeeds in getting an IP address ,it shows 10.1.1.2:
 show DHCP lease , this command will show some information about the ip address and the server of DHCP
 ```
 
---------------------------------------------------------------------------------
-
-
+![dhcp1](https://img1.jesse.top/static/images/network/dhcp1.png)
 
 #### Now. Let's analyse the process of HDCP :
 
-
 ---
 
-
+![dhcp3](https://img1.jesse.top/static/images/network/dhcp3.png)
 
 **1.Client send a DHCP Discover massage :**
-
 
 the destination MAC address is broadcast address ,and the destination IP address is the broadcast address too.  
 R1 sends a Bootstrap Protocol (discover) with the message type :Boot Request 1
 
-
+![dhcp4](https://img1.jesse.top/static/images/network/dhcp4.png)
 
 **2.DHCP server send an ARP request message  before assing the ip address .to make sure this address is available.**
 
@@ -89,33 +86,31 @@ R1 sends a Bootstrap Protocol (discover) with the message type :Boot Request 1
 
 
 
-
-
+![dhcp5](https://img1.jesse.top/static/images/network/dhcp5.png)
 
 **4.Clinet send a Request massage to Server to choose an ip address (there could be more than one servers in the network )**
 
-
-
+![dhcp6](https://img1.jesse.top/static/images/network/dhcp6.png)
 
 
 
 **5.DHCP server send an ACK message to make sure this IP address was accepted by Client. this is a Reply pacakge**
 
-
+![dhcp7](https://img1.jesse.top/static/images/network/dhcp7.png)
 
 
 
 
 **6.At the end . Client will send a gratuitous ARP (无故ARP) to broadcast address . to inform all others about its own IP address and ARP address :**
 
-
-
+![dhcp8](https://img1.jesse.top/static/images/network/dhcp8.png)
 
 
 
 --------------------------------------------------------------------------------
 #### Summarize :
 
+![dhcp9](https://img1.jesse.top/static/images/network/dhcp9.png)
 
 ---
 

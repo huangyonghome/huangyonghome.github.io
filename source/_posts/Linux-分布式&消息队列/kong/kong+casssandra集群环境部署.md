@@ -35,7 +35,7 @@ kong 集群并不意味着客户端请求将会负载均衡到kong集群中的�
 
 为了提高冗余性和健壮性.我们对kong的每个环节都进行了冗余设计.一个基本的kong集群架构大概如下图所示:
 
-![](http://pabkmteb4.bkt.clouddn.com/kong-flow.png)
+![](https://img1.jesse.top/kong-flow.png)
 
 --
 

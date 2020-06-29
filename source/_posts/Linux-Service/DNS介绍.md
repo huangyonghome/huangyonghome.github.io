@@ -34,7 +34,7 @@ DNS系统采用树状的阶层是架构,
 
  DNS 是以类似『树状目录』的型态来进行主机名的管理的！所以每一部 DNS 服务器都仅管理自己的下一层主机 .下图演示了www.ksu.edu.tw这个主机名的DNS查询过程:
 
-![](http://pabkmteb4.bkt.clouddn.com/dns.png)
+![](https://img1.jesse.top/dns.png)
 
 
 

@@ -225,21 +225,21 @@ autorestart还有个值是unexpected.并且默认是unexpected
 
 比如下面这个例子,supervisor反复的启动elasticsearch..注意观察elasticsearch的PID一直在变. : 
 
-
+![supervisor](https://img1.jesse.top/static/images/Linux/supervisor.png)
 
 
  查看supervisor的日志: 
 
 elasticsearch一直在不断的启动,异常退出,启动.并且看到elasticsearch的退出码为1 
 
-
+![supervisor](https://img1.jesse.top/static/images/Linux/supervisor1.png)
 
 
 查看elasticsearch的日志: 
 
 可以看到elasticsearch一直在退出.然后被supervisor自动重启 
 
-
+![supervisor](https://img1.jesse.top/static/images/Linux/supervisor2.png)
 
 
 修改supervisord.conf配置文件中的elasticsearch配置文件
@@ -254,6 +254,7 @@ elasticsearch一直在不断的启动,异常退出,启动.并且看到elasticsea
 
 重载supervisor配置文件,可以发现supervisor并没有自动重启该应用 
 
+![supervisor](https://img1.jesse.top/static/images/Linux/supervisor3.png)
 
 ---
 

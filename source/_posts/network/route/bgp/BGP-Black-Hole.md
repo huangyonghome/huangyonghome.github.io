@@ -11,6 +11,7 @@ copyright: true
 
 ## BGP2. Black Hole
 
+![hsrp8](https://img1.jesse.top/static/images/network/bgp2-1.png)
 
 <!--more-->
 
@@ -36,7 +37,7 @@ This is an interesting conclusion that Routes might could pass through between d
 
 We still use above topology and give them some IP address :
 
-
+![hsrp8](https://img1.jesse.top/static/images/network/bgp2-2.png)
 
 
 **1.Routes updates packet **

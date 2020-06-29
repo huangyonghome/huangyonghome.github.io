@@ -45,7 +45,7 @@ copyright: true
 
 在"app store"搜索并下载 "cisco anyconnect".如下图所示
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect1.png)
+![](https://img1.jesse.top/anyconnect1.png)
 
 
 
@@ -55,9 +55,9 @@ copyright: true
 
 打开软件.点击底部的"设置"菜单.关闭"阻止不信任的服务器"功能.如下图所示:
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect2.png)
+![](https://img1.jesse.top/anyconnect2.png)
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect3.png)
+![](https://img1.jesse.top/anyconnect3.png)
 
 
 
@@ -67,13 +67,13 @@ Anyconnect VPN支持包括密码,证书等多种验证方式.为了避免每次�
 
 3.1点击底部的"诊断"菜单.在诊断界面中,点击"证书"
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect4.png)
+![](https://img1.jesse.top/anyconnect4.png)
 
 
 
 3.2.点击"导入用户证书......"
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect5.png)
+![](https://img1.jesse.top/anyconnect5.png)
 
 
 
@@ -81,13 +81,13 @@ Anyconnect VPN支持包括密码,证书等多种验证方式.为了避免每次�
 
 下图所示的是我个人的证书URL路径:
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect6.png)
+![](https://img1.jesse.top/anyconnect6.png)
 
 
 
 3.4.证书导入成功
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect7.png)
+![](https://img1.jesse.top/anyconnect7.png)
 
 
 
@@ -97,13 +97,13 @@ Anyconnect VPN支持包括密码,证书等多种验证方式.为了避免每次�
 
 4.1 回到软件主界面,点击"连接".如下图所示
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect8.png)
+![](https://img1.jesse.top/anyconnect8.png)
 
 
 
 4.2 点击"添加VPN连接".如下图所示
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect9.png)
+![](https://img1.jesse.top/anyconnect9.png)
 
 
 
@@ -113,19 +113,19 @@ Anyconnect VPN支持包括密码,证书等多种验证方式.为了避免每次�
 >
 > "服务器地址": 这个是我们VPN服务器的地址.必须为:xx.xx.xx.xx:4333. **注意这里的冒号符号必须为英文格式,不要再中文输入法下输入冒号**
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect10.png)
+![](https://img1.jesse.top/anyconnect10.png)
 
 
 
 4.4 此时会提示你"AnyConnect"想要添加VPN配置文件到iphone手机上.点击"Allow"允许.如下图所示:
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect15.png)
+![](https://img1.jesse.top/anyconnect15.png)
 
 
 
 4.5.此时会要求你输入手机密码进行验证通过.如下图所示:
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect16.png)
+![](https://img1.jesse.top/anyconnect16.png)
 
 
 
@@ -133,7 +133,7 @@ Anyconnect VPN支持包括密码,证书等多种验证方式.为了避免每次�
 
 
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect17.png)
+![](https://img1.jesse.top/anyconnect17.png)
 
 
 
@@ -155,7 +155,7 @@ Anyconnect VPN支持包括密码,证书等多种验证方式.为了避免每次�
 
 > note: 注意"连接"这里是我们刚刚创建的dwd连接名.(有可能是您自己创建的连接名)
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect11.png)
+![](https://img1.jesse.top/anyconnect11.png)
 
 
 
@@ -163,7 +163,7 @@ Anyconnect VPN支持包括密码,证书等多种验证方式.为了避免每次�
 
 点击"继续"即可.如下图所示:
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect13.png)
+![](https://img1.jesse.top/anyconnect13.png)
 
 
 
@@ -171,7 +171,7 @@ Anyconnect VPN支持包括密码,证书等多种验证方式.为了避免每次�
 
 
 
-![](http://pabkmteb4.bkt.clouddn.com/anyconnect14.png)
+![](https://img1.jesse.top/anyconnect14.png)
 
 
 

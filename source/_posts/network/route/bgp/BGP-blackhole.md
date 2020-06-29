@@ -11,10 +11,9 @@ copyright: true
 
 ## LAB About BGP black hole
 
-
+![hsrp8](https://img1.jesse.top/static/images/network/bgp3-1.png)
 
 ### LAB Topology 
-
 
 ---
 

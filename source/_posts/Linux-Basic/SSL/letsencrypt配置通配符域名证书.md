@@ -183,7 +183,7 @@ server {
 ```
 重启nginx,浏览器访问域名.通配符证书已经生效.如下图所示:
 
-![](http://pabkmteb4.bkt.clouddn.com/letsencrypt.png)
+![](https://img1.jesse.top/letsencrypt.png)
 
 --
 

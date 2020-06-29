@@ -493,19 +493,19 @@ zabbix_agentd -c /etc/zabbix/zabbix_agentd.conf
 
 1.在slave库配置监控项
 
-![](http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat.png)
+![](https://img1.jesse.top/mysql-heartbeat.png)
 
 
 
 2.配置图形
 
-![](http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat1.png)
+![](https://img1.jesse.top/mysql-heartbeat1.png)
 
 
 
 3.配置触发器
 
-![](http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat2.png)
+![](https://img1.jesse.top/mysql-heartbeat2.png)
 
 > note: 为了防止因为网络抖动造成的频繁的延时报警.这里表达式设置为连续3次采集的数据都大于10秒才报警.也可以换成另外一种表达式:
 >
@@ -515,19 +515,19 @@ zabbix_agentd -c /etc/zabbix/zabbix_agentd.conf
 
 另外.再设置一档报警.比如5分钟延时报警,此时报警等级为严重.
 
-![](http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat3.png)
+![](https://img1.jesse.top/mysql-heartbeat3.png)
 
 
 
 4.查看监控数据
 
-![](http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat4.png)
+![](https://img1.jesse.top/mysql-heartbeat4.png)
 
 
 
 5.测试触发器是否工作正常
 
-![](http://pabkmteb4.bkt.clouddn.com/mysql-heartbeat5.png)
+![](https://img1.jesse.top/mysql-heartbeat5.png)
 
 
 
