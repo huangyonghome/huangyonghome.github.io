@@ -362,7 +362,7 @@ Data stored on this pod: Hey There ! This greeting was submitted to statefulset-
 
 #### 1.7版本之前默认的On Delete更新策略
 
-​     statefulset在1.7版本开始支持滚动更新..在1.7版本之前默认的更新测量是```On Delete```.这种侧列和ReplicaSet类似.当更新了配置文件后,旧的pod并不会被自动删除,而是需要手动删除.
+​     statefulset在1.7版本开始支持滚动更新..在1.7版本之前默认的更新测量是`On Delete`.这种侧列和ReplicaSet类似.当更新了配置文件后,旧的pod并不会被自动删除,而是需要手动删除.
 
 ​    下面这个例子中,将镜像更换为luksa/kubia-pet-peers.副本数从3个增加到4个.(为此,我们需要提前再创建一个pv-4
 
@@ -550,7 +550,7 @@ Containers:
 
 ##### 强制删除
 
-带上参数```--force --grace-period 0```可以强制删除一个pod
+带上参数`--force --grace-period 0`可以强制删除一个pod
 
 ```
 [root@k8s-master ~]# kubectl delete po statefulset-kubia-v1-0 --force --grace-period 0

@@ -158,7 +158,7 @@ This is v1 running in pod kubia-dm-rc-v1-mk6hf
 
 >如果使用了指定的tag,例如(v1),则默认的镜像拉取策略为IfNotPresent,则虽然应用程序更新了,但是由于tag不变(都是v1),所以某些已经拉取了v1版本的镜像的Pod仍然使用v1旧版本的镜像.但是之前没有运行该pod的节点拉取的是v2版本.这就造成虽然镜像名一样,但是内容不一样的意外情况
 
-#### 3.使用```kubectl rolling-update```命令开始ReplicationController的滚动升级.
+#### 3.使用`kubectl rolling-update`命令开始ReplicationController的滚动升级.
 
 >在这之前打开一个新终端,循环访问Pod容器,观察升级过程中客户端访问情况
 
@@ -378,7 +378,7 @@ deployment有2种升级策略
 
 其中RollingUpdate还有更详细的配置参数定义滚动过程动作.
 
-> 在演示滚动更新之前,先回顾一下修改对象的几种不同方式.之前接触过通过```kubectl edit```命令修改,或者通过```kubectl patch```打补丁的方式修改
+> 在演示滚动更新之前,先回顾一下修改对象的几种不同方式.之前接触过通过`kubectl edit`命令修改,或者通过`kubectl patch`打补丁的方式修改
 
 下表中是几种不同的修改方式:
 
@@ -432,7 +432,7 @@ This is v2 running in pod kubia-dm-v1-6c99f46f5-fj4dl
 This is v2 running in pod kubia-dm-v1-6c99f46f5-b55rf
 ```
 
-deploy进行滚动更新的过程和上个例子中使用的```kubectl rolling-update```命令非常相似.稍有不同的是,deployment更新完成后,创建了一个新的ReplicaSet.但是旧的ReplicaSet并不会删除.
+deploy进行滚动更新的过程和上个例子中使用的`kubectl rolling-update`命令非常相似.稍有不同的是,deployment更新完成后,创建了一个新的ReplicaSet.但是旧的ReplicaSet并不会删除.
 
 ```
 [root@k8s-master ~]# kubectl get rs
@@ -486,7 +486,7 @@ Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4
 
 先演示如何手动停止升级.deployment可以非常容易的回滚到先前部署的版本.它可以让Kubernetes取消最后一次部署的Deployment
 
-命令: ```kubectl rollout undo deployment DeplymentName```
+命令: `kubectl rollout undo deployment DeplymentName`
 
 ```
 [root@k8s-master ~]# kubectl rollout undo deployment kubia-dm-v1
@@ -509,7 +509,7 @@ This is v2 running in pod kubia-dm-v1-6c99f46f5-pkv5f
 
 ##### 4. 显示deployment的滚动升级历史
 
-命令: ```kubectl rollout history deployment DeploymentName```
+命令: `kubectl rollout history deployment DeploymentName`
 
 ```
 [root@k8s-master ~]# kubectl rollout history deployment kubia-dm-v1
@@ -545,7 +545,7 @@ Pod Template:
 
 有了上面的revision版本编号,可以回滚到一个特定的deployment版本,比如回滚到第一个版本
 
-命令: ```kubectl rollout undo deployment Deployment名 --to-revision=回滚版本```
+命令: `kubectl rollout undo deployment Deployment名 --to-revision=回滚版本`
 
 ```
 [root@k8s-master ~]# kubectl rollout undo deployment kubia-dm-v1 --to-revision=1
@@ -673,7 +673,7 @@ deploy可以使用暂停滚动升级来实现这一需求,在触发滚动升级�
 [root@k8s-master ~]# kubectl set image deployment kubia-dm-v1  nodejs=luksa/kubia:v4
 deployment.apps/kubia-dm-v1 image updated
 ```
-使用命令```kubectl rollout pause deployment deploymentName```暂停
+使用命令`kubectl rollout pause deployment deploymentName`暂停
 
 ```
 [root@k8s-master ~]# kubectl rollout pause deployment kubia-dm-v1
@@ -700,7 +700,7 @@ This is v2 running in pod kubia-dm-v1-6c99f46f5-cvbfd
 
 #### 恢复滚动升级
 
-一旦确认v4版本pod没有问题,就可以恢复升级了,使用命令```kubectl rollout resume deployment deploymentName```
+一旦确认v4版本pod没有问题,就可以恢复升级了,使用命令`kubectl rollout resume deployment deploymentName`
 
 ```
 [root@k8s-master ~]# kubectl rollout resume deployment kubia-dm-v1
@@ -819,7 +819,7 @@ Waiting for deployment "kubia-dm-v1" rollout to finish: 1 out of 3 new replicas 
 error: deployment "kubia-dm-v1" exceeded its progress deadline
 ```
 
-通过```kubectl describe deploy kubia-dm-v1```可以查看deployment状态.ProgressDeadlineExceeded表示升级超时
+通过`kubectl describe deploy kubia-dm-v1`可以查看deployment状态.ProgressDeadlineExceeded表示升级超时
 
 ```
 Conditions:
