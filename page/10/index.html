@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/" itemprop="url">使用acme.sh申请https证书</a></h1>
+                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="url">letsencrypt配置通配符域名证书</a></h1>
         
 
         <div class="post-meta">
@@ -358,8 +358,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/" itemprop="commentCount"></span>
+                <a href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -388,20 +388,12 @@
 
       
         
-          <h3 id="使用acme-sh申请https证书"><a href="#使用acme-sh申请https证书" class="headerlink" title="使用acme.sh申请https证书"></a>使用acme.sh申请https证书</h3><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><strong>acme.sh</strong> 实现了 <code>acme</code> 协议, 可以从 letsencrypt 生成免费的证书.</p>
-<p>acme是一个shell脚本。安装使用都很方便。不依赖于python或官方的Let’s Encrypt客户端。<br>只需一个脚本即可自动颁发，续订和安装证书。 不需要root/sudoer访问权限。</p>
-<p>acme的github项目有详细的中文文档：<a href="https://github.com/Neilpang/acme.sh/wiki/%E8%AF%B4%E6%98%8E" target="_blank" rel="noopener">acme.sh</a></p>
-<hr>
-<h3 id="对比certbot工具"><a href="#对比certbot工具" class="headerlink" title="对比certbot工具"></a>对比certbot工具</h3><p>还有另外一个工具<strong>certbot-auto</strong>也可以申请letsencrypt免费证书。</p>
-<p>certbot工具需要安装一大堆系统库以及 Python 库，Python 的 pip 在国内还会有墙的问题…而且每次certbot工具自动更新版本的时候都会面临pip被墙的风险。所以很难使用。</p>
-<p>当然，<strong>acme.sh</strong>相比certbot更强大的地方还在于：</p>
-<p>1.acme支持dns认证方式</p>
-<p>2.acme带有自动更新dns记录，验证dns的脚本(需要dns服务商的api token)</p>
-<p>3.支持通配符证书的申请</p>
-<p>4.acme安装后就自动写入crontab记录，意味着只要证书申请后就自动更新，完全不需操心</p>
+          <h2 id="letsencrypt配置通配符域名证书"><a href="#letsencrypt配置通配符域名证书" class="headerlink" title="letsencrypt配置通配符域名证书"></a>letsencrypt配置通配符域名证书</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在今年稍早些的时候,letsencrypt终于开始免费支持通配符域名证书了.但是只支持一个层级的通配主机域名.</p>
+<p>比如我曾经踩过的坑:*.dev.xxx.com通配符域名证书并不能支持api.v3.dev.xxx.com这种三层子域名.</p>
+<p>如果需要为api.v3.dev.xxx.com申请通配符证书,则还需要申请*.v3.dev.xxx.com通配符证书</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/#more" rel="contents">
+            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1102,166 +1094,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/" itemprop="url">Ansible-Playbook</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T22:59:58+08:00">
-                2018-08-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Ansible/" itemprop="url" rel="index">
-                    <span itemprop="name">Ansible</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Ansible的Playbook介绍以及技巧"><a href="#Ansible的Playbook介绍以及技巧" class="headerlink" title="Ansible的Playbook介绍以及技巧"></a>Ansible的Playbook介绍以及技巧</h2><p>playbook的格式是YAML.以下是一个playbook的范例:</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/26/Ansible/playbook高级特性/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1368,6 +1200,166 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/08/26/Ansible/playbook高级特性/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/" itemprop="url">Ansible-Playbook</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T22:59:58+08:00">
+                2018-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Ansible/" itemprop="url" rel="index">
+                    <span itemprop="name">Ansible</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Ansible的Playbook介绍以及技巧"><a href="#Ansible的Playbook介绍以及技巧" class="headerlink" title="Ansible的Playbook介绍以及技巧"></a>Ansible的Playbook介绍以及技巧</h2><p>playbook的格式是YAML.以下是一个playbook的范例:</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1756,7 +1748,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/14/Linux-Service/DNS介绍/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/14/Linux-Service/docker运行DNS服务器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1775,7 +1767,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/14/Linux-Service/DNS介绍/" itemprop="url">DNS介绍</a></h1>
+                <a class="post-title-link" href="/2018/08/14/Linux-Service/docker运行DNS服务器/" itemprop="url">docker运行DNS服务器</a></h1>
         
 
         <div class="post-meta">
@@ -1828,8 +1820,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/08/14/Linux-Service/DNS介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/14/Linux-Service/DNS介绍/" itemprop="commentCount"></span>
+                <a href="/2018/08/14/Linux-Service/docker运行DNS服务器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/14/Linux-Service/docker运行DNS服务器/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1858,11 +1850,11 @@
 
       
         
-          <h3 id="DNS介绍"><a href="#DNS介绍" class="headerlink" title="DNS介绍"></a>DNS介绍</h3><p>IP地址虽然采用了十分记数法.但是对于人脑来说还是非常难以记忆,但是访问互联网网站又一定需要IP,为了应对这个问题.早期的时候是通过hosts文件来绑定主机名和IP的对应关系,</p>
-<p>但是这种方法存在非常多的不足,特别是IP和主机名的对应关系越来越多的时候.hosts档案完全无法满足人们的需求.这个时候,伯克利大学发展出一套主机名IP对应系统.称为Berkeley Internet Name Domain, BIND  .也就是目前全世界使用最广泛的Domain Name System, DNS </p>
+          <h2 id="docker运行DNS服务器"><a href="#docker运行DNS服务器" class="headerlink" title="docker运行DNS服务器"></a>docker运行DNS服务器</h2><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>linux提供了Bind工具搭建DNS服务,但是bind配置太过复杂,需要配置正向解析,zone区域等.而且很多功能是完全用不上的.所以这里选择使用dnsmasq来作为内部DNS服务器.</p>
+<p>dnsmasq非常小巧,简单,配置十分方便.只有3个配置文件:</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/08/14/Linux-Service/DNS介绍/#more" rel="contents">
+            <a class="btn" href="/2018/08/14/Linux-Service/docker运行DNS服务器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

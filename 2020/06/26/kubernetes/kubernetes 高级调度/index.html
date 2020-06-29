@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="kubernetes 高级调度介绍本章主要介绍pod的高级调度功能.主要涵盖2方面调度特性:  节点污染和pod容忍度 节点亲缘性   一.节点污染和pod容忍度概念节点污点: 该特性用于限制哪些Pod可以被调度到某一个节点. pod容忍度:当一个Pod容忍某个节点的污点,这个pod才能被调度到该节点 默认情况下k8s集群中的master主节点就设置了污点,.这样才能保证只有控制面板等系统组件才能">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-26T08:49:19.131Z">
+<meta property="og:updated_time" content="2020-06-29T14:41:57.002Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernetes 高级调度">
 <meta name="twitter:description" content="kubernetes 高级调度介绍本章主要介绍pod的高级调度功能.主要涵盖2方面调度特性:  节点污染和pod容忍度 节点亲缘性   一.节点污染和pod容忍度概念节点污点: 该特性用于限制哪些Pod可以被调度到某一个节点. pod容忍度:当一个Pod容忍某个节点的污点,这个pod才能被调度到该节点 默认情况下k8s集群中的master主节点就设置了污点,.这样才能保证只有控制面板等系统组件才能">
@@ -386,9 +386,10 @@
 <p>默认情况下k8s集群中的master主节点就设置了污点,.这样才能保证只有控制面板等系统组件才能部署在主节点上.应用pod只能被调度到工作节点</p>
 <hr>
 <h4 id="显示节点污点信息"><a href="#显示节点污点信息" class="headerlink" title="显示节点污点信息"></a>显示节点污点信息</h4><a id="more"></a>
-<p>通过<figure class="highlight plain"><figcaption><span>describe node```可以查看节点的污点信息.例如下面是master节点污点信息</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```bash</span><br><span class="line">[root@k8s-master ~]# kubectl describe node k8s-master</span><br><span class="line">Taints:             node-role.kubernetes.io/master:NoSchedule</span><br></pre></td></tr></table></figure></p>
+<p>通过<code>kubectl describe node</code>可以查看节点的污点信息.例如下面是master节点污点信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># kubectl describe node k8s-master</span></span><br><span class="line">Taints:             node-role.kubernetes.io/master:NoSchedule</span><br></pre></td></tr></table></figure>
 <p>master节点包含一个污点(taints).污点包含一个key,value,effect.格式为:<key>=<value>:<effect></effect></value></key></p>
-<p>上面的污点信息包含一个<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">这个污点将阻止pod调度到这个节点上,除非有pod能容忍这个污点.通常能容忍这个污点的Pod都是kubernetes系统级别的Pod.</span><br><span class="line"></span><br><span class="line">例如观察一个Kube-system名称空间下的coredns系统级别的pod信息:</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">[root@k8s-master ~]# kubectl describe po coredns-7f9c544f75-9sh28 -n kube-system</span><br><span class="line"></span><br><span class="line">Tolerations:     CriticalAddonsOnly</span><br><span class="line">                 node-role.kubernetes.io/master:NoSchedule</span><br><span class="line">                 node.kubernetes.io/not-ready:NoExecute for 300s</span><br><span class="line">                 node.kubernetes.io/unreachable:NoExecute for 300s</span><br></pre></td></tr></table></figure></p>
+<p>上面的污点信息包含一个<code>node-role.kubernetes.io/master</code>的key.一个空的value,以及值为<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">这个污点将阻止pod调度到这个节点上,除非有pod能容忍这个污点.通常能容忍这个污点的Pod都是kubernetes系统级别的Pod.</span><br><span class="line"></span><br><span class="line">例如观察一个Kube-system名称空间下的coredns系统级别的pod信息:</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">[root@k8s-master ~]# kubectl describe po coredns-7f9c544f75-9sh28 -n kube-system</span><br><span class="line"></span><br><span class="line">Tolerations:     CriticalAddonsOnly</span><br><span class="line">                 node-role.kubernetes.io/master:NoSchedule</span><br><span class="line">                 node.kubernetes.io/not-ready:NoExecute for 300s</span><br><span class="line">                 node.kubernetes.io/unreachable:NoExecute for 300s</span><br></pre></td></tr></table></figure></p>
 <p>该pod容忍度(tolerations)包含了4个容忍度,其中<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">##### 污点效果</span><br><span class="line"></span><br><span class="line">上面列出的pod展示了2种污点effect(污点效果):```NoSchedule```和```NoExecute```.每一个污点都可以关联一个effect.下面介绍各污点效果.</span><br><span class="line"></span><br><span class="line">* **NoSechedule**: 如果pod没有容忍这些污点,这pod不能被调度到包含这个污点的节点</span><br><span class="line">* **PreferNoSechedule** NoSechedule的宽松版本,表示尽量阻止pod被调度到这个节点.但是如果没有其他节点可以调度,pod依然会被调度到这个节点</span><br><span class="line">* **NoExecute** 上面两者只在调度期间起作用,而NoExecute也会影响正在节点上运行中的pod.如果在一个节点上添加了NoExecute污点.那么在这个节点上正在运行的pod如果没有容忍这个污点,会被这个节点驱除</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">#### 添加自定义污点</span><br><span class="line"></span><br><span class="line">如果一个单独K8s集群上同时有生产环境和非生产环境的应用.那么可以在生产环境上添加自定义污点来防止其他环境的Pod调度到生产节点.</span><br><span class="line"></span><br><span class="line">添加污点命令:```kubectl taint</span><br></pre></td></tr></table></figure></p>
 <p>命令格式: <figure class="highlight plain"><figcaption><span>taint node NodeName key</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">例如下面命令将node1的节点添加一个key为```node-type```.value为```production```.效果为```NoSchedule```的污点</span><br></pre></td></tr></table></figure></p>
 <p>root@k8s-master ~]# kubectl taint node k8s-node1 node-type=production:NoSchedule<br>node/k8s-node1 tainted<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">下面部署一个常规的多副本pod.此时所有pod都被调度到k8s-node2节点上.无法调度到node1</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">[root@k8s-master ~]# kubectl run test --image busybox --replicas 5 -- sleep 999</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]# kubectl get pods -o wide  </span><br><span class="line">test-69c6778cfb-2jgbn           1/1     Running   0          4m38s   10.100.169.188   k8s-node2   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">test-69c6778cfb-7lbnw           1/1     Running   0          4m38s   10.100.169.187   k8s-node2   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">test-69c6778cfb-c4vrx           1/1     Running   0          4m38s   10.100.169.190   k8s-node2   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">test-69c6778cfb-grkhc           1/1     Running   0          4m38s   10.100.169.185   k8s-node2   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">test-69c6778cfb-xc2sp           1/1     Running   0          4m38s   10.100.169.130   k8s-node2   &lt;none&gt;           &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
@@ -487,7 +488,7 @@
   <p><span>本文标题:</span><a href="/2020/06/26/kubernetes/kubernetes 高级调度/">kubernetes 高级调度</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2020年06月26日 - 11:06</p>
-  <p><span>最后更新:</span>2020年06月26日 - 16:06</p>
+  <p><span>最后更新:</span>2020年06月29日 - 22:06</p>
   <p><span>原始链接:</span><a href="/2020/06/26/kubernetes/kubernetes 高级调度/" title="kubernetes 高级调度">https://jesse.top/2020/06/26/kubernetes/kubernetes 高级调度/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/kubernetes/kubernetes 高级调度/"  aria-label="复制成功！"></i></span>
   </p>
@@ -562,8 +563,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/" rel="next" title="kong+casssandra集群环境部署">
-                <i class="fa fa-chevron-left"></i> kong+casssandra集群环境部署
+              <a href="/2020/06/26/kubernetes/kubernetes探针/" rel="next" title="kubernets探针">
+                <i class="fa fa-chevron-left"></i> kubernets探针
               </a>
             
           </div>
@@ -572,8 +573,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" rel="prev" title="docker安装最新版Kong(v1.0)+konga">
-                docker安装最新版Kong(v1.0)+konga <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/26/kubernetes/kubernetes headless Service/" rel="prev" title="kubernetes headless Service">
+                kubernetes headless Service <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

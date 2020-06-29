@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群利用federation插件平滑迁移/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/" itemprop="url">线上MQ宕机复盘</a></h1>
+                <a class="post-title-link" href="/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群利用federation插件平滑迁移/" itemprop="url">rabbitmq集群利用federation插件平滑迁移</a></h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/" itemprop="commentCount"></span>
+                <a href="/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群利用federation插件平滑迁移/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群利用federation插件平滑迁移/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,13 +377,16 @@
 
       
         
-          <h2 id="线上MQ宕机复盘"><a href="#线上MQ宕机复盘" class="headerlink" title="线上MQ宕机复盘"></a>线上MQ宕机复盘</h2><hr>
-<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>时间:2018年11月20号晚上10点40</p>
-<p>服务器:mq-slave</p>
-<p>故障现象: 钉钉收到报警MQ服务器的rabbitmq进程挂了.手动启动后,过一会超时退出</p>
+          <h2 id="rabbitmq集群利用federation插件平滑迁移"><a href="#rabbitmq集群利用federation插件平滑迁移" class="headerlink" title="rabbitmq集群利用federation插件平滑迁移"></a>rabbitmq集群利用federation插件平滑迁移</h2><p>关于feration的官方文档:<a href="https://www.rabbitmq.com/federated-exchanges.html" target="_blank" rel="noopener">federated Exchange</a></p>
+<p>关于安装和配置feration的文档:<a href="https://www.jianshu.com/p/5a8b00cf4a0a" target="_blank" rel="noopener">RabbitMQ Federation集群</a></p>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>公司的MQ集群出现了点问题,需要将业务迁移到一台新的MQ集群(包含2个MQ节点服务器).但是由于生产环境中一直有生产和消费数据产生,而且更麻烦的是还有大量延迟队列(生产的数据在一天甚至一周后再去消费).</p>
+<p>此时如何做到不影响业务,不影响数据一致性,也不产生2次重复消费的前提下平滑迁移就很有挑战性.直接暴力的将业务迁移到新的rabbitmq集群显然不行.</p>
+<p>此时就要求新集群服务器和老集群数据同步,并且将业务迁移到新的集群后,老的集群上未消费的数据,或者延迟队列的数据仍然在迁移后仍然能被消费掉..</p>
+<p>federation插件完美的完成了这个任务</p>
+<hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/#more" rel="contents">
+            <a class="btn" href="/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群利用federation插件平滑迁移/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1476,7 +1479,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1495,7 +1498,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/" itemprop="url">gitlab自带nginx更新SSL证书</a></h1>
+                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/" itemprop="url">使用acme.sh申请https证书</a></h1>
         
 
         <div class="post-meta">
@@ -1559,8 +1562,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/" itemprop="commentCount"></span>
+                <a href="/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1589,192 +1592,20 @@
 
       
         
-          <h2 id="gitlab自带nginx更新SSL证书"><a href="#gitlab自带nginx更新SSL证书" class="headerlink" title="gitlab自带nginx更新SSL证书"></a>gitlab自带nginx更新SSL证书</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>由于letsencrypt证书有效期太短.gitlab不是很方便自动续约.所以在阿里云上购买证书,然后下载到到服务器.(由于gitlab底层是基于nginx,所以下载证书也是选择Nginx格式)</p>
+          <h3 id="使用acme-sh申请https证书"><a href="#使用acme-sh申请https证书" class="headerlink" title="使用acme.sh申请https证书"></a>使用acme.sh申请https证书</h3><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><strong>acme.sh</strong> 实现了 <code>acme</code> 协议, 可以从 letsencrypt 生成免费的证书.</p>
+<p>acme是一个shell脚本。安装使用都很方便。不依赖于python或官方的Let’s Encrypt客户端。<br>只需一个脚本即可自动颁发，续订和安装证书。 不需要root/sudoer访问权限。</p>
+<p>acme的github项目有详细的中文文档：<a href="https://github.com/Neilpang/acme.sh/wiki/%E8%AF%B4%E6%98%8E" target="_blank" rel="noopener">acme.sh</a></p>
 <hr>
-<p>找出gitlab证书存放位置:</p>
-<p>1.在gitlab配置文件下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:~# cd /etc/gitlab</span><br><span class="line">root@gitlab:/etc/gitlab# ls</span><br><span class="line">gitlab.rb  gitlab.rb.bak  gitlab.rb.bak2  gitlab-secrets.json  trusted-certs</span><br></pre></td></tr></table></figure>
-<p>2.打开gitlab.rb配置文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:/etc/gitlab# vim gitlab.rb</span><br><span class="line"></span><br><span class="line">#可以找到下列两行配置.这个就是gitlab的ssl证书存放路径</span><br><span class="line">nginx[&apos;ssl_certificate&apos;] = &quot;/etc/ssl/private/gitlab.pem&quot;</span><br><span class="line">nginx[&apos;ssl_certificate_key&apos;] = &quot;/etc/ssl/private/gitlab.key&quot;</span><br></pre></td></tr></table></figure>
-<p>在gitlab的nginx配置文件下也可以找到相关配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:/etc/gitlab# cd /var/opt/gitlab/nginx/conf/</span><br><span class="line">root@gitlab:/var/opt/gitlab/nginx/conf# ls</span><br><span class="line">gitlab-http.conf  gitlab-http.conf.bak  nginx.conf  nginx-status.conf</span><br><span class="line"></span><br><span class="line">#在gitlab-http.conf的nginx配置文件中也定义了ssl路径:</span><br><span class="line"></span><br><span class="line">root@gitlab:/var/opt/gitlab/nginx/conf# cat gitlab-http.conf | grep ssl_certificate</span><br><span class="line">  ssl_certificate /etc/ssl/private/gitlab.pem;</span><br><span class="line">  ssl_certificate_key /etc/ssl/private/gitlab.key;</span><br></pre></td></tr></table></figure>
-<p>3.将阿里云下载下来的证书上传到gitlab的/etc/ssl/private目录中</p>
+<h3 id="对比certbot工具"><a href="#对比certbot工具" class="headerlink" title="对比certbot工具"></a>对比certbot工具</h3><p>还有另外一个工具<strong>certbot-auto</strong>也可以申请letsencrypt免费证书。</p>
+<p>certbot工具需要安装一大堆系统库以及 Python 库，Python 的 pip 在国内还会有墙的问题…而且每次certbot工具自动更新版本的时候都会面临pip被墙的风险。所以很难使用。</p>
+<p>当然，<strong>acme.sh</strong>相比certbot更强大的地方还在于：</p>
+<p>1.acme支持dns认证方式</p>
+<p>2.acme带有自动更新dns记录，验证dns的脚本(需要dns服务商的api token)</p>
+<p>3.支持通配符证书的申请</p>
+<p>4.acme安装后就自动写入crontab记录，意味着只要证书申请后就自动更新，完全不需操心</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="url">letsencrypt配置通配符域名证书</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-15T11:59:58+08:00">
-                2018-10-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/SSL/" itemprop="url" rel="index">
-                    <span itemprop="name">SSL</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="letsencrypt配置通配符域名证书"><a href="#letsencrypt配置通配符域名证书" class="headerlink" title="letsencrypt配置通配符域名证书"></a>letsencrypt配置通配符域名证书</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在今年稍早些的时候,letsencrypt终于开始免费支持通配符域名证书了.但是只支持一个层级的通配主机域名.</p>
-<p>比如我曾经踩过的坑:*.dev.xxx.com通配符域名证书并不能支持api.v3.dev.xxx.com这种三层子域名.</p>
-<p>如果需要为api.v3.dev.xxx.com申请通配符证书,则还需要申请*.v3.dev.xxx.com通配符证书</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#more" rel="contents">
+            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1948,6 +1779,186 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/10/15/Linux-Basic/SSL/letsencrypt证书上传到阿里云SLB/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/" itemprop="url">gitlab自带nginx更新SSL证书</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-15T11:59:58+08:00">
+                2018-10-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/SSL/" itemprop="url" rel="index">
+                    <span itemprop="name">SSL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="gitlab自带nginx更新SSL证书"><a href="#gitlab自带nginx更新SSL证书" class="headerlink" title="gitlab自带nginx更新SSL证书"></a>gitlab自带nginx更新SSL证书</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>由于letsencrypt证书有效期太短.gitlab不是很方便自动续约.所以在阿里云上购买证书,然后下载到到服务器.(由于gitlab底层是基于nginx,所以下载证书也是选择Nginx格式)</p>
+<hr>
+<p>找出gitlab证书存放位置:</p>
+<p>1.在gitlab配置文件下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:~# cd /etc/gitlab</span><br><span class="line">root@gitlab:/etc/gitlab# ls</span><br><span class="line">gitlab.rb  gitlab.rb.bak  gitlab.rb.bak2  gitlab-secrets.json  trusted-certs</span><br></pre></td></tr></table></figure>
+<p>2.打开gitlab.rb配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:/etc/gitlab# vim gitlab.rb</span><br><span class="line"></span><br><span class="line">#可以找到下列两行配置.这个就是gitlab的ssl证书存放路径</span><br><span class="line">nginx[&apos;ssl_certificate&apos;] = &quot;/etc/ssl/private/gitlab.pem&quot;</span><br><span class="line">nginx[&apos;ssl_certificate_key&apos;] = &quot;/etc/ssl/private/gitlab.key&quot;</span><br></pre></td></tr></table></figure>
+<p>在gitlab的nginx配置文件下也可以找到相关配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:/etc/gitlab# cd /var/opt/gitlab/nginx/conf/</span><br><span class="line">root@gitlab:/var/opt/gitlab/nginx/conf# ls</span><br><span class="line">gitlab-http.conf  gitlab-http.conf.bak  nginx.conf  nginx-status.conf</span><br><span class="line"></span><br><span class="line">#在gitlab-http.conf的nginx配置文件中也定义了ssl路径:</span><br><span class="line"></span><br><span class="line">root@gitlab:/var/opt/gitlab/nginx/conf# cat gitlab-http.conf | grep ssl_certificate</span><br><span class="line">  ssl_certificate /etc/ssl/private/gitlab.pem;</span><br><span class="line">  ssl_certificate_key /etc/ssl/private/gitlab.key;</span><br></pre></td></tr></table></figure>
+<p>3.将阿里云下载下来的证书上传到gitlab的/etc/ssl/private目录中</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

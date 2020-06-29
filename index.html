@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-6.学习stack/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-5.学习swarm集群/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-6.学习stack/" itemprop="url">docker学习笔记---学习Docker Stack</a></h1>
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/" itemprop="url">docker学习笔记---理解swarm集群</a></h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/29/docker/docker官网学习-6.学习stack/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-6.学习stack/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-5.学习swarm集群/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,15 +377,18 @@
 
       
         
-          <h2 id="学习Docker-Stack"><a href="#学习Docker-Stack" class="headerlink" title="学习Docker Stack"></a>学习Docker Stack</h2><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>一个stack是一组共享依赖包的多个相关的services,并且可以编排和扩展.其实从第4小节开始,在利用compose文件部署app时,就已经开始一直使用stack.但是还只是运行在一个单一服务器的单一service.<br>现在,你可以学习在多个服务器上,运行多个相关的services.</p>
+          <h3 id="理解swarm集群"><a href="#理解swarm集群" class="headerlink" title="理解swarm集群"></a>理解swarm集群</h3><p>一个swarm是一组运行docker服务器的的集群,docker服务器可以是物理机也可以是虚拟机.</p>
+<p>swarm manager可以使用多种策略来运行容器.比如”emptiest node”—部署容器到压力最小的服务器上,或者”global”—确保每台服务器都只允许一个容器实例.你可以在Compose文件中指示swarm manager去选择何种策略</p>
+<p>swarm managers是swarm进群中唯一可以执行命令,或者授权其他服务器以”workers”身份加入swarm集群的服务器.</p>
 <hr>
+<h4 id="初始化swarm-加入节点"><a href="#初始化swarm-加入节点" class="headerlink" title="初始化swarm,加入节点"></a>初始化swarm,加入节点</h4><p>试验环境:</p>
+<p>1.10.0.0.50 —swarm manager<br>2.10.0.0.12 —worker 节点</p>
 <ul>
-<li>使用下面的docker-compose.yml文件替换第4小节中的docker-compose.yml</li>
+<li>初始化swarm,并且指定通告的IP</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3&quot;</span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    # replace username/repo:tag with your name and image details</span><br><span class="line">    image: ianch/friendlyhello:v1</span><br><span class="line">    deploy:</span><br><span class="line">      replicas: 5</span><br><span class="line">      resources:</span><br><span class="line">        limits:</span><br><span class="line">          cpus: &quot;0.1&quot;</span><br><span class="line">          memory: 50M</span><br><span class="line">      restart_policy:</span><br><span class="line">        condition: on-failure</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;4000:80&quot;</span><br><span class="line">    networks:</span><br><span class="line">      - webnet</span><br><span class="line">  Visualizer:</span><br><span class="line">    image: dockersamples/visualizer:stable</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8080:8080&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - &quot;/var/run/docker.sock:/var/run/docker.sock&quot;</span><br><span class="line">    deploy:</span><br><span class="line">      placement:</span><br><span class="line">        constraints: [node.role == manager]</span><br><span class="line">    networks:</span><br><span class="line">      - webnet</span><br><span class="line">networks:</span><br><span class="line">  webnet:</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/29/docker/docker官网学习-6.学习stack/#more" rel="contents">
+            <a class="btn" href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -440,7 +443,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习—2.dockerfile/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -459,7 +462,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习—2.dockerfile/" itemprop="url">docker学习笔记---Dockerfile</a></h1>
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/" itemprop="url">docker学习笔记---docker使用阿里云私有仓库</a></h1>
         
 
         <div class="post-meta">
@@ -512,8 +515,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/29/docker/docker官网学习—2.dockerfile/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习—2.dockerfile/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -542,16 +545,17 @@
 
       
         
-          <h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><p>Dockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用docker build命令,用户可以依据dockerfile和上下文编译一个镜像.</p>
-<p>使用dockerfile需要注意一些事项</p>
-<p><strong>1.上下文</strong></p>
-<p>docker build编译镜像时,会将当前目录下的Dockerfile和所有文件打包添加发送到docker daemon服务端.所以一般情况下创建一个空目录编辑dockerfile文件.然后将需要copy和add的文件放进和dockerfile同一目录下.</p>
-<p>dockerfile中的copy以及add命令,添加文件到docker镜像中时.不要使用绝对路径.例如/home/work/a.txt..docker deamon只能识别到当前上下文环境,无法识别到其他目录.但是可以使用当前上下文的相对路径.</p>
-<p><strong>2.分层</strong></p>
-<p>dockerfile编译镜像时,每条指令都是一个镜像层.除了From指令外,每一行指令都是基于上一行生成的临时镜像运行一个容器.执行一条指令就类似于docker commit命令生成一个新的镜像.所以两条指令之间互不关联.</p>
+          <h3 id="docker使用阿里云私有仓库"><a href="#docker使用阿里云私有仓库" class="headerlink" title="docker使用阿里云私有仓库"></a>docker使用阿里云私有仓库</h3><p>注册阿里云镜像服务:</p>
+<p>以下是我的阿里云镜像仓库链接:<br><a href="https://cr.console.aliyun.com/cn-hangzhou/repositories" target="_blank" rel="noopener">https://cr.console.aliyun.com/cn-hangzhou/repositories</a></p>
+<p>一.使用阿里云镜像加速器<br><a href="https://cr.console.aliyun.com/cn-hangzhou/mirrors" target="_blank" rel="noopener">https://cr.console.aliyun.com/cn-hangzhou/mirrors</a></p>
+<p>镜像加速地址:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://0w5ygvsg.mirror.aliyuncs.com</span><br></pre></td></tr></table></figure>
+<p>如果是Centos系统,可以通过修改daemon配置文件/etc/docker/daemon.json来使用加速器:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&apos;EOF&apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://0w5ygvsg.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/29/docker/docker官网学习—2.dockerfile/#more" rel="contents">
+            <a class="btn" href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1454,7 +1458,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-5.学习swarm集群/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-6.学习stack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1473,7 +1477,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/" itemprop="url">docker学习笔记---理解swarm集群</a></h1>
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-6.学习stack/" itemprop="url">docker学习笔记---学习Docker Stack</a></h1>
         
 
         <div class="post-meta">
@@ -1526,8 +1530,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-5.学习swarm集群/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker官网学习-6.学习stack/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-6.学习stack/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1556,18 +1560,15 @@
 
       
         
-          <h3 id="理解swarm集群"><a href="#理解swarm集群" class="headerlink" title="理解swarm集群"></a>理解swarm集群</h3><p>一个swarm是一组运行docker服务器的的集群,docker服务器可以是物理机也可以是虚拟机.</p>
-<p>swarm manager可以使用多种策略来运行容器.比如”emptiest node”—部署容器到压力最小的服务器上,或者”global”—确保每台服务器都只允许一个容器实例.你可以在Compose文件中指示swarm manager去选择何种策略</p>
-<p>swarm managers是swarm进群中唯一可以执行命令,或者授权其他服务器以”workers”身份加入swarm集群的服务器.</p>
+          <h2 id="学习Docker-Stack"><a href="#学习Docker-Stack" class="headerlink" title="学习Docker Stack"></a>学习Docker Stack</h2><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>一个stack是一组共享依赖包的多个相关的services,并且可以编排和扩展.其实从第4小节开始,在利用compose文件部署app时,就已经开始一直使用stack.但是还只是运行在一个单一服务器的单一service.<br>现在,你可以学习在多个服务器上,运行多个相关的services.</p>
 <hr>
-<h4 id="初始化swarm-加入节点"><a href="#初始化swarm-加入节点" class="headerlink" title="初始化swarm,加入节点"></a>初始化swarm,加入节点</h4><p>试验环境:</p>
-<p>1.10.0.0.50 —swarm manager<br>2.10.0.0.12 —worker 节点</p>
 <ul>
-<li>初始化swarm,并且指定通告的IP</li>
+<li>使用下面的docker-compose.yml文件替换第4小节中的docker-compose.yml</li>
 </ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3&quot;</span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    # replace username/repo:tag with your name and image details</span><br><span class="line">    image: ianch/friendlyhello:v1</span><br><span class="line">    deploy:</span><br><span class="line">      replicas: 5</span><br><span class="line">      resources:</span><br><span class="line">        limits:</span><br><span class="line">          cpus: &quot;0.1&quot;</span><br><span class="line">          memory: 50M</span><br><span class="line">      restart_policy:</span><br><span class="line">        condition: on-failure</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;4000:80&quot;</span><br><span class="line">    networks:</span><br><span class="line">      - webnet</span><br><span class="line">  Visualizer:</span><br><span class="line">    image: dockersamples/visualizer:stable</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8080:8080&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - &quot;/var/run/docker.sock:/var/run/docker.sock&quot;</span><br><span class="line">    deploy:</span><br><span class="line">      placement:</span><br><span class="line">        constraints: [node.role == manager]</span><br><span class="line">    networks:</span><br><span class="line">      - webnet</span><br><span class="line">networks:</span><br><span class="line">  webnet:</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/#more" rel="contents">
+            <a class="btn" href="/2020/06/29/docker/docker官网学习-6.学习stack/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

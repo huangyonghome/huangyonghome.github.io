@@ -467,7 +467,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/04-shell导入外部文件/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -486,7 +486,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/Linux-Basic/shell&shell脚本/04-shell导入外部文件/" itemprop="url">shell脚本导入外部文件</a></h1>
+                <a class="post-title-link" href="/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/" itemprop="url">Shell脚本特殊变量</a></h1>
         
 
         <div class="post-meta">
@@ -550,8 +550,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/12/Linux-Basic/shell&shell脚本/04-shell导入外部文件/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/shell&shell脚本/04-shell导入外部文件/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -580,13 +580,48 @@
 
       
         
-          <p><strong>shell脚本有时需要读取文件内容.下面介绍了从外部读取文件,引入循环语句处理该文件的几种常见方法</strong></p>
-<p><strong>1.文本重定向</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">定义一个文件内容:</span><br><span class="line">[root@localhost ~]$cat users.cvs</span><br><span class="line">tom</span><br><span class="line">jesse</span><br><span class="line">tony</span><br></pre></td></tr></table></figure>
-<p>shell脚本从该文件读取文件的每行内容,且创建相关账户</p>
+          <h2 id="shell脚本特殊变量"><a href="#shell脚本特殊变量" class="headerlink" title="shell脚本特殊变量"></a>shell脚本特殊变量</h2><table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$0</td>
+<td>当前脚本的文件名</td>
+</tr>
+<tr>
+<td>$n</td>
+<td>传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是$1，第二个参数是$2……第n个参数是$n</td>
+</tr>
+<tr>
+<td>$#</td>
+<td>传递给脚本或函数的参数个数</td>
+</tr>
+<tr>
+<td>$*</td>
+<td>传递给脚本或函数的所有参数。</td>
+</tr>
+<tr>
+<td>$@</td>
+<td>传递给脚本或函数的所有参数。被双引号(“ “)包含时，与 $* 稍有不同，下面将会讲到。</td>
+</tr>
+<tr>
+<td>$?</td>
+<td>上个命令的退出状态，或函数的返回值。一般情况下，执行成功会返回 0，失败返回 值是个大于1的整数</td>
+</tr>
+<tr>
+<td>$$</td>
+<td>当前Shell进程ID。对于 Shell 脚本，就是这些脚本所在的进程ID</td>
+</tr>
+</tbody>
+</table>
+<hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/Linux-Basic/shell&shell脚本/04-shell导入外部文件/#more" rel="contents">
+            <a class="btn" href="/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
