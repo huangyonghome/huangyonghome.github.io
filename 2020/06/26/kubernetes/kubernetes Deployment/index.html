@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="k8s," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="kuberentes Deployment介绍之前学习过使用ReplicationController和ReplicaSet实现托管和更新pod容器.客户端通过Service服务访问RC或者RS托管的一组pod.这也是Kubernetes典型的应用程序运行方式 假设这个时候应用程序需要更新,从v1版本更新到v2,有以下两种方式更新pod镜像:  直接删除所有现有的pod,然后创建新的pod 可以先">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kuberentes Deployment">
+<meta property="og:url" content="https://jesse.top/2020/06/26/kubernetes/kubernetes Deployment/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="kuberentes Deployment介绍之前学习过使用ReplicationController和ReplicaSet实现托管和更新pod容器.客户端通过Service服务访问RC或者RS托管的一组pod.这也是Kubernetes典型的应用程序运行方式 假设这个时候应用程序需要更新,从v1版本更新到v2,有以下两种方式更新pod镜像:  直接删除所有现有的pod,然后创建新的pod 可以先">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-26T10:02:24.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kuberentes Deployment">
+<meta name="twitter:description" content="kuberentes Deployment介绍之前学习过使用ReplicationController和ReplicaSet实现托管和更新pod容器.客户端通过Service服务访问RC或者RS托管的一组pod.这也是Kubernetes典型的应用程序运行方式 假设这个时候应用程序需要更新,从v1版本更新到v2,有以下两种方式更新pod镜像:  直接删除所有现有的pod,然后创建新的pod 可以先">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/06/26/kubernetes/kubernetes Deployment/"/>
+
+
+
+
+
+  <title>kuberentes Deployment | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes Deployment/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kuberentes Deployment</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/kubernetes/kubernetes Deployment/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes Deployment/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="kuberentes-Deployment"><a href="#kuberentes-Deployment" class="headerlink" title="kuberentes Deployment"></a>kuberentes Deployment</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>之前学习过使用ReplicationController和ReplicaSet实现托管和更新pod容器.<br>客户端通过Service服务访问RC或者RS托管的一组pod.这也是Kubernetes典型的应用程序运行方式</p>
+<p>假设这个时候应用程序需要更新,从v1版本更新到v2,有以下两种方式更新pod镜像:</p>
+<ul>
+<li>直接删除所有现有的pod,然后创建新的pod</li>
+<li>可以先创建新的Pod,并等待他们运行成功后,再删除旧的.</li>
+</ul>
+<p>这2中方法各有优缺点.第一种方法将导致服务在端在时间内不可用.第二种方法要求应用程序同时支持2个版本对外提供服务.</p>
+<p>本文具体介绍kubernetes上述两种更新方式.然后介绍通过手动方式,replicatController的更新方式.最后再引入deployment机制的用法介绍</p>
+<a id="more"></a>
+<hr>
+<h2 id="1-更新pod"><a href="#1-更新pod" class="headerlink" title="1.更新pod"></a>1.更新pod</h2><h3 id="删除旧版本pod-使用新版本pod替换"><a href="#删除旧版本pod-使用新版本pod替换" class="headerlink" title="删除旧版本pod,使用新版本pod替换"></a>删除旧版本pod,使用新版本pod替换</h3><p>这是更新pod最简单的方式,如果有一个replicationController管理一组v1的pod,可以直接修改pod模板为v2版本.然后执行下列命令删除旧rc,创建新rc来更新整个pod组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl delete -f kubia-rc.yaml</span><br><span class="line">[root@k8s-master ~]# kubectl create -f kubia-rc.yaml</span><br><span class="line">replicationcontroller/kubia created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]# kubectl get pods</span><br><span class="line">NAME                READY   STATUS        RESTARTS   AGE</span><br><span class="line">kubia-2xz92         0/1     Terminating   0          92s</span><br><span class="line">kubia-dkhsz         1/1     Running       0          3s</span><br><span class="line">kubia-kn694         1/1     Running       0          3s</span><br><span class="line">kubia-l946z         1/1     Running       0          3s</span><br><span class="line">kubia-p5bmx         0/1     Terminating   0          92s</span><br><span class="line">kubia-sjxlz         0/1     Terminating   0          92s</span><br><span class="line">kubia-tt6fz         0/1     Terminating   0          92s</span><br><span class="line">kubia-xm8js         1/1     Running       0          3s</span><br><span class="line">ssd-monitor-h7k7q   1/1     Running       0          57s</span><br></pre></td></tr></table></figure>
+<p>此时旧版本会处于terminating终止中状态,(最后会逐渐被删除),同时创建了新的一组v2版本的Pod.</p>
+<hr>
+<h3 id="先新建pod-再删除旧pod"><a href="#先新建pod-再删除旧pod" class="headerlink" title="先新建pod,再删除旧pod"></a>先新建pod,再删除旧pod</h3><p>如果短暂的服务中断不可介绍,并且应用程序支持多个版本同时对外服务.那么可以先创建新的Pod,然后删除原有的pod.</p>
+<blockquote>
+<p>但是这会在短暂时间内同时运行2倍数量的pod,要求服务器有更多的空闲硬件资源</p>
+</blockquote>
+<h4 id="大致步骤"><a href="#大致步骤" class="headerlink" title="大致步骤"></a>大致步骤</h4><ol>
+<li>创建新版本pod</li>
+<li>一旦新版本Pod就绪,将Service服务从老版本pod关联到新版本pod</li>
+<li>删除旧的ReplicationController</li>
+</ol>
+<hr>
+<h2 id="2-使用ReplicationController实现自动的滚动升级"><a href="#2-使用ReplicationController实现自动的滚动升级" class="headerlink" title="2.使用ReplicationController实现自动的滚动升级"></a>2.使用ReplicationController实现自动的滚动升级</h2><h3 id="使用kubectl命令手动滚动式升级"><a href="#使用kubectl命令手动滚动式升级" class="headerlink" title="使用kubectl命令手动滚动式升级"></a>使用kubectl命令手动滚动式升级</h3><h4 id="1-下面创建一个ReplicationController和一个v1版本进行的pod-以及一个nodePort类型的Service-并以此为例子进行后面的演练"><a href="#1-下面创建一个ReplicationController和一个v1版本进行的pod-以及一个nodePort类型的Service-并以此为例子进行后面的演练" class="headerlink" title="1.下面创建一个ReplicationController和一个v1版本进行的pod.以及一个nodePort类型的Service.并以此为例子进行后面的演练"></a>1.下面创建一个ReplicationController和一个v1版本进行的pod.以及一个nodePort类型的Service.并以此为例子进行后面的演练</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: ReplicationController</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia-dm-rc-v1</span><br><span class="line">spec:</span><br><span class="line">  replicas: 3</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: kubia</span><br><span class="line">      labels:</span><br><span class="line">        app: kubia</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">       - image: luksa/kubia:v1</span><br><span class="line">         name: nodejs</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">#一个yaml文件可以定义多种资源,中间用---隔开</span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia-dm-svc-v1</span><br><span class="line"></span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  selector:</span><br><span class="line">    app: kubia</span><br><span class="line"></span><br><span class="line">  ports:</span><br><span class="line">  - port: 80</span><br><span class="line">    targetPort: 8080</span><br><span class="line">    nodePort: 32013</span><br></pre></td></tr></table></figure>
+<p>这个例子中创建了一个kubia-dm-rc-v1的ReplicationController.并运行了3个副本.另外还创建了一个kubia-dm-svc-v1的nodeport类型的Service</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl create -f deployment-kubia-v1.yaml</span><br><span class="line">replicationcontroller/kubia-dm-rc-v1 created</span><br><span class="line">service/kubia-dm-svc-v1 created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]# kubectl get svc</span><br><span class="line">NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE</span><br><span class="line">fortune-nfs-svc      ClusterIP      10.96.243.6     &lt;none&gt;        80/TCP         14d</span><br><span class="line">fortune-svc          ClusterIP      10.96.123.110   &lt;none&gt;        80/TCP         14d</span><br><span class="line">kubernetes           ClusterIP      10.96.0.1       &lt;none&gt;        443/TCP        41d</span><br><span class="line">kubia                ClusterIP      10.96.170.37    &lt;none&gt;        80/TCP         21d</span><br><span class="line">kubia-dm-svc-v1      NodePort       10.96.136.55    &lt;none&gt;        80:32013/TCP   4s</span><br><span class="line">kubia-loadbalancer   LoadBalancer   10.96.1.162     &lt;pending&gt;     80:31924/TCP   20d</span><br><span class="line">kubia-nginx          ClusterIP      10.96.154.64    &lt;none&gt;        80/TCP         21d</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]# kubectl get pods</span><br><span class="line">NAME                   READY   STATUS    RESTARTS   AGE</span><br><span class="line">kubia-dm-rc-v1-dsk5v   1/1     Running   0          9s</span><br><span class="line">kubia-dm-rc-v1-mk6hf   1/1     Running   0          9s</span><br><span class="line">kubia-dm-rc-v1-rh6qz   1/1     Running   0          9s</span><br><span class="line">[root@k8s-master ~]#</span><br></pre></td></tr></table></figure>
+<p>访问Service的IP:10.96.136.55,或者节点物理网卡IP的32013端口访问pod容器,目前是v1版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# while true;do curl http://10.96.136.55;sleep 1;done</span><br><span class="line">This is v1 running in pod kubia-dm-rc-v1-dsk5v</span><br><span class="line">This is v1 running in pod kubia-dm-rc-v1-mk6hf</span><br><span class="line">This is v1 running in pod kubia-dm-rc-v1-rh6qz</span><br><span class="line">This is v1 running in pod kubia-dm-rc-v1-rh6qz</span><br><span class="line">This is v1 running in pod kubia-dm-rc-v1-rh6qz</span><br><span class="line">This is v1 running in pod kubia-dm-rc-v1-mk6hf</span><br></pre></td></tr></table></figure>
+<h4 id="2-创建v2版本的应用-这里直接使用luksa-kubia-v2"><a href="#2-创建v2版本的应用-这里直接使用luksa-kubia-v2" class="headerlink" title="2.创建v2版本的应用.这里直接使用luksa/kubia:v2"></a>2.创建v2版本的应用.这里直接使用luksa/kubia:v2</h4><blockquote>
+<p>虽然在开发的过程中,进程推送修改后的应用到同一个镜像tag,但是这种做法不推荐.如果用的是latest的tag倒还好,因为不指定容器tag,或者tag是latest,则镜像拉取策略(imagePullPolicy)默认为always.</p>
+</blockquote>
+<blockquote>
+<p>如果使用了指定的tag,例如(v1),则默认的镜像拉取策略为IfNotPresent,则虽然应用程序更新了,但是由于tag不变(都是v1),所以某些已经拉取了v1版本的镜像的Pod仍然使用v1旧版本的镜像.但是之前没有运行该pod的节点拉取的是v2版本.这就造成虽然镜像名一样,但是内容不一样的意外情况</p>
+</blockquote>
+<h4 id="3-使用"><a href="#3-使用" class="headerlink" title="3.使用"></a>3.使用<figure class="highlight plain"><figcaption><span>rolling-update```命令开始ReplicationController的滚动升级.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt;在这之前打开一个新终端,循环访问Pod容器,观察升级过程中客户端访问情况</span><br><span class="line"></span><br><span class="line">命令格式为</span><br></pre></td></tr></table></figure></h4><p>kubectl rolling-update 旧rc名 新rc名 –image=新镜像<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl rolling-update kubia-dm-rc-v1 kubia-dm-rc-v2 –image=luksa/kubia:v2<br>Command “rolling-update” is deprecated, use “rollout” instead<br>Created kubia-dm-rc-v2</p>
+<p>Scaling up kubia-dm-rc-v2 from 0 to 3, scaling down kubia-dm-rc-v1 from 3 to 0 (keep 3 pods available, don’t exceed 4 pods)<br>Scaling kubia-dm-rc-v2 up to 1<br>Scaling kubia-dm-rc-v1 down to 2<br>Scaling kubia-dm-rc-v2 up to 2<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">该命令会自动进行滚动升级,先创建个v2版本(初始副本为0),然后v2版本副本慢慢增加到3,同时v1版本缩容慢慢缩减到0</span><br><span class="line"></span><br><span class="line">此时访问pod容器的nginx服务并没有中断,访问流量逐渐慢慢从v1过度到v2</span><br></pre></td></tr></table></figure></p>
+<p>This is v1 running in pod kubia-dm-rc-v1-rh6qz<br>This is v1 running in pod kubia-dm-rc-v1-dsk5v<br>This is v1 running in pod kubia-dm-rc-v1-dsk5v<br>This is v2 running in pod kubia-dm-rc-v2-nvjln<br>This is v2 running in pod kubia-dm-rc-v2-nvjln<br>This is v1 running in pod kubia-dm-rc-v1-dsk5v<br>This is v1 running in pod kubia-dm-rc-v1-dsk5v<br>This is v2 running in pod kubia-dm-rc-v2-nvjln<br>This is v1 running in pod kubia-dm-rc-v1-rh6qz<br>This is v2 running in pod kubia-dm-rc-v2-nvjln<br>This is v1 running in pod kubia-dm-rc-v1-dsk5v<br>This is v2 running in pod kubia-dm-rc-v2-nvjln<br>This is v2 running in pod kubia-dm-rc-v2-nvjln<br>This is v1 running in pod kubia-dm-rc-v1-rh6qz<br>This is v2 running in pod kubia-dm-rc-v2-gx2qr<br>This is v1 running in pod kubia-dm-rc-v1-dsk5v<br>This is v1 running in pod kubia-dm-rc-v1-dsk5v<br>This is v1 running in pod kubia-dm-rc-v1-dsk5v<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">查看kubia-dm-rc-v2新的rc,发现多了一个label标签</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl describe rc kubia-dm-rc-v2<br>…..<br>  Labels:  app=kubia<br>           deployment=e765c85861762e0e8a6a68870e355478<br>…..<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">同时旧的kubia-dm-rc-v1的rc,也多了一个label标签,标签末尾有个orig</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl describe rc kubia-dm-rc-v1<br>……<br>  Labels:  app=kubia<br>           deployment=0a4a2fdf1a43e220276c99beda132b0c-orig<br>……<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">甚至正在运行的pod也修改了标签,3个正在运行的老的Pod容器副本增加了对应的旧的rc标签.</span><br><span class="line"></span><br><span class="line">同时创建了个新的pod,标签对应为新的kubia-dm-rc-v2新rc的标签</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl get po –show-labels<br>NAME                   READY   STATUS    RESTARTS   AGE   LABELS<br>kubia-dm-rc-v1-dsk5v   1/1     Running   0          18m   app=kubia,deployment=0a4a2fdf1a43e220276c99beda132b0c-orig<br>kubia-dm-rc-v1-mk6hf   1/1     Running   0          18m   app=kubia,deployment=0a4a2fdf1a43e220276c99beda132b0c-orig<br>kubia-dm-rc-v1-rh6qz   1/1     Running   0          18m   app=kubia,deployment=0a4a2fdf1a43e220276c99beda132b0c-orig<br>kubia-dm-rc-v2-nvjln   1/1     Running   0          59s   app=kubia,deployment=e765c85861762e0e8a6a68870e355478</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">最终,老的ReplicationController副本会缩容到0,导致最后一个v1 pod被删除,老的kubia-dm-rc-v1名字rc被删除.</span><br><span class="line"></span><br><span class="line">新的ReplicationController副本扩容到3,最后所有的请求都到了v2</span><br></pre></td></tr></table></figure>
+<p>[root@k8s-master ~]# kubectl get rc<br>NAME             DESIRED   CURRENT   READY   AGE<br>kubia-dm-rc-v2   3         3         3       15m<br>[root@k8s-master ~]#</p>
+<p>[root@k8s-master ~]# while true;do curl <a href="http://10.96.136.55;sleep" target="_blank" rel="noopener">http://10.96.136.55;sleep</a> 1;done<br>This is v2 running in pod kubia-dm-rc-v2-gx2qr<br>This is v2 running in pod kubia-dm-rc-v2-gx2qr<br>This is v2 running in pod kubia-dm-rc-v2-nvjln<br>This is v2 running in pod kubia-dm-rc-v2-l44qp<br>This is v2 running in pod kubia-dm-rc-v2-gx2qr<br>^C<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line"></span><br><span class="line">## 3.使用Deployment声明式升级应用</span><br><span class="line"></span><br><span class="line">使用kubectl命令并不是最优的方案,一方面这是由kubectl客户端执行任务,并不是kubernetes master执行的.领一方面,如果在kubectl执行升级时,出现网络故障,升级过程将会终端.造成意料之外情况</span><br><span class="line"></span><br><span class="line">最重要的是,通过命令行来手动的升级并不符合Kubernetes的理念和预期.直接使用期望的副本数来伸缩pod是kubernetes期望的部署和伸方式.</span><br><span class="line"></span><br><span class="line">正是这一点推动了一种称为Deployment的新资源的引入.也是现在kubernetes部署应用程序的首选方式</span><br><span class="line"></span><br><span class="line">----</span><br><span class="line"></span><br><span class="line">### 3.1 Deployment介绍</span><br><span class="line"></span><br><span class="line">Deployment是一种更高阶的资源,当创建一个Deployment时,ReplicaSet资源也会随之创建.ReplicaSet是新一代的ReplicationController,并且已经替代了后者来管理pod.</span><br><span class="line"></span><br><span class="line">在使用Deployment时,并不是由Deployment直接创建和管理pod.而是Deployment创建ReplicaSet,然后ReplicaSet创建pod</span><br></pre></td></tr></table></figure></p>
+<p>Deployment—–&gt; ReplicaSet—–&gt;pods1,pods2,pods3……<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 为什么这么复杂,引入Deployment概念,直接ReplicaSet管理pod不是已经挺好的吗?.在上个滚动升级的例子中,我们需要协调2个ReplicationController.新的版本扩容,旧的版本缩容,所以这需要另一个资源来协调.</span><br><span class="line"></span><br><span class="line">&gt; Deployment资源就是负责处理这个问题</span><br><span class="line"></span><br><span class="line">#### 1.创建一个Deployment</span><br><span class="line"></span><br><span class="line">创建deployment和创建rc,rs并没有任何区别,也是由标签选择器,期望副本,和pod模板组成.另外还包含另一个字段,指定一个部署策略</span><br><span class="line"></span><br><span class="line">稍微修改上一个rc的配置</span><br></pre></td></tr></table></figure></p>
+<p>apiVersion: apps/v1<br>kind: Deployment<br>metadata:<br>  name: kubia-dm-v1<br>spec:<br>  replicas: 3<br>  selector:<br>      matchLabels:<br>         app: kubia<br>  template:<br>    metadata:<br>      name: kubia<br>      labels:<br>        app: kubia<br>    spec:<br>      containers:</p>
+<pre><code>- image: luksa/kubia:v1
+  name: nodejs
+</code></pre><hr>
+<p>#一个yaml文件可以定义多种资源,中间用—隔开</p>
+<p>apiVersion: v1<br>kind: Service<br>metadata:<br>  name: kubia-dm-svc-v1</p>
+<p>spec:<br>  type: NodePort<br>  selector:<br>    app: kubia</p>
+<p>  ports:</p>
+<ul>
+<li>port: 80<br>targetPort: 8080<br>nodePort: 32014</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">deployment属于apps/v1版本.大体字段差不多,但是selector字段必须要显示指定.</span><br><span class="line"></span><br><span class="line">#### 2,创建depolyment和Service</span><br></pre></td></tr></table></figure>
+<p>[root@k8s-master ~]# kubectl create -f deployment-kubia-v2.yaml –record<br>deployment.apps/kubia-dm-v1 created<br>service/kubia-dm-svc-v1 created<br>[root@k8s-master ~]#<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; --record选项会记录历史版本号</span><br><span class="line"></span><br><span class="line">#### 3.展示Deployment滚动过程中的状态</span><br><span class="line"></span><br><span class="line">通过以下命令可以看到deployment部署的pod已经全部正常就位</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl rollout status deployment kubia-dm-v1<br>deployment “kubia-dm-v1” successfully rolled out</p>
+<p>[root@k8s-master ~]# kubectl get pods<br>NAME                          READY   STATUS    RESTARTS   AGE<br>kubia-dm-v1-74fb644f8-6fp7n   1/1     Running   0          2m32s<br>kubia-dm-v1-74fb644f8-8hddk   1/1     Running   0          2m32s<br>kubia-dm-v1-74fb644f8-hcrck   1/1     Running   0          2m32s</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">通过deploy创建的pod命名和之前的有些稍微区别.中间的一串数字是deployment和replicaSet模板的哈希值.查看rs的信息,可以看到rs名称中也包含了pod相同的哈希值</span><br></pre></td></tr></table></figure>
+<p>[root@k8s-master ~]# kubectl get replicasets<br>NAME                    DESIRED   CURRENT   READY   AGE<br>kubia-dm-v1-74fb644f8   3         3         3       3m58s<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 3.2.deployment升级</span><br><span class="line"></span><br><span class="line">更新升级deployment相比之前的一个例子要简单,并且强大的多.只需要修改deployment资源定义模板配置文件中的镜像tag和期望副本.kubernetes会自动扩容或者缩容,以匹配期望的状态</span><br><span class="line"></span><br><span class="line">##### 不同的deployment升级策略</span><br><span class="line"></span><br><span class="line">deployment有2种升级策略</span><br><span class="line"></span><br><span class="line">* RollingUpdate(默认策略): 滚动更新.先删除一个旧的Pod,然后创建一个新的Pod,这就是蓝绿发布</span><br><span class="line">* Recreate:先全部删除旧pod,然后创建新Pod.</span><br><span class="line"></span><br><span class="line">其中RollingUpdate还有更详细的配置参数定义滚动过程动作.</span><br><span class="line"></span><br><span class="line">&gt; 在演示滚动更新之前,先回顾一下修改对象的几种不同方式.之前接触过通过```kubectl edit```命令修改,或者通过```kubectl patch```打补丁的方式修改</span><br><span class="line"></span><br><span class="line">下表中是几种不同的修改方式:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">方法  | 例子| 作用</span><br><span class="line">---|---|---</span><br><span class="line">kubectl edit | kubectl edit deployment kubia-dm-v2| 使用默认编辑器打开资源配置修改并更新</span><br><span class="line">kubectl patch | kubectl patch deployment kubia-dm-v2 -p &apos;&#123;&quot;spec&quot;:&#123;&quot;replicas&quot;:4&#125;&#125;&apos; | 通过打补丁的方式修改单个资源属性,比如修改副本数为4</span><br><span class="line">kubectl apply| kubectl apply -f kubia-dm-v2 | 应用一个完整的yaml文件,如果yaml中指定的对象不存在,则会被创建,文件中新的值会更新.</span><br><span class="line">kubectl replace|kubectl replace -f kubia-dm-v2 | 也是应用一个新的完整的yaml文件,文件中定义的值会更新原有的值,但是与apply相反,要求新的对象必须事先存在,否则会报错.</span><br><span class="line">kubectl set image| kubectl set iamge deployment kubia-dm-v2 nodejs=luksa/kubia:v2 | 修改部分资源(pod,job,rc,rs,deployment,DemonSet)的镜像</span><br><span class="line"></span><br><span class="line">----</span><br><span class="line"></span><br><span class="line">接下来演示滚动升级.首先通过patch方式修改deployment的一个属性</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl patch deployment kubia-dm-v1 -p ‘{“spec”:{“minReadySeconds”:10}}’<br>deployment.apps/kubia-dm-v1 patched<br>[root@k8s-master ~]#</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">在另一个终端持续访问pod的nginx服务</span><br></pre></td></tr></table></figure>
+<p>[root@k8s-master ~]# while true;do curl <a href="http://10.96.68.186;sleep" target="_blank" rel="noopener">http://10.96.68.186;sleep</a> 1;done<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">接下来通过另外一种方式修改deployment中定义的pod镜像版本为v2</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl set image deployment kubia-dm-v1 nodejs=luksa/kubia:v2<br>deployment.apps/kubia-dm-v1 image updated<br>[root@k8s-master ~]#<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时,kuberntes开始执行滚动更新,直到所有的v1pod都被删除,所有的请求到v2</span><br></pre></td></tr></table></figure></p>
+<p>This is v1 running in pod kubia-dm-v1-74fb644f8-6fp7n<br>This is v1 running in pod kubia-dm-v1-74fb644f8-6fp7n<br>This is v1 running in pod kubia-dm-v1-74fb644f8-6fp7n<br>This is v1 running in pod kubia-dm-v1-74fb644f8-6fp7n<br>This is v2 running in pod kubia-dm-v1-6c99f46f5-fj4dl<br>This is v1 running in pod kubia-dm-v1-74fb644f8-6fp7n<br>This is v2 running in pod kubia-dm-v1-6c99f46f5-fj4dl<br>This is v2 running in pod kubia-dm-v1-6c99f46f5-b55rf<br>This is v2 running in pod kubia-dm-v1-6c99f46f5-b55rf<br>This is v2 running in pod kubia-dm-v1-6c99f46f5-b55rf<br>This is v2 running in pod kubia-dm-v1-6c99f46f5-fj4dl<br>This is v2 running in pod kubia-dm-v1-6c99f46f5-b55rf<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">deploy进行滚动更新的过程和上个例子中使用的```kubectl rolling-update```命令非常相似.稍有不同的是,deployment更新完成后,创建了一个新的ReplicaSet.但是旧的ReplicaSet并不会删除.</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl get rs<br>NAME                    DESIRED   CURRENT   READY   AGE<br>kubia-dm-v1-6c99f46f5   3         3         3       5m1s<br>kubia-dm-v1-74fb644f8   0         0         0       61m<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">但是相比上个例子,使用deployment进行滚动升级明显要方便的多,用户仅仅需要管理一个单一的deployment资源.并不需要过多的关心pod和RS.</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 3.3 deployment回滚</span><br><span class="line"></span><br><span class="line">##### 1.使用v3版本的镜像(luksa/kubia:v3)升级,但是v3版本在处理第五个请求时会返回500错误,导致服务器不可用.</span><br><span class="line"></span><br><span class="line">##### 2.修改deployment资源kubia-dm-v1的镜像为v3版本,出发滚动升级</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl set image deployment kubia-dm-v1 nodejs=luksa/kubia:v3<br>deployment.apps/kubia-dm-v1 image updated<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">滚动升级完成后,全部访问到v3版本镜像,但是访问出现问题</span><br></pre></td></tr></table></figure></p>
+<p>This is v2 running in pod kubia-dm-v1-6c99f46f5-fj4dl<br>This is v2 running in pod kubia-dm-v1-6c99f46f5-fj4dl<br>^@This is v2 running in pod kubia-dm-v1-6c99f46f5-fj4dl<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4<br>This is v3 running in pod kubia-dm-v1-6bb646bc8d-p9nq5<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-qzwss<br>This is v3 running in pod kubia-dm-v1-6bb646bc8d-p9nq5<br>This is v2 running in pod kubia-dm-v1-6c99f46f5-fj4dl<br>This is v3 running in pod kubia-dm-v1-6bb646bc8d-p9nq5<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4<br>This is v3 running in pod kubia-dm-v1-6bb646bc8d-p9nq5<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-p9nq5<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-qzwss<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-qzwss<br>Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">##### 3.手动停止回滚升级</span><br><span class="line"></span><br><span class="line">先演示如何手动停止升级.deployment可以非常容易的回滚到先前部署的版本.它可以让Kubernetes取消最后一次部署的Deployment</span><br><span class="line"></span><br><span class="line">命令: ```kubectl rollout undo deployment DeplymentName</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl rollout undo deployment kubia-dm-v1</span><br><span class="line">deployment.apps/kubia-dm-v1 rolled back</span><br></pre></td></tr></table></figure>
+<p>此时deployment会回滚到上一个版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-qzwss</span><br><span class="line">Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4</span><br><span class="line">This is v2 running in pod kubia-dm-v1-6c99f46f5-pkv5f</span><br><span class="line">This is v2 running in pod kubia-dm-v1-6c99f46f5-vnglb</span><br><span class="line">Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4</span><br><span class="line">This is v2 running in pod kubia-dm-v1-6c99f46f5-vnglb</span><br><span class="line">Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-q7lr4</span><br><span class="line">Some internal error has occurred! This is pod kubia-dm-v1-6bb646bc8d-qzwss</span><br><span class="line">This is v2 running in pod kubia-dm-v1-6c99f46f5-pkv5f</span><br></pre></td></tr></table></figure>
+<h5 id="4-显示deployment的滚动升级历史"><a href="#4-显示deployment的滚动升级历史" class="headerlink" title="4. 显示deployment的滚动升级历史"></a>4. 显示deployment的滚动升级历史</h5><p>命令: <figure class="highlight plain"><figcaption><span>rollout history deployment DeploymentName```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl rollout history deployment kubia-dm-v1<br>deployment.apps/kubia-dm-v1<br>REVISION  CHANGE-CAUSE<br>1         kubectl create –filename=deployment-kubia-v2.yaml –record=true<br>3         kubectl create –filename=deployment-kubia-v2.yaml –record=true<br>4         kubectl create –filename=deployment-kubia-v2.yaml –record=true<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">使用--revison=REVISION编号,可以看回滚历史的具体信息,比如</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl rollout history  deployment kubia-dm-v1 –revision=3<br>deployment.apps/kubia-dm-v1 with revision #3<br>Pod Template:<br>  Labels:    app=kubia<br>    pod-template-hash=6bb646bc8d<br>  Annotations:    kubernetes.io/change-cause: kubectl create –filename=deployment-kubia-v2.yaml –record=true<br>  Containers:<br>   nodejs:<br>    Image:    luksa/kubia:v3<br>    Port:    <none><br>    Host Port:    <none><br>    Environment:    <none><br>    Mounts:    <none><br>  Volumes:    <none><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 还记得创建deployment时添加的--record参数吗?</span><br><span class="line"></span><br><span class="line">##### 5. 回滚到一个特定的deployment版本</span><br><span class="line"></span><br><span class="line">有了上面的revision版本编号,可以回滚到一个特定的deployment版本,比如回滚到第一个版本</span><br><span class="line"></span><br><span class="line">命令: ```kubectl rollout undo deployment Deployment名 --to-revision=回滚版本</span><br></pre></td></tr></table></figure></none></none></none></none></none></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl rollout undo deployment kubia-dm-v1 --to-revision=1</span><br><span class="line">deployment.apps/kubia-dm-v1 rolled back</span><br></pre></td></tr></table></figure>
+<p>现在全部是v1版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-fckvz</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-fckvz</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-lf4fv</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-lf4fv</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-fckvz</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-lf4fv</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-lf4fv</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-lf4fv</span><br></pre></td></tr></table></figure>
+<p>再次查看回滚历史,发现revision版本4使用的是v2版本..所以再试一下回滚到v2版本也就是revision=4</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl rollout history  deployment kubia-dm-v1 --revision=4</span><br><span class="line">deployment.apps/kubia-dm-v1 with revision #4</span><br><span class="line">Pod Template:</span><br><span class="line">  Labels:	app=kubia</span><br><span class="line">	pod-template-hash=6c99f46f5</span><br><span class="line">  Annotations:	kubernetes.io/change-cause: kubectl create --filename=deployment-kubia-v2.yaml --record=true</span><br><span class="line">  Containers:</span><br><span class="line">   nodejs:</span><br><span class="line">    Image:	luksa/kubia:v2</span><br><span class="line">    Port:	&lt;none&gt;</span><br><span class="line">    Host Port:	&lt;none&gt;</span><br><span class="line">    Environment:	&lt;none&gt;</span><br><span class="line">    Mounts:	&lt;none&gt;</span><br><span class="line">  Volumes:	&lt;none&gt;</span><br></pre></td></tr></table></figure>
+<p> 回滚到revision=4</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> [root@k8s-master ~]# kubectl rollout undo deployment kubia-dm-v1 --to-revision=4</span><br><span class="line">deployment.apps/kubia-dm-v1 rolled back</span><br></pre></td></tr></table></figure>
+<p>于是,开始回滚到v2版本镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-fckvz</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-lf4fv</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-lf4fv</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-fckvz</span><br><span class="line">This is v2 running in pod kubia-dm-v1-6c99f46f5-458p7</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-fckvz</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-bmwx7</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-lf4fv</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-fckvz</span><br><span class="line">This is v1 running in pod kubia-dm-v1-74fb644f8-bmwx7</span><br><span class="line">This is v2 running in pod kubia-dm-v1-6c99f46f5-458p7</span><br><span class="line">This is v2 running in pod kubia-dm-v1-6c99f46f5-cvbfd</span><br></pre></td></tr></table></figure>
+<h5 id="6-历史ReplicaSet版本记录"><a href="#6-历史ReplicaSet版本记录" class="headerlink" title="6. 历史ReplicaSet版本记录"></a>6. 历史ReplicaSet版本记录</h5><p>查看rs信息,可以发现保留了3个RS版本,一份是正在使用的(v2),一份是上一次回滚的版本(v1),还有一份是最早的版本(v3))</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl get rs</span><br><span class="line">NAME                     DESIRED   CURRENT   READY   AGE</span><br><span class="line">kubia-dm-v1-6bb646bc8d   0         0         0       22m</span><br><span class="line">kubia-dm-v1-6c99f46f5    3         3         3       20h</span><br><span class="line">kubia-dm-v1-74fb644f8    0         0         0       20h</span><br></pre></td></tr></table></figure>
+<p>通过回滚历史中的pod-template-hash的号码,可以定位到某个rs名字对应的Pod镜像版本以及rs对应的回滚版本</p>
+<p>从下面的命令中可以看到6bb646bc8d的HASH值对应的是revision=3这个版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl rollout history deployment kubia-dm-v1 --revision=3</span><br><span class="line">deployment.apps/kubia-dm-v1 with revision #3</span><br><span class="line">Pod Template:</span><br><span class="line">  Labels:	app=kubia</span><br><span class="line">	pod-template-hash=6bb646bc8d</span><br><span class="line">  Annotations:	kubernetes.io/change-cause: kubectl create --filename=deployment-kubia-v2.yaml --record=true</span><br><span class="line">  Containers:</span><br><span class="line">   nodejs:</span><br><span class="line">    Image:	luksa/kubia:v3</span><br><span class="line">    Port:	&lt;none&gt;</span><br><span class="line">    Host Port:	&lt;none&gt;</span><br><span class="line">    Environment:	&lt;none&gt;</span><br><span class="line">    Mounts:	&lt;none&gt;</span><br><span class="line">  Volumes:	&lt;none&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>旧版本过多会导致ReplicaSet列表管理混乱,可以通过Deployment的revisionHistoryLimit属性来限制历史版本数量,默认是3</p>
+</blockquote>
+<hr>
+<h3 id="4-控制滚动升级速率"><a href="#4-控制滚动升级速率" class="headerlink" title="4 控制滚动升级速率"></a>4 控制滚动升级速率</h3><p>在上面的例子中,进行deployment升级时会看到第一个新pod被创建(等待就绪后),然后旧pod被删除,然后又一个新pod被创建,然后又一个旧pod被删除,直到新pod创建完毕,旧pod全部删除完</p>
+<p>在此期间有2个滚动策略的属性决定一次性替换多少个Pod.这就是maxSurge字段和maxUnavailable字段.</p>
+<p>这2个字段的属性和用法可以通过下面的命令查看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl explain deployment.spec.strategy.rollingUpdate</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>maxSurge: 该字段决定了deployment期望的副本之外,最多运行超出的Pod实例数量.默认为25%.也就是pod实例最多可以比期望数量多25%.也可以是一个绝对值.如果期望副本数是4.那么不会同时运行超过5个pod.</p>
+</li>
+<li><p>maxUnavailable: 该字段决定了在滚动升级期间,<strong>相对于期望副本数</strong>有多少个Pod实例可以处于不可用状态.默认值也是25%.所以可用的Pod实例数不能低于期望副本数的75%.也可以是一个绝对值.如果副本数是4,那么最多只允许有一个Pod处于不可用状态.</p>
+</li>
+</ul>
+<blockquote>
+<p>需要注意的是maxUnavailable是相对期望副本数而言的.并不是绝对值.例如期望副本数是3,maxSurge和maxUnavailable都设置成1.那么第一步,先删除1个旧Pod,然后创建2个新pod,此时一共4个Pod,但是由于新Pod还未就绪,所以一共只有2个旧pod提供服务..虽然maxUnavailable是1.但是有2个pod不可用.但是由于期望副本数是3.所以相对副本数来说,仍然是只有1个pod不可用</p>
+</blockquote>
+<h3 id="5-滚动升级暂停-金丝雀发布"><a href="#5-滚动升级暂停-金丝雀发布" class="headerlink" title="5.滚动升级暂停(金丝雀发布)"></a>5.滚动升级暂停(金丝雀发布)</h3><p>上一个v3版本出现了Bug,如果采用这种升级方式,势必会带来糟糕的体验.比较好的方式是采用金丝雀发布,在现有的版本之上运行一个新版本pod.并查看一小部分用户请求的情况.如果一旦没问题.就可以用新的pod替换所有的旧的pod</p>
+<p>deploy可以使用暂停滚动升级来实现这一需求,在触发滚动升级刚开始几秒后,马上暂停滚动更新.下面用v4版本的镜像来演示这个例子.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl set image deployment kubia-dm-v1  nodejs=luksa/kubia:v4</span><br><span class="line">deployment.apps/kubia-dm-v1 image updated</span><br></pre></td></tr></table></figure>
+<p>使用命令<figure class="highlight plain"><figcaption><span>rollout pause deployment deploymentName```暂停</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl rollout pause deployment kubia-dm-v1<br>deployment.apps/kubia-dm-v1 paused<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">此时增加了一个新版本的Pod,只有一个v4 pod正在运行,</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl get pods<br>NAME                           READY   STATUS    RESTARTS   AGE<br>kubia-dm-v1-6c99f46f5-458p7    1/1     Running   0          4h43m<br>kubia-dm-v1-6c99f46f5-cvbfd    1/1     Running   0          4h43m<br>kubia-dm-v1-6c99f46f5-q4lr6    1/1     Running   0          4h42m<br>kubia-dm-v1-8585b844df-5rnx7   1/1     Running   0          93s<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line">This is v2 running in pod kubia-dm-v1-6c99f46f5-458p7</span><br><span class="line">This is v2 running in pod kubia-dm-v1-6c99f46f5-cvbfd</span><br><span class="line">This is v2 running in pod kubia-dm-v1-6c99f46f5-cvbfd</span><br><span class="line">This is v4 running in pod kubia-dm-v1-8585b844df-5rnx7</span><br><span class="line">This is v2 running in pod kubia-dm-v1-6c99f46f5-cvbfd</span><br></pre></td></tr></table></figure></p>
+<h4 id="恢复滚动升级"><a href="#恢复滚动升级" class="headerlink" title="恢复滚动升级"></a>恢复滚动升级</h4><p>一旦确认v4版本pod没有问题,就可以恢复升级了,使用命令<figure class="highlight plain"><figcaption><span>rollout resume deployment deploymentName```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl rollout resume deployment kubia-dm-v1<br>deployment.apps/kubia-dm-v1 resumed<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 在滚动升级的过程中,想要在一个确切的位置暂停滚动升级,目前还无法做到,目前想要实现金丝雀发布的正确方式是使用2个不同的deployment,并同时调整他们对应的pod数量</span><br><span class="line"></span><br><span class="line">&gt; 暂停滚动升级的另一个用处是,先暂停滚动升级,然后可以反复多次修改deployment配置文件,从而不会触发自动升级</span><br><span class="line"></span><br><span class="line">### 6. minReadySeconds用处</span><br><span class="line"></span><br><span class="line">之前演示过使用minReadySeconds参数.这个属性是指新创建的pod至少要成功运行多久后,才能视为可用状态,从而继续删除旧Pod,新建新pod.配合就绪探针的使用,当达到这个时间,且pod就绪探针正常时,pod才被标记就绪状态.如果探针返回失败,新的Pod运行出错,那么新版本的滚动升级将被阻止.</span><br><span class="line"></span><br><span class="line">使用这个属性可以减缓滚动升级的过程,同时能有效的组织升级继续进行.在生产中,需要设置为较高的值.以确保pod在开始接收流量后持续保持就绪状态</span><br><span class="line"></span><br><span class="line">----</span><br><span class="line"></span><br><span class="line">### 7.配合就绪探针阻止有Bug版本的滚动部署</span><br><span class="line"></span><br><span class="line">再次部署v3版本,但是这次配合就绪探针和minReadySeconds参数来演示阻止滚动升级.</span><br><span class="line"></span><br><span class="line">下面定义deployment-kubia-with-readinesscheck.yaml文件来更新deployment</span><br></pre></td></tr></table></figure></p>
+<p>apiVersion: apps/v1<br>kind: Deployment<br>metadata:<br>  name: kubia-dm-v1<br>spec:<br>  replicas: 3</p>
+<p>  #Pod就绪等待时间<br>  minReadySeconds: 10</p>
+<p>  #滚动更新策略<br>  strategy:<br>    rollingUpdate:<br>       maxSurge: 1<br>       maxUnavailable: 0 #设置为0.确保pod在升级过程中被挨个替代<br>    type: RollingUpdate<br>  selector:<br>      matchLabels:<br>         app: kubia<br>  template:<br>    metadata:<br>      name: kubia<br>      labels:<br>        app: kubia<br>    spec:<br>      containers:</p>
+<pre><code>- image: luksa/kubia:v3
+  name: nodejs
+  readinessProbe: #httpGet类型的就绪探针
+     periodSeconds: 1 #每秒探测一次
+     httpGet: #get访问8080端口的根路径
+        path: /
+        port: 8080
+</code></pre><hr>
+<p>#一个yaml文件可以定义多种资源,中间用—隔开</p>
+<p>apiVersion: v1<br>kind: Service<br>metadata:<br>  name: kubia-dm-svc-v1</p>
+<p>spec:<br>  type: NodePort<br>  selector:<br>    app: kubia</p>
+<p>  ports:</p>
+<ul>
+<li>port: 80<br>targetPort: 8080<br>nodePort: 32014</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">更新deployment配置文件</span><br></pre></td></tr></table></figure>
+<p>[root@k8s-master ~]# kubectl apply -f deployment-kubia-with-readinesscheck.yaml<br>deployment.apps/kubia-dm-v1 configured<br>service/kubia-dm-svc-v1 unchanged<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">查看更新状态,发现一直停留在等待第一个Pod就绪</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl rollout status deployment kubia-dm-v1<br>Waiting for deployment “kubia-dm-v1” rollout to finish: 1 out of 3 new replicas have been updated…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">查看pods状态,发现3个旧版本的pod继续运行,新版本的Pod还未就绪</span><br></pre></td></tr></table></figure>
+<p>[root@k8s-master ~]# kubectl get pods<br>NAME                           READY   STATUS    RESTARTS   AGE<br>kubia-dm-v1-645b94954b-2gkw9   0/1     Running   0          49s<br>kubia-dm-v1-8585b844df-5rnx7   1/1     Running   0          53m<br>kubia-dm-v1-8585b844df-sz65w   1/1     Running   0          2m21s<br>kubia-dm-v1-8585b844df-ztd7x   1/1     Running   0          2m32s<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 因为maxUnavailable属性设置为0,所以不会删除任何旧版本的Pod.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">默认情况下,在10分钟之内不能完成滚动升级的话,此次滚动升级被视为失败.</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl rollout status deployment kubia-dm-v1<br>Waiting for deployment “kubia-dm-v1” rollout to finish: 1 out of 3 new replicas have been updated…<br>error: deployment “kubia-dm-v1” exceeded its progress deadline<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">通过```kubectl describe deploy kubia-dm-v1```可以查看deployment状态.ProgressDeadlineExceeded表示升级超时</span><br></pre></td></tr></table></figure></p>
+<p>Conditions:<br>  Type           Status  Reason</p>
+<hr>
+<p>  Available      True    MinimumReplicasAvailable<br>  Progressing    False   ProgressDeadlineExceeded</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 可以通过设定deployment.sepc.progressDeadlineSeconds来指定超时时间</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### 取消出错版本的滚动升级</span><br></pre></td></tr></table></figure>
+<p>[root@k8s-master ~]# kubectl rollout undo deployment kubia-dm-v1<br>deployment.apps/kubia-dm-v1 rolled back<br>[root@k8s-master ~]#<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">## 命令总结</span><br></pre></td></tr></table></figure></p>
+<p>#手动升级ReplicationController<br>kubectl rolling-update 当前rc名 新rc名 –image=新镜像名</p>
+<p>#创建deployment资源,记录版本信息<br>kubectl create -f deployment配置文件 –record</p>
+<p>#查看deployment滚动升级状态<br>kubectl rollout status deployment deployment名字</p>
+<p>#修改deployment资源配置<br>kubectl patch deployment deployment名字 -p ‘{}’</p>
+<p>#修改deployment配置的镜像信息<br>kubectl set image deployment deployment名字 镜像名=新镜像</p>
+<p>#deployment回滚到上一个版本.在滚动升级超时时,用于取消滚动升级任务<br>kubectl rollout undo deployment deployment名字</p>
+<p>#显示deployment回滚历史<br>kubectl rollout history deployment deployment名字</p>
+<p>#deployment回滚到指定版本<br>kubectl rollout undo deployment deployment名字 –to-revision=版本号</p>
+<p>#deployment暂停滚动升级<br>kubectl rollout pause deployment deployment名字</p>
+<p>#deployment恢复滚动升级<br>kubectl rollout resume deployment deployment名字</p>
+<p>#等待pod就绪时间<br>minReadySeconds</p>
+<p><code>`</code></p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/06/26/kubernetes/kubernetes Deployment/">kuberentes Deployment</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年06月26日 - 11:06</p>
+  <p><span>最后更新:</span>2020年06月26日 - 18:06</p>
+  <p><span>原始链接:</span><a href="/2020/06/26/kubernetes/kubernetes Deployment/" title="kuberentes Deployment">https://jesse.top/2020/06/26/kubernetes/kubernetes Deployment/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/kubernetes/kubernetes Deployment/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/26/kubernetes/kubernetes Ingress/" rel="next" title="kuberentes Ingress">
+                <i class="fa fa-chevron-left"></i> kuberentes Ingress
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/" rel="prev" title="kong+casssandra集群环境部署">
+                kong+casssandra集群环境部署 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/06/26/kubernetes/kubernetes Deployment/"
+           data-title="kuberentes Deployment" data-url="https://jesse.top/2020/06/26/kubernetes/kubernetes Deployment/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">162</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#kuberentes-Deployment"><span class="nav-number">1.</span> <span class="nav-text">kuberentes Deployment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-更新pod"><span class="nav-number">3.</span> <span class="nav-text">1.更新pod</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#删除旧版本pod-使用新版本pod替换"><span class="nav-number">3.1.</span> <span class="nav-text">删除旧版本pod,使用新版本pod替换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#先新建pod-再删除旧pod"><span class="nav-number">3.2.</span> <span class="nav-text">先新建pod,再删除旧pod</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#大致步骤"><span class="nav-number">3.2.1.</span> <span class="nav-text">大致步骤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-使用ReplicationController实现自动的滚动升级"><span class="nav-number">4.</span> <span class="nav-text">2.使用ReplicationController实现自动的滚动升级</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用kubectl命令手动滚动式升级"><span class="nav-number">4.1.</span> <span class="nav-text">使用kubectl命令手动滚动式升级</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-下面创建一个ReplicationController和一个v1版本进行的pod-以及一个nodePort类型的Service-并以此为例子进行后面的演练"><span class="nav-number">4.1.1.</span> <span class="nav-text">1.下面创建一个ReplicationController和一个v1版本进行的pod.以及一个nodePort类型的Service.并以此为例子进行后面的演练</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-创建v2版本的应用-这里直接使用luksa-kubia-v2"><span class="nav-number">4.1.2.</span> <span class="nav-text">2.创建v2版本的应用.这里直接使用luksa/kubia:v2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-使用"><span class="nav-number">4.1.3.</span> <span class="nav-text">3.使用rolling-update```命令开始ReplicationController的滚动升级.1234&gt;在这之前打开一个新终端,循环访问Pod容器,观察升级过程中客户端访问情况命令格式为</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-显示deployment的滚动升级历史"><span class="nav-number">4.1.3.1.</span> <span class="nav-text">4. 显示deployment的滚动升级历史</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-历史ReplicaSet版本记录"><span class="nav-number">4.1.3.2.</span> <span class="nav-text">6. 历史ReplicaSet版本记录</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-控制滚动升级速率"><span class="nav-number">4.2.</span> <span class="nav-text">4 控制滚动升级速率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-滚动升级暂停-金丝雀发布"><span class="nav-number">4.3.</span> <span class="nav-text">5.滚动升级暂停(金丝雀发布)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#恢复滚动升级"><span class="nav-number">4.3.1.</span> <span class="nav-text">恢复滚动升级</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

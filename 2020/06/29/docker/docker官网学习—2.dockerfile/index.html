@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="docker," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="DockerfileDockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用build```命令,用户可以依据dockerfile和上下文编译一个镜像.12345678910111213141516使用dockerfile需要注意一些事项**1.上下文**```docker build```编译镜像时,会将当前目录下的Dockerfile和所有">
+<meta name="keywords" content="docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker学习笔记---Dockerfile">
+<meta property="og:url" content="https://jesse.top/2020/06/29/docker/docker官网学习—2.dockerfile/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="DockerfileDockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用build```命令,用户可以依据dockerfile和上下文编译一个镜像.12345678910111213141516使用dockerfile需要注意一些事项**1.上下文**```docker build```编译镜像时,会将当前目录下的Dockerfile和所有">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-29T13:51:11.208Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="docker学习笔记---Dockerfile">
+<meta name="twitter:description" content="DockerfileDockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用build```命令,用户可以依据dockerfile和上下文编译一个镜像.12345678910111213141516使用dockerfile需要注意一些事项**1.上下文**```docker build```编译镜像时,会将当前目录下的Dockerfile和所有">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/06/29/docker/docker官网学习—2.dockerfile/"/>
+
+
+
+
+
+  <title>docker学习笔记---Dockerfile | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习—2.dockerfile/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">docker学习笔记---Dockerfile</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/29/docker/docker官网学习—2.dockerfile/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习—2.dockerfile/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><p>Dockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用<figure class="highlight docker"><figcaption><span>build```命令,用户可以依据dockerfile和上下文编译一个镜像.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">使用dockerfile需要注意一些事项</span><br><span class="line"></span><br><span class="line">**<span class="number">1</span>.上下文**</span><br><span class="line"></span><br><span class="line">```docker build```编译镜像时,会将当前目录下的Dockerfile和所有文件打包添加发送到docker daemon服务端.所以一般情况下创建一个空目录编辑dockerfile文件.然后将需要<span class="keyword">copy</span>和add的文件放进和dockerfile同一目录下.</span><br><span class="line"></span><br><span class="line">dockerfile中的copy以及add命令,添加文件到docker镜像中时.不要使用绝对路径.例如/home/work/a.txt..docker deamon只能识别到当前上下文环境,无法识别到其他目录.但是可以使用当前上下文的相对路径.</span><br><span class="line"></span><br><span class="line">**2.分层**</span><br><span class="line"></span><br><span class="line">dockerfile编译镜像时,每条指令都是一个镜像层.除了From指令外,每一行指令都是基于上一行生成的临时镜像运行一个容器.执行一条指令就类似于```docker commit```命令生成一个新的镜像.所以两条指令之间互不关联.</span><br><span class="line"></span><br><span class="line">&lt;!--more--&gt;</span><br><span class="line"></span><br><span class="line">例如,下列的dockerfile并不能在/data/目录下创建files文件.</span><br></pre></td></tr></table></figure></p>
+<p>FROM ubuntu<br>RUN mkdir /data<br>RUN cd /data<br>RUN touch files<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">下列的dockerfile甚至不会创建/data/file文件,也不会修改/data/目录权限</span><br></pre></td></tr></table></figure></p>
+<p>FROM ubuntu<br>RUN useradd foo<br>VOLUME /data<br>RUN touch /data/file<br>RUN chown -R foo:foo /data<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">想要实现这个需求,可以这样写:</span><br></pre></td></tr></table></figure></p>
+<p>FROM ubuntu<br>RUN useradd foo<br>RUN mkdir /data &amp;&amp; touch /data/file<br>RUN chown -R foo:foo /data<br>VOLUME /data<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line"></span><br><span class="line">**3.精简**</span><br><span class="line"></span><br><span class="line">由于dockerfile在构建镜像时,dockerfile文本中每一行语句会产生每一层镜像.</span><br><span class="line"></span><br><span class="line">例如下面这个dockerfile:</span><br></pre></td></tr></table></figure></p>
+<p>From ubuntu<br>RUN apt-get update<br>RUN apt-get -y install vim git wget net-tools<br>RUN useradd foo<br>RUN mkdir /data<br>RUN touch /data/file<br>RUN chown -R foo:foo /data<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在编译时,每一个RUN语句都会构建一层镜像.(实际上所有指令都是这样,不仅仅是RUN)</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost test]$docker build -t test:v1 .<br>Sending build context to Docker daemon  2.048kB<br>Step 1/7 : From ubuntu<br> —&gt; 94e814e2efa8<br>Step 2/7 : RUN apt-get update<br> —&gt; Using cache<br> —&gt; 5520126e7fcc<br>Step 3/7 : RUN apt-get -y install vim git wget net-tools<br> —&gt; Using cache<br> —&gt; cb24e170539c<br>Step 4/7 : RUN useradd foo<br> —&gt; Using cache<br> —&gt; ca31aeba0309<br>Step 5/7 : RUN mkdir /data<br> —&gt; Using cache<br> —&gt; d5c6e0f32f6b<br>Step 6/7 : RUN touch /data/file<br> —&gt; Using cache<br> —&gt; 9c4b06e9b25d<br>Step 7/7 : RUN chown -R foo:foo /data<br> —&gt; Using cache<br> —&gt; 75ecea0b0795<br>Successfully built 75ecea0b0795<br>Successfully tagged test:v1<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">这种写法会导致镜像层非常多,镜像文件也会相对较大.所以一般推荐更精简的语法,每一条功能相同的语句,尽量写在一行.上面的dockerfile可以优化成:</span><br></pre></td></tr></table></figure></p>
+<p>From ubuntu<br>RUN apt-get update \<br>    &amp;&amp; apt-get -y install \<br>       vim \<br>       git \<br>       wget \<br>       net-tools</p>
+<p>RUN useradd foo<br>RUN mkdir /data &amp;&amp;  touch /data/file &amp;&amp;  chown -R foo:foo /data<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这次编译只需构建4层镜像</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost test]$docker build -t test:v1 .<br>Sending build context to Docker daemon  2.048kB<br>Step 1/4 : From ubuntu<br> —&gt; 94e814e2efa8<br>Step 2/4 : RUN apt-get update     &amp;&amp; apt-get -y install        vim        git        wget        net-tools<br> —&gt; Using cache<br> —&gt; 7aa2bc9041e0<br>Step 3/4 : RUN useradd foo<br> —&gt; Using cache<br> —&gt; 5a13764414e6<br>Step 4/4 : RUN mkdir /data &amp;&amp;  touch /data/file &amp;&amp;  chown -R foo:foo /data<br> —&gt; Using cache<br> —&gt; bd61817d7526<br>Successfully built bd61817d7526<br>Successfully tagged test:v1<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">4.使用no-install-recommends</span><br><span class="line"></span><br><span class="line">如果是使用APT包管理器,则应该在执行apt-get install 命令时加上no-install-recommends参数.这样ATP就仅安装核心依赖.而不安装其他推荐和建议的包,这会显著减少不必要包的下载数量</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### Dockerfile指令介绍</span><br><span class="line"></span><br><span class="line">介绍完Dockerfile的概念和特点后,接下来了解一下Dockerfile语法中的具体指令的介绍和用法</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">下面是一个例子:</span><br></pre></td></tr></table></figure></p>
+<h1 id="Use-an-official-Python-runtime-as-a-parent-image"><a href="#Use-an-official-Python-runtime-as-a-parent-image" class="headerlink" title="Use an official Python runtime as a parent image"></a>Use an official Python runtime as a parent image</h1><p>FROM python:2.7-slim</p>
+<h1 id="Set-the-working-directory-to-app"><a href="#Set-the-working-directory-to-app" class="headerlink" title="Set the working directory to /app"></a>Set the working directory to /app</h1><p>WORKDIR /app</p>
+<h1 id="Copy-the-current-directory-contents-into-the-container-at-app"><a href="#Copy-the-current-directory-contents-into-the-container-at-app" class="headerlink" title="Copy the current directory contents into the container at /app"></a>Copy the current directory contents into the container at /app</h1><p>COPY . /app</p>
+<h1 id="Install-any-needed-packages-specified-in-requirements-txt"><a href="#Install-any-needed-packages-specified-in-requirements-txt" class="headerlink" title="Install any needed packages specified in requirements.txt"></a>Install any needed packages specified in requirements.txt</h1><p>RUN pip install –trusted-host pypi.python.org -r requirements.txt</p>
+<h1 id="Make-port-80-available-to-the-world-outside-this-container"><a href="#Make-port-80-available-to-the-world-outside-this-container" class="headerlink" title="Make port 80 available to the world outside this container"></a>Make port 80 available to the world outside this container</h1><p>EXPOSE 80</p>
+<h1 id="Define-environment-variable"><a href="#Define-environment-variable" class="headerlink" title="Define environment variable"></a>Define environment variable</h1><p>ENV NAME World</p>
+<h1 id="Run-app-py-when-the-container-launches"><a href="#Run-app-py-when-the-container-launches" class="headerlink" title="Run app.py when the container launches"></a>Run app.py when the container launches</h1><p>CMD [“python”, “app.py”]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">* FROM </span><br><span class="line"></span><br><span class="line">格式: ```FROM &lt;image&gt;``` 或者 ```FROM &lt;image&gt;:tag</span><br></pre></td></tr></table></figure></p>
+<p>表示从一个基础镜像构建.Dockerfile必须以FROM语句作为第一条非注释语句.</p>
+<ul>
+<li><p>WORKDIR: 表示工作目录,后续的相对路径也是基于这个目录</p>
+</li>
+<li><p>COPY</p>
+</li>
+</ul>
+<p>格式: <figure class="highlight plain"><figcaption><span>src dest```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">复制宿主机上的文件到镜像中.```src```是当前上下文中的文件或者目录.```dest```是容器中的目标文件或者目录.```src```指定的源可以有多个.此外```src``` 还支持通配符.例如: COPY hom* /mydir/ 表示添加所有当前目录下的hom开头的文件到目录/mydir/下</span><br><span class="line"></span><br><span class="line">&lt;dest&gt;可以是文件或者目录.但是必须是镜像中的绝对路径,或者是WORKDIR的相对路径.若&lt;dest&gt;以反斜杠```/```结尾,则指向的是目录,否则指向文件.当```src```有多个源时,```dest```必须是目录.如果```dest```目录不存在,则会自动被创建</span><br><span class="line"></span><br><span class="line">* ADD</span><br><span class="line"></span><br><span class="line">格式: ```ADD src dest</span><br></pre></td></tr></table></figure></p>
+<p> ADD和COPY命令有相同功能,都支持复制本地文件到镜像里.但ADD能从互联网的URL下载文件到镜像..<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> 但是如果```src```是一个URL的归档格式文件,则不会自动解压.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* RUN</span><br><span class="line"></span><br><span class="line">RUN命令有两种格式:</span><br><span class="line"></span><br><span class="line">```RUN &lt;command&gt;``` (shell格式)  </span><br><span class="line">```RUN [&quot;executable&quot;,&quot;param1&quot;,&quot;param2&quot;]``` (exec格式)</span><br><span class="line"></span><br><span class="line">RUN指令的两种格式表示命令在容器中的两种运行方式.当使用shell格式时,命令通过```/bin/sh -c```运行.当使用exec格式时.命令直接运行,不调用shell程序.exec格式中的参数会被当成JSON数组被Docker解析.所以必须使用双引号,不能使用单引号. </span><br><span class="line"></span><br><span class="line">另外由于exec格式不会在shell中运行.所以无法识别ENV环境变量.例如当执行```CMD [&quot;echo&quot;,&quot;$HOME&quot;]```时,```$HOME```不会被变量替换.如果希望运行shell程序.可以写成```CMD [&quot;sh&quot;,&quot;-c&quot;,&quot;echo&quot;,&quot;$HOME&quot;]```.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* EXPOSE: 镜像需要暴露出来的端口. </span><br><span class="line"></span><br><span class="line">&gt; 要注意的是,这里只是说明镜像需要暴露哪些端口,在镜像构建完毕,启动容器时,仍然需要-p参数来映射端口,否则端口不会自动映射</span><br><span class="line"></span><br><span class="line">* ENV</span><br><span class="line"></span><br><span class="line">  格式: ENV &lt;key&gt; &lt;value&gt; 或者 ENV &lt;key&gt;=&lt;value&gt;</span><br><span class="line">  </span><br><span class="line">  ENV指令用来声明环境变量,并且可以被(ADD,COPY,WORKDIR等)指令调用.调用ENV环境变量的格式和shell一样:```$variable_name```或者 ```$&#123;variable_name&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>CMD </li>
+</ul>
+<p>CMD命令有3种格式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CMD &lt;command&gt; (shell格式)  </span><br><span class="line">CMD [&quot;executable&quot;,&quot;param1&quot;,&quot;param2&quot;] (exec格式)  </span><br><span class="line">CMD [&quot;param1&quot;,&quot;param2&quot;] (为ENTRYPOINT命令提供参数)</span><br></pre></td></tr></table></figure>
+<p>CMD提供容器启动后执行的命令.或者是为ENTRYPOINT传递一些参数.一个dockerfile文件只允许存在一条CMD指令.如果存在多条CMD指令,以最后一条为准.但是如果用户在<figure class="highlight docker"><figcaption><span>run```时指定了命令,则会覆盖CMD中的指令</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* <span class="keyword">ENTRYPOINT</span></span><br><span class="line"></span><br><span class="line">ENTRYPOINT有两种格式.和上文CMD一样分为shell格式和exec格式.</span><br><span class="line"></span><br><span class="line">ENTRYPOINT和CMD类似,指定容器启动时执行的命令.和CMD一样一个Dockerfile文件中可以有多个ENTRYPOINT命令.但只有最后一条生效.但是又有一些区别.当使用shell格式时,ENTRYPOINT会忽略任何CMD指令和```docker run```启动容器时手动输入的指令.并且会运行在```/bin/sh -c```环境中,成为它的子进程.进程在容器中PID不是1,也不能接收UNIX信号.(也就是在执行```docker stop &lt;container&gt;```时,进程接收不到SIGTERM指令)</span><br><span class="line"></span><br><span class="line">当使用exec格式时,```docker run```手动指定的命令,将作为参数覆盖CMD指定的参数传递到ENTRYPOINT.(也就是说```docker run```启动容器时指定的不再是具体命令,而是命令的参数).</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">创建上面dockerfile中所需要的app.py和requirements.txt文件,并且将他们和Dockerfile文件放在同一目录下:</span><br><span class="line"></span><br><span class="line">requirements.txt:</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost docker_python]$cat requirements.txt<br>Flask<br>Redis</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.py:</span><br></pre></td></tr></table></figure>
+<p>root@localhost docker_python]$cat app.py<br>from flask import Flask<br>from redis import Redis, RedisError<br>import os<br>import socket</p>
+<h1 id="Connect-to-Redis"><a href="#Connect-to-Redis" class="headerlink" title="Connect to Redis"></a>Connect to Redis</h1><p>redis = Redis(host=”redis”, db=0, socket_connect_timeout=2, socket_timeout=2)</p>
+<p>app = Flask(<strong>name</strong>)</p>
+<p>@app.route(“/“)<br>def hello():<br>    try:<br>        visits = redis.incr(“counter”)<br>    except RedisError:<br>        visits = “<i>cannot connect to Redis, counter disabled</i>“</p>
+<pre><code>html = &quot;&lt;h3&gt;Hello {name}!&lt;/h3&gt;&quot; \
+       &quot;&lt;b&gt;Hostname:&lt;/b&gt; {hostname}&lt;br/&gt;&quot; \
+       &quot;&lt;b&gt;Visits:&lt;/b&gt; {visits}&quot;
+return html.format(name=os.getenv(&quot;NAME&quot;, &quot;world&quot;), hostname=socket.gethostname(), visits=visits)
+</code></pre><p>if <strong>name</strong> == “<strong>main</strong>“:<br>    app.run(host=’0.0.0.0’, port=80)<br>[root@localhost docker_python]$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line"></span><br><span class="line">#### 开始构建镜像</span><br><span class="line"></span><br><span class="line">首先确保Dockerfile里所需的文件,以及Dockerfile都在同一目录下:</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost docker_python]$ls<br>app.py  Dockerfile  requirements.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">运行以下命令来构建一个镜像.使用--tag参数(或者-t),可以为镜像打个标签:</span><br></pre></td></tr></table></figure></p>
+<p>docker build –tag=friendlyhello .<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">构建过程略..在构建过程中,注意以下现象:</span><br><span class="line"></span><br><span class="line">1.构建镜像层:</span><br><span class="line"></span><br><span class="line">部分指令会创建一个新的镜像层,而有些指令则不会.关于如何区分命令是否会新建镜像层,一个基本的原则是:</span><br><span class="line"></span><br><span class="line">如果指令的作用是像镜像中添加新的文件或者程序,那么就会新建镜像层.(例如:RUN,COPY,ADD,FROM等)</span><br><span class="line"></span><br><span class="line">如果只是告诉docker如何构建或者运行应用程序,增加或者修改容器的元数据,那么不会构建新的镜像层.(例如:WORKDIR,EXPOSE,ENV,ENTERPOINT等)</span><br><span class="line"></span><br><span class="line">2.构建步骤:</span><br><span class="line"></span><br><span class="line">基本等过程大致为:</span><br><span class="line"></span><br><span class="line">运行临时容器----&gt;在该容器中运行Dockerfile指令----&gt;将运行结果保存为一个新等镜像层------&gt; 删除临时容器</span><br><span class="line"></span><br><span class="line">构建完成后,通过以下命令可以看到构建的镜像</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost docker_python]$docker images<br>REPOSITORY                 TAG                 IMAGE ID            CREATED              SIZE<br>friendlyhello              latest              f091d1bb803c        About a minute ago   131MB</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; 或者也可以是输入以下命令 docker image ls</span><br><span class="line"></span><br><span class="line">&gt; 可能会疑惑,为什么tag标签是latest..镜像的完整标签格式应该是:friendlyhello:lastest.</span><br><span class="line">如果需要在构建镜像时指定版本.可以使用: --tag=friendlyhello:v0.0.1</span><br><span class="line"></span><br><span class="line">----</span><br><span class="line"></span><br><span class="line">#### 使用构建的镜像启动一个容器</span><br><span class="line"></span><br><span class="line">输入以下命令,利用刚才的镜像启动一个容器:</span><br></pre></td></tr></table></figure>
+<p>docker run -p 4000:80 friendlyhello<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">执行结果:</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost docker_python]$docker run -p 4000:80 friendlyhello</p>
+<ul>
+<li>Serving Flask app “app” (lazy loading)</li>
+<li>Environment: production<br>WARNING: Do not use the development server in a production environment.<br>Use a production WSGI server instead.</li>
+<li>Debug mode: off</li>
+<li><p>Running on <a href="http://0.0.0.0:80/" target="_blank" rel="noopener">http://0.0.0.0:80/</a> (Press CTRL+C to quit)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> * docker run 表示启动一个容器</span><br><span class="line"> * -p 宿主机端口:容器端口  表示将宿主机的端口映射给容器.如果是-P 80 表示随机映射一个宿主机的端口给容器</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">此时可以在其他电脑上访问这个容器的80端口,下面是在我的PC上访问宿主机的4000端口,也就是刚才启动的容器</span><br></pre></td></tr></table></figure>
+<p>✘ huangyong@huangyong-Macbook-Pro  ~  curl <a href="http://10.0.0.50:4000" target="_blank" rel="noopener">http://10.0.0.50:4000</a><br></p><h3>Hello World!</h3><b>Hostname:</b> f9b1b804404f<br><b>Visits:</b> <i>cannot connect to Redis, counter disabled</i>%<p></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">容器默认是在前台执行,加上-d参数可以时容器运行在后台:</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>docker run -d -p 4000:80 friendlyhello<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker ps命令可以显示正在运行中的容器</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost docker_python]$docker ps<br>CONTAINER ID        IMAGE                      COMMAND             CREATED             STATUS              PORTS                    NAMES<br>fcf7d29ac627        friendlyhello              “python app.py”     5 seconds ago       Up 1 second         0.0.0.0:4000-&gt;80/tcp     stoic_colden<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; docker container ls命令也有同样的效果</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">这一节(包括第3小节)涉及到的基础命令如下:</span><br></pre></td></tr></table></figure></p>
+<p>docker build -t friendlyhello .  # Create image using this directory’s Dockerfile<br>docker run -p 4000:80 friendlyhello  # Run “friendlyname” mapping port 4000 to 80<br>docker run -d -p 4000:80 friendlyhello         # Same thing, but in detached mode<br>docker container ls                                # List all running containers<br>docker container ls -a             # List all containers, even those not running<br>docker container stop <hash>           # Gracefully stop the specified container<br>docker container kill <hash>         # Force shutdown of the specified container<br>docker container rm <hash>        # Remove specified container from this machine<br>docker container rm $(docker container ls -a -q)         # Remove all containers<br>docker image ls -a                             # List all images on this machine<br>docker image rm <image id="">            # Remove specified image from this machine<br>docker image rm $(docker image ls -a -q)   # Remove all images from this machine<br>docker login             # Log in this CLI session using your Docker credentials<br>docker tag <image> username/repository:tag  # Tag <image> for upload to registry<br>docker push username/repository:tag            # Upload tagged image to registry<br>docker run username/repository:tag                   # Run image from a registry<br><code>`</code></image></image></image></hash></hash></hash></p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/06/29/docker/docker官网学习—2.dockerfile/">docker学习笔记---Dockerfile</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年06月29日 - 11:06</p>
+  <p><span>最后更新:</span>2020年06月29日 - 21:06</p>
+  <p><span>原始链接:</span><a href="/2020/06/29/docker/docker官网学习—2.dockerfile/" title="docker学习笔记---Dockerfile">https://jesse.top/2020/06/29/docker/docker官网学习—2.dockerfile/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/29/docker/docker官网学习—2.dockerfile/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/docker/" rel="tag"># docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/" rel="next" title="docker学习笔记---docker使用阿里云私有仓库">
+                <i class="fa fa-chevron-left"></i> docker学习笔记---docker使用阿里云私有仓库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/" rel="prev" title="docker学习笔记---理解swarm集群">
+                docker学习笔记---理解swarm集群 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/06/29/docker/docker官网学习—2.dockerfile/"
+           data-title="docker学习笔记---Dockerfile" data-url="https://jesse.top/2020/06/29/docker/docker官网学习—2.dockerfile/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">162</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dockerfile"><span class="nav-number">1.</span> <span class="nav-text">Dockerfile</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Use-an-official-Python-runtime-as-a-parent-image"><span class="nav-number"></span> <span class="nav-text">Use an official Python runtime as a parent image</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Set-the-working-directory-to-app"><span class="nav-number"></span> <span class="nav-text">Set the working directory to /app</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Copy-the-current-directory-contents-into-the-container-at-app"><span class="nav-number"></span> <span class="nav-text">Copy the current directory contents into the container at /app</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Install-any-needed-packages-specified-in-requirements-txt"><span class="nav-number"></span> <span class="nav-text">Install any needed packages specified in requirements.txt</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Make-port-80-available-to-the-world-outside-this-container"><span class="nav-number"></span> <span class="nav-text">Make port 80 available to the world outside this container</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Define-environment-variable"><span class="nav-number"></span> <span class="nav-text">Define environment variable</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Run-app-py-when-the-container-launches"><span class="nav-number"></span> <span class="nav-text">Run app.py when the container launches</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Connect-to-Redis"><span class="nav-number"></span> <span class="nav-text">Connect to Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">Hello World!</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="docker," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="学习Docker Stack介绍一个stack是一组共享依赖包的多个相关的services,并且可以编排和扩展.其实从第4小节开始,在利用compose文件部署app时,就已经开始一直使用stack.但是还只是运行在一个单一服务器的单一service.现在,你可以学习在多个服务器上,运行多个相关的services.   使用下面的docker-compose.yml文件替换第4小节中的docker">
+<meta name="keywords" content="docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker学习笔记---学习Docker Stack">
+<meta property="og:url" content="https://jesse.top/2020/06/29/docker/docker官网学习-6.学习stack/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="学习Docker Stack介绍一个stack是一组共享依赖包的多个相关的services,并且可以编排和扩展.其实从第4小节开始,在利用compose文件部署app时,就已经开始一直使用stack.但是还只是运行在一个单一服务器的单一service.现在,你可以学习在多个服务器上,运行多个相关的services.   使用下面的docker-compose.yml文件替换第4小节中的docker">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://docs.docker.com/get-started/images/get-started-visualizer1.png">
+<meta property="og:image" content="https://docs.docker.com/get-started/images/visualizer-with-redis.png">
+<meta property="og:updated_time" content="2020-06-29T13:12:58.803Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="docker学习笔记---学习Docker Stack">
+<meta name="twitter:description" content="学习Docker Stack介绍一个stack是一组共享依赖包的多个相关的services,并且可以编排和扩展.其实从第4小节开始,在利用compose文件部署app时,就已经开始一直使用stack.但是还只是运行在一个单一服务器的单一service.现在,你可以学习在多个服务器上,运行多个相关的services.   使用下面的docker-compose.yml文件替换第4小节中的docker">
+<meta name="twitter:image" content="https://docs.docker.com/get-started/images/get-started-visualizer1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/06/29/docker/docker官网学习-6.学习stack/"/>
+
+
+
+
+
+  <title>docker学习笔记---学习Docker Stack | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-6.学习stack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">docker学习笔记---学习Docker Stack</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/29/docker/docker官网学习-6.学习stack/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-6.学习stack/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="学习Docker-Stack"><a href="#学习Docker-Stack" class="headerlink" title="学习Docker Stack"></a>学习Docker Stack</h2><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>一个stack是一组共享依赖包的多个相关的services,并且可以编排和扩展.其实从第4小节开始,在利用compose文件部署app时,就已经开始一直使用stack.但是还只是运行在一个单一服务器的单一service.<br>现在,你可以学习在多个服务器上,运行多个相关的services.</p>
+<hr>
+<ul>
+<li>使用下面的docker-compose.yml文件替换第4小节中的docker-compose.yml</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3&quot;</span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    # replace username/repo:tag with your name and image details</span><br><span class="line">    image: ianch/friendlyhello:v1</span><br><span class="line">    deploy:</span><br><span class="line">      replicas: 5</span><br><span class="line">      resources:</span><br><span class="line">        limits:</span><br><span class="line">          cpus: &quot;0.1&quot;</span><br><span class="line">          memory: 50M</span><br><span class="line">      restart_policy:</span><br><span class="line">        condition: on-failure</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;4000:80&quot;</span><br><span class="line">    networks:</span><br><span class="line">      - webnet</span><br><span class="line">  Visualizer:</span><br><span class="line">    image: dockersamples/visualizer:stable</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8080:8080&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - &quot;/var/run/docker.sock:/var/run/docker.sock&quot;</span><br><span class="line">    deploy:</span><br><span class="line">      placement:</span><br><span class="line">        constraints: [node.role == manager]</span><br><span class="line">    networks:</span><br><span class="line">      - webnet</span><br><span class="line">networks:</span><br><span class="line">  webnet:</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>docker-compose文件稍微做了点改动.添加一个Visualizer服务,placement指令确保这个Visualizer服务仅仅运行在swarm manager节点.</p>
+<hr>
+<h4 id="部署compose文件"><a href="#部署compose文件" class="headerlink" title="部署compose文件"></a>部署compose文件</h4><ul>
+<li>初始化swarm</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker swarm init</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第二台服务器加入swarm集群</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@php compose]$docker swarm join --token SWMTKN-1-5qr6e90o52h5licxatuvmft65kji5qf1roujebf16auoe5xgam-3d0fuzr8818r6330n88dm1fcu 10.0.0.50:2377</span><br><span class="line">This node joined a swarm as a worker.</span><br></pre></td></tr></table></figure>
+<ul>
+<li>部署app</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost compose]$docker stack deploy -c docker-compose.yml getstartedlab</span><br><span class="line">Creating network getstartedlab_webnet</span><br><span class="line">Creating service getstartedlab_web</span><br><span class="line">Creating service getstartedlab_Visualizer</span><br><span class="line">[root@localhost compose]$</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>添加了2个服务.web和Visualizer</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost compose]$docker stack ps getstartedlab</span><br><span class="line">ID                  NAME                         IMAGE                             NODE                    DESIRED STATE       CURRENT STATE                ERROR               PORTS</span><br><span class="line">ds77cn4hgd9w        getstartedlab_web.1          friendlyhello:latest              php                     Running             Running about a minute ago</span><br><span class="line">agzj3veqno63        getstartedlab_Visualizer.1   dockersamples/visualizer:stable   localhost.localdomain   Running             Running about a minute ago</span><br><span class="line">3hq0if79g3gk        getstartedlab_web.2          friendlyhello:latest              php                     Running             Running about a minute ago</span><br><span class="line">iuxh7qjfpikw        getstartedlab_web.3          friendlyhello:latest              localhost.localdomain   Running             Running 53 seconds ago</span><br><span class="line">ba9hcq5zmlbd        getstartedlab_web.4          friendlyhello:latest              php                     Running             Running about a minute ago</span><br><span class="line">o600yqmqets7        getstartedlab_web.5          friendlyhello:latest              localhost.localdomain   Running             Running 55 seconds ago</span><br><span class="line">[root@localhost compose]$</span><br></pre></td></tr></table></figure>
+<p>访问任意一台服务器的8080端口,可以看到Visualizer服务正在运行</p>
+<p><img src="https://docs.docker.com/get-started/images/get-started-visualizer1.png" alt=""></p>
+<blockquote>
+<p>这是我借用的官网的图片.</p>
+</blockquote>
+<p>可以看到,visualizer运行在swarm manager节点上,5个web服务运行在swarm集群上.visualizer是一个不需要任何依赖,而可以运行在任何app的独立服务.现在尝试一下创建一个具有依赖项的服务:提供访问计数器的Redis服务</p>
+<hr>
+<h3 id="编辑docker-compose文件"><a href="#编辑docker-compose文件" class="headerlink" title="编辑docker-compose文件"></a>编辑docker-compose文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3&quot;</span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    # replace username/repo:tag with your name and image details</span><br><span class="line">    image: ianch/friendlyhello:v1</span><br><span class="line">    deploy:</span><br><span class="line">      replicas: 5</span><br><span class="line">      resources:</span><br><span class="line">        limits:</span><br><span class="line">          cpus: &quot;0.1&quot;</span><br><span class="line">          memory: 50M</span><br><span class="line">      restart_policy:</span><br><span class="line">        condition: on-failure</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;4000:80&quot;</span><br><span class="line">    networks:</span><br><span class="line">      - webnet</span><br><span class="line">  Visualizer:</span><br><span class="line">    image: dockersamples/visualizer:stable</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8080:8080&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - &quot;/var/run/docker.sock:/var/run/docker.sock&quot;</span><br><span class="line">    deploy:</span><br><span class="line">      placement:</span><br><span class="line">        constraints: [node.role == manager]</span><br><span class="line">    networks:</span><br><span class="line">      - webnet</span><br><span class="line"></span><br><span class="line">  redis:</span><br><span class="line">    image: redis</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;6379:6379&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - &quot;/home/docker/data:/data&quot;</span><br><span class="line">    deploy:</span><br><span class="line">      placement:</span><br><span class="line">        constraints: [node.role == manager]</span><br><span class="line">    command: redis-server --appendonly yes</span><br><span class="line">    networks:</span><br><span class="line">      - webnet</span><br><span class="line">networks:</span><br><span class="line">  webnet:</span><br></pre></td></tr></table></figure>
+<p> 这里我们添加了一个redis服务.在Docker HUB上有redis官方镜像,并且已经暴露了6379端口.所以这里只需要指定redis镜像即可..同样redis也只运行在manager节点服务器.</p>
+<p> 这里为了持久化数据,在启动redis容器的时候指定了appendonly参数,并且挂载了本机的/home/docker/data目录映射到容器的/data.(redis容器默认保存数据路径)</p>
+<ul>
+<li>在manager节点创建/home/docker/data目录</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost compose]$mkdir -pv /home/docker/data</span><br><span class="line">mkdir: 已创建目录 &quot;/home/docker&quot;</span><br><span class="line">mkdir: 已创建目录 &quot;/home/docker/data&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>部署compose</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost compose]$docker stack deploy -c docker-compose.yml getstartedlab</span><br><span class="line">Updating service getstartedlab_web (id: mtgafxttekwfh0tkhkaespa1v)</span><br><span class="line">image friendlyhello:latest could not be accessed on a registry to record</span><br><span class="line">its digest. Each node will access friendlyhello:latest independently,</span><br><span class="line">possibly leading to different nodes running different</span><br><span class="line">versions of the image.</span><br><span class="line"></span><br><span class="line">Updating service getstartedlab_Visualizer (id: zmim1kj44afsr9xay8ppxker6)</span><br><span class="line">Creating service getstartedlab_redis</span><br></pre></td></tr></table></figure>
+<p>可以看到3个services都启动起来了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost compose]$docker service ls</span><br><span class="line">ID                  NAME                       MODE                REPLICAS            IMAGE                             PORTS</span><br><span class="line">zmim1kj44afs        getstartedlab_Visualizer   replicated          1/1                 dockersamples/visualizer:stable   *:8080-&gt;8080/tcp</span><br><span class="line">elomaiu5go9p        getstartedlab_redis        replicated          1/1                 redis:latest                      *:6379-&gt;6379/tcp</span><br><span class="line">mtgafxttekwf        getstartedlab_web          replicated          5/5                 friendlyhello:latest              *:4000-&gt;80/tcp</span><br></pre></td></tr></table></figure>
+<p>在浏览器访问服务器的4000端口可以看到有一个访问计数器在增加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> huangyong@huangyong-Macbook-Pro  ~  curl http://10.0.0.50:4000</span><br><span class="line">&lt;h3&gt;Hello World!&lt;/h3&gt;&lt;b&gt;Hostname:&lt;/b&gt; eed56ca4164b&lt;br/&gt;&lt;b&gt;Visits:&lt;/b&gt; 5%                                                                                                           huangyong@huangyong-Macbook-Pro  ~  curl http://10.0.0.50:4000</span><br><span class="line">&lt;h3&gt;Hello World!&lt;/h3&gt;&lt;b&gt;Hostname:&lt;/b&gt; 777d2cab6468&lt;br/&gt;&lt;b&gt;Visits:&lt;/b&gt; 6%                                                                                                           huangyong@huangyong-Macbook-Pro  ~  curl http://10.0.0.50:4000</span><br><span class="line">&lt;h3&gt;Hello World!&lt;/h3&gt;&lt;b&gt;Hostname:&lt;/b&gt; 213e6a729c6a&lt;br/&gt;&lt;b&gt;Visits:&lt;/b&gt; 7%                                                                                                           huangyong@huangyong-Macbook-Pro  ~  curl http://10.0.0.50:4000</span><br><span class="line">&lt;h3&gt;Hello World!&lt;/h3&gt;&lt;b&gt;Hostname:&lt;/b&gt; 85ccc6b1cb18&lt;br/&gt;&lt;b&gt;Visits:&lt;/b&gt; 8%                                                                                                           huangyong@huangyong-Macbook-Pro  ~ </span><br></pre></td></tr></table></figure>
+<p>访问另外一台服务器也可以看到同样结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> huangyong@huangyong-Macbook-Pro  ~  curl http://10.0.0.12:4000</span><br><span class="line">&lt;h3&gt;Hello World!&lt;/h3&gt;&lt;b&gt;Hostname:&lt;/b&gt; e77e36db18be&lt;br/&gt;&lt;b&gt;Visits:&lt;/b&gt; 10%                                                                                                          huangyong@huangyong-Macbook-Pro  ~  curl http://10.0.0.50:4000</span><br><span class="line">&lt;h3&gt;Hello World!&lt;/h3&gt;&lt;b&gt;Hostname:&lt;/b&gt; eed56ca4164b&lt;br/&gt;&lt;b&gt;Visits:&lt;/b&gt; 11%                                                                                                          huangyong@huangyong-Macbook-Pro  ~  curl http://10.0.0.12:4000</span><br><span class="line">&lt;h3&gt;Hello World!&lt;/h3&gt;&lt;b&gt;Hostname:&lt;/b&gt; eed56ca4164b&lt;br/&gt;&lt;b&gt;Visits:&lt;/b&gt; 12%</span><br></pre></td></tr></table></figure>
+<p>访问visulizer容器的8080端口,可以看到redis服务运行</p>
+<p><img src="https://docs.docker.com/get-started/images/visualizer-with-redis.png" alt=""></p>
+<hr>
+<h3 id="管理命令"><a href="#管理命令" class="headerlink" title="管理命令"></a>管理命令</h3><p>使用docker node ls 列出swarm集群的所有节点<br>使用docker service ls 列出所有服务<br>docker service ps &lt;service_name&gt; 列出某个服务的所有tasks</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$docker node ls</span><br><span class="line">ID                            HOSTNAME                STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION</span><br><span class="line">056r5hr2xb6jjzmbw64m3btd2 *   localhost.localdomain   Ready               Active              Leader              18.09.2</span><br><span class="line">r58bkpsxgi4mjaxrn8octuxw1     php                     Ready               Active                                  18.09.3</span><br><span class="line">[root@localhost ~]$docker service ls</span><br><span class="line">ID                  NAME                       MODE                REPLICAS            IMAGE                             PORTS</span><br><span class="line">zmim1kj44afs        getstartedlab_Visualizer   replicated          1/1                 dockersamples/visualizer:stable   *:8080-&gt;8080/tcp</span><br><span class="line">elomaiu5go9p        getstartedlab_redis        replicated          1/1                 redis:latest                      *:6379-&gt;6379/tcp</span><br><span class="line">mtgafxttekwf        getstartedlab_web          replicated          5/5                 friendlyhello:latest              *:4000-&gt;80/tcp</span><br><span class="line"></span><br><span class="line">[root@localhost ~]$docker service ps getstartedlab_web</span><br><span class="line">ID                  NAME                  IMAGE                  NODE                    DESIRED STATE       CURRENT STATE          ERROR               PORTS</span><br><span class="line">ds77cn4hgd9w        getstartedlab_web.1   friendlyhello:latest   php                     Running             Running 14 hours ago</span><br><span class="line">3hq0if79g3gk        getstartedlab_web.2   friendlyhello:latest   php                     Running             Running 14 hours ago</span><br><span class="line">iuxh7qjfpikw        getstartedlab_web.3   friendlyhello:latest   localhost.localdomain   Running             Running 14 hours ago</span><br><span class="line">ba9hcq5zmlbd        getstartedlab_web.4   friendlyhello:latest   php                     Running             Running 14 hours ago</span><br><span class="line">o600yqmqets7        getstartedlab_web.5   friendlyhello:latest   localhost.localdomain   Running             Running 14 hours ago</span><br><span class="line">[root@localhost ~]$</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/06/29/docker/docker官网学习-6.学习stack/">docker学习笔记---学习Docker Stack</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年06月29日 - 11:06</p>
+  <p><span>最后更新:</span>2020年06月29日 - 21:06</p>
+  <p><span>原始链接:</span><a href="/2020/06/29/docker/docker官网学习-6.学习stack/" title="docker学习笔记---学习Docker Stack">https://jesse.top/2020/06/29/docker/docker官网学习-6.学习stack/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/29/docker/docker官网学习-6.学习stack/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/docker/" rel="tag"># docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/" rel="next" title="docker学习笔记---理解swarm集群">
+                <i class="fa fa-chevron-left"></i> docker学习笔记---理解swarm集群
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/" rel="prev" title="docker学习笔记---docker网络之host,Container,None网络">
+                docker学习笔记---docker网络之host,Container,None网络 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/06/29/docker/docker官网学习-6.学习stack/"
+           data-title="docker学习笔记---学习Docker Stack" data-url="https://jesse.top/2020/06/29/docker/docker官网学习-6.学习stack/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">162</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#学习Docker-Stack"><span class="nav-number">1.</span> <span class="nav-text">学习Docker Stack</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#介绍"><span class="nav-number">1.0.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#部署compose文件"><span class="nav-number">1.0.2.</span> <span class="nav-text">部署compose文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编辑docker-compose文件"><span class="nav-number">1.1.</span> <span class="nav-text">编辑docker-compose文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管理命令"><span class="nav-number">1.2.</span> <span class="nav-text">管理命令</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

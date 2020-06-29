@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="k8s," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="kuberentes Ingress介绍K8s ingress 学习博客 ingress是暴露服务给外部客户端的另外一种方法.(前面我们学习过2种服务类型可以实现同样的目的:NodePort和LoadBalance) 但是这几种Service都有局限性:  ClusterIP的默认Serivce方式只能在集群内部访问。 NodePort:当有几十上百的服务在集群中运行时，NodePort的端口管理">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kuberentes Ingress">
+<meta property="og:url" content="https://jesse.top/2020/06/26/kubernetes/kubernetes Ingress/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="kuberentes Ingress介绍K8s ingress 学习博客 ingress是暴露服务给外部客户端的另外一种方法.(前面我们学习过2种服务类型可以实现同样的目的:NodePort和LoadBalance) 但是这几种Service都有局限性:  ClusterIP的默认Serivce方式只能在集群内部访问。 NodePort:当有几十上百的服务在集群中运行时，NodePort的端口管理">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-26T10:04:38.304Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kuberentes Ingress">
+<meta name="twitter:description" content="kuberentes Ingress介绍K8s ingress 学习博客 ingress是暴露服务给外部客户端的另外一种方法.(前面我们学习过2种服务类型可以实现同样的目的:NodePort和LoadBalance) 但是这几种Service都有局限性:  ClusterIP的默认Serivce方式只能在集群内部访问。 NodePort:当有几十上百的服务在集群中运行时，NodePort的端口管理">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/06/26/kubernetes/kubernetes Ingress/"/>
+
+
+
+
+
+  <title>kuberentes Ingress | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes Ingress/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kuberentes Ingress</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/kubernetes/kubernetes Ingress/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes Ingress/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="kuberentes-Ingress"><a href="#kuberentes-Ingress" class="headerlink" title="kuberentes Ingress"></a>kuberentes Ingress</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><a href="https://segmentfault.com/a/1190000019908991" target="_blank" rel="noopener">K8s ingress 学习博客</a></p>
+<p>ingress是暴露服务给外部客户端的另外一种方法.(前面我们学习过2种服务类型可以实现同样的目的:NodePort和LoadBalance)</p>
+<p>但是这几种Service都有局限性:</p>
+<ul>
+<li>ClusterIP的默认Serivce方式只能在集群内部访问。</li>
+<li><p>NodePort:当有几十上百的服务在集群中运行时，NodePort的端口管理是灾难。</p>
+</li>
+<li><p>LoadBalance方式受限于云平台，且通常在云平台部署ELB还需要额外的费用。</p>
+</li>
+</ul>
+<p>所幸k8s还提供了一种集群维度暴露服务的方式，也就是ingress。ingress可以简单理解为service的service，他通过独立的ingress对象来制定请求转发的规则，把请求路由到一个或多个service中。这样就把服务与请求规则解耦了，可以从业务维度统一考虑业务的暴露，而不用为每个service单独考虑。</p>
+<p>Ingress可以为多个Service提供服务,可以根据请求的HOST和PATH,将请求代理到相关的Service中.而且Ingres工作在HTTP层,可以实现7层代理特性,诸如:coockies和会话亲和力</p>
+<a id="more"></a>
+<hr>
+<h2 id="ingress与ingress-controller"><a href="#ingress与ingress-controller" class="headerlink" title="ingress与ingress-controller"></a>ingress与ingress-controller</h2><p>要理解ingress，需要区分两个概念，ingress和ingress-controller：</p>
+<ul>
+<li>ingress对象：</li>
+</ul>
+<p>指的是k8s中的一个api对象，一般用yaml配置。作用是定义请求如何转发到service的规则，可以理解为配置模板。</p>
+<ul>
+<li>ingress-controller：</li>
+</ul>
+<p>具体实现反向代理及负载均衡的程序，对ingress定义的规则进行解析，根据配置的规则来实现请求转发。</p>
+<p>简单来说，ingress-controller才是负责具体转发的组件，通过各种方式将它暴露在集群入口，外部对集群的请求流量会先到ingress-controller，而ingress对象是用来告诉ingress-controller该如何转发请求，比如哪些域名哪些path要转发到哪些服务等等。</p>
+<hr>
+<h2 id="ingress-controller"><a href="#ingress-controller" class="headerlink" title="ingress-controller"></a>ingress-controller</h2><p>ingress-controller并不是k8s自带的组件，实际上ingress-controller只是一个统称，用户可以选择不同的ingress-controller实.</p>
+<p>目前，由k8s维护的ingress-controller只有google云的GCE与ingress-nginx两个，其他还有很多第三方维护的ingress-controller，具体可以参考官方文档。</p>
+<p>但是不管哪一种ingress-controller，实现的机制都大同小异，只是在具体配置上有差异。一般来说，ingress-controller的形式都是一个pod，里面跑着daemon程序和反向代理程序。daemon负责不断监控集群的变化，根据ingress对象生成配置并应用新配置到反向代理，比如nginx-ingress就是动态生成nginx配置，动态更新upstream，并在需要的时候reload程序应用新配置。</p>
+<p>为了方便，后面的例子都以k8s官方维护的nginx-ingress为例。</p>
+<hr>
+<h2 id="ingress"><a href="#ingress" class="headerlink" title="ingress"></a>ingress</h2><p>ingress是一个API对象，和其他对象一样，通过yaml文件来配置。ingress通过http或https暴露集群内部service，给service提供外部URL、负载均衡、SSL/TLS能力以及基于host的方向代理。ingress要依靠ingress-controller来具体实现以上功能。</p>
+<hr>
+<h2 id="ingress的部署"><a href="#ingress的部署" class="headerlink" title="ingress的部署"></a>ingress的部署</h2><p>ingress的部署，需要考虑两个方面：</p>
+<p>1.ingress-controller是作为pod来运行的，以什么方式部署比较好</p>
+<p>2.ingress解决了把如何请求路由到集群内部，那它自己怎么暴露给外部比较好</p>
+<p>下面列举一些目前常见的部署和暴露方式，具体使用哪种方式还是得根据实际需求来考虑决定。</p>
+<p><strong>Deployment+LoadBalancer模式的Service</strong></p>
+<p>如果要把ingress部署在公有云，那用这种方式比较合适。用Deployment部署ingress-controller，创建一个type为LoadBalancer的service关联这组pod。大部分公有云，都会为LoadBalancer的service自动创建一个负载均衡器，通常还绑定了公网地址。只要把域名解析指向该地址，就实现了集群服务的对外暴露。</p>
+<p><strong>Deployment+NodePort模式的Service</strong></p>
+<p>同样用deployment模式部署ingress-controller，并创建对应的服务，但是type为NodePort。这样，ingress就会暴露在集群节点ip的特定端口上。由于nodeport暴露的端口是随机端口，一般会在前面再搭建一套负载均衡器来转发请求。该方式一般用于宿主机是相对固定的环境ip地址不变的场景。<br>NodePort方式暴露ingress虽然简单方便，但是NodePort多了一层NAT，在请求量级很大时可能对性能会有一定影响。</p>
+<p><strong>DaemonSet+HostNetwork+nodeSelector</strong></p>
+<p>用DaemonSet结合nodeselector来部署ingress-controller到特定的node上，然后使用HostNetwork直接把该pod与宿主机node的网络打通，直接使用宿主机的80/433端口就能访问服务。这时，ingress-controller所在的node机器就很类似传统架构的边缘节点，比如机房入口的nginx服务器。该方式整个请求链路最简单，性能相对NodePort模式更好。缺点是由于直接利用宿主机节点的网络和端口，一个node只能部署一个ingress-controller pod。比较适合大并发的生产环境使用。</p>
+<hr>
+<h2 id="ingress-controller部署"><a href="#ingress-controller部署" class="headerlink" title="ingress-controller部署"></a>ingress-controller部署</h2><p>参考文档: <a href="https://www.kuboard.cn/install/install-k8s.html#%E5%AE%89%E8%A3%85-ingress-controller" target="_blank" rel="noopener">kubernetes集群部署</a></p>
+<hr>
+<h2 id="配置一个简单的Ingress对象"><a href="#配置一个简单的Ingress对象" class="headerlink" title="配置一个简单的Ingress对象"></a>配置一个简单的Ingress对象</h2><p>编辑一个简单的yaml配置文件如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# cat kubia-ingress.yaml</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">    - host: kubia.example.com </span><br><span class="line">      http:</span><br><span class="line">        paths:</span><br><span class="line">        - path: /</span><br><span class="line">          backend:</span><br><span class="line">            #将访问请求转发到上一节中创建的kubia-svc-nodeport的Serivce上</span><br><span class="line">            serviceName: kubia-svc-nodeport</span><br><span class="line">            #kubia-svc-nodeport的源端口</span><br><span class="line">            servicePort: 80</span><br></pre></td></tr></table></figure>
+<p>接下来,可以将kubia.exanple.com域名解析到任意一个Node服务器节点的IP地址,然后请求这个域名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> huangyong@huangyong-Macbook-Pro  ~  curl http://kubia.example.com</span><br><span class="line">You&apos;ve hit kubia-hd429</span><br><span class="line"> huangyong@huangyong-Macbook-Pro  ~  curl http://kubia.example.com</span><br><span class="line">You&apos;ve hit kubia-fcc59</span><br><span class="line"> huangyong@huangyong-Macbook-Pro  ~  curl http://kubia.example.com</span><br><span class="line">You&apos;ve hit kubia-rm9qf</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="ingress关联多个Service"><a href="#ingress关联多个Service" class="headerlink" title="ingress关联多个Service"></a>ingress关联多个Service</h2><p>ingress的rules字段可以包含多个转发规则,可以将不同的访问URL或者HOST代理到相关联的不同的Service中.参考下面的例子</p>
+<ul>
+<li>不同的PATH转发到不同的Service</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia-ingress-kubia</span><br><span class="line"></span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">    - host: kubia.example.com</span><br><span class="line">      paths:</span><br><span class="line">       - path: /foo</span><br><span class="line">         backend:</span><br><span class="line">            serviceName: kubia-svc-foo</span><br><span class="line">            servicePort: 80</span><br><span class="line"></span><br><span class="line">       - path: /bar</span><br><span class="line">         backend:</span><br><span class="line">            serviceName: kubia-svc-bar</span><br><span class="line">            servicePort: 80</span><br></pre></td></tr></table></figure>
+<ul>
+<li>不同的Host转发到不同的Service</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia-ingress-kubia2</span><br><span class="line"></span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">    - host: foo.example.com</span><br><span class="line">      paths:</span><br><span class="line">       - path: /</span><br><span class="line">         backend:</span><br><span class="line">            serviceName: kubia-svc-foo</span><br><span class="line">            servicePort: 80</span><br><span class="line">    - host: bar.example.com</span><br><span class="line">      paths:</span><br><span class="line">       - path: /</span><br><span class="line">         backend:</span><br><span class="line">            serviceName: kubia-svc-bar</span><br><span class="line">            servicePort: 80</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="Ingress处理https-TLS传输"><a href="#Ingress处理https-TLS传输" class="headerlink" title="Ingress处理https TLS传输"></a>Ingress处理https TLS传输</h2><p>当用户使用TLS链接时,ingress负责处理用户的TLS请求,但是和后端的Pod仍然是以http连接,要实现这一点,Https的证书和秘钥必须挂载在ingress控制器上.</p>
+<p>证书和秘钥可以保存在kubernetes的secret资源对象中.然后在ingress的mainfest资源中引用.</p>
+<p>下面先创建一个自签名的证书和私钥</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# openssl genrsa -out tls.key 2048</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]#openssl req -new -x509 -key tls.key -out tls.cert -days 360 -subj /CN=kubia.example.com</span><br></pre></td></tr></table></figure>
+<p>创建Secret</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl create secret tls tls-secret --cert=tls.cert --key=tls.key</span><br><span class="line">secret/tls-secret created</span><br></pre></td></tr></table></figure>
+<h3 id="创建https的ingress"><a href="#创建https的ingress" class="headerlink" title="创建https的ingress"></a>创建https的ingress</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia</span><br><span class="line">spec:</span><br><span class="line">  tls:</span><br><span class="line">   - hosts:</span><br><span class="line">     - kubia.example.com</span><br><span class="line">     secretName: tls-secret</span><br><span class="line"></span><br><span class="line">  rules:</span><br><span class="line">   - host: kubia.example.com</span><br><span class="line">     http:</span><br><span class="line">       paths:</span><br><span class="line">         - path: /</span><br><span class="line">           backend:</span><br><span class="line">              serviceName: kubia</span><br><span class="line">              servicePort: 80</span><br></pre></td></tr></table></figure>
+<p>更新ingress资源kubia</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl apply -f kubia-ingress-tls.yaml</span><br><span class="line">ingress.extensions/kubia configured</span><br></pre></td></tr></table></figure>
+<p>ingress支持443端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl get ing</span><br><span class="line">NAME    HOSTS               ADDRESS   PORTS     AGE</span><br><span class="line">kubia   kubia.example.com             80, 443   6h4m</span><br></pre></td></tr></table></figure>
+<p>现在客户端可以https访问kubia.expample.com</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> ✘ huangyong@huangyong-Macbook-Pro  ~  curl -k https://kubia.example.com</span><br><span class="line">You&apos;ve hit kubia-xgnkq</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/06/26/kubernetes/kubernetes Ingress/">kuberentes Ingress</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年06月26日 - 11:06</p>
+  <p><span>最后更新:</span>2020年06月26日 - 18:06</p>
+  <p><span>原始链接:</span><a href="/2020/06/26/kubernetes/kubernetes Ingress/" title="kuberentes Ingress">https://jesse.top/2020/06/26/kubernetes/kubernetes Ingress/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/kubernetes/kubernetes Ingress/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/" rel="next" title="k8s挂载NFS网络磁盘">
+                <i class="fa fa-chevron-left"></i> k8s挂载NFS网络磁盘
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/26/kubernetes/kubernetes Deployment/" rel="prev" title="kuberentes Deployment">
+                kuberentes Deployment <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/06/26/kubernetes/kubernetes Ingress/"
+           data-title="kuberentes Ingress" data-url="https://jesse.top/2020/06/26/kubernetes/kubernetes Ingress/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">162</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#kuberentes-Ingress"><span class="nav-number">1.</span> <span class="nav-text">kuberentes Ingress</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ingress与ingress-controller"><span class="nav-number">3.</span> <span class="nav-text">ingress与ingress-controller</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ingress-controller"><span class="nav-number">4.</span> <span class="nav-text">ingress-controller</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ingress"><span class="nav-number">5.</span> <span class="nav-text">ingress</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ingress的部署"><span class="nav-number">6.</span> <span class="nav-text">ingress的部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ingress-controller部署"><span class="nav-number">7.</span> <span class="nav-text">ingress-controller部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置一个简单的Ingress对象"><span class="nav-number">8.</span> <span class="nav-text">配置一个简单的Ingress对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ingress关联多个Service"><span class="nav-number">9.</span> <span class="nav-text">ingress关联多个Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ingress处理https-TLS传输"><span class="nav-number">10.</span> <span class="nav-text">Ingress处理https TLS传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建https的ingress"><span class="nav-number">10.1.</span> <span class="nav-text">创建https的ingress</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

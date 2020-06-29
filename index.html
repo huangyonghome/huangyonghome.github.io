@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker学习笔记—容器篇/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/Linux-Web/kong postgresql konga/" itemprop="url">kong+postgresql+konga集群环境部署</a></h1>
+                <a class="post-title-link" href="/2020/06/29/docker/docker学习笔记—容器篇/" itemprop="url">未命名</a></h1>
         
 
         <div class="post-meta">
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
-                2020-06-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T21:51:55+08:00">
+                2020-06-29
               </time>
             
 
@@ -317,39 +317,6 @@
           </span>
 
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Web</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
-                    <span itemprop="name">kong</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
 
           
             
@@ -358,8 +325,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/Linux-Web/kong postgresql konga/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/kong postgresql konga/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker学习笔记—容器篇/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker学习笔记—容器篇/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -388,21 +355,218 @@
 
       
         
-          <h2 id="kong-postgresql-konga集群环境部署"><a href="#kong-postgresql-konga集群环境部署" class="headerlink" title="kong+postgresql+konga集群环境部署"></a>kong+postgresql+konga集群环境部署</h2><h3 id="kong简介"><a href="#kong简介" class="headerlink" title="kong简介"></a>kong简介</h3><p>Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和API之间的中间层，加上众多功能强大的插件，可以实现认证授权、访问控制等功能。并且提供易于使用的RESTful API来操作和配置系统。</p>
-<p>有关kong的详细介绍请参考官网.</p>
-<p>–</p>
-<h3 id="postgreSQL简介"><a href="#postgreSQL简介" class="headerlink" title="postgreSQL简介"></a>postgreSQL简介</h3><p><a href="https://baike.baidu.com/item/PostgreSQL/530240" target="_blank" rel="noopener">PostgreSQL</a> 是一个免费的对象-关系数据库服务器(数据库管理系统)，它在灵活的 BSD-风格许可证下发行。它提供了相对其他开放源代码数据库系统(比如 MySQL 和 Firebird)，和专有系统(比如 Oracle、Sybase、IBM 的 DB2 和 Microsoft SQL Server)之外的另一种选择。</p>
-<p>–</p>
-<h3 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h3><ul>
-<li><strong>kong cluster</strong></li>
+          
+            <h2 id="docker学习笔记—-docker容器篇"><a href="#docker学习笔记—-docker容器篇" class="headerlink" title="docker学习笔记— docker容器篇"></a>docker学习笔记— docker容器篇</h2><p><strong>一.创建并启动容器</strong></p>
+<ul>
+<li><strong>创建容器</strong></li>
 </ul>
-<p>kong 集群并不意味着客户端请求将会负载均衡到kong集群中的每个节点上，kong集群并不是开箱即用，仍然需要在kong集群多节点上层搭建负载均衡，以便分发请求。 一个kong集群只是意味着集群内的节点，都共享同样的配置。</p>
-<p>有关Kong cluster集群的详细介绍请参考官网:<a href="https://docs.konghq.com/0.14.x/clustering/" target="_blank" rel="noopener">Kong cluser document</a></p>
-<p>为了提高冗余性和健壮性.我们对kong的每个环节都进行了冗余设计.一个基本的kong集群架构大概如下图所示:</p>
-<p><img src="https://img1.jesse.top/kong-flow.png" alt=""></p>
+<figure class="highlight docker"><figcaption><span>create -it 镜像名:tag```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* **查看所有容器**(包括运行中,已退出,错误容器)</span><br><span class="line"></span><br><span class="line">```docker ps -a</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看所有容器的ID</li>
+</ul>
+<figure class="highlight docker"><figcaption><span>ps -qa```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* **启动容器**</span><br><span class="line"></span><br><span class="line">```docker start container_id``` </span><br><span class="line"></span><br><span class="line">* **使用指定的镜像直接创建并启动容器**</span><br><span class="line"></span><br><span class="line">```docker <span class="keyword">run</span> -it 镜像名:标签 COMMAND</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jesse@jesse-virtual-machine:~$ docker run -it ubuntu:16.04 /bin/bash</span><br><span class="line">root@66a29f973548:/#   ----------此时已经进入到容器的bash环境</span><br></pre></td></tr></table></figure>
+<p>当利用 docker run 来创建容器时，Docker 在后台运行的标准操作包括：</p>
+<p>1.检查本地是否存在指定的镜像，不存在就从公有仓库下载</p>
+<p>2.利用镜像创建并启动一个容器</p>
+<p>3.分配一个文件系统，并在只读的镜像层外面挂载一层可读写层</p>
+<p>4.从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去</p>
+<p>5.从地址池配置一个 ip 地址给容器</p>
+<p>6.执行用户指定的应用程序</p>
+<p>7.执行完毕后容器被终止</p>
+<ul>
+<li><strong>以守护状态运行:</strong></li>
+</ul>
+<p>以守护态运行（加参数-d):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d registry.intra.weibo.com/yushuang3/centos:v1 /bin/sh -c &quot;while true; do echo hello world; sleep 1; done&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>容器终止:</strong></li>
+</ul>
+<p><strong>获取容器输出的信息</strong></p>
+<figure class="highlight docker"><figcaption><span>logs container_id```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">**停止容器**</span><br><span class="line"></span><br><span class="line">```docker stop container_Id ``` </span><br><span class="line"></span><br><span class="line">&gt; 终止一个容器  加入-t=<span class="number">10</span> 表示等待<span class="number">10</span>秒(不加-t选项则默认就是<span class="number">10</span>秒)再次发送SIGKILL信号终止容器</span><br><span class="line"></span><br><span class="line">**重启容器**</span><br><span class="line"></span><br><span class="line">```docker restart container_id</span><br></pre></td></tr></table></figure>
+<p><strong>容器状态:</strong></p>
+<ul>
+<li><strong>status表示容器的状态..</strong></li>
+</ul>
+<ul>
+<li><p><strong>exited 表示容器已经退出</strong></p>
+</li>
+<li><p><strong>up 表示容器正在运行</strong></p>
+</li>
+</ul>
+<figure class="highlight docker"><figcaption><span>run```启动容器时还可以指定其他的配置参数:</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* -h HOSTNAME 或者 --hostname=HOSTNAME.设置容器的主机名</span><br><span class="line">* --dns=IP_ADDRESS:设置容器的DNS.写在容器的/etc/resolv.conf文件中.</span><br></pre></td></tr></table></figure>
+<p>[root@localhost test]$docker run -itd –name busybox1 -h dwd-busybox –dns=8.8.8.8 busybox<br>c25dac9c641705e00f02aefe302987f39f853a1feb8c0d3f32dc1675747edd84</p>
+<p>[root@localhost test]$docker exec -it busybox1 hostname<br>dwd-busybox</p>
+<p>[root@localhost test]$docker exec -it busybox1 cat /etc/resolv.conf<br>nameserver 8.8.8.8<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">但是需要注意的是.这些修改不会被```docker commit```保存,也就是不会保存在镜像中</span><br></pre></td></tr></table></figure></p>
+<p>#将busybox1容器保存为busybox1:test镜像<br>[root@localhost test]$docker commit -m ‘test’ -a ‘jesse’ busybox1 busybox1:test<br>sha256:3c8faee532f177cf8bb8736db89694c2c3ff5be1a30a15d604e450130909d123</p>
+<p>#用这个镜像,启动一个新的busybox1-test的容器<br>[root@localhost test]$docker run –name busybox1-test -itd busybox1:test<br>9326b615e9e3af64336683f7f82e048929de560d4ad0a5caf2485bbc4a62e18c</p>
+<p>#可以看到hostname和dns信息没有被保留<br>[root@localhost test]$docker exec -it busybox1-test hostname<br>9326b615e9e3</p>
+<p>[root@localhost test]$docker exec -it busybox1-test cat /etc/resolv.conf<br>nameserver 114.114.114.114<br>nameserver 114.114.115.115<br><code>`</code></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/Linux-Web/使用goreplay收集线上真实http流量/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/29/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="url">使用goreplay收集线上真实http流量</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/29/Linux-Web/使用goreplay收集线上真实http流量/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="使用goreplay收集线上真实http流量"><a href="#使用goreplay收集线上真实http流量" class="headerlink" title="使用goreplay收集线上真实http流量"></a>使用goreplay收集线上真实http流量</h2><h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>在很多场景中,我们需要将线上服务器的真实Http请求复制转发到某台服务器中(或者测试环境中),并且前提是不影响线上生产业务进行.</p>
+<p>例如:</p>
+<ol>
+<li>通常可能会通过ab等压测工具来对单一http接口进行压测。但如果是需要http服务整体压测，使用ab来压测工作量大且不方便，通过线上流量复制引流，通过将真实请求流量放大N倍来进行压测，能对服务有一个较为全面的检验.</li>
+<li>将线上流量引入到测试环境中,测试某个中间件或者数据库的压力</li>
+<li>上线前在预发布环境，使用线上真实的请求，检查是否准备发布的版本，是否具备发布标准</li>
+<li>用线上的流量转发到预发，检查相同流量下一些指标的反馈情况，检查核心数据是否有改善、优化.</li>
+</ol>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/Linux-Web/kong postgresql konga/#more" rel="contents">
+            <a class="btn" href="/2020/06/29/Linux-Web/使用goreplay收集线上真实http流量/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -457,7 +621,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/docker/harbor私有仓库部署/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习--docker网络之overlay/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -476,7 +640,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/docker/harbor私有仓库部署/" itemprop="url">harbor私有仓库部署</a></h1>
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习--docker网络之overlay/" itemprop="url">docker学习笔记---docker网络之overlay</a></h1>
         
 
         <div class="post-meta">
@@ -488,8 +652,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
-                2020-06-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
               </time>
             
 
@@ -529,8 +693,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/docker/harbor私有仓库部署/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/docker/harbor私有仓库部署/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker官网学习--docker网络之overlay/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习--docker网络之overlay/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -559,202 +723,691 @@
 
       
         
-          <h2 id="harbor私有仓库部署"><a href="#harbor私有仓库部署" class="headerlink" title="harbor私有仓库部署"></a>harbor私有仓库部署</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>harbor是docker的私有仓库,可以部署在局域网服务器上,用来管理docker镜像.虽然docker官方也提供公共镜像仓库,但是由于是境外网站,拉取镜像速度非常慢,而且有被墙的可能.部署私有仓库非常有必要</p>
-<p>harbor是vmware公司开源的企业级的docker registry管理项目.</p>
+          
+            <h2 id="docker官网学习-7-docker网络之overlay"><a href="#docker官网学习-7-docker网络之overlay" class="headerlink" title="docker官网学习-7.docker网络之overlay"></a>docker官网学习-7.docker网络之overlay</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>overlay网卡在多个docker宿主机之间创建一个分布式的网络,允许多个容器安全通信.</p>
+<p>当初始化一个swarm集群,或者加入docker宿主机到一个swarm集群中.Docker会在该宿主机上创建2个网络:</p>
+<ul>
+<li>ingress: 负责swarm集群的控制以及数据流量</li>
+<li>docker_gwbridge:一个Bridge网络,负责连接swarm集群中的每个docker节点</li>
+</ul>
+<p>overlay网络的创建方式和bridge一样.也是<figure class="highlight docker"><figcaption><span>network create```命令</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"><span class="comment">### 创建overlay网络</span></span><br><span class="line"></span><br><span class="line">&lt;!--more--&gt;</span><br><span class="line"></span><br><span class="line">**创建overlay网络的前提条件**</span><br><span class="line"></span><br><span class="line"><span class="number">1</span>.防火墙开通以下端口</span><br><span class="line"></span><br><span class="line">* TCP <span class="number">2377</span>——集群管理节点通信</span><br><span class="line">* TCP,UPD <span class="number">7946</span>—节点间通信</span><br><span class="line">* UDP <span class="number">4789</span>—overlay网络流量</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>.初始化docker宿主机为swarm集群的manager角色.命令为```docker swarm init```.或者使用```docker swarm join```命令加入到一个现有的swarm集群.</span><br><span class="line"></span><br><span class="line">这两种方式都会创建默认的ingress overlay网络.</span><br><span class="line"></span><br><span class="line">&gt; 即使你不打算使用swarm服务,但是也要这样做.然后才能创建自定义的overlay网络</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">**创建overlay网络命令**</span><br></pre></td></tr></table></figure></p>
+<p>#创建个overlay网络.名字为my-overlay<br>docker network create -d overlay my-overlay<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">如果swarm服务或者独立容器需要和其他docker宿主机上的独立容器通信.需要加上```—attachable```参数</span><br></pre></td></tr></table></figure></p>
+<p>#创建个overlay网络,名字为my-overlay.并且和其他docker宿主机的standalone容器通信.<br>docker network create -d overlay –attachable my-overlay<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 可以自定义地址段,掩码,网关等信息.具体方法见docker network create --help</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 自定义默认Ingress网络</span><br><span class="line"></span><br><span class="line">大部分用户不需要配置ingress网络.但是docker17.05以上版本可以自定义ingress网络.如果默认的Ingress网络iP地址段和已经存在的网络有冲突,则自定义的配置可很有用.</span><br><span class="line"></span><br><span class="line">配置Ingress网络需要先删除ingress,然后重新创建.所以最好是在创建容器服务之前先定义好ingress.如果已经有暴露出端口的服务.则需要先删除服务.</span><br><span class="line"></span><br><span class="line">**自定义默认ingress网络步骤如下:**</span><br><span class="line"></span><br><span class="line">1.查看当前ingress网络.```docker network inspect ingress```.删除所有连接到ingress的容器的服务.</span><br><span class="line"></span><br><span class="line">2.移除现有的ingress网络.```docker network rm ingress</span><br></pre></td></tr></table></figure></p>
+<p>3.使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p> docker network create \<br>  –driver overlay \<br>  –ingress \<br>  –subnet=10.11.0.0/16 \<br>  –gateway=10.11.0.2 \<br>  –opt com.docker.network.driver.mtu=1200 \<br>  my-ingress<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 可以用自定义名称(my-ingress)来定义ingress网络.但是只允许存在一个自定义Ingress.</span><br><span class="line"></span><br><span class="line">4.重启步骤1中的服务</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 自定义默认docker_gwbridge 接口</span><br><span class="line"></span><br><span class="line">docker_gwbridge是连接overlay网络和docker宿主机物理网卡之间的虚拟网桥.当初始化一个swarm集群,或者将docker宿主机加入到一个swarm集群时,docker会自动创建docker_gwbridge.但是docker_gwbridge不是一个docker服务,而是存在于docker宿主机的内核当中.</span><br><span class="line"></span><br><span class="line">所以需要在加入到swarm集群前先配置好docker_gwbridge.</span><br><span class="line"></span><br><span class="line">**自定义默认docker_gwbridge网络步骤如下:**</span><br><span class="line"></span><br><span class="line">1.停止docker</span><br><span class="line"></span><br><span class="line">2.删除当前```docker_gwbridge</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ip link set docker_gwbridge down</span><br><span class="line"></span><br><span class="line">$ sudo ip link del dev docker_gwbridge</span><br></pre></td></tr></table></figure>
+<p>3.开启docker.不要加入或者初始化swarm</p>
+<p>4.手动创建<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 关于docker_gwbridge的更多参数请参考[Bridg dirver options](&lt;https://docs.docker.com/engine/reference/commandline/network_create/#bridge-driver-options&gt;)</span><br></pre></td></tr></table></figure></p>
+<p>$ docker network create \<br>–subnet 10.11.0.0/16 \<br>–opt com.docker.network.bridge.name=docker_gwbridge \<br>–opt com.docker.network.bridge.enable_icc=false \<br>–opt com.docker.network.bridge.enable_ip_masquerade=true \<br>docker_gwbridge<br><code>`</code></p>
+<p>5.初始化或者加入到swarm集群</p>
+<p>### </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker学习笔记——镜像篇/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/29/docker/docker学习笔记——镜像篇/" itemprop="url">docker学习笔记---Docker镜像篇</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/29/docker/docker学习笔记——镜像篇/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker学习笔记——镜像篇/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="docker笔记——镜像篇"><a href="#docker笔记——镜像篇" class="headerlink" title="docker笔记——镜像篇"></a>docker笔记——镜像篇</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>docker镜像是一个只读的Docker容器模板.含有启动docker容器所需的文件系统结构以及内容.因此是启动一个容器的基础.docker镜像的文件内容以及一些运行docker容器的配置文件组成了docker容器的静态文件运行环境—rootfs.</p>
+<p>可以这么理解,docker镜像是docker容器的静态视角.docker容器是docker镜像的运行状态</p>
+<hr>
+<p><strong>1.rootfs</strong></p>
+<p>rootfs是docker容器的根目录.如:/dev,/proc,/bin,/etc …….传统的Linux容器操作系统内核启动时,首先挂载一个只读(read-only)的rootfs.当系统检测到完整性后,再将其切换到读写(read-write)模式.而在docker架构中.也沿用了Linux内核的启动方法.在docker为容器挂载rootfs时,将rootfs设置为只读模式,挂载完毕后,在已有的只读rootfs上再挂载一个读写层.</p>
+<p>读写层位于docker容器文件系统的最顶层.下面可能挂载了多个只读层.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/29/docker/docker学习笔记——镜像篇/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker学习笔记—docker-compose/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/29/docker/docker学习笔记—docker-compose/" itemprop="url">docker学习笔记---docker-compose</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/29/docker/docker学习笔记—docker-compose/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker学习笔记—docker-compose/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="docker学习笔记——docker-compose"><a href="#docker学习笔记——docker-compose" class="headerlink" title="docker学习笔记——docker-compose"></a>docker学习笔记——docker-compose</h2><p>docker compose 定义并且运行多个docker容器.使用YAML风格文件定义一个compose文件.利用compose文件创建和启动所有服务.</p>
+<p>使用docker compose基本只需要3个步骤</p>
+<ul>
+<li>在Dockerfile文件定义app环境</li>
+<li>在docker-compose.yml文件中定义组成app的各个服务</li>
+<li>run docker-compose up 和compose 启动和运行app</li>
+</ul>
+<p>下面文档均可以在docker-compose官方找到详细资料:<a href="https://docs.docker.com/compose/" target="_blank" rel="noopener">docker-compose</a></p>
+<h3 id="docker-compose安装"><a href="#docker-compose安装" class="headerlink" title="docker-compose安装"></a>docker-compose安装</h3>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/29/docker/docker学习笔记—docker-compose/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-7.docker网络之bridge/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-7.docker网络之bridge/" itemprop="url">docker学习笔记---docker网络之bridge</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/29/docker/docker官网学习-7.docker网络之bridge/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-7.docker网络之bridge/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="docker官网学习–docker网络之bridge"><a href="#docker官网学习–docker网络之bridge" class="headerlink" title="docker官网学习–docker网络之bridge"></a>docker官网学习–docker网络之bridge</h2><p>本节介绍docker基础网络概念.以便能认识和利用各种不同的网络类型功能.</p>
+<p>docker的网络支持插件化,驱动化定制.有一些网络驱动已经默认集成到docker中.docker网络主要有以下类型</p>
+<ul>
+<li>bridge</li>
+<li>host</li>
+<li>overlay</li>
+<li>macvlan</li>
+<li>none</li>
+<li>其他网络插件</li>
+</ul>
+<hr>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/29/docker/docker官网学习-7.docker网络之bridge/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/" itemprop="url">docker学习笔记---docker网络之host,Container,None网络</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="docker官网学习-7-docker网络之host-Container-None网络"><a href="#docker官网学习-7-docker网络之host-Container-None网络" class="headerlink" title="docker官网学习-7.docker网络之host,Container,None网络"></a>docker官网学习-7.docker网络之host,Container,None网络</h2><h3 id="host网络介绍"><a href="#host网络介绍" class="headerlink" title="host网络介绍"></a>host网络介绍</h3><p>如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</p>
+<hr>
+<h3 id="创建host网络"><a href="#创建host网络" class="headerlink" title="创建host网络"></a>创建host网络</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run -tid --net=host --name busybox busybox1</span><br><span class="line"></span><br><span class="line">#host网络下的容器没有虚拟网卡,而是和宿主机共享网络</span><br><span class="line">[root@localhost ~]$docker exec  -it busybox1 ifconfig</span><br><span class="line">docker0   Link encap:Ethernet  HWaddr 02:42:89:26:D1:C9</span><br><span class="line">          inet addr:192.168.1.5  Bcast:192.168.1.255  Mask:255.255.255.0</span><br><span class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</span><br><span class="line">          RX packets:1072032 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:1997027 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:0</span><br><span class="line">          RX bytes:61915874 (59.0 MiB)  TX bytes:1934238839 (1.8 GiB)</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>处于数据脱敏需要,以下内容中隐藏了真实域名.而使用hub.xxxxxx.com替代</p>
-</blockquote>
-<hr>
-<h3 id="社区"><a href="#社区" class="headerlink" title="社区"></a>社区</h3><p>harbor github: <a href="https://github.com/goharbor/harbor" target="_blank" rel="noopener">goharbor/harbor</a></p>
-<p>官网文档介绍: <a href="https://goharbor.io/docs/1.10/" target="_blank" rel="noopener">harbor doc</a></p>
-<p>在部署中遇到的各种坑,都可以通过查阅文档,或者搜索github的issue解决</p>
-<hr>
-<h3 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h3><p>harbor是docker-compose部署的.包括一系列组件:nginx.core,log,register等等.</p>
-<p>但是由于本机已经存在一个Nginx镜像.所以用Nginx代理到harbor的Nginx.<strong>如果是独立的服务器部署Harbor的话,则不会存在这个问题,可以直接跳过这一章节.</strong></p>
-<p>nginx代理框架大概是:</p>
-<p><strong>nginx—-&gt;harbor-nginx—–&gt;habor</strong></p>
-<p>由于docker提交镜像需要Https协议,所以:</p>
-<p><strong>nginx—301跳转到nginx https—–&gt;harbor-nginx http—-&gt; habor</strong></p>
-<p>但是这样的部署方式,有一个问题:</p>
-<p>私有仓库可以正常login但是push镜像的时候,又提示未验证.</p>
-<p>该问题尝试过很多解决方案,但是均无法解决</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/docker/harbor私有仓库部署/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" itemprop="url">docker安装最新版Kong(v1.0)+konga</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Web</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="docker安装最新版Kong-v1-0-konga"><a href="#docker安装最新版Kong-v1-0-konga" class="headerlink" title="docker安装最新版Kong(v1.0)+konga"></a>docker安装最新版Kong(v1.0)+konga</h3><p>参考以下文档:</p>
-<p><a href="https://docs.konghq.com/install/docker/?_ga=2.167535422.1288669860.1553147426-917309945.1539077269" target="_blank" rel="noopener">Kong installation</a></p>
-<p><a href="https://github.com/pantsel/konga#installation" target="_blank" rel="noopener">konga github</a></p>
-<hr>
-<h4 id="docker安装kong-postgresql"><a href="#docker安装kong-postgresql" class="headerlink" title="docker安装kong+postgresql"></a>docker安装kong+postgresql</h4><p>1.创建一个docker网络用于docker,postgresql和konga容器间通信</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create kong-net</span><br></pre></td></tr></table></figure>
-<p>2.启动posgtresql容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name kong-database \</span><br><span class="line">               --network=kong-net \</span><br><span class="line">               -p 5432:5432 \</span><br><span class="line">               -e &quot;POSTGRES_USER=kong&quot; \</span><br><span class="line">               -e &quot;POSTGRES_DB=kong&quot; \</span><br><span class="line">               postgres:9.6</span><br></pre></td></tr></table></figure>
-<p>3.初始化postgresql数据库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm \</span><br><span class="line">    --network=kong-net \</span><br><span class="line">    -e &quot;KONG_DATABASE=postgres&quot; \</span><br><span class="line">    -e &quot;KONG_PG_HOST=kong-database&quot; \</span><br><span class="line">    -e &quot;KONG_CASSANDRA_CONTACT_POINTS=kong-database&quot; \</span><br><span class="line">    kong:latest kong migrations bootstrap</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意两点:</p>
-<p>1.最好是先删除本地的kong镜像.因为本地的Kong:lastest镜像不一定就是最新版</p>
-<p>2.如果本地的kong:latest镜像地域0.15版本,则不支持bootstrap命令.可以将bootstrap命令替换成up</p>
+<p>注:host网络只能工作在Linux主机上.</p>
+<p>如果容器没有暴露任何端口,那host网络没有任何效果</p>
 </blockquote>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/#more" rel="contents">
+            <a class="btn" href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -809,7 +1462,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-6.学习stack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -828,7 +1481,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/" itemprop="url">k8s挂载NFS网络磁盘</a></h1>
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-6.学习stack/" itemprop="url">docker学习笔记---学习Docker Stack</a></h1>
         
 
         <div class="post-meta">
@@ -840,8 +1493,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
-                2020-06-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
               </time>
             
 
@@ -863,8 +1516,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">kubernetes</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
 
@@ -881,8 +1534,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/k8s挂载NFS网络磁盘/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker官网学习-6.学习stack/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-6.学习stack/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -911,369 +1564,183 @@
 
       
         
-          <h2 id="k8s挂载NFS网络磁盘"><a href="#k8s挂载NFS网络磁盘" class="headerlink" title="k8s挂载NFS网络磁盘"></a>k8s挂载NFS网络磁盘</h2><p>按照<kubernetes in="" action="">这本书NFS做持久化存储的例子,发现了一个坑.,启动pod失败,报如下错误</kubernetes></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown: changing ownership of &apos;/data/db&apos;: Operation not permitted</span><br></pre></td></tr></table></figure>
-<p>网上也有人遇到这个问题.可以参考这篇文档: <a href="https://blog.csdn.net/herhun_chen/article/details/90247123" target="_blank" rel="noopener">Kubernetes 集群挂载NFS Volume</a></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/kong casssandra集群环境部署/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/" itemprop="url">kong+casssandra集群环境部署</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Web</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
-                    <span itemprop="name">kong</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/kong casssandra集群环境部署/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="kong-casssandra集群环境部署"><a href="#kong-casssandra集群环境部署" class="headerlink" title="kong+casssandra集群环境部署"></a>kong+casssandra集群环境部署</h2><h3 id="kong简介"><a href="#kong简介" class="headerlink" title="kong简介"></a>kong简介</h3><p>Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和API之间的中间层，加上众多功能强大的插件，可以实现认证授权、访问控制等功能。并且提供易于使用的RESTful API来操作和配置系统。</p>
-<p>有关kong的详细介绍请参考官网.</p>
-<p>–</p>
-<h3 id="cassandra简介"><a href="#cassandra简介" class="headerlink" title="cassandra简介"></a>cassandra简介</h3><p>Cassandra 是一个来自 Apache 的分布式数据库，具有高度可扩展性，可用于管理大量的结构化数据。它提供了高可用性，没有单点故障。kong支持PostgreSQL或者Cassandra两种数据库.这里我们选择了cassandra.</p>
-<p>有关cassandra的详细介绍和使用方法.请参考官网</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/" itemprop="url">Linux 使用parted+LVM分区</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T10:59:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/Skills/" itemprop="url" rel="index">
-                    <span itemprop="name">Skills</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Linux-使用parted-LVM分区"><a href="#Linux-使用parted-LVM分区" class="headerlink" title="Linux 使用parted+LVM分区"></a>Linux 使用parted+LVM分区</h2><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>fdisk使用MBR分区硬盘,但是最大只能识别到2T的磁盘,如果单块磁盘超过2T则需要使用GPT分区格式</p>
+          <h2 id="学习Docker-Stack"><a href="#学习Docker-Stack" class="headerlink" title="学习Docker Stack"></a>学习Docker Stack</h2><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>一个stack是一组共享依赖包的多个相关的services,并且可以编排和扩展.其实从第4小节开始,在利用compose文件部署app时,就已经开始一直使用stack.但是还只是运行在一个单一服务器的单一service.<br>现在,你可以学习在多个服务器上,运行多个相关的services.</p>
 <hr>
-<h4 id="分区步骤"><a href="#分区步骤" class="headerlink" title="分区步骤"></a>分区步骤</h4><p>分区方法和fdisk大同小异</p>
 <ul>
-<li>1.parted 磁盘名 .进入交互式界面</li>
+<li>使用下面的docker-compose.yml文件替换第4小节中的docker-compose.yml</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@archiver-mysql ~]# parted /dev/vdb</span><br><span class="line">GNU Parted 3.1</span><br><span class="line">Using /dev/vdb</span><br><span class="line">Welcome to GNU Parted! Type &apos;help&apos; to view a list of commands.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3&quot;</span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    # replace username/repo:tag with your name and image details</span><br><span class="line">    image: ianch/friendlyhello:v1</span><br><span class="line">    deploy:</span><br><span class="line">      replicas: 5</span><br><span class="line">      resources:</span><br><span class="line">        limits:</span><br><span class="line">          cpus: &quot;0.1&quot;</span><br><span class="line">          memory: 50M</span><br><span class="line">      restart_policy:</span><br><span class="line">        condition: on-failure</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;4000:80&quot;</span><br><span class="line">    networks:</span><br><span class="line">      - webnet</span><br><span class="line">  Visualizer:</span><br><span class="line">    image: dockersamples/visualizer:stable</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8080:8080&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - &quot;/var/run/docker.sock:/var/run/docker.sock&quot;</span><br><span class="line">    deploy:</span><br><span class="line">      placement:</span><br><span class="line">        constraints: [node.role == manager]</span><br><span class="line">    networks:</span><br><span class="line">      - webnet</span><br><span class="line">networks:</span><br><span class="line">  webnet:</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/29/docker/docker官网学习-6.学习stack/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-5.学习swarm集群/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/" itemprop="url">docker学习笔记---理解swarm集群</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-5.学习swarm集群/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="理解swarm集群"><a href="#理解swarm集群" class="headerlink" title="理解swarm集群"></a>理解swarm集群</h3><p>一个swarm是一组运行docker服务器的的集群,docker服务器可以是物理机也可以是虚拟机.</p>
+<p>swarm manager可以使用多种策略来运行容器.比如”emptiest node”—部署容器到压力最小的服务器上,或者”global”—确保每台服务器都只允许一个容器实例.你可以在Compose文件中指示swarm manager去选择何种策略</p>
+<p>swarm managers是swarm进群中唯一可以执行命令,或者授权其他服务器以”workers”身份加入swarm集群的服务器.</p>
+<hr>
+<h4 id="初始化swarm-加入节点"><a href="#初始化swarm-加入节点" class="headerlink" title="初始化swarm,加入节点"></a>初始化swarm,加入节点</h4><p>试验环境:</p>
+<p>1.10.0.0.50 —swarm manager<br>2.10.0.0.12 —worker 节点</p>
 <ul>
-<li>2.mklabel gpt 转换为gpt分区</li>
+<li>初始化swarm,并且指定通告的IP</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(parted) mklabel gpt</span><br><span class="line">Warning: The existing disk label on /dev/vdb will be destroyed and all data on this disk will be lost. Do you want to continue?</span><br><span class="line">Yes/No? yes</span><br></pre></td></tr></table></figure>
-<p>3.mkpart分区</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/#more" rel="contents">
+            <a class="btn" href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1328,7 +1795,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习—2.dockerfile/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1347,7 +1814,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/" itemprop="url">33.Python之路 - 特殊操作符</a></h1>
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习—2.dockerfile/" itemprop="url">docker学习笔记---Dockerfile</a></h1>
         
 
         <div class="post-meta">
@@ -1359,8 +1826,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
               </time>
             
 
@@ -1382,19 +1849,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
 
@@ -1411,8 +1867,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker官网学习—2.dockerfile/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习—2.dockerfile/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1441,640 +1897,70 @@
 
       
         
-          <h1 id="Python之路-特殊操作符"><a href="#Python之路-特殊操作符" class="headerlink" title="Python之路 - 特殊操作符"></a>Python之路 - 特殊操作符</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在 Python 中 , 我们自定义类都是基于 Object 对象实现的 , 而在 Object 对象中有一些特殊的操作符 (<code>__method__</code>) 控制着整个对象的行为 , 所以 , 如果我们想对对象的行为进行控制 , 我们就需要自己来实现这些方法 ; 当然很多人称这些方法为 Python 魔法方法 (魔术方法) </p>
-<p>下面 , 看看这些方法吧</p>
-<h2 id="基本行为-🍀"><a href="#基本行为-🍀" class="headerlink" title="基本行为  🍀"></a>基本行为  🍀</h2><table>
-<thead>
-<tr>
-<th>操作符</th>
-<th>控制行为</th>
-<th>调用说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>__new__</code></td>
-<td>对象创建</td>
-<td><code>__init__</code> 只是用处初始化 , <code>__new__</code> 调用的结果会交给 <code>__init__</code> 进一步处理</td>
-</tr>
-<tr>
-<td><code>__init__</code></td>
-<td>对象初始化</td>
-<td>构造函数 , 进行属性设置</td>
-</tr>
-<tr>
-<td><code>__del__</code></td>
-<td>对象删除</td>
-<td>析构函数 , 进行对象的销毁</td>
-</tr>
-<tr>
-<td><code>__repr__</code></td>
-<td>对象显示 , 针对对象</td>
-<td>终端显示 , 返回值必须为字符串 , 实例见表下方</td>
-</tr>
-<tr>
-<td><code>__str__</code></td>
-<td>对象显示 , 针对 <code>print</code></td>
-<td><code>print</code> 显示结果 , 返回值必须为字符串 , 如果未实现该方法 , <code>print</code> 将使用 <code>__repr__</code></td>
-</tr>
-<tr>
-<td><code>__bytes__</code></td>
-<td>字节对象转换</td>
-<td>返回值必须为一个bytes对象 , bytes(obj)</td>
-</tr>
-<tr>
-<td><code>__format__</code></td>
-<td>格式化字符串</td>
-<td>返回值必须为字符串对象 , format(obj)</td>
-</tr>
-<tr>
-<td><code>__lt__</code></td>
-<td><code>&lt;</code> 运算</td>
-<td><code>x &lt; y</code> , 返回布尔值 , 下同</td>
-</tr>
-<tr>
-<td><code>__le__</code></td>
-<td><code>&lt;=</code> 运算</td>
-<td><code>x &lt;= y</code></td>
-</tr>
-<tr>
-<td><code>__eq__</code></td>
-<td><code>=</code> 运算</td>
-<td><code>x == y</code></td>
-</tr>
-<tr>
-<td><code>__ne__</code></td>
-<td><code>!=</code> 运算</td>
-<td><code>x != y</code></td>
-</tr>
-<tr>
-<td><code>__gt__</code></td>
-<td><code>&gt;</code> 运算</td>
-<td><code>x &gt; y</code></td>
-</tr>
-<tr>
-<td><code>__ge__</code></td>
-<td><code>&gt;=</code> 运算</td>
-<td><code>x &gt;= y</code></td>
-</tr>
-<tr>
-<td><code>__hash__</code></td>
-<td>可哈希</td>
-<td>返回一个哈希对象 , hash(obj) , 注意 : 定义该方法同时应该定义 <code>__eq__</code></td>
-</tr>
-<tr>
-<td><code>__bool__</code></td>
-<td>真假测试</td>
-<td>返回布尔值</td>
-</tr>
-<tr>
-<td><code>__call__</code></td>
-<td>对象调用</td>
-<td>在对象被调用时执行</td>
-</tr>
-<tr>
-<td><code>__len__</code></td>
-<td><code>len()</code></td>
-<td>使用 <code>len(obj)</code> 时被调用 , 为防止值测试抛出 <code>OverflowError</code> , 必须定义 <code>__bool__()</code></td>
-</tr>
-</tbody>
-</table>
-<p><code>__repr__</code> 与 <code>__str__</code> 对比实例 : </p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/" itemprop="url">29.Python之路 - 属性方法,类方法,静态方法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-属性方法-类方法-静态方法"><a href="#Python之路-属性方法-类方法-静态方法" class="headerlink" title="Python之路 - 属性方法,类方法,静态方法"></a>Python之路 - 属性方法,类方法,静态方法</h1><h2 id="属性方法-🍀"><a href="#属性方法-🍀" class="headerlink" title="属性方法  🍀"></a>属性方法  🍀</h2><p>属性方法就是通过使用装饰器 <code>@property</code> , 将一个方法变成一个静态属性 , 于是我们就可以通过访问属性 , 来或得一个方法的返回值</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlopen</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Web_page</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, url)</span>:</span></span><br><span class="line">        self.url = url</span><br><span class="line">        self.__content = <span class="keyword">None</span></span><br><span class="line">    <span class="comment"># 将content方法变成属性</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">content</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 返回私有属性</span></span><br><span class="line">        <span class="keyword">return</span> self.__content <span class="keyword">if</span> self.__content <span class="keyword">else</span> urlopen(self.url).read()</span><br><span class="line">con = Web_page(<span class="string">'www.baidu.com'</span>)</span><br><span class="line">res = con.content</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/" itemprop="url">28.Python之路 - 面向对象特性之封装</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-面向对象特性之封装"><a href="#Python之路-面向对象特性之封装" class="headerlink" title="Python之路 - 面向对象特性之封装"></a>Python之路 - 面向对象特性之封装</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>封装就是把客观事物封装成抽象的类 , 并且类可以把自己的数据和方法只让可信的类或者对象操作 , 对不可信的进行信息隐藏</p>
-<h2 id="私有问题-🍀"><a href="#私有问题-🍀" class="headerlink" title="私有问题  🍀"></a>私有问题  🍀</h2><p>当我们类中的一些属性或者方法想要对不可信的类或者对象隐藏时 , 我们就可以将这些属性或者方法 , 定义成私有属性或者私有方法</p>
-<p>在Python中用双下划线开头的方式将属性隐藏起来 , 即带双下划线就为私有属性或者私有方法</p>
+            <h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><p>Dockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用<figure class="highlight docker"><figcaption><span>build```命令,用户可以依据dockerfile和上下文编译一个镜像.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">使用dockerfile需要注意一些事项</span><br><span class="line"></span><br><span class="line">**<span class="number">1</span>.上下文**</span><br><span class="line"></span><br><span class="line">```docker build```编译镜像时,会将当前目录下的Dockerfile和所有文件打包添加发送到docker daemon服务端.所以一般情况下创建一个空目录编辑dockerfile文件.然后将需要<span class="keyword">copy</span>和add的文件放进和dockerfile同一目录下.</span><br><span class="line"></span><br><span class="line">dockerfile中的copy以及add命令,添加文件到docker镜像中时.不要使用绝对路径.例如/home/work/a.txt..docker deamon只能识别到当前上下文环境,无法识别到其他目录.但是可以使用当前上下文的相对路径.</span><br><span class="line"></span><br><span class="line">**2.分层**</span><br><span class="line"></span><br><span class="line">dockerfile编译镜像时,每条指令都是一个镜像层.除了From指令外,每一行指令都是基于上一行生成的临时镜像运行一个容器.执行一条指令就类似于```docker commit```命令生成一个新的镜像.所以两条指令之间互不关联.</span><br><span class="line"></span><br><span class="line">&lt;!--more--&gt;</span><br><span class="line"></span><br><span class="line">例如,下列的dockerfile并不能在/data/目录下创建files文件.</span><br></pre></td></tr></table></figure></p>
+<p>FROM ubuntu<br>RUN mkdir /data<br>RUN cd /data<br>RUN touch files<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">下列的dockerfile甚至不会创建/data/file文件,也不会修改/data/目录权限</span><br></pre></td></tr></table></figure></p>
+<p>FROM ubuntu<br>RUN useradd foo<br>VOLUME /data<br>RUN touch /data/file<br>RUN chown -R foo:foo /data<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">想要实现这个需求,可以这样写:</span><br></pre></td></tr></table></figure></p>
+<p>FROM ubuntu<br>RUN useradd foo<br>RUN mkdir /data &amp;&amp; touch /data/file<br>RUN chown -R foo:foo /data<br>VOLUME /data<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line"></span><br><span class="line">**3.精简**</span><br><span class="line"></span><br><span class="line">由于dockerfile在构建镜像时,dockerfile文本中每一行语句会产生每一层镜像.</span><br><span class="line"></span><br><span class="line">例如下面这个dockerfile:</span><br></pre></td></tr></table></figure></p>
+<p>From ubuntu<br>RUN apt-get update<br>RUN apt-get -y install vim git wget net-tools<br>RUN useradd foo<br>RUN mkdir /data<br>RUN touch /data/file<br>RUN chown -R foo:foo /data<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在编译时,每一个RUN语句都会构建一层镜像.(实际上所有指令都是这样,不仅仅是RUN)</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost test]$docker build -t test:v1 .<br>Sending build context to Docker daemon  2.048kB<br>Step 1/7 : From ubuntu<br> —&gt; 94e814e2efa8<br>Step 2/7 : RUN apt-get update<br> —&gt; Using cache<br> —&gt; 5520126e7fcc<br>Step 3/7 : RUN apt-get -y install vim git wget net-tools<br> —&gt; Using cache<br> —&gt; cb24e170539c<br>Step 4/7 : RUN useradd foo<br> —&gt; Using cache<br> —&gt; ca31aeba0309<br>Step 5/7 : RUN mkdir /data<br> —&gt; Using cache<br> —&gt; d5c6e0f32f6b<br>Step 6/7 : RUN touch /data/file<br> —&gt; Using cache<br> —&gt; 9c4b06e9b25d<br>Step 7/7 : RUN chown -R foo:foo /data<br> —&gt; Using cache<br> —&gt; 75ecea0b0795<br>Successfully built 75ecea0b0795<br>Successfully tagged test:v1<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">这种写法会导致镜像层非常多,镜像文件也会相对较大.所以一般推荐更精简的语法,每一条功能相同的语句,尽量写在一行.上面的dockerfile可以优化成:</span><br></pre></td></tr></table></figure></p>
+<p>From ubuntu<br>RUN apt-get update \<br>    &amp;&amp; apt-get -y install \<br>       vim \<br>       git \<br>       wget \<br>       net-tools</p>
+<p>RUN useradd foo<br>RUN mkdir /data &amp;&amp;  touch /data/file &amp;&amp;  chown -R foo:foo /data<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这次编译只需构建4层镜像</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost test]$docker build -t test:v1 .<br>Sending build context to Docker daemon  2.048kB<br>Step 1/4 : From ubuntu<br> —&gt; 94e814e2efa8<br>Step 2/4 : RUN apt-get update     &amp;&amp; apt-get -y install        vim        git        wget        net-tools<br> —&gt; Using cache<br> —&gt; 7aa2bc9041e0<br>Step 3/4 : RUN useradd foo<br> —&gt; Using cache<br> —&gt; 5a13764414e6<br>Step 4/4 : RUN mkdir /data &amp;&amp;  touch /data/file &amp;&amp;  chown -R foo:foo /data<br> —&gt; Using cache<br> —&gt; bd61817d7526<br>Successfully built bd61817d7526<br>Successfully tagged test:v1<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">4.使用no-install-recommends</span><br><span class="line"></span><br><span class="line">如果是使用APT包管理器,则应该在执行apt-get install 命令时加上no-install-recommends参数.这样ATP就仅安装核心依赖.而不安装其他推荐和建议的包,这会显著减少不必要包的下载数量</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### Dockerfile指令介绍</span><br><span class="line"></span><br><span class="line">介绍完Dockerfile的概念和特点后,接下来了解一下Dockerfile语法中的具体指令的介绍和用法</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">下面是一个例子:</span><br></pre></td></tr></table></figure></p>
+<h1 id="Use-an-official-Python-runtime-as-a-parent-image"><a href="#Use-an-official-Python-runtime-as-a-parent-image" class="headerlink" title="Use an official Python runtime as a parent image"></a>Use an official Python runtime as a parent image</h1><p>FROM python:2.7-slim</p>
+<h1 id="Set-the-working-directory-to-app"><a href="#Set-the-working-directory-to-app" class="headerlink" title="Set the working directory to /app"></a>Set the working directory to /app</h1><p>WORKDIR /app</p>
+<h1 id="Copy-the-current-directory-contents-into-the-container-at-app"><a href="#Copy-the-current-directory-contents-into-the-container-at-app" class="headerlink" title="Copy the current directory contents into the container at /app"></a>Copy the current directory contents into the container at /app</h1><p>COPY . /app</p>
+<h1 id="Install-any-needed-packages-specified-in-requirements-txt"><a href="#Install-any-needed-packages-specified-in-requirements-txt" class="headerlink" title="Install any needed packages specified in requirements.txt"></a>Install any needed packages specified in requirements.txt</h1><p>RUN pip install –trusted-host pypi.python.org -r requirements.txt</p>
+<h1 id="Make-port-80-available-to-the-world-outside-this-container"><a href="#Make-port-80-available-to-the-world-outside-this-container" class="headerlink" title="Make port 80 available to the world outside this container"></a>Make port 80 available to the world outside this container</h1><p>EXPOSE 80</p>
+<h1 id="Define-environment-variable"><a href="#Define-environment-variable" class="headerlink" title="Define environment variable"></a>Define environment variable</h1><p>ENV NAME World</p>
+<h1 id="Run-app-py-when-the-container-launches"><a href="#Run-app-py-when-the-container-launches" class="headerlink" title="Run app.py when the container launches"></a>Run app.py when the container launches</h1><p>CMD [“python”, “app.py”]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">* FROM </span><br><span class="line"></span><br><span class="line">格式: ```FROM &lt;image&gt;``` 或者 ```FROM &lt;image&gt;:tag</span><br></pre></td></tr></table></figure></p>
+<p>表示从一个基础镜像构建.Dockerfile必须以FROM语句作为第一条非注释语句.</p>
 <ul>
-<li>私有属性</li>
+<li><p>WORKDIR: 表示工作目录,后续的相对路径也是基于这个目录</p>
+</li>
+<li><p>COPY</p>
+</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,name)</span>:</span></span><br><span class="line">        <span class="comment"># 定义私有属性</span></span><br><span class="line">        self.__name = name</span><br><span class="line"><span class="comment"># 实例化</span></span><br><span class="line">a = A(<span class="string">"Lyon"</span>)</span><br><span class="line"><span class="comment"># 访问a中的__name属性</span></span><br><span class="line">print(a.__name)</span><br><span class="line"><span class="comment"># 执行结果 : AttributeError: 'A' object has no attribute '__name'</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">结果报错,意思是对象A中没有__name这个属性</span></span><br><span class="line"><span class="string">也就是说,外部已经不能直接利用 .__name 来访问这个属性了</span></span><br><span class="line"><span class="string">因为此时它是一个私有属性</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/06-Python之路 - 序列化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/" itemprop="url">21.Python之路 - 序列化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
+<p>格式: <figure class="highlight plain"><figcaption><span>src dest```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">复制宿主机上的文件到镜像中.```src```是当前上下文中的文件或者目录.```dest```是容器中的目标文件或者目录.```src```指定的源可以有多个.此外```src``` 还支持通配符.例如: COPY hom* /mydir/ 表示添加所有当前目录下的hom开头的文件到目录/mydir/下</span><br><span class="line"></span><br><span class="line">&lt;dest&gt;可以是文件或者目录.但是必须是镜像中的绝对路径,或者是WORKDIR的相对路径.若&lt;dest&gt;以反斜杠```/```结尾,则指向的是目录,否则指向文件.当```src```有多个源时,```dest```必须是目录.如果```dest```目录不存在,则会自动被创建</span><br><span class="line"></span><br><span class="line">* ADD</span><br><span class="line"></span><br><span class="line">格式: ```ADD src dest</span><br></pre></td></tr></table></figure></p>
+<p> ADD和COPY命令有相同功能,都支持复制本地文件到镜像里.但ADD能从互联网的URL下载文件到镜像..<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> 但是如果```src```是一个URL的归档格式文件,则不会自动解压.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* RUN</span><br><span class="line"></span><br><span class="line">RUN命令有两种格式:</span><br><span class="line"></span><br><span class="line">```RUN &lt;command&gt;``` (shell格式)  </span><br><span class="line">```RUN [&quot;executable&quot;,&quot;param1&quot;,&quot;param2&quot;]``` (exec格式)</span><br><span class="line"></span><br><span class="line">RUN指令的两种格式表示命令在容器中的两种运行方式.当使用shell格式时,命令通过```/bin/sh -c```运行.当使用exec格式时.命令直接运行,不调用shell程序.exec格式中的参数会被当成JSON数组被Docker解析.所以必须使用双引号,不能使用单引号. </span><br><span class="line"></span><br><span class="line">另外由于exec格式不会在shell中运行.所以无法识别ENV环境变量.例如当执行```CMD [&quot;echo&quot;,&quot;$HOME&quot;]```时,```$HOME```不会被变量替换.如果希望运行shell程序.可以写成```CMD [&quot;sh&quot;,&quot;-c&quot;,&quot;echo&quot;,&quot;$HOME&quot;]```.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* EXPOSE: 镜像需要暴露出来的端口. </span><br><span class="line"></span><br><span class="line">&gt; 要注意的是,这里只是说明镜像需要暴露哪些端口,在镜像构建完毕,启动容器时,仍然需要-p参数来映射端口,否则端口不会自动映射</span><br><span class="line"></span><br><span class="line">* ENV</span><br><span class="line"></span><br><span class="line">  格式: ENV &lt;key&gt; &lt;value&gt; 或者 ENV &lt;key&gt;=&lt;value&gt;</span><br><span class="line">  </span><br><span class="line">  ENV指令用来声明环境变量,并且可以被(ADD,COPY,WORKDIR等)指令调用.调用ENV环境变量的格式和shell一样:```$variable_name```或者 ```$&#123;variable_name&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>CMD </li>
+</ul>
+<p>CMD命令有3种格式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CMD &lt;command&gt; (shell格式)  </span><br><span class="line">CMD [&quot;executable&quot;,&quot;param1&quot;,&quot;param2&quot;] (exec格式)  </span><br><span class="line">CMD [&quot;param1&quot;,&quot;param2&quot;] (为ENTRYPOINT命令提供参数)</span><br></pre></td></tr></table></figure>
+<p>CMD提供容器启动后执行的命令.或者是为ENTRYPOINT传递一些参数.一个dockerfile文件只允许存在一条CMD指令.如果存在多条CMD指令,以最后一条为准.但是如果用户在<figure class="highlight docker"><figcaption><span>run```时指定了命令,则会覆盖CMD中的指令</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* <span class="keyword">ENTRYPOINT</span></span><br><span class="line"></span><br><span class="line">ENTRYPOINT有两种格式.和上文CMD一样分为shell格式和exec格式.</span><br><span class="line"></span><br><span class="line">ENTRYPOINT和CMD类似,指定容器启动时执行的命令.和CMD一样一个Dockerfile文件中可以有多个ENTRYPOINT命令.但只有最后一条生效.但是又有一些区别.当使用shell格式时,ENTRYPOINT会忽略任何CMD指令和```docker run```启动容器时手动输入的指令.并且会运行在```/bin/sh -c```环境中,成为它的子进程.进程在容器中PID不是1,也不能接收UNIX信号.(也就是在执行```docker stop &lt;container&gt;```时,进程接收不到SIGTERM指令)</span><br><span class="line"></span><br><span class="line">当使用exec格式时,```docker run```手动指定的命令,将作为参数覆盖CMD指定的参数传递到ENTRYPOINT.(也就是说```docker run```启动容器时指定的不再是具体命令,而是命令的参数).</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">创建上面dockerfile中所需要的app.py和requirements.txt文件,并且将他们和Dockerfile文件放在同一目录下:</span><br><span class="line"></span><br><span class="line">requirements.txt:</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost docker_python]$cat requirements.txt<br>Flask<br>Redis</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.py:</span><br></pre></td></tr></table></figure>
+<p>root@localhost docker_python]$cat app.py<br>from flask import Flask<br>from redis import Redis, RedisError<br>import os<br>import socket</p>
+<h1 id="Connect-to-Redis"><a href="#Connect-to-Redis" class="headerlink" title="Connect to Redis"></a>Connect to Redis</h1><p>redis = Redis(host=”redis”, db=0, socket_connect_timeout=2, socket_timeout=2)</p>
+<p>app = Flask(<strong>name</strong>)</p>
+<p>@app.route(“/“)<br>def hello():<br>    try:<br>        visits = redis.incr(“counter”)<br>    except RedisError:<br>        visits = “<i>cannot connect to Redis, counter disabled</i>“</p>
+<pre><code>html = &quot;&lt;h3&gt;Hello {name}!&lt;/h3&gt;&quot; \
+       &quot;&lt;b&gt;Hostname:&lt;/b&gt; {hostname}&lt;br/&gt;&quot; \
+       &quot;&lt;b&gt;Visits:&lt;/b&gt; {visits}&quot;
+return html.format(name=os.getenv(&quot;NAME&quot;, &quot;world&quot;), hostname=socket.gethostname(), visits=visits)
+</code></pre><p>if <strong>name</strong> == “<strong>main</strong>“:<br>    app.run(host=’0.0.0.0’, port=80)<br>[root@localhost docker_python]$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line"></span><br><span class="line">#### 开始构建镜像</span><br><span class="line"></span><br><span class="line">首先确保Dockerfile里所需的文件,以及Dockerfile都在同一目录下:</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost docker_python]$ls<br>app.py  Dockerfile  requirements.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">运行以下命令来构建一个镜像.使用--tag参数(或者-t),可以为镜像打个标签:</span><br></pre></td></tr></table></figure></p>
+<p>docker build –tag=friendlyhello .<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">构建过程略..在构建过程中,注意以下现象:</span><br><span class="line"></span><br><span class="line">1.构建镜像层:</span><br><span class="line"></span><br><span class="line">部分指令会创建一个新的镜像层,而有些指令则不会.关于如何区分命令是否会新建镜像层,一个基本的原则是:</span><br><span class="line"></span><br><span class="line">如果指令的作用是像镜像中添加新的文件或者程序,那么就会新建镜像层.(例如:RUN,COPY,ADD,FROM等)</span><br><span class="line"></span><br><span class="line">如果只是告诉docker如何构建或者运行应用程序,增加或者修改容器的元数据,那么不会构建新的镜像层.(例如:WORKDIR,EXPOSE,ENV,ENTERPOINT等)</span><br><span class="line"></span><br><span class="line">2.构建步骤:</span><br><span class="line"></span><br><span class="line">基本等过程大致为:</span><br><span class="line"></span><br><span class="line">运行临时容器----&gt;在该容器中运行Dockerfile指令----&gt;将运行结果保存为一个新等镜像层------&gt; 删除临时容器</span><br><span class="line"></span><br><span class="line">构建完成后,通过以下命令可以看到构建的镜像</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost docker_python]$docker images<br>REPOSITORY                 TAG                 IMAGE ID            CREATED              SIZE<br>friendlyhello              latest              f091d1bb803c        About a minute ago   131MB</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; 或者也可以是输入以下命令 docker image ls</span><br><span class="line"></span><br><span class="line">&gt; 可能会疑惑,为什么tag标签是latest..镜像的完整标签格式应该是:friendlyhello:lastest.</span><br><span class="line">如果需要在构建镜像时指定版本.可以使用: --tag=friendlyhello:v0.0.1</span><br><span class="line"></span><br><span class="line">----</span><br><span class="line"></span><br><span class="line">#### 使用构建的镜像启动一个容器</span><br><span class="line"></span><br><span class="line">输入以下命令,利用刚才的镜像启动一个容器:</span><br></pre></td></tr></table></figure>
+<p>docker run -p 4000:80 friendlyhello<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">执行结果:</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost docker_python]$docker run -p 4000:80 friendlyhello</p>
+<ul>
+<li>Serving Flask app “app” (lazy loading)</li>
+<li>Environment: production<br>WARNING: Do not use the development server in a production environment.<br>Use a production WSGI server instead.</li>
+<li>Debug mode: off</li>
+<li><p>Running on <a href="http://0.0.0.0:80/" target="_blank" rel="noopener">http://0.0.0.0:80/</a> (Press CTRL+C to quit)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> * docker run 表示启动一个容器</span><br><span class="line"> * -p 宿主机端口:容器端口  表示将宿主机的端口映射给容器.如果是-P 80 表示随机映射一个宿主机的端口给容器</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">此时可以在其他电脑上访问这个容器的80端口,下面是在我的PC上访问宿主机的4000端口,也就是刚才启动的容器</span><br></pre></td></tr></table></figure>
+<p>✘ huangyong@huangyong-Macbook-Pro  ~  curl <a href="http://10.0.0.50:4000" target="_blank" rel="noopener">http://10.0.0.50:4000</a><br></p><h3>Hello World!</h3><b>Hostname:</b> f9b1b804404f<br><b>Visits:</b> <i>cannot connect to Redis, counter disabled</i>%<p></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">容器默认是在前台执行,加上-d参数可以时容器运行在后台:</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>docker run -d -p 4000:80 friendlyhello<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker ps命令可以显示正在运行中的容器</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost docker_python]$docker ps<br>CONTAINER ID        IMAGE                      COMMAND             CREATED             STATUS              PORTS                    NAMES<br>fcf7d29ac627        friendlyhello              “python app.py”     5 seconds ago       Up 1 second         0.0.0.0:4000-&gt;80/tcp     stoic_colden<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; docker container ls命令也有同样的效果</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">这一节(包括第3小节)涉及到的基础命令如下:</span><br></pre></td></tr></table></figure></p>
+<p>docker build -t friendlyhello .  # Create image using this directory’s Dockerfile<br>docker run -p 4000:80 friendlyhello  # Run “friendlyname” mapping port 4000 to 80<br>docker run -d -p 4000:80 friendlyhello         # Same thing, but in detached mode<br>docker container ls                                # List all running containers<br>docker container ls -a             # List all containers, even those not running<br>docker container stop <hash>           # Gracefully stop the specified container<br>docker container kill <hash>         # Force shutdown of the specified container<br>docker container rm <hash>        # Remove specified container from this machine<br>docker container rm $(docker container ls -a -q)         # Remove all containers<br>docker image ls -a                             # List all images on this machine<br>docker image rm <image id="">            # Remove specified image from this machine<br>docker image rm $(docker image ls -a -q)   # Remove all images from this machine<br>docker login             # Log in this CLI session using your Docker credentials<br>docker tag <image> username/repository:tag  # Tag <image> for upload to registry<br>docker push username/repository:tag            # Upload tagged image to registry<br>docker run username/repository:tag                   # Run image from a registry<br><code>`</code></image></image></image></hash></hash></hash></p>
 
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Modules/" itemprop="url" rel="index">
-                    <span itemprop="name">Modules</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/06-Python之路 - 序列化/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-序列化"><a href="#Python之路-序列化" class="headerlink" title="Python之路 - 序列化"></a>Python之路 - 序列化</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>先说个例子 , 当我们将一个字典或者列表再或者变量存入磁盘中 , 而存入磁盘后原本数据类型就得不到保持了 . 这个时候我们就得用序列化和反序列化了</p>
-<p>序列化是将对象进行存储时保持当时对象的状态 , 实现其生命周期的延长 </p>
-<p>反序列化则是将存储的对象读取出来并转成原本的数据类型</p>
-<p>序列化的目的</p>
-<ol>
-<li>以某种存储形式使自定义对象持久化</li>
-<li>将对象从一个地方传递到另一个地方</li>
-<li>使程序更具维护性</li>
-</ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -2116,7 +2002,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2166,7 +2052,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">142</span>
+                  <span class="site-state-item-count">162</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2188,7 +2074,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">35</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

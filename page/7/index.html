@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群利用federation插件平滑迁移/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/02-Python之路 - 面向对象之继承/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群利用federation插件平滑迁移/" itemprop="url">rabbitmq集群利用federation插件平滑迁移</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/02-Python之路 - 面向对象之继承/" itemprop="url">26.Python之路 - 面向对象之继承</a></h1>
         
 
         <div class="post-meta">
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-21T17:59:58+08:00">
-                2018-11-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
               </time>
             
 
@@ -329,343 +329,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群利用federation插件平滑迁移/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群利用federation插件平滑迁移/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="rabbitmq集群利用federation插件平滑迁移"><a href="#rabbitmq集群利用federation插件平滑迁移" class="headerlink" title="rabbitmq集群利用federation插件平滑迁移"></a>rabbitmq集群利用federation插件平滑迁移</h2><p>关于feration的官方文档:<a href="https://www.rabbitmq.com/federated-exchanges.html" target="_blank" rel="noopener">federated Exchange</a></p>
-<p>关于安装和配置feration的文档:<a href="https://www.jianshu.com/p/5a8b00cf4a0a" target="_blank" rel="noopener">RabbitMQ Federation集群</a></p>
-<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>公司的MQ集群出现了点问题,需要将业务迁移到一台新的MQ集群(包含2个MQ节点服务器).但是由于生产环境中一直有生产和消费数据产生,而且更麻烦的是还有大量延迟队列(生产的数据在一天甚至一周后再去消费).</p>
-<p>此时如何做到不影响业务,不影响数据一致性,也不产生2次重复消费的前提下平滑迁移就很有挑战性.直接暴力的将业务迁移到新的rabbitmq集群显然不行.</p>
-<p>此时就要求新集群服务器和老集群数据同步,并且将业务迁移到新的集群后,老的集群上未消费的数据,或者延迟队列的数据仍然在迁移后仍然能被消费掉..</p>
-<p>federation插件完美的完成了这个任务</p>
-<hr>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群利用federation插件平滑迁移/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群版本升级/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群版本升级/" itemprop="url">rabbitmq集群版本升级</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-21T17:59:58+08:00">
-                2018-11-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群版本升级/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群版本升级/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="rabbitmq集群版本升级"><a href="#rabbitmq集群版本升级" class="headerlink" title="rabbitmq集群版本升级"></a>rabbitmq集群版本升级</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本文档介绍rabbitmq所有节点从当前的3.6.3版本升级到3.6.5版本.</p>
-<h3 id="升级步骤"><a href="#升级步骤" class="headerlink" title="升级步骤"></a>升级步骤</h3><p>1.停止rabbitmq进程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service rabbitmq-server stop</span><br></pre></td></tr></table></figure>
-<p>2.备份延迟队列插件.(如果你安装了其他自定义插件,也需要先备份出来)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/lib/rabbitmq/lib/rabbitmq_server-3.6.3/plugins/rabbitmq_delayed_message_exchange-0.0.1.ez  ~/</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>可以使用 yum -ql 软件包 (CentOS) 或者 dpkg -L 软件包来查找插件安装路径</p>
-</blockquote>
-<p>3.下载软件包.本文档采用RPM包或者deb包安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#Centos系统</span><br><span class="line">https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v3_6_5/rabbitmq-server-3.6.5-1.noarch.rpm</span><br><span class="line"></span><br><span class="line">#Ubuntu系统</span><br><span class="line">https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v3_6_5/rabbitmq-server_3.6.5-1_all.deb</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群版本升级/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/11/21/Linux-Basic/文本处理/vim使用技巧/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/21/Linux-Basic/文本处理/vim使用技巧/" itemprop="url">vim使用技巧</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-21T12:59:58+08:00">
-                2018-11-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
                   </a>
                 </span>
 
@@ -675,8 +340,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/文本处理/" itemprop="url" rel="index">
-                    <span itemprop="name">文本处理</span>
+                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">Object-Oriented</span>
                   </a>
                 </span>
 
@@ -693,8 +358,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/11/21/Linux-Basic/文本处理/vim使用技巧/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/11/21/Linux-Basic/文本处理/vim使用技巧/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/04-Object-Oriented/02-Python之路 - 面向对象之继承/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/02-Python之路 - 面向对象之继承/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -723,1242 +388,1661 @@
 
       
         
-          <h2 id="vim使用技巧"><a href="#vim使用技巧" class="headerlink" title="vim使用技巧"></a>vim使用技巧</h2><h3 id="移动光标"><a href="#移动光标" class="headerlink" title="移动光标"></a>移动光标</h3><hr>
-<ul>
-<li>单行移动</li>
-</ul>
+          <h1 id="Python之路-面向对象之继承"><a href="#Python之路-面向对象之继承" class="headerlink" title="Python之路 - 面向对象之继承"></a>Python之路 - 面向对象之继承</h1><h2 id="抽象与继承-🍀"><a href="#抽象与继承-🍀" class="headerlink" title="抽象与继承  🍀"></a>抽象与继承  🍀</h2><p><strong>抽象</strong> </p>
+<blockquote>
+<p>抽象是从众多的事物中抽取出共同的、本质性的特征，而舍弃其非本质的特征</p>
+</blockquote>
+<p>比如 🍎 , 🍌 , 🍇 ,  等 , 它们共同的特性就是水果 , 我们得出水果这个概念的过程就是一个抽象的过程 , 抽象能使复杂度降低 , 好让人们能够以宏观的角度来了解许多特定的事态</p>
+<p>有抽象就会有具体 , 我们会用抽象的对象来表示一类事物 , 而用具体的对象表示某个事物 , 比如苹果 , 香蕉 , 葡萄都是具体的对象 , 水果则是抽象的对象</p>
+<p><strong>继承</strong> </p>
+<blockquote>
+<p>继承是基于抽象的结果</p>
+</blockquote>
+<p>抽象可以让我们来以宏观的角度了解一类事物事物 , 并且这类事物都拥有该抽象中所有的特征 , 相当于继承了该抽象中的特征 , 这样我们就可以只将这类事物不同的特征放到具体中 , 而不需要再次关心共同特征 , 所以<strong><em>先有抽象后才能有继承</em></strong> </p>
+<p>介绍抽象的概念时利用了水果来进行说明 , 为了更好的理解 , 继承就用动物为例子</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/02-Python之路 - 面向对象之继承/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/07/python/02-Advanced/01-Python之路 - 函数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/07/python/02-Advanced/01-Python之路 - 函数/" itemprop="url">11.Python之路 - Python函数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-07T17:20:58+08:00">
+                2020-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Advanced/" itemprop="url" rel="index">
+                    <span itemprop="name">Advanced</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/07/python/02-Advanced/01-Python之路 - 函数/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/07/python/02-Advanced/01-Python之路 - 函数/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-函数"><a href="#Python之路-函数" class="headerlink" title="Python之路 - 函数"></a>Python之路 - 函数</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>函数是组织好的 , 可重复使用的 , 用来实现单一 , 或相关联功能的代码段</p>
+<p>函数能提高应用的模块性 , 和代码的重复利用率 , 比如我们一直使用的<code>print()</code>  , <code>input()</code>  等等 , 都是函数</p>
+<p>如下我们写了一个用户认证程序 ; 而现在我们又需要写一个用户管理系统 , 管理系统中有很多的功能 , 比如添加用户 , 删除用户 , 查询用户 , 修改用户 ; 但是这些功能必须先通过用户认证程序才能使用 , 明显我们不可能在每一个功能前加上一段用户认证代码 , 因为这将大大增加我们的重复代码</p>
+<p>那么为了解决这个问题我们就可以将用户认证功能封装到一个函数之中 , 而后续我们如果需要使用这个函数仅需调用即可 , 着就是函数的魅力所在 , 当然更多的还是通过下面进一步了解函数</p>
+<h2 id="语法-🍀"><a href="#语法-🍀" class="headerlink" title="语法  🍀"></a>语法  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自定义函数,function_name为函数名</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">function_name</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""注释"""</span></span><br><span class="line">    </span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    功能代码块</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="comment"># 返回值,一般都具有返回值,当然也可以不设定</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/07/python/02-Advanced/01-Python之路 - 函数/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/07/python/02-Advanced/02-Python之路 - 函数进阶/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/07/python/02-Advanced/02-Python之路 - 函数进阶/" itemprop="url">12.Python之路 - Python函数进阶</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-07T17:20:58+08:00">
+                2020-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Advanced/" itemprop="url" rel="index">
+                    <span itemprop="name">Advanced</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/07/python/02-Advanced/02-Python之路 - 函数进阶/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/07/python/02-Advanced/02-Python之路 - 函数进阶/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-函数进阶"><a href="#Python之路-函数进阶" class="headerlink" title="Python之路 - 函数进阶"></a>Python之路 - 函数进阶</h1><h2 id="嵌套函数-🍀"><a href="#嵌套函数-🍀" class="headerlink" title="嵌套函数  🍀"></a>嵌套函数  🍀</h2><p>嵌套函数即函数里面再套一个函数 , 如下 : </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 全局变量name</span></span><br><span class="line">name = <span class="string">"Lyon_1"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># 第一层局部变量name</span></span><br><span class="line">    name = <span class="string">"Lyon_2"</span></span><br><span class="line">    print(<span class="string">"第1层打印"</span>,name)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#嵌套</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">func2</span><span class="params">()</span>:</span></span><br><span class="line">        <span class="comment"># 第二层局部变量name</span></span><br><span class="line">        name = <span class="string">"Lyon_3"</span></span><br><span class="line">        print(<span class="string">"第2层打印"</span>, name)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 嵌套</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">func3</span><span class="params">()</span>:</span></span><br><span class="line">            <span class="comment"># 第三层局部变量</span></span><br><span class="line">            name = <span class="string">"Lyon_4"</span></span><br><span class="line">            print(<span class="string">"第3层打印"</span>, name)</span><br><span class="line">        <span class="comment"># 调用内层函数</span></span><br><span class="line">        func3()     </span><br><span class="line">    <span class="comment"># 调用内层函数</span></span><br><span class="line">    func2()  </span><br><span class="line">func()</span><br><span class="line">print(<span class="string">"最外层打印"</span>, name)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">执行结果:</span></span><br><span class="line"><span class="string">第1层打印 Lyon_2</span></span><br><span class="line"><span class="string">第2层打印 Lyon_3</span></span><br><span class="line"><span class="string">第3层打印 Lyon_4</span></span><br><span class="line"><span class="string">最外层打印 Lyon_1</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/07/python/02-Advanced/02-Python之路 - 函数进阶/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/07/python/02-Advanced/03-Python之路 - 匿名函数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/07/python/02-Advanced/03-Python之路 - 匿名函数/" itemprop="url">13.Python之路 - python匿名函数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-07T17:20:58+08:00">
+                2020-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Advanced/" itemprop="url" rel="index">
+                    <span itemprop="name">Advanced</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/07/python/02-Advanced/03-Python之路 - 匿名函数/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/07/python/02-Advanced/03-Python之路 - 匿名函数/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-匿名函数"><a href="#Python之路-匿名函数" class="headerlink" title="Python之路 - 匿名函数"></a>Python之路 - 匿名函数</h1><h2 id="匿名函数介绍-🍀"><a href="#匿名函数介绍-🍀" class="headerlink" title="匿名函数介绍 🍀"></a>匿名函数介绍 🍀</h2><p>lambda是一个表达式 , 而并非语句 , 所以可以出现在def语句所不能出现的位置 , 并且不需要指定函数名; lambda表达式还可以提高代码的可读性 , 简化代码</p>
+<p>lambda表达式主要用于写一些简单的方法 , 对于复杂的还是用函数写的好 </p>
+<p>示例:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 普通函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x * x</span><br><span class="line">print(func(<span class="number">5</span>))</span><br><span class="line">-----------------------</span><br><span class="line"><span class="comment"># 匿名函数,自带return功能</span></span><br><span class="line">func = <span class="keyword">lambda</span> x : x * x</span><br><span class="line">print(func(<span class="number">5</span>))</span><br><span class="line">---------------------------------------------------</span><br><span class="line">func = <span class="keyword">lambda</span> arguments : expression using argument</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/07/python/02-Advanced/03-Python之路 - 匿名函数/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/07/python/02-Advanced/04-Python之路 - 内置函数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/07/python/02-Advanced/04-Python之路 - 内置函数/" itemprop="url">14.Python之路 - Python内置函数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-07T17:20:58+08:00">
+                2020-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Advanced/" itemprop="url" rel="index">
+                    <span itemprop="name">Advanced</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/07/python/02-Advanced/04-Python之路 - 内置函数/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/07/python/02-Advanced/04-Python之路 - 内置函数/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-内置函数"><a href="#Python之路-内置函数" class="headerlink" title="Python之路 - 内置函数"></a>Python之路 - 内置函数</h1><h2 id="str类型代码的执行-3个-🍀"><a href="#str类型代码的执行-3个-🍀" class="headerlink" title="str类型代码的执行(3个) 🍀"></a>str类型代码的执行(3个) 🍀</h2><blockquote>
+<p><code>exec</code>(object[, globals[, locals]])  👈</p>
+</blockquote>
+<p>将字符串当做表达式去执行，没有返回值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 流程语句用exec</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>exec(<span class="string">"print('123')"</span>)</span><br><span class="line"><span class="number">123</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>exec(<span class="string">'1+2+3+4'</span>)</span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>res = exec(<span class="string">'1+2+3+4'</span>)</span><br><span class="line"><span class="keyword">None</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>eval</code>(expression, globals=None, locals=None)   👈</p>
+</blockquote>
+<p>将字符串当做表达式去执行，并返回执行结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 简单求值表达式用eval</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>res = eval(<span class="string">'1+2+3+4'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>res</span><br><span class="line"><span class="number">10</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>compile</code>(source, filename, mode, flags=0, dont_inherit=False, optimize=-1)   👈</p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/07/python/02-Advanced/04-Python之路 - 内置函数/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/" itemprop="url">15.Python之路 - Python迭代器和生成器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-07T17:20:58+08:00">
+                2020-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Advanced/" itemprop="url" rel="index">
+                    <span itemprop="name">Advanced</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-迭代器和生成器"><a href="#Python之路-迭代器和生成器" class="headerlink" title="Python之路 - 迭代器和生成器"></a>Python之路 - 迭代器和生成器</h1><h2 id="可迭代对象-🍀"><a href="#可迭代对象-🍀" class="headerlink" title="可迭代对象  🍀"></a>可迭代对象  🍀</h2><p>在Python中一切皆对象</p>
+<p>迭代是重复反馈过程的活动 , 其目的通常是为了逼近所需目标或结果 </p>
+<p>可迭代对象 , 即可以按照迭代的方式进行存取数据的对象 , 在python中我们可以理解为可以用for循环遍历的对象就是可迭代对象</p>
+<p><strong>for循环做的那些事</strong> :  for循环是我们用来遍历一个数据集合的方法 , 其实就是根据一定的要求 (这个要求叫做’协议’ ) 进行一次次的迭代的效果 . 当我们用for循环去遍历时 , 它做的第一件事就是判断对象是否是可迭代对象 , 如果是 , 那么它就会将该对象转换成一个迭代器 , 最后利用<code>__next__()</code>方法将迭代器中的内容一个接一个的取出来</p>
+<p>可迭代对象的标志是 , 它具有<code>__iter__()</code>方法</p>
+<p>判断对象是否为可迭代对象方法如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入模块</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> Iterable</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>l = [<span class="string">'lyon'</span>,<span class="string">'oldboy'</span>]</span><br><span class="line"><span class="comment"># 判断是否为Iterable , 即可迭代对象</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>isinstance(l,Iterable)</span><br><span class="line"><span class="comment"># 返回bool值</span></span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#或者下面这个方法也可以判断</span></span><br><span class="line">l = [<span class="string">'lyon'</span>,<span class="string">'oldboy'</span>]</span><br><span class="line">print(<span class="string">"__iter__"</span> <span class="keyword">in</span> dir(l))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">True</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/07/python/02-Advanced/05-Python之路 - 迭代器和生成器/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/07/python/02-Advanced/06-Python之路 - 递归/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/07/python/02-Advanced/06-Python之路 - 递归/" itemprop="url">16.Python之路 - Python递归函数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-07T17:20:58+08:00">
+                2020-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Advanced/" itemprop="url" rel="index">
+                    <span itemprop="name">Advanced</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/07/python/02-Advanced/06-Python之路 - 递归/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/07/python/02-Advanced/06-Python之路 - 递归/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-递归"><a href="#Python之路-递归" class="headerlink" title="Python之路 - 递归"></a>Python之路 - 递归</h1><h2 id="递归算法-🍀"><a href="#递归算法-🍀" class="headerlink" title="递归算法 🍀"></a>递归算法 🍀</h2><p>递归算法是一种直接或者间接地调用自身算法的过程（递归函数就是一个体现）。在计算机编写程序中，递归算法对解决一大类问题是十分有效的，它往往使算法的描述简介而且易于理解。</p>
+<p>特点：👈</p>
+<ol>
+<li>递归就是再过程或函数里调用自身</li>
+<li>再使用递归策略时，必须有一个明确的递归结束条件，称为递归出口。递归算法解题通常显得很简洁，但递归算法解题的运行效率低</li>
+<li>在递归调用的过程当中系统为每一层的返回点、局部量等开辟了栈来存储。递归次数过多容易造成栈溢出等。所以一般不提倡用递归算法设计程序</li>
+</ol>
+<p>要求：👈</p>
+<ol>
+<li>每次调用在问题规模上都有所减少（通常是减半）</li>
+<li>相邻两次重复之间有紧密的联系，前一次要为后一次做准备（通常前一次的输出就作为后一次的输入）</li>
+<li>再问题的规模极小时必须要直接给出解答而不再进行递归调用，因而每次递归调用都是有条件的（以规模未达到直接解答的大小为条件），无条件递归条用将会称为死循环而不能正常结束</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/07/python/02-Advanced/06-Python之路 - 递归/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/27/python/01-basic/06-Python之路- 列表/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/27/python/01-basic/06-Python之路- 列表/" itemprop="url">06.Python之路 - 列表</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-27T22:59:58+08:00">
+                2020-05-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/basic/" itemprop="url" rel="index">
+                    <span itemprop="name">basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/27/python/01-basic/06-Python之路- 列表/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/27/python/01-basic/06-Python之路- 列表/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-列表"><a href="#Python之路-列表" class="headerlink" title="Python之路 - 列表"></a>Python之路 - 列表</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>列表是我们以后最常用的数据类型之一 , 通过列表可以对数据实现最方便的存储、修改等操作</p>
+<p><strong>列表是可变的、有序的 </strong> , 基本操作有 : 创建、访问、切片、追加、插入、修改、删除、扩展、拷贝、排序、翻转、等</p>
+<p>列表相当于其他语言中的数组</p>
+<h2 id="创建-🍀"><a href="#创建-🍀" class="headerlink" title="创建  🍀"></a>创建  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个列表</span></span><br><span class="line">names = [<span class="string">"Alex"</span>,<span class="string">"Lyon"</span>,<span class="string">"Leon"</span>]</span><br><span class="line"><span class="comment"># 创建一个空列表</span></span><br><span class="line">names = []</span><br><span class="line"><span class="comment"># 也可通过list方法</span></span><br><span class="line">names = list()</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/27/python/01-basic/06-Python之路- 列表/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/27/python/01-basic/09-Python之路 - 字符编码/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/27/python/01-basic/09-Python之路 - 字符编码/" itemprop="url">09.Python之路 - 字符编码</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-27T22:59:58+08:00">
+                2020-05-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/basic/" itemprop="url" rel="index">
+                    <span itemprop="name">basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/27/python/01-basic/09-Python之路 - 字符编码/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/27/python/01-basic/09-Python之路 - 字符编码/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-字符编码"><a href="#Python之路-字符编码" class="headerlink" title="Python之路 - 字符编码"></a>Python之路 - 字符编码</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p><strong>字符编码</strong></p>
+<p>字符编码 (Character encoding) 也称字集码 , 它是一套<strong>法则</strong> , 使用该法则能够对自然语言的字符的一个集合 (如字母表或音节表) , 与其他东西的一个集合 (如号码或电脉冲) 进行配对 , 即在符号集合与数字系统之间建立对应关系</p>
+<p>再简单一点说其实就是一张具有对应关系的表格 , 如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+----+-----------+</span><br><span class="line">| id | character | </span><br><span class="line">+----+-----------+</span><br><span class="line">| 65 |     A     | </span><br><span class="line">| 66 |     B     | </span><br><span class="line">| 67 |     C     | </span><br><span class="line">+----+-----------+</span><br></pre></td></tr></table></figure>
+<p>如上表所示 , 这就是一套法则 , 使我们用数字成功的表示了字符</p>
+<blockquote>
+<p><em>为什么要一套这样的法则 ?</em></p>
+</blockquote>
+<p>众所周知 , 计算机只认识机器码 , 也就是一堆0101之类的二进制数字 , 计算机并不认识我们的 “A” , “B” ,”C” , 我们为了使其友好的显示 , 就需要一套这样的法则 , 来完成这些转换 , 于是两个名词诞生了</p>
+<p><strong>编码</strong> </p>
+<p>通俗的说 , 就是按照何种规则将字符存储在计算机中 . 比如 “A” 用65表示 , 也就是把字符”A”以二进制的方式存储在计算机中</p>
+<p><strong>解码</strong> </p>
+<p> 反之 , 将存储在计算机中的二进制数解析显示出来 , 这就是解码</p>
+<p>在Python中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''既然是对于字符,那么自然对应着Python中的字符串了'''</span></span><br><span class="line"><span class="string">'''Python中提供了两个函数来完成编码和解码'''</span></span><br><span class="line"><span class="comment"># 编码函数encode()</span></span><br><span class="line">encode()  </span><br><span class="line">character  →  byte</span><br><span class="line"><span class="comment"># 解码函数decode()</span></span><br><span class="line">byte  →  character</span><br></pre></td></tr></table></figure>
+<p><strong>PS : 必须采用相对应的法则 , 否则就会出错 , 也就是我们常说的乱码</strong></p>
+<p>最后还有一个名词 , 字符集</p>
+<p><strong>字符集</strong></p>
+<p>是一个系统支持的所有抽象字符的集合 , 字符是各种文字和符号的总称 , 包括各国家文字、标点符号、图形符号、数字等</p>
+<p>字符编码就是在字符集与数字系统之间建立的对应关系</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/27/python/01-basic/09-Python之路 - 字符编码/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/27/python/01-basic/03-Python之路-运算符/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/27/python/01-basic/03-Python之路-运算符/" itemprop="url">03.Python之路 - Python运算符</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-27T22:59:58+08:00">
+                2020-05-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/basic/" itemprop="url" rel="index">
+                    <span itemprop="name">basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/27/python/01-basic/03-Python之路-运算符/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/27/python/01-basic/03-Python之路-运算符/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Python运算符"><a href="#Python运算符" class="headerlink" title="Python运算符"></a>Python运算符</h2><h3 id="Python支持以下运算符"><a href="#Python支持以下运算符" class="headerlink" title="Python支持以下运算符"></a>Python支持以下运算符</h3><h3 id="算数运算符"><a href="#算数运算符" class="headerlink" title="算数运算符"></a>算数运算符</h3><p>以下假设变量： <strong>a=10，b=20</strong>：</p>
 <table>
 <thead>
 <tr>
-<th>w</th>
-<th>移动光标到下一个单词开头</th>
+<th>运算符</th>
+<th>描述</th>
+<th>实例</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>W</td>
-<td>移动光标到下一个单词开头，长跳．比如／etc/letsencryt 被认为是一个单词</td>
+<td>+</td>
+<td>加 - 两个对象相加</td>
+<td>a + b 输出结果 30</td>
 </tr>
 <tr>
-<td>e</td>
-<td>移动光标到下一个单词结尾</td>
+<td>-</td>
+<td>减 - 得到负数或是一个数减去另一个数</td>
+<td>a - b 输出结果 -10</td>
 </tr>
 <tr>
-<td>E</td>
-<td>移动光标到下一个单词结尾,长跳</td>
+<td>*</td>
+<td>乘 - 两个数相乘或是返回一个被重复若干次的字符串</td>
+<td>a * b 输出结果 200</td>
 </tr>
 <tr>
-<td>b</td>
-<td>移动光标到上一个单词</td>
+<td>/</td>
+<td>除 - x除以y</td>
+<td>b / a 输出结果 2</td>
 </tr>
 <tr>
-<td>B</td>
-<td>移动光标到上一个单词,长跳</td>
+<td>%</td>
+<td>取模 - 返回除法的余数</td>
+<td>b % a 输出结果 0</td>
 </tr>
 <tr>
-<td>nw</td>
-<td>n代表数字,比如移动到下5个单词的头部,5w</td>
-</tr>
-<tr>
-<td>ne</td>
-<td>n代表数字,比如移动到下5个单词的尾部,5e</td>
+<td>**</td>
+<td>幂 - 返回x的y次幂</td>
+<td>a**b 为10的20次方， 输出结果 100000000000000000000</td>
 </tr>
 </tbody>
 </table>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/21/Linux-Basic/文本处理/vim使用技巧/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/11/21/Linux-分布式&消息队列/kong/kong+casssandra集群环境部署/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/21/Linux-分布式&消息队列/kong/kong+casssandra集群环境部署/" itemprop="url">kong+casssandra集群环境部署</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-21T05:22:58+08:00">
-                2018-11-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/11/21/Linux-分布式&消息队列/kong/kong+casssandra集群环境部署/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/11/21/Linux-分布式&消息队列/kong/kong+casssandra集群环境部署/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="kong-casssandra集群环境部署"><a href="#kong-casssandra集群环境部署" class="headerlink" title="kong+casssandra集群环境部署"></a>kong+casssandra集群环境部署</h2><h3 id="kong简介"><a href="#kong简介" class="headerlink" title="kong简介"></a>kong简介</h3><p>Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和API之间的中间层，加上众多功能强大的插件，可以实现认证授权、访问控制等功能。并且提供易于使用的RESTful API来操作和配置系统。</p>
-<p>有关kong的详细介绍请参考官网.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/11/21/Linux-分布式&消息队列/kong/kong+casssandra集群环境部署/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/11/20/Linux-分布式&消息队列/kong/kong API网关介绍及API接口配置/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/20/Linux-分布式&消息队列/kong/kong API网关介绍及API接口配置/" itemprop="url">kong API网关介绍及API接口配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-20T12:59:58+08:00">
-                2018-11-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/11/20/Linux-分布式&消息队列/kong/kong API网关介绍及API接口配置/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/11/20/Linux-分布式&消息队列/kong/kong API网关介绍及API接口配置/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="kong-API网关介绍及API接口配置"><a href="#kong-API网关介绍及API接口配置" class="headerlink" title="kong API网关介绍及API接口配置"></a>kong API网关介绍及API接口配置</h2><p>上一篇讲解了kong+cassandra的部署安装方法.接下来讲解一下kong的API配置.官网上也有详细的api介绍.</p>
-<p>下面简单讲解一下kong的各个api组件:</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/11/20/Linux-分布式&消息队列/kong/kong API网关介绍及API接口配置/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/19/Linux-Basic/Skills/服务器中毒+挖矿+redis安全加固/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/19/Linux-Basic/Skills/服务器中毒+挖矿+redis安全加固/" itemprop="url">服务器中挖矿病毒</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-19T12:59:58+08:00">
-                2018-10-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/19/Linux-Basic/Skills/服务器中毒+挖矿+redis安全加固/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/19/Linux-Basic/Skills/服务器中毒+挖矿+redis安全加固/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="BETA服务器中毒案例"><a href="#BETA服务器中毒案例" class="headerlink" title="BETA服务器中毒案例"></a>BETA服务器中毒案例</h2><p>周末发现公司的BETA服务器占用CPU非常非常高.利用htop查看发现一个很奇怪的进程名:ZXGcBt</p>
-<p>第一直觉就是服务器可能遭受了攻击,被植入了可疑程序.</p>
-<hr>
-<h3 id="解决步骤"><a href="#解决步骤" class="headerlink" title="解决步骤:"></a>解决步骤:</h3>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/19/Linux-Basic/Skills/服务器中毒+挖矿+redis安全加固/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/Certbot管理Lets Encrypt证书的几个经验/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/Certbot管理Lets Encrypt证书的几个经验/" itemprop="url">Certbot管理Lets Encrypt证书的几个经验</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-15T17:59:58+08:00">
-                2018-10-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/SSL/" itemprop="url" rel="index">
-                    <span itemprop="name">SSL</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/15/Linux-Basic/SSL/Certbot管理Lets Encrypt证书的几个经验/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/Certbot管理Lets Encrypt证书的几个经验/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Certbot管理Lets-Encrypt证书的几个经验"><a href="#Certbot管理Lets-Encrypt证书的几个经验" class="headerlink" title="Certbot管理Lets Encrypt证书的几个经验"></a>Certbot管理Lets Encrypt证书的几个经验</h2><p>certbot提供了很多命令和插件申请,注销,续约letsencrypt的证书.使用非常方便.借鉴网上的一些小技巧,整理出了这篇文章.</p>
-<p>后续如果有更多教训或者经验技巧,还会更新此篇文章.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/Certbot管理Lets Encrypt证书的几个经验/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/" itemprop="url">gitlab自带nginx更新SSL证书</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-15T11:59:58+08:00">
-                2018-10-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/SSL/" itemprop="url" rel="index">
-                    <span itemprop="name">SSL</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="gitlab自带nginx更新SSL证书"><a href="#gitlab自带nginx更新SSL证书" class="headerlink" title="gitlab自带nginx更新SSL证书"></a>gitlab自带nginx更新SSL证书</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>由于letsencrypt证书有效期太短.gitlab不是很方便自动续约.所以在阿里云上购买证书,然后下载到到服务器.(由于gitlab底层是基于nginx,所以下载证书也是选择Nginx格式)</p>
-<hr>
-<p>找出gitlab证书存放位置:</p>
-<p>1.在gitlab配置文件下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:~# cd /etc/gitlab</span><br><span class="line">root@gitlab:/etc/gitlab# ls</span><br><span class="line">gitlab.rb  gitlab.rb.bak  gitlab.rb.bak2  gitlab-secrets.json  trusted-certs</span><br></pre></td></tr></table></figure>
-<p>2.打开gitlab.rb配置文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:/etc/gitlab# vim gitlab.rb</span><br><span class="line"></span><br><span class="line">#可以找到下列两行配置.这个就是gitlab的ssl证书存放路径</span><br><span class="line">nginx[&apos;ssl_certificate&apos;] = &quot;/etc/ssl/private/gitlab.pem&quot;</span><br><span class="line">nginx[&apos;ssl_certificate_key&apos;] = &quot;/etc/ssl/private/gitlab.key&quot;</span><br></pre></td></tr></table></figure>
-<p>在gitlab的nginx配置文件下也可以找到相关配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:/etc/gitlab# cd /var/opt/gitlab/nginx/conf/</span><br><span class="line">root@gitlab:/var/opt/gitlab/nginx/conf# ls</span><br><span class="line">gitlab-http.conf  gitlab-http.conf.bak  nginx.conf  nginx-status.conf</span><br><span class="line"></span><br><span class="line">#在gitlab-http.conf的nginx配置文件中也定义了ssl路径:</span><br><span class="line"></span><br><span class="line">root@gitlab:/var/opt/gitlab/nginx/conf# cat gitlab-http.conf | grep ssl_certificate</span><br><span class="line">  ssl_certificate /etc/ssl/private/gitlab.pem;</span><br><span class="line">  ssl_certificate_key /etc/ssl/private/gitlab.key;</span><br></pre></td></tr></table></figure>
-<p>3.将阿里云下载下来的证书上传到gitlab的/etc/ssl/private目录中</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/" itemprop="url">使用acme.sh申请https证书</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-15T11:59:58+08:00">
-                2018-10-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/SSL/" itemprop="url" rel="index">
-                    <span itemprop="name">SSL</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="使用acme-sh申请https证书"><a href="#使用acme-sh申请https证书" class="headerlink" title="使用acme.sh申请https证书"></a>使用acme.sh申请https证书</h3><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><strong>acme.sh</strong> 实现了 <code>acme</code> 协议, 可以从 letsencrypt 生成免费的证书.</p>
-<p>acme是一个shell脚本。安装使用都很方便。不依赖于python或官方的Let’s Encrypt客户端。<br>只需一个脚本即可自动颁发，续订和安装证书。 不需要root/sudoer访问权限。</p>
-<p>acme的github项目有详细的中文文档：<a href="https://github.com/Neilpang/acme.sh/wiki/%E8%AF%B4%E6%98%8E" target="_blank" rel="noopener">acme.sh</a></p>
-<hr>
-<h3 id="对比certbot工具"><a href="#对比certbot工具" class="headerlink" title="对比certbot工具"></a>对比certbot工具</h3><p>还有另外一个工具<strong>certbot-auto</strong>也可以申请letsencrypt免费证书。</p>
-<p>certbot工具需要安装一大堆系统库以及 Python 库，Python 的 pip 在国内还会有墙的问题…而且每次certbot工具自动更新版本的时候都会面临pip被墙的风险。所以很难使用。</p>
-<p>当然，<strong>acme.sh</strong>相比certbot更强大的地方还在于：</p>
-<p>1.acme支持dns认证方式</p>
-<p>2.acme带有自动更新dns记录，验证dns的脚本(需要dns服务商的api token)</p>
-<p>3.支持通配符证书的申请</p>
-<p>4.acme安装后就自动写入crontab记录，意味着只要证书申请后就自动更新，完全不需操心</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/使用acme.sh申请https证书/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="url">letsencrypt配置通配符域名证书</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-15T11:59:58+08:00">
-                2018-10-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/SSL/" itemprop="url" rel="index">
-                    <span itemprop="name">SSL</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="letsencrypt配置通配符域名证书"><a href="#letsencrypt配置通配符域名证书" class="headerlink" title="letsencrypt配置通配符域名证书"></a>letsencrypt配置通配符域名证书</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在今年稍早些的时候,letsencrypt终于开始免费支持通配符域名证书了.但是只支持一个层级的通配主机域名.</p>
-<p>比如我曾经踩过的坑:*.dev.xxx.com通配符域名证书并不能支持api.v3.dev.xxx.com这种三层子域名.</p>
-<p>如果需要为api.v3.dev.xxx.com申请通配符证书,则还需要申请*.v3.dev.xxx.com通配符证书</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#more" rel="contents">
+            <a class="btn" href="/2020/05/27/python/01-basic/03-Python之路-运算符/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2004,7 +2088,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2054,7 +2138,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">142</span>
+                  <span class="site-state-item-count">162</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2076,7 +2160,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">35</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

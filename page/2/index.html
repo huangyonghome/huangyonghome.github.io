@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/09-Python之路-tarfile&zipfile&shutil模块/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/03-Modules/09-Python之路-tarfile&zipfile&shutil模块/" itemprop="url">24.Python之路 - tarfile&zipfile&shutil模块</a></h1>
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/" itemprop="url">docker学习笔记---docker使用阿里云私有仓库</a></h1>
         
 
         <div class="post-meta">
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
               </time>
             
 
@@ -329,19 +329,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Modules/" itemprop="url" rel="index">
-                    <span itemprop="name">Modules</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
 
@@ -358,8 +347,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/03-Modules/09-Python之路-tarfile&zipfile&shutil模块/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/09-Python之路-tarfile&zipfile&shutil模块/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -388,17 +377,188 @@
 
       
         
-          <h1 id="Python之路-tarfile-amp-zipfile-amp-shutil模块"><a href="#Python之路-tarfile-amp-zipfile-amp-shutil模块" class="headerlink" title="Python之路 -  tarfile&amp;zipfile&amp;shutil模块"></a>Python之路 -  tarfile&amp;zipfile&amp;shutil模块</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍 🍀"></a>介绍 🍀</h2><p>tarfile和zipfile,shutil都是文件压缩,打包,解压的模块.其中shuttile还支持文件的拷贝,复制等功能</p>
-<h2 id="zipfile模块-🍀"><a href="#zipfile模块-🍀" class="headerlink" title="zipfile模块 🍀"></a>zipfile模块 🍀</h2><ul>
-<li>单个文件压缩</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import zipfile</span><br><span class="line">with zipfile.ZipFile(&apos;log.zip&apos;,&apos;w&apos;) as z:</span><br><span class="line">    z.write(&apos;sys.log&apos;)     #将文件sys.log添加到log.zip这个压缩包.下面2行代码功能一样</span><br><span class="line">    z.write(&apos;test.log&apos;)</span><br><span class="line">    z.write(&apos;advance.log&apos;)</span><br></pre></td></tr></table></figure>
+          <h3 id="docker使用阿里云私有仓库"><a href="#docker使用阿里云私有仓库" class="headerlink" title="docker使用阿里云私有仓库"></a>docker使用阿里云私有仓库</h3><p>注册阿里云镜像服务:</p>
+<p>以下是我的阿里云镜像仓库链接:<br><a href="https://cr.console.aliyun.com/cn-hangzhou/repositories" target="_blank" rel="noopener">https://cr.console.aliyun.com/cn-hangzhou/repositories</a></p>
+<p>一.使用阿里云镜像加速器<br><a href="https://cr.console.aliyun.com/cn-hangzhou/mirrors" target="_blank" rel="noopener">https://cr.console.aliyun.com/cn-hangzhou/mirrors</a></p>
+<p>镜像加速地址:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://0w5ygvsg.mirror.aliyuncs.com</span><br></pre></td></tr></table></figure>
+<p>如果是Centos系统,可以通过修改daemon配置文件/etc/docker/daemon.json来使用加速器:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&apos;EOF&apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://0w5ygvsg.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<hr>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker笔记—存储驱动篇/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/29/docker/docker笔记—存储驱动篇/" itemprop="url">docker学习笔记---Docker存储驱动篇</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/29/docker/docker笔记—存储驱动篇/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker笔记—存储驱动篇/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="docker笔记——存储驱动篇"><a href="#docker笔记——存储驱动篇" class="headerlink" title="docker笔记——存储驱动篇"></a>docker笔记——存储驱动篇</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>通过前一篇的镜像笔记,我们知道docker的镜像是只读的,而且通过同一个镜像启动的docker容器,他们共享同一份底层镜像文件.</p>
+<p>这里主要说一说.这些分层的多个只读Image镜像是如何在磁盘中存储的.</p>
+<hr>
+<h3 id="docker存储驱动"><a href="#docker存储驱动" class="headerlink" title="docker存储驱动"></a>docker存储驱动</h3><p>docker提供了多种存储驱动来实现不同的方式存储镜像，下面是常用的几种存储驱动：</p>
 <ul>
-<li>查看上面log.zip压缩包内的文件</li>
+<li>AUFS</li>
+<li>OverlayFS</li>
+<li>Devicemapper</li>
+<li>Btrfs</li>
+<li>ZFS</li>
 </ul>
+<p>下面说一说AUFS、OberlayFS及Devicemapper，更多的存储驱动说明可参考：<a href="http://dockone.io/article/1513" target="_blank" rel="noopener">http://dockone.io/article/1513</a></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/03-Modules/09-Python之路-tarfile&zipfile&shutil模块/#more" rel="contents">
+            <a class="btn" href="/2020/06/29/docker/docker笔记—存储驱动篇/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -453,7 +613,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -472,7 +632,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/" itemprop="url">25.Python之路 - 面向对象</a></h1>
+                <a class="post-title-link" href="/2020/06/26/Linux-Web/kong postgresql konga/" itemprop="url">kong+postgresql+konga集群环境部署</a></h1>
         
 
         <div class="post-meta">
@@ -484,7 +644,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
                 2020-06-26
               </time>
             
@@ -507,8 +667,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
+                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Web</span>
                   </a>
                 </span>
 
@@ -518,8 +678,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
+                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
+                    <span itemprop="name">kong</span>
                   </a>
                 </span>
 
@@ -536,8 +696,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/Linux-Web/kong postgresql konga/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/kong postgresql konga/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -566,1436 +726,1373 @@
 
       
         
-          <h1 id="Python之路-面向对象"><a href="#Python之路-面向对象" class="headerlink" title="Python之路 - 面向对象"></a>Python之路 - 面向对象</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>编程范式</p>
-<p>编程是程序员用 特定的语法 + 数据结构 + 算法组成的代码来告诉计算机如何执行任务的过程 , 而实现一个任务的方式有很多种不同的方式 ,  对这些不同的编程方式的特点进行归纳总结得出来的编程方式类别，即为编程范式</p>
+          <h2 id="kong-postgresql-konga集群环境部署"><a href="#kong-postgresql-konga集群环境部署" class="headerlink" title="kong+postgresql+konga集群环境部署"></a>kong+postgresql+konga集群环境部署</h2><h3 id="kong简介"><a href="#kong简介" class="headerlink" title="kong简介"></a>kong简介</h3><p>Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和API之间的中间层，加上众多功能强大的插件，可以实现认证授权、访问控制等功能。并且提供易于使用的RESTful API来操作和配置系统。</p>
+<p>有关kong的详细介绍请参考官网.</p>
+<p>–</p>
+<h3 id="postgreSQL简介"><a href="#postgreSQL简介" class="headerlink" title="postgreSQL简介"></a>postgreSQL简介</h3><p><a href="https://baike.baidu.com/item/PostgreSQL/530240" target="_blank" rel="noopener">PostgreSQL</a> 是一个免费的对象-关系数据库服务器(数据库管理系统)，它在灵活的 BSD-风格许可证下发行。它提供了相对其他开放源代码数据库系统(比如 MySQL 和 Firebird)，和专有系统(比如 Oracle、Sybase、IBM 的 DB2 和 Microsoft SQL Server)之外的另一种选择。</p>
+<p>–</p>
+<h3 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h3><ul>
+<li><strong>kong cluster</strong></li>
+</ul>
+<p>kong 集群并不意味着客户端请求将会负载均衡到kong集群中的每个节点上，kong集群并不是开箱即用，仍然需要在kong集群多节点上层搭建负载均衡，以便分发请求。 一个kong集群只是意味着集群内的节点，都共享同样的配置。</p>
+<p>有关Kong cluster集群的详细介绍请参考官网:<a href="https://docs.konghq.com/0.14.x/clustering/" target="_blank" rel="noopener">Kong cluser document</a></p>
+<p>为了提高冗余性和健壮性.我们对kong的每个环节都进行了冗余设计.一个基本的kong集群架构大概如下图所示:</p>
+<p><img src="https://img1.jesse.top/kong-flow.png" alt=""></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/Linux-Web/kong postgresql konga/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes volume存储卷/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes volume存储卷/" itemprop="url">kubernetes volume</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/kubernetes/kubernetes volume存储卷/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes volume存储卷/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="kubernetes-volume"><a href="#kubernetes-volume" class="headerlink" title="kubernetes volume"></a>kubernetes volume</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>在学习docker时,学习了如何将宿主机上的文件系统挂载到容器当中,实现持久化存储,以及多个容器共享同一个文件目录.</p>
+<p>在k8s中,我们也希望pod容器中的数据能够持久化存储.当一个容器因为故障或者其他原因需要删除时,我们希望新的容器能够在上一个容器结束的位置继续运行.</p>
+<p>但是和docker一样,容器默认情况下删除后,所有该容器产生的数据都会消失.并且,虽然容器和宿主机共享CPU,网络,内存等资源,但是并不会共享文件存储.甚至同一个Pod中每个容器都有自己独立的文件系统,彼此互相隔离.</p>
+<p>和docker容器一样,这就需要有一种存储卷能够挂载到Pod容器中,并脱离Pod的生命周期之外,将容器运行产生的数据保存在宿主机或者独立的外部存储卷中</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/kubernetes/kubernetes volume存储卷/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes headless Service/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes headless Service/" itemprop="url">kubernetes headless Service</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/kubernetes/kubernetes headless Service/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes headless Service/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <hr>
+<h3 id="kubernetes-headless-Service"><a href="#kubernetes-headless-Service" class="headerlink" title="kubernetes headless Service"></a>kubernetes headless Service</h3><p>​     我们以前学习过,Service是Kubernetes项目中用来将一组Pod暴露给外界访问的一种机制.外部客户端通过Service地址可以随机访问到某个具体的Pod</p>
+<p>​     之前学过几种Service类型,包括nodeport,loadbalancer等等.所有这类Service都有一个VIP(虚拟IP),访问Service VIP,Service会将请求转发到后端的Pod上,</p>
+<p>​     还有一种Service是Headless Service(无头服务),这类Service自身不需要VIP,当DNS解析该Service时,会解析出Service后端的Pod地址.这样设置的好处是Kubernetes项目为Pod分配唯一的”可解析身份”,只要知道一个pod的名字和对应的Headless Service名字,就可以通过这条DNS访问到后端的Pod</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/kubernetes/kubernetes headless Service/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/" itemprop="url">kubernetes API服务器权限(ServiceAccount && RBAC)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="kubernetes-API服务器权限-ServiceAccount-amp-amp-RBAC"><a href="#kubernetes-API服务器权限-ServiceAccount-amp-amp-RBAC" class="headerlink" title="kubernetes API服务器权限(ServiceAccount &amp;&amp; RBAC)"></a>kubernetes API服务器权限(ServiceAccount &amp;&amp; RBAC)</h2><h3 id="ServiceAccount介绍"><a href="#ServiceAccount介绍" class="headerlink" title="ServiceAccount介绍"></a>ServiceAccount介绍</h3><p>​        每个Pod都与一个ServiceAccount相关联,它代表了运行在pod中应用程序的身份证明.每个pod在启动的时候kubernetes会自动挂载ServiceAccount的TOKEN到pod容器的<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">​		ServiceAccount只不过是一种运行在pod中的应用程序和API服务器身份认证的一种方式.应用程序通过在请求中传递serviceaccount的token和API服务器通信</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 了解ServiceAccount资源</span><br><span class="line"></span><br><span class="line">​		ServiceAccount和pod,Secret,ConfigMap等一样,本身也是一种资源.他们作用在单独的命名空间.kubernetes为每个命名空间自动创建一个默认的ServiceAccount(名字是default),可以像查看其它资源一样使用```kubectl get sa```来查看ServiceAccount列表</span><br><span class="line"></span><br><span class="line">&lt;!--more--&gt;</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl get sa<br>NAME      SECRETS   AGE<br>default   1         51d<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* 同一个命名空间下的多个pod可以使用同一个ServiceAccount</span><br><span class="line">* pod只能使用同一个命名空间下的ServiceAccount</span><br><span class="line">* 如果在pod的manifest文件中没有显示的指定ServiceAccount名称.则默认使用default ServiceAccount</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 创建ServiceAccount</span><br><span class="line"></span><br><span class="line">​		为什么要去创建新的ServiceAccount,而不是所有pod都使用默认的ServiceAccount? 为了集群的安全性,尽量做到权限最小分配的原则,只对有需要的Pod配置有相应较高权限的ServiceAccount,而其他pod使用default默认ServiceAccount应该不允许他们检索或者修改部署在集群中的任何资源.</span><br><span class="line"></span><br><span class="line">​		下面实验一下如何创建其他ServiceAccount,并且分配给Pod</span><br><span class="line"></span><br><span class="line">* 创建ServiceAccount很简单,直接使用```kubectl create serviceaccount```命令</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl create serviceaccount foo<br>serviceaccount/foo created</p>
+<p>[root@k8s-master ~]# kubectl describe sa foo<br>Name:                foo<br>Namespace:           default<br>Labels:              <none><br>Annotations:         <none><br>Image pull secrets:  <none><br>Mountable secrets:   foo-token-ktjj5<br>Tokens:              foo-token-ktjj5<br>Events:              <none><br>[root@k8s-master ~]#<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">上面就创建了一个名为foo的serviceaccount.如果查看这个名为foo-token-ktjj5的TOKEN秘钥可以发现这个ServiceAccount也和default默认的ServiceAccount一样具有相同的条目(CA证书,命名空间,token),当然这2个token本身是不一样的</span><br></pre></td></tr></table></figure></none></none></none></none></p>
+<p>[root@k8s-master ~]# kubectl describe secret foo-token-ktjj5<br>Name:         foo-token-ktjj5<br>Namespace:    default<br>Labels:       <none><br>Annotations:  kubernetes.io/service-account.name: foo<br>              kubernetes.io/service-account.uid: 28cb7741-eaf3-46bb-bd58-3f1ddb748c2e</none></p>
+<p>Type:  kubernetes.io/service-account-token</p>
+<h1 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h1><p>ca.crt:     1025 bytes<br>namespace:  7 bytes<br>token:      eyJhbGciOiJSUzI1NiIsImtpZCI6InI3cE50azROV1pseDJqNmxVQTlSWjF6Vk9YVFFnamZEWFF5RG56YTJhaWMifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImZvby10b2tlbi1rdGpqNSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJmb28iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIyOGNiNzc0MS1lYWYzLTQ2YmItYmQ1OC0zZjFkZGI3NDhjMmUiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpmb28ifQ.KdfyYVkb7Ye_sV8yUWqU6I8fe8Pck7cyTDdwh08Y9w0f4cwJKqIwsuVn39VCpYIH3PaDsKoxBv7Bpahn6lfiP3MgA4zcWlX4vtBUxJCAt-GBXBTcHkqQ6BwtxFzkY4rgsXLd5HuqsrqrZbxrSM1zfNovPccRgklN3kbz0BuxTmKQ65E9DFhAt5kmzajO3qvAB_ymGeoJLMul1fZEqLnV48UEKN5KFAxVfwo0b4On2LcKOVkmG_P7yO7X6TsE6zEN03kvoxjOd0vnJrGUCT9fu0KlabRyDsyDWsua-Su2kv-gDg3O6zQxqDGgEwRxTb2-7Cbv6PaFbfCwSRnCC8Y6FA<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* 将ServiceAccount分配给pod</span><br><span class="line"></span><br><span class="line">将ServiceAccount赋值给Pod非常简单,进需要在pod的manifest文件中的spec字段下指定serviceAccountName即可.例如下面之前学习过的curl镜像和kubectl-proxy的ambassador镜像</span><br></pre></td></tr></table></figure></p>
+<p>apiVersion: v1<br>kind: Pod<br>metadata:<br>  name: curl-custome-sa<br>spec:</p>
+<p>  #指定pod使用哪个serviceaccount<br>  serviceAccountName: foo<br>  containers:</p>
+<pre><code>- name: main
+  image: tutum/curl
+  command: [&apos;sleep&apos;,&apos;9999999&apos;]
+- name: ambassador
+  image: luksa/kubectl-proxy:1.6.2
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; ServiceAccount必须在pod创建之前新建,后续不能被修改</span><br><span class="line"></span><br><span class="line">* 使用新创建的ServiceAccount访问API服务器.(通过ambassador容器)</span><br></pre></td></tr></table></figure>
+<p>[root@k8s-master ~]# kubectl exec -it curl-custome-sa -c main curl localhost:8001/api/v1/pods<br>{<br>  “kind”: “Status”,<br>  “apiVersion”: “v1”,<br>  “metadata”: {</p>
+<p>  },<br>  “status”: “Failure”,<br>  “message”: “pods is forbidden: User \”system:serviceaccount:default:foo\” cannot list resource \”pods\” in API group \”\” at the cluster scope”,<br>  “reason”: “Forbidden”,<br>  “details”: {<br>    “kind”: “pods”<br>  },<br>  “code”: 403<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">还是无法访问? 这是因为RBAC(基于角色权限控制)插件没有给这个ServiceAccount进行权限授权.</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 介绍RBAC</span><br><span class="line"></span><br><span class="line">​		在1.6版本开始,集群安全性显著提高.RBAC在集群中默认开启.RBAC会阻止未授权的用户查看和修改集群状态.API服务器对外暴露了REST接口,用户可以通过向服务器发送HTTP请求来执行动作.</span><br><span class="line"></span><br><span class="line">​		REST客户端发送GET,POST,PUT,DELETE和其他类型的HTTP请求到特定的URL资源.这些资源可以是kubernetes的Pod,Service,Secret等等.</span><br><span class="line"></span><br><span class="line">​		RBAC支持的支持一些动词(例如,get,create,update)等映射到客户端请求的HTTP方法(GET,POST,PUT).完整的映射方法如下表</span><br><span class="line"></span><br><span class="line">| HTTP方法 |        RBAC动词        |</span><br><span class="line">| :------: | :--------------------: |</span><br><span class="line">| GET,HEAD | get(或者watch用于监听) |</span><br><span class="line">|   POST   |         create         |</span><br><span class="line">|   PUT    |         update         |</span><br><span class="line">|  PATCH   |         patch          |</span><br><span class="line">|  DELETE  |         delete         |</span><br><span class="line"></span><br><span class="line">​		除了可以对全部资源类型应用安装权限,RBAC规则还可以引用于特定的资源实例,以及非资源URL路径.(并不是API服务器对外暴露的每个路径都映射到一个资源),例如/api路径,/healthz健康路径</span><br><span class="line"></span><br><span class="line">​		RBAC授权插件将用户角色作为决定用户能否执行操作的关键因素主体.(可以是一个人,一个ServiceAccount,或者一组人,一组ServiceAccount).一个用户可以有多个角色.</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 介绍RBAC资源</span><br><span class="line"></span><br><span class="line">RBAC授权规则通过四种资源来进行配置.可以分为两个组:</span><br><span class="line"></span><br><span class="line">* Role(角色)和ClusterRole(集群角色).他们指定了在资源上可以执行哪些动作</span><br><span class="line">* RoleBinding(角色绑定)和ClusterRoleBinding.(集群角色绑定).他们将上述角色绑定到特定的用户,组或者ServiceAccount上</span><br><span class="line"></span><br><span class="line">&gt; 角色定义了可以有什么访问权限,而角色绑定决定了谁可以做这些操作</span><br><span class="line"></span><br><span class="line">角色和集群角色,或者角色绑定和集群角色绑定之间的区别在于角色和角色绑定是命名空间资源.而集群角色和集群角色绑定是集群级别的资源(独立资源,不属于任何命名空间).</span><br><span class="line"></span><br><span class="line">* 单个命名空间可以创建多个角色,以及多个角色绑定</span><br><span class="line">* 尽管角色绑定是在命名空间下的.但是也可以引用其他命名空间下的集群角色.</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 演示RBAC的实践</span><br><span class="line"></span><br><span class="line">* ##### 创建2个命名空间,然后在2个命名空间下运行```kubectl-proxy``` pod.</span><br><span class="line"></span><br><span class="line">下面这个配置创建了```foo```,```bar```这2个名称空间.以及在每个名称空间下创建了一个```kubectl-proxy```的test容器</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">[root@k8s-master ~]# kubectl create ns foo</span><br><span class="line">namespace/foo created</span><br><span class="line">[root@k8s-master ~]# kubectl create ns bar</span><br><span class="line">namespace/bar created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]# kubectl run test --image=luksa/kubectl-proxy -n foo</span><br><span class="line">kubectl run --generator=deployment/apps.v1 is DEPRECATED and will be removed in a future version. Use kubectl run --generator=run-pod/v1 or kubectl create instead.</span><br><span class="line">deployment.apps/test created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]# kubectl run test --image=luksa/kubectl-proxy -n bar</span><br><span class="line">kubectl run --generator=deployment/apps.v1 is DEPRECATED and will be removed in a future version. Use kubectl run --generator=run-pod/v1 or kubectl create instead.</span><br><span class="line">deployment.apps/test created</span><br></pre></td></tr></table></figure></p>
+<p>列出各名称空间下的pod</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># kubectl get po -n foo</span></span><br><span class="line">NAME                    READY   STATUS    RESTARTS   AGE</span><br><span class="line"><span class="built_in">test</span>-7b4bb6b9ff-qpppf   1/1     Running   0          28m</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment"># kubectl get po -n bar</span></span><br><span class="line">NAME                    READY   STATUS    RESTARTS   AGE</span><br><span class="line"><span class="built_in">test</span>-7b4bb6b9ff-jl6v5   1/1     Running   0          42m</span><br></pre></td></tr></table></figure>
+<p>此时由于还没有授权,进入pod容器内部,对API服务器发起http访问请求时.API服务器不允许Pod访问services服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@k8s-master ~]# kubectl exec -it test-7b4bb6b9ff-qpppf -n foo sh</span><br><span class="line"></span><br><span class="line">/ # curl localhost:8001/api/v1/namespaces/foo/services</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;Status&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;status&quot;: &quot;Failure&quot;,</span><br><span class="line">  &quot;message&quot;: &quot;services is forbidden: User \&quot;system:serviceaccount:foo:default\&quot; cannot list resource \&quot;services\&quot; in API group \&quot;\&quot; in the namespace \&quot;foo\&quot;&quot;,</span><br><span class="line">  &quot;reason&quot;: &quot;Forbidden&quot;,</span><br><span class="line">  &quot;details&quot;: &#123;</span><br><span class="line">    &quot;kind&quot;: &quot;services&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;code&quot;: 403</span><br><span class="line">&#125;/ #</span><br></pre></td></tr></table></figure>
+<hr>
 <ul>
-<li>面向过程编程  Procedural Programming</li>
+<li><h5 id="使用Role和RoleBinding"><a href="#使用Role和RoleBinding" class="headerlink" title="使用Role和RoleBinding"></a>使用Role和RoleBinding</h5><h5 id="创建Role"><a href="#创建Role" class="headerlink" title="创建Role"></a>创建Role</h5><p>Role资源定义了哪些操作可以在哪些资源上执行.下面的配置文件定义了一个Role.允许用户获取并列出foo命名空间中的服务</p>
+</li>
 </ul>
-<p>面向过程编程就是程序从上到下一步步执行 , 基本设计思路就是程序一开始是要着手解决一个大的问题 , 然后把一个大问题分解成很多个小问题或子过程 , 这些子过程再执行的过程再继续分解直到小问题足够简单到可以在一个小步骤范围内解决</p>
-<p>在Python中 , 我们通过把大段代码拆成函数 , 通过一层一层的函数调用 , 就可以把复杂任务分解成简单的任务 , 这种分解可以称之为面向过程的程序设计 . 函数就是面向过程的程序设计的基本单元</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: Role</span><br><span class="line">metadata:</span><br><span class="line">  #该role所在的命名空间,如果没有填写,则此role应用在默认的命名空间</span><br><span class="line">  namespace: foo</span><br><span class="line">  name: service-reader</span><br><span class="line">#以下是此role定义的规则</span><br><span class="line">rules:</span><br><span class="line">    #Service是核心apiGroup的资源,所以没有apiGroup名,就是&quot;&quot;空</span><br><span class="line">  - apiGroups: [&quot;&quot;]</span><br><span class="line">    #该Role角色授权的规则,允许get,list访问权限</span><br><span class="line">    verbs: [&quot;get&quot;,&quot;list&quot;]</span><br><span class="line">   #这个规则和服务有关,(必须使用复数)</span><br><span class="line">    resources: [&quot;services&quot;]</span><br><span class="line">~</span><br></pre></td></tr></table></figure>
+<p>Role配置文件中定义了以下信息:</p>
 <ul>
-<li>函数式编程  Functional Programming</li>
+<li>Role所处的名称空间</li>
+<li>Role角色名</li>
+<li>verbs: 角色允许的访问权限</li>
+<li>resources: 角色允许访问的资源</li>
 </ul>
-<p>函数式编程就是一种抽象程度很高的编程范式 , 纯粹的函数式编程语言编写的函数没有变量 , 函数式编程的一个特点就是 , 允许把函数本身作为参数传入另一个函数 , 还允许返回一个函数  , Python对函数式编程提供部分支持 . 由于Python允许使用变量 , 因此 , Python不是纯函数式编程语言</p>
+<p>创建role</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># kubectl create -f serviceaccount-service-reader.yaml</span></span><br><span class="line">role.rbac.authorization.k8s.io/service-reader created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment"># kubectl get role -n foo</span></span><br><span class="line">NAME             AGE</span><br><span class="line">service-reader   6m18s</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment"># kubectl describe role -n foo service-reader</span></span><br><span class="line">Name:         service-reader</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  &lt;none&gt;</span><br><span class="line">PolicyRule:</span><br><span class="line">  Resources  Non-Resource URLs  Resource Names  Verbs</span><br><span class="line">  ---------  -----------------  --------------  -----</span><br><span class="line">  services   []                 []              [get list]</span><br><span class="line">[root@k8s-master ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
 <ul>
-<li>面向对象编程  Object Oriented Programming</li>
+<li><h5 id="将Role角色绑定到ServiceAccount"><a href="#将Role角色绑定到ServiceAccount" class="headerlink" title="将Role角色绑定到ServiceAccount"></a>将Role角色绑定到ServiceAccount</h5><p>​      Role角色定义了哪些操作可以执行,但是没有指定谁拥有该角色.要做到这一点,需要将角色绑定到一个主体上.它可以是一个usr(用户),或者一个ServiceAccount.或者一个组.</p>
+<p>​        通过创建一个RoleBinding资源来实现将角色绑定到主体.使用<figure class="highlight plain"><figcaption><span>create rolebinding```.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">完整格式是```kubectl create rolebinding 绑定名 --role=角色名 --serviceaccount=命名空间:ServiceAccount名 -n 命名空间```.下面是具体的例子实现</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">[root@k8s-master ~]# kubectl create rolebinding test --role=service-reader --serviceaccount=foo:default -n foo</span><br><span class="line">rolebinding.rbac.authorization.k8s.io/test created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]# kubectl get rolebinding test -n foo  -o yaml</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: RoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  creationTimestamp: &quot;2020-05-05T09:45:58Z&quot;</span><br><span class="line">  name: test</span><br><span class="line">  namespace: foo</span><br><span class="line">  resourceVersion: &quot;10719596&quot;</span><br><span class="line">  selfLink: /apis/rbac.authorization.k8s.io/v1/namespaces/foo/rolebindings/test</span><br><span class="line">  uid: a400ece9-ceb7-4a57-8687-f385a69b9190</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: Role</span><br><span class="line">  name: service-reader</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: default</span><br><span class="line">  namespace: foo</span><br></pre></td></tr></table></figure></p>
+<p>​        在上面的例子中创建了一个test的rolebinding的角色绑定资源.将<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">​		通过yaml文件显示,RoleBinding角色绑定引用了单一的角色(从```roleRef```字段可以看到引用的Role角色信息).RoleBinding可以将单个角色绑定到多个主体.</span><br><span class="line"></span><br><span class="line">​		因为这个RoleBinding将service-reader这个Role角色绑定到了foo命名空间下的ServiceAccount下.所以现在foo下的pod可以访问集群的Service资源了</span><br></pre></td></tr></table></figure></p>
+<p>#进入foo命名空间下的Pod容器内部,通过API服务器访问services<br>/ # curl localhost:8001/api/v1/namespaces/foo/services<br>{<br>  “kind”: “ServiceList”,<br>  “apiVersion”: “v1”,<br>  “metadata”: {</p>
+<pre><code>&quot;selfLink&quot;: &quot;/api/v1/namespaces/foo/services&quot;,
+&quot;resourceVersion&quot;: &quot;10720460&quot;
+</code></pre><p>  },<br>  “items”: []  #items列表为空很正常,因为foo名称空间下没有任何Serivce资源<br>}/ #</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* ##### 在RoleBinding角色绑定中使用其他名称空间的ServiceAccount</span><br><span class="line"></span><br><span class="line">  ​	刚才在foo的名称空间下创建了Role和RoleBinding.并且foo下的pod可以正常通过API服务器访问Service资源了.但是很显然bar名称空间下pod没有任何访问权限.</span><br><span class="line"></span><br><span class="line">  ​	可以修改foo名称空间中的RoleBinding,并添加另一个pod的ServiceAccount.即使这个ServiceAccount在另一个不同的名称空间中.</span><br><span class="line"></span><br><span class="line">  ​		修改RoleBinding资源名为test的配置文件</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
-<p>面向对象编程是利用”类”和”对象”来创建各种模型来实现对真实世界的描述 , 使用面向对象编程的原因一方面是因为它可以使程序的维护和扩展变得更简单 , 并且可以大大提高程序开发效率 , 另外 , 基于面向对象的程序可以使它人更加容易理解你的代码逻辑 , 从而使团队开发变得更从容</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/" itemprop="url">22.Python之路 - logging日志模块</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Modules/" itemprop="url" rel="index">
-                    <span itemprop="name">Modules</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-logging日志模块"><a href="#Python之路-logging日志模块" class="headerlink" title="Python之路 -  logging日志模块"></a>Python之路 -  logging日志模块</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍 🍀"></a>介绍 🍀</h2><p>logging模块是Python内置的标准模块，主要用于输出运行日志，可以设置输出日志的等级、日志保存路径、日志文件回滚等；相比print，具备如下优点：</p>
-<p>可以通过设置不同的日志等级，在release版本中只输出重要信息，而不必显示大量的调试信息；</p>
-<p>print将所有信息都输出到标准输出中，严重影响开发者从标准输出中查看其它数据；logging则可以由开发者决定将信息输出到什么地方，以及怎么输出。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/" itemprop="url">23.Python之路 - hashlib加密</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Modules/" itemprop="url" rel="index">
-                    <span itemprop="name">Modules</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-hashlib加密"><a href="#Python之路-hashlib加密" class="headerlink" title="Python之路 - hashlib加密"></a>Python之路 - hashlib加密</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍 🍀"></a>介绍 🍀</h2><p>此模块有人称为摘要算法，也叫做加密算法，或者是哈希算法，散列算法等等，这么多title不用大家记，那么有同学就问他到底是干啥的？ 简单来说就是做加密和校验使用，它的工作原理给大家简单描述一下：它通过一个函数，把任意长度的数据按照一定规则转换为一个固定长度的数据串（通常用16进制的字符串表示）。</p>
-<h4 id="hashlib的特征以及使用要点："><a href="#hashlib的特征以及使用要点：" class="headerlink" title="hashlib的特征以及使用要点："></a>hashlib的特征以及使用要点：</h4><p>1.bytes类型数据 —&gt; 通过hashlib算法 —&gt; 固定长度的字符串</p>
-<p>2.不同的bytes类型数据转化成的结果一定不同。</p>
-<p>3.相同的bytes类型数据转化成的结果一定相同。</p>
-<p>4.此转化过程不可逆。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/" itemprop="url">39.Python之路 - Socketserver实现多并发</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Network/" itemprop="url" rel="index">
-                    <span itemprop="name">Network</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-Socketserver实现多并发"><a href="#Python之路-Socketserver实现多并发" class="headerlink" title="Python之路 - Socketserver实现多并发"></a>Python之路 - Socketserver实现多并发</h1><h2 id="阅读指引-🍀"><a href="#阅读指引-🍀" class="headerlink" title="阅读指引  🍀"></a>阅读指引  🍀</h2><p>在上面的整理篇章中 , 简单的网络编程基本已经会了 , 一个TCP , 一个UDP , 然后就是粘包问题</p>
-<p>但是在上述中有一个问题 , 在现实生活中 , 一个服务端肯定常常需要同时服务好几个客户端 , 而上述篇章中并没有实现一对多同时进行的情况 , TCP中只能等前一个链接断开后续的才能连上 , 没连上就一直等 ; UDP则是接一次发一次 , 并不能同时接两次发两次 . 为了处理这个问题 , 即实现并发 (后续文章详细讲解) , Python中有一个socketserver模块可以满足我们的要求</p>
-<h2 id="socketserver-🍀"><a href="#socketserver-🍀" class="headerlink" title="socketserver  🍀"></a>socketserver  🍀</h2><p>Python提供了两个级别访问的网络服务:</p>
-<ol>
-<li>低级别的网络服务支持基本的socket , 它提供了标准的BSD Socket API , 可以访问底层操作系统Socket接口的全部方法</li>
-<li>高级别的网络服务模块socketserver , 它提供了服务器中心类 , 可以简化网络服务器的开发</li>
-</ol>
-<p>socket就不用说了 , now socketserver</p>
-<p>我们知道基于TCP的套接字 , 关键就是两个循环 , 一个链接循环(多人) , 一个通信循环(多消息)</p>
-<p>在socketserver模块中分为两大类 : server类 (解决链接问题) 和request类 (解决通信问题) </p>
-<p>如果想进一步了解 , 可以看看官方文档 , &lt; <a href="https://docs.python.org/3/library/socketserver.html?highlight=socketserver#module-socketserver" target="_blank" rel="noopener">socketserver官方文档 </a>&gt;</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/02-Python之路 - 面向对象之继承/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/02-Python之路 - 面向对象之继承/" itemprop="url">26.Python之路 - 面向对象之继承</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/02-Python之路 - 面向对象之继承/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/02-Python之路 - 面向对象之继承/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-面向对象之继承"><a href="#Python之路-面向对象之继承" class="headerlink" title="Python之路 - 面向对象之继承"></a>Python之路 - 面向对象之继承</h1><h2 id="抽象与继承-🍀"><a href="#抽象与继承-🍀" class="headerlink" title="抽象与继承  🍀"></a>抽象与继承  🍀</h2><p><strong>抽象</strong> </p>
+<p>[root@k8s-master ~]# kubectl edit rolebinding test -n foo<br>rolebinding.rbac.authorization.k8s.io/test edited</p>
+<p>#在配置文件中最后新增一个subjects配置.引用来自bar名称空间中的default ServiceAccount<br>apiVersion: rbac.authorization.k8s.io/v1<br>kind: RoleBinding<br>metadata:<br>  creationTimestamp: “2020-05-05T09:45:58Z”<br>  name: test<br>  namespace: foo<br>  resourceVersion: “10719596”<br>  selfLink: /apis/rbac.authorization.k8s.io/v1/namespaces/foo/rolebindings/test<br>  uid: a400ece9-ceb7-4a57-8687-f385a69b9190<br>roleRef:<br>  apiGroup: rbac.authorization.k8s.io<br>  kind: Role<br>  name: service-reader<br>subjects:</p>
+<ul>
+<li>kind: ServiceAccount<br>name: default<br>namespace: foo</li>
+<li>kind: ServiceAccount<br>name: default<br>namespace: bar<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">此时,bar名称空间下的Pod可以访问foo名称空间下的Service资源(但是仍然不能访问bar自己名称空间下的资源)</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">/ # curl localhost:8001/api/v1/namespaces/foo/services</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;ServiceList&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line">    &quot;selfLink&quot;: &quot;/api/v1/namespaces/foo/services&quot;,</span><br><span class="line">    &quot;resourceVersion&quot;: &quot;10722489&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;items&quot;: []</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">/ # curl localhost:8001/api/v1/namespaces/bar/services</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;Status&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;status&quot;: &quot;Failure&quot;,</span><br><span class="line">  &quot;message&quot;: &quot;services is forbidden: User \&quot;system:serviceaccount:bar:default\&quot; cannot list resource \&quot;services\&quot; in API group \&quot;\&quot; in the namespace \&quot;bar\&quot;&quot;,</span><br><span class="line">  &quot;reason&quot;: &quot;Forbidden&quot;,</span><br><span class="line">  &quot;details&quot;: &#123;</span><br><span class="line">    &quot;kind&quot;: &quot;services&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;code&quot;: 403</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="ClusterRole和ClusterRoleBinding"><a href="#ClusterRole和ClusterRoleBinding" class="headerlink" title="ClusterRole和ClusterRoleBinding"></a>ClusterRole和ClusterRoleBinding</h3><p>​    Role和RoleBinding都是名称空间的资源,他们属于一个单一的名称空间资源上.但是如上面那个例子,RoleBinding可以引用来自其他名称空间中的ServiceAccount.</p>
+<p>​    除了这些名称空间里的资源,还存在2个集群级别的RBAC资源:<strong>ClusterRole</strong>和<strong>ClusterRoleBinding</strong>.之所以存在集群级别的 资源是因为常规的<strong>Role</strong>和<strong>RoleBinding</strong>只允许访问和角色在同一个名称空间中的资源.如果希望允许不同名称空间下的Pod可以互相访问资源,则需要在每个名称空间中创建一个相同的<strong>Role</strong>和<strong>RoleBinding</strong>.</p>
+<p>​    另外,一些特定的资源完全不在任何名称空间中(例如.Node,PV,namespace等等).我们也提过API服务器对外暴露的一些不表示资源的URL路径(例如/healthz).常规<strong>Role</strong>和<strong>RoleBinding</strong>不能对这些类型的URL进行授权.但是<strong>ClusterRole</strong>可以.</p>
+<h5 id="创建ClusterRole"><a href="#创建ClusterRole" class="headerlink" title="创建ClusterRole"></a>创建ClusterRole</h5><p>命令格式和Role类似:<figure class="highlight plain"><figcaption><span>create clusterrole 名字```.下面这个例子创建一个pv-reader的集群角色,允许只读访问persistentvolumes资源</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```bash</span><br><span class="line">[root@k8s-master ~]# kubectl create clusterrole pv-reader --verb=get,list --resource=persistentvolumes</span><br><span class="line">clusterrole.rbac.authorization.k8s.io/pv-reader created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]# kubectl get clusterrole pv-reader -o yaml</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: ClusterRole</span><br><span class="line">metadata:</span><br><span class="line">  creationTimestamp: &quot;2020-05-05T10:26:01Z&quot;</span><br><span class="line">  name: pv-reader</span><br><span class="line">  resourceVersion: &quot;10725342&quot;</span><br><span class="line">  selfLink: /apis/rbac.authorization.k8s.io/v1/clusterroles/pv-reader</span><br><span class="line">  uid: 2c6d3083-3385-46b3-9ea6-b479f57e7db5</span><br><span class="line">rules:</span><br><span class="line">- apiGroups:</span><br><span class="line">  - &quot;&quot;</span><br><span class="line">  resources:</span><br><span class="line">  - persistentvolumes</span><br><span class="line">  verbs:</span><br><span class="line">  - get</span><br><span class="line">  - list</span><br><span class="line">[root@k8s-master ~]#</span><br></pre></td></tr></table></figure></p>
+<h5 id="创建ClusterRoleBinding"><a href="#创建ClusterRoleBinding" class="headerlink" title="创建ClusterRoleBinding"></a>创建ClusterRoleBinding</h5><p>命令和RoleBinding使用方法类似: <figure class="highlight plain"><figcaption><span>create clusterrolebind```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">下面的命令创建了个一个pv-test的```ClusterRoleBinding```集群角色绑定对线,指定的角色是```pv-reader```,分配给的ServiceAccount是```foo```名称空间下的default默认ServiceAccount</span><br></pre></td></tr></table></figure></p>
+<p>[root@k8s-master ~]# kubectl create clusterrolebinding pv-test –clusterrole=pv-reader –serviceaccount=foo:default<br>clusterrolebinding.rbac.authorization.k8s.io/pv-test created<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">现在foo名称空间下的Pod就可以访问集群下的persistentvolume(PV)资源了</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">/ # curl localhost:8001/api/v1/persistentvolumes</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;PersistentVolumeList&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line">    &quot;selfLink&quot;: &quot;/api/v1/persistentvolumes&quot;,</span><br><span class="line">    &quot;resourceVersion&quot;: &quot;10858720&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;items&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;metadata&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;pv-1&quot;,</span><br><span class="line">        &quot;selfLink&quot;: &quot;/api/v1/persistentvolumes/pv-1&quot;,</span><br><span class="line">        &quot;uid&quot;: &quot;544a9c07-1c41-41c5-8ed4-da41b4d11cf5&quot;,</span><br><span class="line">        &quot;resourceVersion&quot;: &quot;10245103&quot;,</span><br><span class="line">        &quot;creationTimestamp&quot;: &quot;2020-05-02T02:54:43Z&quot;,</span><br><span class="line">        .......</span><br></pre></td></tr></table></figure></p>
 <blockquote>
-<p>抽象是从众多的事物中抽取出共同的、本质性的特征，而舍弃其非本质的特征</p>
+<p>由于指定了绑定到foo名称空间下的ServiceAccount.所以显而易见,bar名称空间下的pod没有权限访问perssitentvolumes资源</p>
 </blockquote>
-<p>比如 🍎 , 🍌 , 🍇 ,  等 , 它们共同的特性就是水果 , 我们得出水果这个概念的过程就是一个抽象的过程 , 抽象能使复杂度降低 , 好让人们能够以宏观的角度来了解许多特定的事态</p>
-<p>有抽象就会有具体 , 我们会用抽象的对象来表示一类事物 , 而用具体的对象表示某个事物 , 比如苹果 , 香蕉 , 葡萄都是具体的对象 , 水果则是抽象的对象</p>
-<p><strong>继承</strong> </p>
+<hr>
+<h3 id="ClusterRole授权访问指定命名空间中的资源"><a href="#ClusterRole授权访问指定命名空间中的资源" class="headerlink" title="ClusterRole授权访问指定命名空间中的资源"></a>ClusterRole授权访问指定命名空间中的资源</h3><p><strong>ClusterRole</strong>不是必须一直和集群级别的<strong>ClusterRoleBinding</strong>绑定使用.他们也可以和常规的<strong>RoleBinding</strong>进行捆绑.</p>
+<p>在kubernetes中,有很多系统预定义的RBAC角色资源.通过<figure class="highlight plain"><figcaption><span>get```命令就可以看到系统预定义的角色.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>kubectl get role -n kube-system<br>kubectl get clusterrole<br>kubectl get rolebinding -n kube-system<br>kubectl get clusterrolebinding<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">下面是一个系统预定义的名为view的集群角色</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">[root@k8s-master ~]# kubectl get clusterrole view -o yaml</span><br><span class="line"></span><br><span class="line">  name: view</span><br><span class="line">  resourceVersion: &quot;413&quot;</span><br><span class="line">  selfLink: /apis/rbac.authorization.k8s.io/v1/clusterroles/view</span><br><span class="line">  uid: 0aa05d0e-69b3-45df-8f92-be922386dbfe</span><br><span class="line">rules:</span><br><span class="line">- apiGroups:</span><br><span class="line">  - &quot;&quot;</span><br><span class="line">  resources:</span><br><span class="line">  - configmaps</span><br><span class="line">  - endpoints</span><br><span class="line">  - persistentvolumeclaims</span><br><span class="line">  - persistentvolumeclaims/status</span><br><span class="line">  - pods</span><br><span class="line">  - replicationcontrollers</span><br><span class="line">  - replicationcontrollers/scale</span><br><span class="line">  - serviceaccounts</span><br><span class="line">  - services</span><br><span class="line">  - services/status</span><br><span class="line">  verbs:</span><br><span class="line">  - get</span><br><span class="line">  - list</span><br><span class="line">  - watch</span><br><span class="line">- apiGroups:</span><br><span class="line">  - &quot;&quot;</span><br><span class="line">  .......</span><br></pre></td></tr></table></figure></p>
+<p>​        这个ClusterRole又很多规则,允许只读(get,list,watch)访问各种资源.这些资源都是有名称空间的.这个名为View的ClusterRole的作用取决于它是和<strong>ClusterRoleBinding</strong>绑定还是和<strong>RoleBinding</strong>绑定.</p>
+<ul>
+<li><p>如果创建了一个<strong>ClusterRoleBinding</strong>,并且引用了View这个<strong>ClusterRole</strong>.那么绑定的主体可以在所有名称空间中查看指定资源</p>
+</li>
+<li><p>如果创建的是一个<strong>RoleBinding</strong>,并且引用了View这个<strong>ClusterRole</strong>,那么在绑定中列出的主体只能查看在RoleBinding名称空间中的资源.</p>
+</li>
+</ul>
+<p>下面观察一下一个ClusterRole绑定到<strong>ClusterRoleBinding</strong>和<strong>RoleBinding</strong>的不同效果</p>
+<p>在实验之前,确认一下默认情况下foo名称空间下的pod无论是访问集群下的pod还是名称空间下的pod都没有权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">/ <span class="comment"># curl localhost:8001/api/v1/pods</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"kind"</span>: <span class="string">"Status"</span>,</span><br><span class="line">  <span class="string">"apiVersion"</span>: <span class="string">"v1"</span>,</span><br><span class="line">  <span class="string">"metadata"</span>: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"Failure"</span>,</span><br><span class="line">  <span class="string">"message"</span>: <span class="string">"pods is forbidden: User \"system:serviceaccount:foo:default\" cannot list resource \"pods\" in API group \"\" at the cluster scope"</span>,</span><br><span class="line">  <span class="string">"reason"</span>: <span class="string">"Forbidden"</span>,</span><br><span class="line">  <span class="string">"details"</span>: &#123;</span><br><span class="line">    <span class="string">"kind"</span>: <span class="string">"pods"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"code"</span>: 403</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">/ <span class="comment"># curl localhost:8001/api/v1/namespaces/foo/pods</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"kind"</span>: <span class="string">"Status"</span>,</span><br><span class="line">  <span class="string">"apiVersion"</span>: <span class="string">"v1"</span>,</span><br><span class="line">  <span class="string">"metadata"</span>: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"Failure"</span>,</span><br><span class="line">  <span class="string">"message"</span>: <span class="string">"pods is forbidden: User \"system:serviceaccount:foo:default\" cannot list resource \"pods\" in API group \"\" in the namespace \"foo\""</span>,</span><br><span class="line">  <span class="string">"reason"</span>: <span class="string">"Forbidden"</span>,</span><br><span class="line">  <span class="string">"details"</span>: &#123;</span><br><span class="line">    <span class="string">"kind"</span>: <span class="string">"pods"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"code"</span>: 403</span><br></pre></td></tr></table></figure>
+<h4 id="1-ClusterRole绑定到ClusterRoleBinding"><a href="#1-ClusterRole绑定到ClusterRoleBinding" class="headerlink" title="1.ClusterRole绑定到ClusterRoleBinding"></a>1.ClusterRole绑定到ClusterRoleBinding</h4><p>下面的命令将view这个ClusterRole绑定到foo名称空间下的ServiceAccount</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl create clusterrolebinding view-test --clusterrole=view --serviceaccount=foo:default</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/view-test created</span><br></pre></td></tr></table></figure>
+<p>现在pod能列出foo名称空间下的Pod了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/namespaces/foo/pods</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;PodList&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line">    &quot;selfLink&quot;: &quot;/api/v1/namespaces/foo/pods&quot;,</span><br><span class="line">    &quot;resourceVersion&quot;: &quot;10865044&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;items&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;metadata&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;test-7b4bb6b9ff-qpppf&quot;,</span><br></pre></td></tr></table></figure>
+<p>而且也可以列出bar名称空间下的Pod了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/namespaces/bar/pods</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;PodList&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line">    &quot;selfLink&quot;: &quot;/api/v1/namespaces/bar/pods&quot;,</span><br><span class="line">    &quot;resourceVersion&quot;: &quot;10865200&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;items&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;metadata&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;test-7b4bb6b9ff-jl6v5&quot;</span><br></pre></td></tr></table></figure>
+<p>还可以使用/api/v1/pods的URL路径来检索所有名称空间中的pod</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/pods | more</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;PodList&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line">    &quot;selfLink&quot;: &quot;/api/v1/pods&quot;,</span><br><span class="line">    &quot;resourceVersion&quot;: &quot;10872966&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;items&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;metadata&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;test-7b4bb6b9ff-jl6v5&quot;,</span><br><span class="line">        &quot;generateName&quot;: &quot;test-7b4bb6b9ff-&quot;,</span><br><span class="line">        &quot;namespace&quot;: &quot;bar&quot;,</span><br><span class="line">        ......</span><br></pre></td></tr></table></figure>
+<p><strong>总结:</strong> 正如预期的那样.将ClusterRole绑定到ClusterRoleBinding.便可以获取整个集群中(包括所有名称空间)下的所有pod的列表.</p>
+<hr>
+<h4 id="2-将ClusterRole绑定到RoleBinding"><a href="#2-将ClusterRole绑定到RoleBinding" class="headerlink" title="2.将ClusterRole绑定到RoleBinding."></a>2.将ClusterRole绑定到RoleBinding.</h4><p>先删除刚才创建的view-test的绑定关系删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl delete clusterrolebinding view-test</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io &quot;view-test&quot; deleted</span><br></pre></td></tr></table></figure>
+<p>创建一个RoleBinding替代</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl create rolebinding view-test --clusterrole=view --serviceaccount=foo:default -n foo</span><br><span class="line">rolebinding.rbac.authorization.k8s.io/view-test created</span><br></pre></td></tr></table></figure>
+<p>现在foo名称空间有一个RoleBinding,将同一个名称空间中的default ServiceAccount绑定到view这个<strong>ClusterRole</strong></p>
+<p>现在pod仍然可以访问当前名称空间下的Pod</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/namespaces/foo/pods</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;PodList&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line">    &quot;selfLink&quot;: &quot;/api/v1/namespaces/foo/pods&quot;,</span><br><span class="line">    &quot;resourceVersion&quot;: &quot;10876697&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;items&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;metadata&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;test-7b4bb6b9ff-qpppf&quot;,</span><br></pre></td></tr></table></figure>
+<p>但是现在已经无法访问bar名称空间下的pod了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/namespaces/bar/pods</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;Status&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;status&quot;: &quot;Failure&quot;,</span><br><span class="line">  &quot;message&quot;: &quot;pods is forbidden: User \&quot;system:serviceaccount:foo:default\&quot; cannot list resource \&quot;pods\&quot; in API group \&quot;\&quot; in the namespace \&quot;bar\&quot;&quot;,</span><br><span class="line">  &quot;reason&quot;: &quot;Forbidden&quot;,</span><br><span class="line">  &quot;details&quot;: &#123;</span><br><span class="line">    &quot;kind&quot;: &quot;pods&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;code&quot;: 403</span><br></pre></td></tr></table></figure>
+<p>整个集群下的pod资源当然也无法访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/pods</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;Status&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;status&quot;: &quot;Failure&quot;,</span><br><span class="line">  &quot;message&quot;: &quot;pods is forbidden: User \&quot;system:serviceaccount:foo:default\&quot; cannot list resource \&quot;pods\&quot; in API group \&quot;\&quot; at the cluster scope&quot;,</span><br><span class="line">  &quot;reason&quot;: &quot;Forbidden&quot;,</span><br><span class="line">  &quot;details&quot;: &#123;</span><br><span class="line">    &quot;kind&quot;: &quot;pods&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;code&quot;: 403</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="总结Role-ClusterRole-RoleBinding和ClusterRoleBinding的组合"><a href="#总结Role-ClusterRole-RoleBinding和ClusterRoleBinding的组合" class="headerlink" title="总结Role,ClusterRole,RoleBinding和ClusterRoleBinding的组合"></a>总结Role,ClusterRole,RoleBinding和ClusterRoleBinding的组合</h3><table>
+<thead>
+<tr>
+<th>访问资源</th>
+<th>角色类型</th>
+<th>绑定类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>集群级别的资源(Nodes,PersistentVolumes,……)</td>
+<td>ClusterRole</td>
+<td>ClusterRoleBinding</td>
+</tr>
+<tr>
+<td>非资源URL(/api,/healthz……)</td>
+<td>ClusterRole</td>
+<td>ClusterRoleBinding</td>
+</tr>
+<tr>
+<td>在任何名称空间中的资源(跨所有名称空间的资源)</td>
+<td>ClusterRole</td>
+<td>ClusterRoleBinding</td>
+</tr>
+<tr>
+<td>具体名称空间中的资源(在多个名称空间中重用这个相同的ClusterRole</td>
+<td>ClusterRole</td>
+<td>RoleBinding</td>
+</tr>
+<tr>
+<td>在具体名称空间中的资源(Role必须在每个名称空间中定义)</td>
+<td>Role</td>
+<td>RoleBinding</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="了解默认的ClusterRole和ClusterRoleBinding"><a href="#了解默认的ClusterRole和ClusterRoleBinding" class="headerlink" title="了解默认的ClusterRole和ClusterRoleBinding"></a>了解默认的ClusterRole和ClusterRoleBinding</h3><p>Kubernetes提供了默认的ClusterRole和ClusterRoleBinding.API服务器启动时都会更新他们,这保证了如果你错误地删除角色和绑定,Kubernetes会重新创建默认的角色和绑定</p>
+<figure class="highlight plain"><figcaption><span>get clusterrolebinding```和```kubectl get clusterrole```命令显示了系统默认的ClusterRole和ClusterRoleBinding</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">在前面的例子中,使用了默认的view ClusterRole.它允许读取一个名称空间中的大多数资源(除了Role,RoleBinding,Secret).</span><br><span class="line"></span><br><span class="line">下面是一些其他的默认**ClusterRole**:</span><br></pre></td></tr></table></figure>
+<p>#允许修改一个名称空间中的资源,不允许查看和修改Role,RoleBinding<br>ClusterRole: edit</p>
+<p>#一个名称空间中的资源完全控制权.可以读取和修改名称空间中的任何资源.和上面的区别在于是否有权限查看修改Role,RoleBinding<br>ClusterRole: admin</p>
+<p>#集群完全控制权限<br>ClusterRole: cluster-admin<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">显然将admin或者cluster-admin授予pod应用程序或者用户是一个坏主意,和安全问题一样,最好是仅仅给每个人提供他们所需的权限(最小权限原则)</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 总结:</span><br></pre></td></tr></table></figure></p>
+<p>#创建ServiceAccount<br>kubectl create serviceaccount 服务账号名 </p>
+<p>#将ServiceAccount分配给pod<br>在pod的manifest配置文件中指定ServiceAccount名:<br>serviceAccountName: 服务账号名</p>
+<p>#RBAC4种角色资源<br>Role: 常规角色.定义了对某个资源具有某种访问权限<br>RoleBinding: 常规角色绑定.定义了该角色绑定到哪个主体<br>ClusterRole: 集群角色.同上<br>ClusterRoleBinding: 集群角色绑定.同上</p>
+<p>区别在于:<br>常规角色和集群角色绑定作用于某个名称空间下.<br>集群角色和集群角色绑定作用于整个集群,不受限于任何名称空间</p>
+<p>#了解集群默认集群角色和集群角色绑定<br><code>`</code></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/使用kubeadmin安装kubernetes集群文档/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/kubernetes/使用kubeadmin安装kubernetes集群文档/" itemprop="url">使用kubeadmin安装kubernetes集群文档</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/kubernetes/使用kubeadmin安装kubernetes集群文档/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/使用kubeadmin安装kubernetes集群文档/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="使用kubeadmin安装kubernetes集群文档"><a href="#使用kubeadmin安装kubernetes集群文档" class="headerlink" title="使用kubeadmin安装kubernetes集群文档"></a>使用kubeadmin安装kubernetes集群文档</h2><h3 id="集群环境"><a href="#集群环境" class="headerlink" title="集群环境"></a>集群环境</h3><table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP地址</th>
+<th>节点角色</th>
+<th>操作系统</th>
+<th>Service网段</th>
+<th>pod网段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>k8s-m01</td>
+<td>10.111.2.58</td>
+<td>master</td>
+<td>CentOS7.6</td>
+<td>10.100.0.0/20</td>
+<td>10.96.0.0/12</td>
+</tr>
+<tr>
+<td>k8s-n01</td>
+<td>10.111.2.56</td>
+<td>node</td>
+<td>CentOS7.6</td>
+<td>10.100.0.0/20</td>
+<td>10.96.0.0/12</td>
+</tr>
+<tr>
+<td>k8s-n02</td>
+<td>10.111.2.55</td>
+<td>node</td>
+<td>CentOS7.6</td>
+<td>10.100.0.0/20</td>
+<td>10.96.0.0/12</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="服务器-网络要求"><a href="#服务器-网络要求" class="headerlink" title="服务器,网络要求"></a>服务器,网络要求</h3><ul>
+<li><p>service和Pod网段可以任意指定,但是不能和物理机网段,或者当前其他物理网段有冲突</p>
+</li>
+<li><p>服务器配置至少是2核2G</p>
+</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/kubernetes/使用kubeadmin安装kubernetes集群文档/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes探针/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes探针/" itemprop="url">kubernets探针</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/kubernetes/kubernetes探针/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes探针/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="kubernets探针"><a href="#kubernets探针" class="headerlink" title="kubernets探针"></a>kubernets探针</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>kubernetes一共有2种探针:</p>
+<p><strong>存活探针</strong></p>
+<p><strong>就绪探针</strong></p>
+<hr>
+<h2 id="就绪探针"><a href="#就绪探针" class="headerlink" title="就绪探针"></a>就绪探针</h2><h3 id="就绪探针工作介绍"><a href="#就绪探针工作介绍" class="headerlink" title="就绪探针工作介绍"></a>就绪探针工作介绍</h3><p>就绪探针会定期调用,检查特定的pod是否准备就绪接收客户端的请求.当容器启动时,会等待一个时间,然后执行第一次准备就绪检查.如果某个Pod没有通过探针探测,则会从服务中删除该pod,如果pod再次准备就绪,则会重新添加到Service</p>
+<p>就绪探针确保客户端只与正常的Pod交互.</p>
+<hr>
+<h3 id="就绪探针的类型"><a href="#就绪探针的类型" class="headerlink" title="就绪探针的类型"></a>就绪探针的类型</h3><ul>
+<li>Exec探针 . 使用command命令,如果命令结果返回0,则说明pod准备就绪.</li>
+<li>HTTP GET探针. 向容器发送HTTP GET.通过响应状态码判断pod容器是否准备好</li>
+<li>TCP socket探针.尝试连接Pod容器的TCP端口.判断pod容器的某个端口是否正常工作</li>
+</ul>
+<hr>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/kubernetes/kubernetes探针/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes 高级调度/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes 高级调度/" itemprop="url">kubernetes 高级调度</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/kubernetes/kubernetes 高级调度/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes 高级调度/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="kubernetes-高级调度"><a href="#kubernetes-高级调度" class="headerlink" title="kubernetes 高级调度"></a>kubernetes 高级调度</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本章主要介绍pod的高级调度功能.主要涵盖2方面调度特性:</p>
+<ul>
+<li>节点污染和pod容忍度</li>
+<li>节点亲缘性</li>
+</ul>
+<hr>
+<h3 id="一-节点污染和pod容忍度"><a href="#一-节点污染和pod容忍度" class="headerlink" title="一.节点污染和pod容忍度"></a>一.节点污染和pod容忍度</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p><strong>节点污点</strong>: 该特性用于限制哪些Pod可以被调度到某一个节点.</p>
+<p><strong>pod容忍度</strong>:当一个Pod容忍某个节点的污点,这个pod才能被调度到该节点</p>
+<p>默认情况下k8s集群中的master主节点就设置了污点,.这样才能保证只有控制面板等系统组件才能部署在主节点上.应用pod只能被调度到工作节点</p>
+<hr>
+<h4 id="显示节点污点信息"><a href="#显示节点污点信息" class="headerlink" title="显示节点污点信息"></a>显示节点污点信息</h4>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/kubernetes/kubernetes 高级调度/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/docker/harbor私有仓库部署/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/docker/harbor私有仓库部署/" itemprop="url">harbor私有仓库部署</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/docker/harbor私有仓库部署/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/docker/harbor私有仓库部署/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="harbor私有仓库部署"><a href="#harbor私有仓库部署" class="headerlink" title="harbor私有仓库部署"></a>harbor私有仓库部署</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>harbor是docker的私有仓库,可以部署在局域网服务器上,用来管理docker镜像.虽然docker官方也提供公共镜像仓库,但是由于是境外网站,拉取镜像速度非常慢,而且有被墙的可能.部署私有仓库非常有必要</p>
+<p>harbor是vmware公司开源的企业级的docker registry管理项目.</p>
 <blockquote>
-<p>继承是基于抽象的结果</p>
+<p>处于数据脱敏需要,以下内容中隐藏了真实域名.而使用hub.xxxxxx.com替代</p>
 </blockquote>
-<p>抽象可以让我们来以宏观的角度了解一类事物事物 , 并且这类事物都拥有该抽象中所有的特征 , 相当于继承了该抽象中的特征 , 这样我们就可以只将这类事物不同的特征放到具体中 , 而不需要再次关心共同特征 , 所以<strong><em>先有抽象后才能有继承</em></strong> </p>
-<p>介绍抽象的概念时利用了水果来进行说明 , 为了更好的理解 , 继承就用动物为例子</p>
+<hr>
+<h3 id="社区"><a href="#社区" class="headerlink" title="社区"></a>社区</h3><p>harbor github: <a href="https://github.com/goharbor/harbor" target="_blank" rel="noopener">goharbor/harbor</a></p>
+<p>官网文档介绍: <a href="https://goharbor.io/docs/1.10/" target="_blank" rel="noopener">harbor doc</a></p>
+<p>在部署中遇到的各种坑,都可以通过查阅文档,或者搜索github的issue解决</p>
+<hr>
+<h3 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h3><p>harbor是docker-compose部署的.包括一系列组件:nginx.core,log,register等等.</p>
+<p>但是由于本机已经存在一个Nginx镜像.所以用Nginx代理到harbor的Nginx.<strong>如果是独立的服务器部署Harbor的话,则不会存在这个问题,可以直接跳过这一章节.</strong></p>
+<p>nginx代理框架大概是:</p>
+<p><strong>nginx—-&gt;harbor-nginx—–&gt;habor</strong></p>
+<p>由于docker提交镜像需要Https协议,所以:</p>
+<p><strong>nginx—301跳转到nginx https—–&gt;harbor-nginx http—-&gt; habor</strong></p>
+<p>但是这样的部署方式,有一个问题:</p>
+<p>私有仓库可以正常login但是push镜像的时候,又提示未验证.</p>
+<p>该问题尝试过很多解决方案,但是均无法解决</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/02-Python之路 - 面向对象之继承/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/" itemprop="url">32.Python之路 - 异常处理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-异常处理"><a href="#Python之路-异常处理" class="headerlink" title="Python之路 - 异常处理"></a>Python之路 - 异常处理</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在我们写程序时难免会出现错误 , 一种为语法错误 , 即为python解释器的语法检测都通不过的错误 , 这种错误只能我们在程序执行前就处理好 . 另一种为逻辑错误 , 这是我们在程序设计时所出现的错误 , 也就是我们通常所说的bug </p>
-<p>在编程过程中为了增加友好性 , 在程序出现bug时一般不会将错误信息显示给用户 , 而是显示一个提示错误的页面</p>
-<p>基本语法</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/" itemprop="url">31.Python之路 - 反射</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-反射"><a href="#Python之路-反射" class="headerlink" title="Python之路 - 反射"></a>Python之路 - 反射</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>反射主要是指程序可以访问、检测和修改它本身状态或行为的一种能力 </p>
-<p>Python面向对象中的反射是通过字符串的形式来操作对象相关的属性 , 在Python中一切皆对象 , 并且只要是对象就可以使用反射</p>
-<h2 id="hasattr-🍀"><a href="#hasattr-🍀" class="headerlink" title="hasattr  🍀"></a>hasattr  🍀</h2><p>判断对象中是否具有给定名称的属性</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hasattr</span><span class="params">(*args, **kwargs)</span>:</span> <span class="comment"># real signature unknown</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Return whether the object has an attribute with the given name.  </span></span><br><span class="line"><span class="string">    This is done by calling getattr(obj, name) and catching AttributeError.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-<p>实例1</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义一个字符串</span></span><br><span class="line">name = <span class="string">'lyon'</span></span><br><span class="line"><span class="comment"># 查看是否具有给定名称的属性</span></span><br><span class="line">bool = hasattr(name,<span class="string">'__len__'</span>)</span><br><span class="line"><span class="comment"># 打印bool</span></span><br><span class="line">print(bool)</span><br><span class="line"><span class="comment"># 执行结果:True</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">说明:很多初学者可能一直不理解为什么说Python里一切皆对象,因为没有意识到,在Python中str、list、int ...等这些数据类型,其实就是用class写出来的一个模型,那么既然是类就会有属性这一说,就可以利用反射来操作对象了</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<p>实例2</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">s1</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">s2</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line">this_modules = sys.modules[__name__]</span><br><span class="line">print(type(this_modules),hasattr(this_modules,<span class="string">'s1'</span>))</span><br><span class="line">module1</span><br></pre></td></tr></table></figure>
-<h2 id="getattr-🍀"><a href="#getattr-🍀" class="headerlink" title="getattr  🍀"></a>getattr  🍀</h2><p>从一个对象中获取属性名称</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/05-Python之路 - 正则表达式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/03-Modules/05-Python之路 - 正则表达式/" itemprop="url">21.Python之路 - 正则表达式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Modules/" itemprop="url" rel="index">
-                    <span itemprop="name">Modules</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/03-Modules/05-Python之路 - 正则表达式/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/05-Python之路 - 正则表达式/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-正则表达式"><a href="#Python之路-正则表达式" class="headerlink" title="Python之路 - 正则表达式"></a>Python之路 - 正则表达式</h1><h2 id="正则介绍-🍀"><a href="#正则介绍-🍀" class="headerlink" title="正则介绍  🍀"></a>正则介绍  🍀</h2><p>正则表达式并不是python的一部分，而是在各个编程语言都有的一种用于处理字符串的强大工具。</p>
-<p>使用正则处理字符串在效率上可能不如str自带的方法，但是它的功能十分强大。python中的正则封装在re模块中。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/03-Modules/05-Python之路 - 正则表达式/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/" itemprop="url">20.Python之路 - 时间和日期模块</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Modules/" itemprop="url" rel="index">
-                    <span itemprop="name">Modules</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-时间和日期模块"><a href="#Python之路-时间和日期模块" class="headerlink" title="Python之路 - 时间和日期模块"></a>Python之路 - 时间和日期模块</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>python提供了 time , datetimme 和 calendar 模块可以用于格式化如期和时间 ; 时间间隔是以秒为单位的浮点数 , 每个时间戳都以自从1970年1月1日午夜（历元）经过了多长时间来表示 , 所以1970年之前的日期就不能用时间戳来表示了 , 时间戳是最适合用来做日期运算的</p>
-<p>python中时间的三种类型 : </p>
-<ol>
-<li>float   浮点数 , 即时间戳</li>
-<li>struct tuple   时间元组</li>
-<li>str    字符串 , 规定格式表示</li>
-</ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/docker/harbor私有仓库部署/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2041,7 +2138,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2091,7 +2188,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">142</span>
+                  <span class="site-state-item-count">162</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2113,7 +2210,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">35</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

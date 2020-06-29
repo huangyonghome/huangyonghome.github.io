@@ -275,1376 +275,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/" itemprop="url">46.Python之路 - 实现线程池</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Concurrent/" itemprop="url" rel="index">
-                    <span itemprop="name">Concurrent</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-实现线程池-🍀"><a href="#Python之路-实现线程池-🍀" class="headerlink" title="Python之路 - 实现线程池  🍀"></a>Python之路 - 实现线程池  🍀</h1><h2 id="方式一-🍀"><a href="#方式一-🍀" class="headerlink" title="方式一  🍀"></a>方式一  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Queue</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadPool</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, max_num=<span class="number">20</span>)</span>:</span></span><br><span class="line">        self.queue = Queue.Queue(max_num)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(max_num):</span><br><span class="line">            self.queue.put(threading.Thread)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_thread</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.queue.get()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_thread</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.queue.put(threading.Thread)</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">使用:</span></span><br><span class="line"><span class="string">pool = ThreadPool(10)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">def func(arg, p):</span></span><br><span class="line"><span class="string">    import time</span></span><br><span class="line"><span class="string">    time.sleep(2)</span></span><br><span class="line"><span class="string">    p.add_thread()</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">for i in range(30):</span></span><br><span class="line"><span class="string">    thread = pool.get_thread()</span></span><br><span class="line"><span class="string">    t = thread(target=func, args=(i, pool))</span></span><br><span class="line"><span class="string">    t.start()</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/04-Python之路 - Socket实现远程执行命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/05-Network/04-Python之路 - Socket实现远程执行命令/" itemprop="url">37.Python之路 - Socket实现远程执行命令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Network/" itemprop="url" rel="index">
-                    <span itemprop="name">Network</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/05-Network/04-Python之路 - Socket实现远程执行命令/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/04-Python之路 - Socket实现远程执行命令/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-Socket实现远程执行命令"><a href="#Python之路-Socket实现远程执行命令" class="headerlink" title="Python之路 - Socket实现远程执行命令"></a>Python之路 - Socket实现远程执行命令</h1><h2 id="os模块实现-🍀"><a href="#os模块实现-🍀" class="headerlink" title="os模块实现  🍀"></a>os模块实现  🍀</h2><p>osssh_server.py</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入socket模块</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="comment"># 导入os模块</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># 创建套接字对象</span></span><br><span class="line">sock = socket.socket()</span><br><span class="line"><span class="comment"># 重置ip和端口</span></span><br><span class="line">sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, <span class="number">1</span>)</span><br><span class="line"><span class="comment"># 绑定ip和端口</span></span><br><span class="line">sock.bind((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))</span><br><span class="line"><span class="comment"># 监听</span></span><br><span class="line">sock.listen(<span class="number">5</span>)</span><br><span class="line"><span class="comment"># 链接循环</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    print(<span class="string">"Waitting for connection..."</span>)</span><br><span class="line">    <span class="comment"># 阻塞</span></span><br><span class="line">    conn, addr = sock.accept()</span><br><span class="line">    print(<span class="string">"&#123;&#125;successful connection..."</span>.format(addr))</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        cmd = conn.recv(<span class="number">1024</span>)</span><br><span class="line">        <span class="comment"># 接收为空说明客户端断开了连接</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> cmd:</span><br><span class="line">            print(<span class="string">"Client is disconnected..."</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        print(<span class="string">"The command is &#123;&#125;"</span>.format(cmd.decode()))</span><br><span class="line">        <span class="comment"># 利用os模块进行系统调用,py3中popen参数为str,所以先decode</span></span><br><span class="line">        data = os.popen(cmd.decode()).read()</span><br><span class="line">        <span class="comment"># 发送命令执行结果</span></span><br><span class="line">        conn.send(data.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    <span class="comment"># 关闭链接</span></span><br><span class="line">    conn.close()</span><br><span class="line"><span class="comment"># 关闭套接字</span></span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
-<p>osssh_client.py</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/05-Network/04-Python之路 - Socket实现远程执行命令/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/03-Python之路 - 面向对象之多态/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/03-Python之路 - 面向对象之多态/" itemprop="url">27.Python之路 - 面向对象多态</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/03-Python之路 - 面向对象之多态/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/03-Python之路 - 面向对象之多态/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-面向对象多态"><a href="#Python之路-面向对象多态" class="headerlink" title="Python之路 - 面向对象多态"></a>Python之路 - 面向对象多态</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>上一篇中已经得知 , 继承可以扩展已存在的代码模块(类) , 其目的是为了解决<strong><em>代码重用</em></strong> 问题</p>
-<p>多态则是为了实现另一个目的 : 接口重用</p>
-<h2 id="多态-🍀"><a href="#多态-🍀" class="headerlink" title="多态  🍀"></a>多态  🍀</h2><p>多态 (Polymorphism) 按字面的意思就是”多种状态” , 比如动物有多种形态 , 人 , 猫 , 狗 ; 文件也有多种格式 exe , txt , md(MarkDown格式) , 这就是多态</p>
-<p> 在面向对象语言中 , 接口的多种不同的实现方式即为多态 </p>
-<blockquote>
-<p>多态性是允许你将父对象设置成为一个或多个他的子对象相等的技术 , 赋值之后 , 父对象就可以根据当前赋值给它的子对象的特性以不同的方式运作</p>
-</blockquote>
-<p>静态多态性</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/03-Python之路 - 面向对象之多态/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/06-Python之路 - 特殊成员方法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/06-Python之路 - 特殊成员方法/" itemprop="url">30.Python之路 - 特殊成员方法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/06-Python之路 - 特殊成员方法/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/06-Python之路 - 特殊成员方法/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-特殊成员方法"><a href="#Python之路-特殊成员方法" class="headerlink" title="Python之路 - 特殊成员方法"></a>Python之路 - 特殊成员方法</h1><h2 id="doc-🍀"><a href="#doc-🍀" class="headerlink" title="__doc__   🍀"></a>__doc__   🍀</h2><p>查看类的描述信息</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    这是一个类,什么都没有的类</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">print(Foo.__doc__)</span><br><span class="line"><span class="comment"># 执行结果: 这是一个类,什么都没有的类</span></span><br></pre></td></tr></table></figure>
-<h2 id="module-🍀"><a href="#module-🍀" class="headerlink" title="__module__  🍀"></a>__module__  🍀</h2><p>查看当前操作对象位于哪个模块</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_module.py</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># test.py</span></span><br><span class="line"><span class="keyword">from</span> my_module <span class="keyword">import</span> Foo</span><br><span class="line">print(Foo.__module__)</span><br><span class="line"><span class="comment"># 执行结果: my_module</span></span><br></pre></td></tr></table></figure>
-<h2 id="class-🍀"><a href="#class-🍀" class="headerlink" title="__class__  🍀"></a>__class__  🍀</h2><p>查看对象的类</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/06-Python之路 - 特殊成员方法/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/zabbix监控ES集群/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/监控/zabbix监控ES集群/" itemprop="url">zabbix监控ES集群</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/监控/" itemprop="url" rel="index">
-                    <span itemprop="name">监控</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/监控/zabbix监控ES集群/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/zabbix监控ES集群/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="zabbix监控ES集群"><a href="#zabbix监控ES集群" class="headerlink" title="zabbix监控ES集群"></a>zabbix监控ES集群</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本节以 zabbix 为例，介绍如何使用监控系统完成 Elasticsearch 的监控报警。</p>
-<p>本文档的源码地址: <a href="https://github.com/huangyonghome/zabbix-es_cluster" target="_blank" rel="noopener">https://github.com/huangyonghome/zabbix-es_cluster</a></p>
-<hr>
-<h3 id="安装配置"><a href="#安装配置" class="headerlink" title="安装配置"></a>安装配置</h3><ol>
-<li>仓库中包括三个文件： 1、ESzabbix.py 2、ESzabbix-userparm.conf 3、ESzabbix_templates.xml</li>
-</ol>
-<p>其中，前两个文件需要分发到每个 ES 节点上，我们环境中的默认位置分别是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/etc/zabbix/scripts/ESzabbix.py</span><br><span class="line">/etc/zabbix/zabbix_agentd.d/ESzabbix-userparm.conf</span><br><span class="line"></span><br><span class="line">#移动文件到zabbix相关目录下</span><br><span class="line">work@hsq-mq-node1-temp:~$ cd zabbix-es</span><br><span class="line">work@hsq-mq-node1-temp:~/zabbix-es$ sudo mv ESzabbix.py /etc/zabbix/scripts/</span><br><span class="line">work@hsq-mq-node1-temp:~/zabbix-es$ sudo mv ESzabbix.userparm /etc/zabbix/zabbix_agentd.conf.d/ESzabbix-userparm.conf</span><br><span class="line"></span><br><span class="line">#修改ESzabbix-userparm.conf文件中的路径</span><br><span class="line">#cat ESzabbix-userparm.conf</span><br><span class="line">UserParameter=ESzabbix[*],/etc/zabbix/scripts/ESzabbix.py $1 $2</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>给文件赋权</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo chown zabbix:zabbix /etc/zabbix/scripts/ESzabbix.py</span><br><span class="line">sudo chmod +x /etc/zabbix/scripts/ESzabbix.py</span><br><span class="line"></span><br><span class="line">sudo chown zabbix:zabbix /etc/zabbix/zabbix_agentd.d/ESzabbix-userparm.conf</span><br></pre></td></tr></table></figure>
-<p>3.修改/etc/zabbix/scripts/ESzabbix.py脚本文件</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/监控/zabbix监控ES集群/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/" itemprop="url">Zabbix通过Idrac监控Dell服务器硬件状态</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/监控/" itemprop="url" rel="index">
-                    <span itemprop="name">监控</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Zabbix-通过Dell-Idrac监控服务器硬件状态"><a href="#Zabbix-通过Dell-Idrac监控服务器硬件状态" class="headerlink" title="Zabbix 通过Dell Idrac监控服务器硬件状态"></a>Zabbix 通过Dell Idrac监控服务器硬件状态</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近登陆vsphere控制台发现一台Dell服务器告警,已经损坏了.于是想通过zabbix监控Dell服务器的硬件状态.</p>
-<p>有2种方法可以监控dell服务器的硬件状态</p>
-<ul>
-<li>通过Dell的OMSA工具监控</li>
-<li>通过Dell的Idrac模块的SNMP协议监控</li>
-</ul>
-<p>Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没办法获取到硬件状态.而且OMSA工具从Dell官网下载太慢.安装很麻烦</p>
-<p>所以本文主要介绍如何通过idrac模块的snmp协议监控硬件状态.监控方法非常的简单</p>
-<hr>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/Zabbix 监控Rabbitmq集群/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/监控/Zabbix 监控Rabbitmq集群/" itemprop="url">Zabbix 监控Rabbitmq集群</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/监控/" itemprop="url" rel="index">
-                    <span itemprop="name">监控</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/监控/Zabbix 监控Rabbitmq集群/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/Zabbix 监控Rabbitmq集群/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="Zabbix-监控Rabbitmq集群"><a href="#Zabbix-监控Rabbitmq集群" class="headerlink" title="Zabbix 监控Rabbitmq集群"></a>Zabbix 监控Rabbitmq集群</h3><p>github上有一个非常不错的rabbitmq监控模板:<a href="https://github.com/jasonmcintosh/rabbitmq-zabbix" target="_blank" rel="noopener">rabbitmq-zabbix</a></p>
-<p>本文档不赘述zabbix的配置细节,仅仅记录该rabbitmq监控模板的使用</p>
-<p>一. 将github的模板文件克隆到服务器上:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">oot@hsq-mq-node1:~/rabbitmq-zabbix# ll</span><br><span class="line">total 132</span><br><span class="line">drwxr-xr-x  6 root root  4096 May 30 18:36 ./</span><br><span class="line">drwx------ 11 root root  4096 Jun 18 09:27 ../</span><br><span class="line">drwxr-xr-x  8 root root  4096 May 30 11:05 .git/</span><br><span class="line">-rw-r--r--  1 root root    40 May 30 11:05 .gitignore</span><br><span class="line">-rw-r--r--  1 root root 10273 May 30 11:05 LICENSE</span><br><span class="line">-rw-r--r--  1 root root 76316 May 30 11:05 rabbitmq.template.xml</span><br><span class="line">-rw-r--r--  1 root root  3274 May 30 11:05 README.ja.md</span><br><span class="line">-rw-r--r--  1 root root  5598 May 30 11:05 README.md</span><br><span class="line">drwxr-xr-x  3 root root  4096 May 30 11:05 scripts/</span><br><span class="line">drwxr-xr-x  2 root root  4096 May 30 11:05 tests/</span><br><span class="line">-rw-r--r--  1 root root   500 May 30 11:05 .travis.yml</span><br><span class="line">drwxr-xr-x  2 root root  4096 May 30 11:05 zabbix_agentd.d/</span><br></pre></td></tr></table></figure>
-<p>其中:</p>
-<p>scripts目录下是监控脚本文件</p>
-<p>zabbix_agentd.d目录下是zabbix监控配置文件</p>
-<p>rabbitmq.template.xml是zabbix监控模板.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/监控/Zabbix 监控Rabbitmq集群/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/Zabbix 监控Dell服务器硬件/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/" itemprop="url">Zabbix 监控Dell服务器硬件</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/监控/" itemprop="url" rel="index">
-                    <span itemprop="name">监控</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/Zabbix 监控Dell服务器硬件/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Zabbix-监控Dell服务器硬件"><a href="#Zabbix-监控Dell服务器硬件" class="headerlink" title="Zabbix 监控Dell服务器硬件"></a>Zabbix 监控Dell服务器硬件</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>​     OMSA（全称Openmanage Server Administrator),是戴尔公司自主研发的IT系统管理解决方案。其通过提供web的图形用户界面和操作系统的命令行工具对本地和远程的服务器进行管理和监控。</p>
-<p>OMSA和IDRAC类似,产品,功能也相似.Zabbix可以通过OMSA和IDRAC来监控Dell服务器的硬件.</p>
-<p>由于Dell服务器官网下载OMSA工具非常慢,所以安装很难.如果可以的花,首选还是建议通过IDRAC来监控服务器硬件状态</p>
-<blockquote>
-<p>我在另一篇笔记<zabbix 通过dell="" idrac监控服务器硬件状态="">中介绍了如何通过IDRAC来监控Dell服务器硬件</zabbix></p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1983,11 +613,1386 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/" itemprop="url">34.Python之路 - 网络编程初识</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Network/" itemprop="url" rel="index">
+                    <span itemprop="name">Network</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-网络编程初识"><a href="#Python之路-网络编程初识" class="headerlink" title="Python之路 - 网络编程初识"></a>Python之路 - 网络编程初识</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>在互联网没有诞生之前 , 我们都是在自己的计算机上自娱自乐 , 那时候的程序也都是单机版的程序 , 随后互联网诞生了 , 用网络把各个计算机连接到了一起 , 让处在网络中的计算机可以互相通信 , 网络编程就是如何在程序中实现两台计算机之间的通信</p>
+<p>最基本的例子莫过于我们传输文件了 , 没有网络的情况下我们只能利用U盘或者硬盘 , 先从我的计算机上将要传输的文件写入到我们的U盘或者硬盘 , 然后再用已有文件的U盘或者硬盘写入其他计算机 , 这样的局限性有多大可想而知 ; 利用网络我们可以直接十万八千里进行文件传输 , 比如用我的QQ传文件给你的QQ , 当然这个例子可能不怎么好 , 因为你传文件一般可能不会用QQ来传</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/" itemprop="url">45.Python之路 - 并发编程之IO多路复用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Concurrent/" itemprop="url" rel="index">
+                    <span itemprop="name">Concurrent</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-并发编程之IO多路复用"><a href="#Python之路-并发编程之IO多路复用" class="headerlink" title="Python之路 - 并发编程之IO多路复用"></a>Python之路 - 并发编程之IO多路复用</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>在网络编程中 , 如果服务端需要面临同时接收上千甚至上万次的客户端请求 , 利用 “进程池” 或 “线程池” 或许可以缓解部分压力 , 但是并不是一个好的选择 , 因为超过数量还是得等 ; 又或者线程一旦进行堵塞 ; 以及任务之间的高度独立 , 并不需要互相通信或者等待时 , 我们就需要用到I/O多路复用(IO Multiplexing) 了 , 又叫做事件驱动IO (Event driven IO)</p>
+<h2 id="I-O多路复用-🍀"><a href="#I-O多路复用-🍀" class="headerlink" title="I/O多路复用  🍀"></a>I/O多路复用  🍀</h2><blockquote>
+<p>I/O多路复用是指单个线程中 , 通过记录跟踪每个I/O流(sock)的状态 , 来同时管理多个I/O流</p>
+</blockquote>
+<p>在I/O多路复用中只要一遇到IO就注册一个事件 , 然后主程序就可以继续干其他的事情了 , 直到IO处理完毕 , 继续恢复之前中断的任务 , 也就是说<strong>一个线程可以同时处理多个请求</strong> </p>
+<p>举🌰</p>
+<p>在UI编程中 , 常常要对鼠标点击进行响应 , 还要同时对键盘敲击也进行响应 </p>
+<p><strong>多进程多线程方式 : </strong> </p>
+<p>创建一个进程 , 进程中由两个线程 , 一个循环检测鼠标点击 , 一个循环检测键盘敲击 , 一旦检测到有情况就再开一个线程去处理 , 然后一直开下去……基本上是由创建进程/线程 , 维护进程/线程来解决的 , 这样对于CPU的资源是很浪费的</p>
+<p><strong>IO多路复用(事件驱动) : </strong> </p>
+<p>创建一个事件(消息)队列 , 鼠标点击就往队列中增加一个鼠标点击事件 , 键盘敲击就往队列中增加一个键盘敲击事件 , 创建一个线程(IO线程)负责不断从队列中取出事件 , 根据不同的事件 , 调用不同的函数 , 如onClick() , onKeyDown()等 , 即一个线程解决了所有事件的问题 , 这就是复用</p>
+<p><strong>比较 :</strong>  与多进程多线程技术相比 , I/O多路复用最大的优势是系统开销小 , 系统不必创建进程/线程 , 也不必维护这些进程/线程 , 从而大大减小了系统的开销</p>
+<p>目前常见支持I/O多路复用的系统调用select , poll , epoll ,I/O多路复用就是通过一种机制 , 一个进程可以监视多个描述符 , 一旦某个描述符就绪(一般是读就绪或者写就绪) , 能够通知程序进行相应的读写操作</p>
+<p>而I/O多路复用的具体实现就是 , select , poll , epoll</p>
+<hr>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/" itemprop="url">46.Python之路 - 实现线程池</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Concurrent/" itemprop="url" rel="index">
+                    <span itemprop="name">Concurrent</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-实现线程池-🍀"><a href="#Python之路-实现线程池-🍀" class="headerlink" title="Python之路 - 实现线程池  🍀"></a>Python之路 - 实现线程池  🍀</h1><h2 id="方式一-🍀"><a href="#方式一-🍀" class="headerlink" title="方式一  🍀"></a>方式一  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Queue</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadPool</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, max_num=<span class="number">20</span>)</span>:</span></span><br><span class="line">        self.queue = Queue.Queue(max_num)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(max_num):</span><br><span class="line">            self.queue.put(threading.Thread)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_thread</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.queue.get()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_thread</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.queue.put(threading.Thread)</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">使用:</span></span><br><span class="line"><span class="string">pool = ThreadPool(10)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">def func(arg, p):</span></span><br><span class="line"><span class="string">    import time</span></span><br><span class="line"><span class="string">    time.sleep(2)</span></span><br><span class="line"><span class="string">    p.add_thread()</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">for i in range(30):</span></span><br><span class="line"><span class="string">    thread = pool.get_thread()</span></span><br><span class="line"><span class="string">    t = thread(target=func, args=(i, pool))</span></span><br><span class="line"><span class="string">    t.start()</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/" itemprop="url">44.Python之路 - 并发编程之协程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Concurrent/" itemprop="url" rel="index">
+                    <span itemprop="name">Concurrent</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-并发编程之协程"><a href="#Python之路-并发编程之协程" class="headerlink" title="Python之路 - 并发编程之协程"></a>Python之路 - 并发编程之协程</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>在前面的文章中 , 基本已经可以解决并发编程中的基本问题了 , 但是如果我们要利用单线程来实现并发 , 线程是轻量级的进程 , 为了使计算机资源能更充分的利用 , 那么我们就需要用到协程了</p>
+<p>并发的本质就是<em>上下文切换</em>加上<em>保存状态</em> , 那么我们就可以想到关键字<code>yield</code> , 我们在生成器篇章中 , 就是利用了<code>yield</code>实现了状态的保存 , 来看一个廖大大的例子</p>
+<p>生产者消费者模型yield版</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">()</span>:</span></span><br><span class="line">    r = <span class="string">''</span></span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        n = <span class="keyword">yield</span> r</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> n:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        print(<span class="string">'[CONSUMER] Consuming %s...'</span> % n)</span><br><span class="line">        r = <span class="string">'200 OK'</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">produce</span><span class="params">(c)</span>:</span></span><br><span class="line">    c.send(<span class="keyword">None</span>)</span><br><span class="line">    n = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> n &lt; <span class="number">5</span>:</span><br><span class="line">        n = n + <span class="number">1</span></span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        print(<span class="string">'[PRODUCER] Producing %s...'</span> % n)</span><br><span class="line">        r = c.send(n)</span><br><span class="line">        print(<span class="string">'[PRODUCER] Consumer return: %s'</span> % r)</span><br><span class="line">    c.close()</span><br><span class="line">c = consumer()</span><br><span class="line">produce(c)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string"># yiled可以保存状态,yield的状态保存与操作系统的保存线程状态很像,但是yield是代码级别控制的,更轻量级</span></span><br><span class="line"><span class="string"># send可以把一个函数的结果传给另外一个函数,以此实现单线程内程序之间的切换 </span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<p>上述例子中<code>yield</code>确实实现了并发 , 但是并没有实现遇到IO操作进行自动切换 , 所以协程出场了</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/Zabbix 监控Dell服务器硬件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/" itemprop="url">Zabbix 监控Dell服务器硬件</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/监控/" itemprop="url" rel="index">
+                    <span itemprop="name">监控</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/Zabbix 监控Dell服务器硬件/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Zabbix-监控Dell服务器硬件"><a href="#Zabbix-监控Dell服务器硬件" class="headerlink" title="Zabbix 监控Dell服务器硬件"></a>Zabbix 监控Dell服务器硬件</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>​     OMSA（全称Openmanage Server Administrator),是戴尔公司自主研发的IT系统管理解决方案。其通过提供web的图形用户界面和操作系统的命令行工具对本地和远程的服务器进行管理和监控。</p>
+<p>OMSA和IDRAC类似,产品,功能也相似.Zabbix可以通过OMSA和IDRAC来监控Dell服务器的硬件.</p>
+<p>由于Dell服务器官网下载OMSA工具非常慢,所以安装很难.如果可以的花,首选还是建议通过IDRAC来监控服务器硬件状态</p>
+<blockquote>
+<p>我在另一篇笔记<zabbix 通过dell="" idrac监控服务器硬件状态="">中介绍了如何通过IDRAC来监控Dell服务器硬件</zabbix></p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/Zabbix 监控Rabbitmq集群/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/监控/Zabbix 监控Rabbitmq集群/" itemprop="url">Zabbix 监控Rabbitmq集群</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/监控/" itemprop="url" rel="index">
+                    <span itemprop="name">监控</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/监控/Zabbix 监控Rabbitmq集群/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/Zabbix 监控Rabbitmq集群/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="Zabbix-监控Rabbitmq集群"><a href="#Zabbix-监控Rabbitmq集群" class="headerlink" title="Zabbix 监控Rabbitmq集群"></a>Zabbix 监控Rabbitmq集群</h3><p>github上有一个非常不错的rabbitmq监控模板:<a href="https://github.com/jasonmcintosh/rabbitmq-zabbix" target="_blank" rel="noopener">rabbitmq-zabbix</a></p>
+<p>本文档不赘述zabbix的配置细节,仅仅记录该rabbitmq监控模板的使用</p>
+<p>一. 将github的模板文件克隆到服务器上:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">oot@hsq-mq-node1:~/rabbitmq-zabbix# ll</span><br><span class="line">total 132</span><br><span class="line">drwxr-xr-x  6 root root  4096 May 30 18:36 ./</span><br><span class="line">drwx------ 11 root root  4096 Jun 18 09:27 ../</span><br><span class="line">drwxr-xr-x  8 root root  4096 May 30 11:05 .git/</span><br><span class="line">-rw-r--r--  1 root root    40 May 30 11:05 .gitignore</span><br><span class="line">-rw-r--r--  1 root root 10273 May 30 11:05 LICENSE</span><br><span class="line">-rw-r--r--  1 root root 76316 May 30 11:05 rabbitmq.template.xml</span><br><span class="line">-rw-r--r--  1 root root  3274 May 30 11:05 README.ja.md</span><br><span class="line">-rw-r--r--  1 root root  5598 May 30 11:05 README.md</span><br><span class="line">drwxr-xr-x  3 root root  4096 May 30 11:05 scripts/</span><br><span class="line">drwxr-xr-x  2 root root  4096 May 30 11:05 tests/</span><br><span class="line">-rw-r--r--  1 root root   500 May 30 11:05 .travis.yml</span><br><span class="line">drwxr-xr-x  2 root root  4096 May 30 11:05 zabbix_agentd.d/</span><br></pre></td></tr></table></figure>
+<p>其中:</p>
+<p>scripts目录下是监控脚本文件</p>
+<p>zabbix_agentd.d目录下是zabbix监控配置文件</p>
+<p>rabbitmq.template.xml是zabbix监控模板.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/监控/Zabbix 监控Rabbitmq集群/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/" itemprop="url">Zabbix 通过Dell Idrac监控服务器硬件状态群</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/监控/" itemprop="url" rel="index">
+                    <span itemprop="name">监控</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Zabbix-通过Dell-Idrac监控服务器硬件状态"><a href="#Zabbix-通过Dell-Idrac监控服务器硬件状态" class="headerlink" title="Zabbix 通过Dell Idrac监控服务器硬件状态"></a>Zabbix 通过Dell Idrac监控服务器硬件状态</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近登陆vsphere控制台发现一台Dell服务器告警,已经损坏了.于是想通过zabbix监控Dell服务器的硬件状态.</p>
+<p>有2种方法可以监控dell服务器的硬件状态</p>
+<ul>
+<li>通过Dell的OMSA工具监控</li>
+<li>通过Dell的Idrac模块的SNMP协议监控</li>
+</ul>
+<p>Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没办法获取到硬件状态.而且OMSA工具从Dell官网下载太慢.安装很麻烦</p>
+<p>所以本文主要介绍如何通过idrac模块的snmp协议监控硬件状态.监控方法非常的简单</p>
+<hr>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/zabbix监控ES集群/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/监控/zabbix监控ES集群/" itemprop="url">zabbix监控ES集群</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/监控/" itemprop="url" rel="index">
+                    <span itemprop="name">监控</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/监控/zabbix监控ES集群/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/zabbix监控ES集群/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="zabbix监控ES集群"><a href="#zabbix监控ES集群" class="headerlink" title="zabbix监控ES集群"></a>zabbix监控ES集群</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本节以 zabbix 为例，介绍如何使用监控系统完成 Elasticsearch 的监控报警。</p>
+<p>本文档的源码地址: <a href="https://github.com/huangyonghome/zabbix-es_cluster" target="_blank" rel="noopener">https://github.com/huangyonghome/zabbix-es_cluster</a></p>
+<hr>
+<h3 id="安装配置"><a href="#安装配置" class="headerlink" title="安装配置"></a>安装配置</h3><ol>
+<li>仓库中包括三个文件： 1、ESzabbix.py 2、ESzabbix-userparm.conf 3、ESzabbix_templates.xml</li>
+</ol>
+<p>其中，前两个文件需要分发到每个 ES 节点上，我们环境中的默认位置分别是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/etc/zabbix/scripts/ESzabbix.py</span><br><span class="line">/etc/zabbix/zabbix_agentd.d/ESzabbix-userparm.conf</span><br><span class="line"></span><br><span class="line">#移动文件到zabbix相关目录下</span><br><span class="line">work@hsq-mq-node1-temp:~$ cd zabbix-es</span><br><span class="line">work@hsq-mq-node1-temp:~/zabbix-es$ sudo mv ESzabbix.py /etc/zabbix/scripts/</span><br><span class="line">work@hsq-mq-node1-temp:~/zabbix-es$ sudo mv ESzabbix.userparm /etc/zabbix/zabbix_agentd.conf.d/ESzabbix-userparm.conf</span><br><span class="line"></span><br><span class="line">#修改ESzabbix-userparm.conf文件中的路径</span><br><span class="line">#cat ESzabbix-userparm.conf</span><br><span class="line">UserParameter=ESzabbix[*],/etc/zabbix/scripts/ESzabbix.py $1 $2</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>给文件赋权</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo chown zabbix:zabbix /etc/zabbix/scripts/ESzabbix.py</span><br><span class="line">sudo chmod +x /etc/zabbix/scripts/ESzabbix.py</span><br><span class="line"></span><br><span class="line">sudo chown zabbix:zabbix /etc/zabbix/zabbix_agentd.d/ESzabbix-userparm.conf</span><br></pre></td></tr></table></figure>
+<p>3.修改/etc/zabbix/scripts/ESzabbix.py脚本文件</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/监控/zabbix监控ES集群/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2037,7 +2042,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">142</span>
+                  <span class="site-state-item-count">162</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2059,7 +2064,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">35</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

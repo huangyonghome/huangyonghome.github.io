@@ -92,17 +92,17 @@
 
 
 
-<meta name="description" content="title:net.ipv4.tcp_tw_recycle踩的坑date:2019-01-7 09:59:58tags:experencecategories:experencecomments:true copyright:truenet.ipv4.tcp_tw_recycle踩的坑参考博文:https://www.cnxct.com/coping-with-the-tcp-time_wait">
+<meta name="description" content="docker学习笔记— docker容器篇一.创建并启动容器  创建容器  create -it 镜像名:tag```1234* **查看所有容器**(包括运行中,已退出,错误容器)```docker ps -a  查看所有容器的ID  ps -qa```12345678* **启动容器**```docker start container_id``` * **使用指定的镜像直接创建并启动容器**">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jesse&#39;s home">
-<meta property="og:url" content="https://jesse.top/2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/index.html">
+<meta property="og:url" content="https://jesse.top/2020/06/29/docker/docker学习笔记—容器篇/index.html">
 <meta property="og:site_name" content="Jesse&#39;s home">
-<meta property="og:description" content="title:net.ipv4.tcp_tw_recycle踩的坑date:2019-01-7 09:59:58tags:experencecategories:experencecomments:true copyright:truenet.ipv4.tcp_tw_recycle踩的坑参考博文:https://www.cnxct.com/coping-with-the-tcp-time_wait">
+<meta property="og:description" content="docker学习笔记— docker容器篇一.创建并启动容器  创建容器  create -it 镜像名:tag```1234* **查看所有容器**(包括运行中,已退出,错误容器)```docker ps -a  查看所有容器的ID  ps -qa```12345678* **启动容器**```docker start container_id``` * **使用指定的镜像直接创建并启动容器**">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-26T06:49:51.094Z">
+<meta property="og:updated_time" content="2020-06-29T13:39:20.018Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jesse&#39;s home">
-<meta name="twitter:description" content="title:net.ipv4.tcp_tw_recycle踩的坑date:2019-01-7 09:59:58tags:experencecategories:experencecomments:true copyright:truenet.ipv4.tcp_tw_recycle踩的坑参考博文:https://www.cnxct.com/coping-with-the-tcp-time_wait">
+<meta name="twitter:description" content="docker学习笔记— docker容器篇一.创建并启动容器  创建容器  create -it 镜像名:tag```1234* **查看所有容器**(包括运行中,已退出,错误容器)```docker ps -a  查看所有容器的ID  ps -qa```12345678* **启动容器**```docker start container_id``` * **使用指定的镜像直接创建并启动容器**">
 
 
 
@@ -132,7 +132,7 @@
 
 
 
-  <link rel="canonical" href="https://jesse.top/2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/"/>
+  <link rel="canonical" href="https://jesse.top/2020/06/29/docker/docker学习笔记—容器篇/"/>
 
 
 
@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker学习笔记—容器篇/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -304,8 +304,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T12:09:07+08:00">
-                2020-06-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T21:51:55+08:00">
+                2020-06-29
               </time>
             
 
@@ -323,8 +323,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker学习笔记—容器篇/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker学习笔记—容器篇/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -352,39 +352,52 @@
       
 
       
-        <hr>
-<p>title:net.ipv4.tcp_tw_recycle踩的坑<br>date:2019-01-7 09:59:58<br>tags:experence<br>categories:experence<br>comments:true</p>
-<h2 id="copyright-true"><a href="#copyright-true" class="headerlink" title="copyright:true"></a>copyright:true</h2><h2 id="net-ipv4-tcp-tw-recycle踩的坑"><a href="#net-ipv4-tcp-tw-recycle踩的坑" class="headerlink" title="net.ipv4.tcp_tw_recycle踩的坑"></a>net.ipv4.tcp_tw_recycle踩的坑</h2><p>参考博文:<a href="https://www.cnxct.com/coping-with-the-tcp-time_wait-state-on-busy-linux-servers-in-chinese-and-dont-enable-tcp_tw_recycle/" target="_blank" rel="noopener">https://www.cnxct.com/coping-with-the-tcp-time_wait-state-on-busy-linux-servers-in-chinese-and-dont-enable-tcp_tw_recycle/</a></p>
-<p>在做系统调优的时候希望能加快<code>TIME_WAIT</code>状态的回收，通常将<code>net.ipv4.tcp_tw_recycle</code>选项开启，但是,请注意这里有个坑</p>
-<h3 id="故障现象"><a href="#故障现象" class="headerlink" title="故障现象"></a>故障现象</h3><p>我们阿里云上有一台BETA测试服务器自从上次将CPU配置从4核升级到8核,然后重启服务器以后..访问该服务器上的web网站经常出现卡顿的现象,大概是每隔几分钟出现一次,很快又恢复.</p>
-<p>1.初步怀疑是BETA服务器性能不行,包括后端数据库拥挤导致</p>
-<p>但是经过排查发现,故障发生时,服务器性能没有任何压力,后端数据库也正常.</p>
-<p>2.在服务器上创建一个hello world 的静态网站,发现连静态网站都无法访问.</p>
-<p>在访问网站的时候,长时间停留在TCP_NODELAY set阶段:</p>
-<a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]$curl -vvv &quot;http://test.beta.haoshiqi.net&quot;</span><br><span class="line">* About to connect() to opadmin.beta.haoshiqi.net port 80 (#0)</span><br><span class="line">*   Trying 114.55.108.51...</span><br><span class="line">* TCP_NODELAY set</span><br></pre></td></tr></table></figure>
-<p>通过telnet工具发现BETA服务器的80端口不通.</p>
-<ol start="3">
-<li>转而怀疑是办公室网络问题.</li>
-</ol>
-<p>但是办公室访问其他阿里云服务器,访问线上环境,日常办公访问互联网又一切正常,在使用mtr,traceroute等工具排查路径节点时也一切正常,没有丢包线下.ping BETA服务器也没有任何丢包现象.</p>
-<ol start="4">
-<li>转而怀疑是BETA服务器问题.</li>
-</ol>
-<p>但是在办公室网络访问出现故障时的同一时间,其他阿里云服务器访问BETA服务器上的网站又是一切正常,没有任何故障.用手机4G网络访问BETA也一切正常.</p>
-<p>其他线索:</p>
-<p>在晚上下班后,BETA服务器没有访问量时,从办公室访问BETA服务器一切正常,故障没有复现</p>
-<p>5.经过抓包发现客户端发出了大量的TCP重传,但是服务器没有回应SYN报文.</p>
-<p>BETA服务端tcpdump抓包命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tcpdump -s 0 -i eth1 host 27.115.51.166 -w /tmp/beta_server.cap</span><br></pre></td></tr></table></figure>
-<p>客户端本地tcpdump抓包命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tcpdump -s 0 -i en4 host 114.55.108.51 -w ~/Desktop/beta.cap</span><br></pre></td></tr></table></figure>
-<p>当故障出现时，服务器端其实是已经接送到TCP三次握手的SYN包，但不回应ACK给客户端，导致客户端一直处于等待状态.</p>
-<hr>
-<h3 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h3><p>后来发现是系统内核优化时,开启了net.ipv4.tcp_tw_recycle参数.这个参数用来优化快速回收TIME_WAIT的socket.但是默认tcp_timestamps也是开启的.当开启了<code>tcp_tw_recycle和timestamps选项后，当连接进入</code>TIME_WAIT`状态后，会记录对应远端主机最后到达分节的时间戳。如果同样的主机有新的分节到达，且时间戳小于之前记录的时间戳，即视为无效，相应的数据包会被丢弃;</p>
-<p>我们的BETA服务器在上班时间使用比较频繁.这也导致了在上班时间内一个公网IP（经过NAT）大量地去反问服务器，不同客户端的时间可能不一致，所以就会出现时间戳错乱的现象，于是后面的数据包就被丢弃了，具体的表现通常是是客户端明明发送的SYN，但服务端就是不响应ACK.</p>
-<hr>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>很多时候我们在做系统调优的情况时，都是直接在网上看一堆的内核参数，然后直接使用，却没有仔细研究过，很多时候，坑只有是自己拆过后才能记住，像这次这个<code>net.ipv4.tcp_tw_recycle</code>故障网上很多分享，看过和自己碰到过还真不一样，好记性不如烂笔头，慢慢记录，慢慢积累，坑应该会越来越少的；</p>
+        <h2 id="docker学习笔记—-docker容器篇"><a href="#docker学习笔记—-docker容器篇" class="headerlink" title="docker学习笔记— docker容器篇"></a>docker学习笔记— docker容器篇</h2><p><strong>一.创建并启动容器</strong></p>
+<ul>
+<li><strong>创建容器</strong></li>
+</ul>
+<figure class="highlight docker"><figcaption><span>create -it 镜像名:tag```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* **查看所有容器**(包括运行中,已退出,错误容器)</span><br><span class="line"></span><br><span class="line">```docker ps -a</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看所有容器的ID</li>
+</ul>
+<figure class="highlight docker"><figcaption><span>ps -qa```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* **启动容器**</span><br><span class="line"></span><br><span class="line">```docker start container_id``` </span><br><span class="line"></span><br><span class="line">* **使用指定的镜像直接创建并启动容器**</span><br><span class="line"></span><br><span class="line">```docker <span class="keyword">run</span> -it 镜像名:标签 COMMAND</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jesse@jesse-virtual-machine:~$ docker run -it ubuntu:16.04 /bin/bash</span><br><span class="line">root@66a29f973548:/#   ----------此时已经进入到容器的bash环境</span><br></pre></td></tr></table></figure>
+<p>当利用 docker run 来创建容器时，Docker 在后台运行的标准操作包括：</p>
+<p>1.检查本地是否存在指定的镜像，不存在就从公有仓库下载</p>
+<p>2.利用镜像创建并启动一个容器</p>
+<p>3.分配一个文件系统，并在只读的镜像层外面挂载一层可读写层</p>
+<p>4.从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去</p>
+<p>5.从地址池配置一个 ip 地址给容器</p>
+<p>6.执行用户指定的应用程序</p>
+<p>7.执行完毕后容器被终止</p>
+<ul>
+<li><strong>以守护状态运行:</strong></li>
+</ul>
+<p>以守护态运行（加参数-d):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d registry.intra.weibo.com/yushuang3/centos:v1 /bin/sh -c &quot;while true; do echo hello world; sleep 1; done&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>容器终止:</strong></li>
+</ul>
+<p><strong>获取容器输出的信息</strong></p>
+<figure class="highlight docker"><figcaption><span>logs container_id```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">**停止容器**</span><br><span class="line"></span><br><span class="line">```docker stop container_Id ``` </span><br><span class="line"></span><br><span class="line">&gt; 终止一个容器  加入-t=<span class="number">10</span> 表示等待<span class="number">10</span>秒(不加-t选项则默认就是<span class="number">10</span>秒)再次发送SIGKILL信号终止容器</span><br><span class="line"></span><br><span class="line">**重启容器**</span><br><span class="line"></span><br><span class="line">```docker restart container_id</span><br></pre></td></tr></table></figure>
+<p><strong>容器状态:</strong></p>
+<ul>
+<li><strong>status表示容器的状态..</strong></li>
+</ul>
+<ul>
+<li><p><strong>exited 表示容器已经退出</strong></p>
+</li>
+<li><p><strong>up 表示容器正在运行</strong></p>
+</li>
+</ul>
+<figure class="highlight docker"><figcaption><span>run```启动容器时还可以指定其他的配置参数:</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* -h HOSTNAME 或者 --hostname=HOSTNAME.设置容器的主机名</span><br><span class="line">* --dns=IP_ADDRESS:设置容器的DNS.写在容器的/etc/resolv.conf文件中.</span><br></pre></td></tr></table></figure>
+<p>[root@localhost test]$docker run -itd –name busybox1 -h dwd-busybox –dns=8.8.8.8 busybox<br>c25dac9c641705e00f02aefe302987f39f853a1feb8c0d3f32dc1675747edd84</p>
+<p>[root@localhost test]$docker exec -it busybox1 hostname<br>dwd-busybox</p>
+<p>[root@localhost test]$docker exec -it busybox1 cat /etc/resolv.conf<br>nameserver 8.8.8.8<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">但是需要注意的是.这些修改不会被```docker commit```保存,也就是不会保存在镜像中</span><br></pre></td></tr></table></figure></p>
+<p>#将busybox1容器保存为busybox1:test镜像<br>[root@localhost test]$docker commit -m ‘test’ -a ‘jesse’ busybox1 busybox1:test<br>sha256:3c8faee532f177cf8bb8736db89694c2c3ff5be1a30a15d604e450130909d123</p>
+<p>#用这个镜像,启动一个新的busybox1-test的容器<br>[root@localhost test]$docker run –name busybox1-test -itd busybox1:test<br>9326b615e9e3af64336683f7f82e048929de560d4ad0a5caf2485bbc4a62e18c</p>
+<p>#可以看到hostname和dns信息没有被保留<br>[root@localhost test]$docker exec -it busybox1-test hostname<br>9326b615e9e3</p>
+<p>[root@localhost test]$docker exec -it busybox1-test cat /etc/resolv.conf<br>nameserver 114.114.114.114<br>nameserver 114.114.115.115<br><code>`</code></p>
 
       
     </div>
@@ -444,8 +457,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/26/Linux-Web/kong postgresql konga/" rel="next" title="kong+postgresql+konga集群环境部署">
-                <i class="fa fa-chevron-left"></i> kong+postgresql+konga集群环境部署
+              <a href="/2020/06/29/Linux-Web/使用goreplay收集线上真实http流量/" rel="next" title="使用goreplay收集线上真实http流量">
+                <i class="fa fa-chevron-left"></i> 使用goreplay收集线上真实http流量
               </a>
             
           </div>
@@ -453,10 +466,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/26/Linux-Web/nginx安装Lua模块/" rel="prev" title="">
-                 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -487,8 +496,8 @@
 
   
     <div class="comments" id="comments">
-      <div class="ds-thread" data-thread-key="2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/"
-           data-title="" data-url="https://jesse.top/2020/06/26/experience/net.ipv4.tcp_tw_recycle踩的坑/">
+      <div class="ds-thread" data-thread-key="2020/06/29/docker/docker学习笔记—容器篇/"
+           data-title="" data-url="https://jesse.top/2020/06/29/docker/docker学习笔记—容器篇/">
       </div>
     </div>
 
@@ -544,7 +553,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-count">162</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -555,7 +564,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -566,7 +575,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">35</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -606,7 +615,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#copyright-true"><span class="nav-number">1.</span> <span class="nav-text">copyright:true</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#net-ipv4-tcp-tw-recycle踩的坑"><span class="nav-number">2.</span> <span class="nav-text">net.ipv4.tcp_tw_recycle踩的坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#故障现象"><span class="nav-number">2.1.</span> <span class="nav-text">故障现象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原因分析"><span class="nav-number">2.2.</span> <span class="nav-text">原因分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">2.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker学习笔记—-docker容器篇"><span class="nav-number">1.</span> <span class="nav-text">docker学习笔记— docker容器篇</span></a></li></ol></div>
             
 
           </div>
