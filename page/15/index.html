@@ -458,7 +458,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/16/network/route/bgp/BGP-Black-Hole/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/16/network/route/bgp/BGP-Lab/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -477,7 +477,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/16/network/route/bgp/BGP-Black-Hole/" itemprop="url">03-BGP-Black Hole</a></h1>
+                <a class="post-title-link" href="/2018/06/16/network/route/bgp/BGP-Lab/" itemprop="url">02-BGP Lab</a></h1>
         
 
         <div class="post-meta">
@@ -552,8 +552,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/16/network/route/bgp/BGP-Black-Hole/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/16/network/route/bgp/BGP-Black-Hole/" itemprop="commentCount"></span>
+                <a href="/2018/06/16/network/route/bgp/BGP-Lab/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/16/network/route/bgp/BGP-Lab/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -582,10 +582,12 @@
 
       
         
-          <h2 id="BGP2-Black-Hole"><a href="#BGP2-Black-Hole" class="headerlink" title="BGP2. Black Hole"></a>BGP2. Black Hole</h2><p><img src="https://img1.jesse.top/static/images/network/bgp2-1.png" alt="hsrp8"></p>
+          <h2 id="BGP-LAB"><a href="#BGP-LAB" class="headerlink" title="BGP LAB"></a>BGP LAB</h2><h3 id="1-实验拓扑"><a href="#1-实验拓扑" class="headerlink" title="1.实验拓扑"></a>1.实验拓扑</h3><p>配置三个AS，运行BGP协议。 </p>
+<p><img src="https://img1.jesse.top/static/images/network/bgp1.png" alt="bgp1"></p>
+<hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/16/network/route/bgp/BGP-Black-Hole/#more" rel="contents">
+            <a class="btn" href="/2018/06/16/network/route/bgp/BGP-Lab/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -812,6 +814,168 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/15/Linux-Service/systemd详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/15/Linux-Service/systemd详解/" itemprop="url">systemd介绍</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-15T15:59:58+08:00">
+                2018-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Service/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Service</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/15/Linux-Service/systemd详解/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/15/Linux-Service/systemd详解/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="systemd介绍"><a href="#systemd介绍" class="headerlink" title="systemd介绍"></a>systemd介绍</h1><p>systemd并不是一个命令,而是一组命令,涉及到系统管理的方方面面.以下是systemd的架构图</p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/2016/bg2016030703.png" alt=""></p>
+<hr>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/15/Linux-Service/systemd详解/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/15/Linux-Service/使用supervisor托管elasticsearch进程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -923,168 +1087,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/06/15/Linux-Service/使用supervisor托管elasticsearch进程/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/15/Linux-Service/systemd详解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/15/Linux-Service/systemd详解/" itemprop="url">systemd介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-15T15:59:58+08:00">
-                2018-06-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Service/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Service</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/06/15/Linux-Service/systemd详解/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/15/Linux-Service/systemd详解/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="systemd介绍"><a href="#systemd介绍" class="headerlink" title="systemd介绍"></a>systemd介绍</h1><p>systemd并不是一个命令,而是一组命令,涉及到系统管理的方方面面.以下是systemd的架构图</p>
-<p><img src="http://www.ruanyifeng.com/blogimg/asset/2016/bg2016030703.png" alt=""></p>
-<hr>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/15/Linux-Service/systemd详解/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1477,7 +1479,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/正则表达式/正则表达式/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/network/switch/dhcp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1496,7 +1498,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/Linux-Basic/正则表达式/正则表达式/" itemprop="url">正则表达式-语法介绍</a></h1>
+                <a class="post-title-link" href="/2018/06/12/network/switch/dhcp/" itemprop="url">DHCP process</a></h1>
         
 
         <div class="post-meta">
@@ -1531,8 +1533,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
+                  <a href="/categories/Network/" itemprop="url" rel="index">
+                    <span itemprop="name">Network</span>
                   </a>
                 </span>
 
@@ -1542,8 +1544,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/正则表达式/" itemprop="url" rel="index">
-                    <span itemprop="name">正则表达式</span>
+                  <a href="/categories/Network/Switch/" itemprop="url" rel="index">
+                    <span itemprop="name">Switch</span>
                   </a>
                 </span>
 
@@ -1560,8 +1562,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/12/Linux-Basic/正则表达式/正则表达式/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/正则表达式/正则表达式/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/network/switch/dhcp/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/network/switch/dhcp/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1590,221 +1592,10 @@
 
       
         
-          <h1 id="正则表达式-语法介绍"><a href="#正则表达式-语法介绍" class="headerlink" title="正则表达式 - 语法介绍"></a>正则表达式 - 语法介绍</h1><p>正则表达式(regular expression)描述了一种字符串匹配的模式（pattern），可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等。 </p>
-<p>构造正则表达式的方法和创建数学表达式的方法一样。也就是用多种元字符与运算符可以将小的表达式结合在一起来创建更大的表达式。正则表达式的组件可以是单个的字符、字符集合、字符范围、字符间的选择或者所有这些组件的任意组合。</p>
-<p>正则表达式是由普通字符（例如字符 a 到 z）以及特殊字符（称为”元字符”）组成的文字模式。模式描述在搜索文本时要匹配的一个或多个字符串。正则表达式作为一个模板，将某个字符模式与所搜索的字符串进行匹配。</p>
+          <h2 id="How-does-DHCP-work"><a href="#How-does-DHCP-work" class="headerlink" title="How does DHCP work"></a>How does DHCP work</h2><h3 id="Lab-Topology"><a href="#Lab-Topology" class="headerlink" title="Lab Topology"></a>Lab Topology</h3><p><img src="https://img1.jesse.top/static/images/network/dhcp.png" alt="dhcp"></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/Linux-Basic/正则表达式/正则表达式/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/" itemprop="url">Shell脚本特殊变量</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-12T22:59:58+08:00">
-                2018-06-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
-                    <span itemprop="name">shell&shell脚本</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="shell脚本特殊变量"><a href="#shell脚本特殊变量" class="headerlink" title="shell脚本特殊变量"></a>shell脚本特殊变量</h2><table>
-<thead>
-<tr>
-<th>变量名</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>$0</td>
-<td>当前脚本的文件名</td>
-</tr>
-<tr>
-<td>$n</td>
-<td>传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是$1，第二个参数是$2……第n个参数是$n</td>
-</tr>
-<tr>
-<td>$#</td>
-<td>传递给脚本或函数的参数个数</td>
-</tr>
-<tr>
-<td>$*</td>
-<td>传递给脚本或函数的所有参数。</td>
-</tr>
-<tr>
-<td>$@</td>
-<td>传递给脚本或函数的所有参数。被双引号(“ “)包含时，与 $* 稍有不同，下面将会讲到。</td>
-</tr>
-<tr>
-<td>$?</td>
-<td>上个命令的退出状态，或函数的返回值。一般情况下，执行成功会返回 0，失败返回 值是个大于1的整数</td>
-</tr>
-<tr>
-<td>$$</td>
-<td>当前Shell进程ID。对于 Shell 脚本，就是这些脚本所在的进程ID</td>
-</tr>
-</tbody>
-</table>
-<hr>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/#more" rel="contents">
+            <a class="btn" href="/2018/06/12/network/switch/dhcp/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1986,6 +1777,180 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/06/12/Linux-Basic/文本处理/sed用法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/04-shell导入外部文件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/12/Linux-Basic/shell&shell脚本/04-shell导入外部文件/" itemprop="url">shell脚本导入外部文件</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-12T22:59:58+08:00">
+                2018-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
+                    <span itemprop="name">shell&shell脚本</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/12/Linux-Basic/shell&shell脚本/04-shell导入外部文件/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/Linux-Basic/shell&shell脚本/04-shell导入外部文件/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><strong>shell脚本有时需要读取文件内容.下面介绍了从外部读取文件,引入循环语句处理该文件的几种常见方法</strong></p>
+<p><strong>1.文本重定向</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">定义一个文件内容:</span><br><span class="line">[root@localhost ~]$cat users.cvs</span><br><span class="line">tom</span><br><span class="line">jesse</span><br><span class="line">tony</span><br></pre></td></tr></table></figure>
+<p>shell脚本从该文件读取文件的每行内容,且创建相关账户</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/12/Linux-Basic/shell&shell脚本/04-shell导入外部文件/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

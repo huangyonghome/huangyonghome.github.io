@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/" itemprop="url">36.Python之路 - Socket实现QQ聊天</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/" itemprop="url">31.Python之路 - 反射</a></h1>
         
 
         <div class="post-meta">
@@ -340,8 +340,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Network/" itemprop="url" rel="index">
-                    <span itemprop="name">Network</span>
+                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">Object-Oriented</span>
                   </a>
                 </span>
 
@@ -358,8 +358,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -388,15 +388,460 @@
 
       
         
-          <h1 id="Python之路-Socket实现QQ聊天"><a href="#Python之路-Socket实现QQ聊天" class="headerlink" title="Python之路 - Socket实现QQ聊天"></a>Python之路 - Socket实现QQ聊天</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在上一篇中写了最基本版的socket服务端和客户端 , 即仅能通信一次后就自动关闭了 , 显然实际应用中可不是这样的 , 那就来写一个像QQ一样的聊天程序吧</p>
-<h2 id="TCP实现-🍀"><a href="#TCP实现-🍀" class="headerlink" title="TCP实现  🍀"></a>TCP实现  🍀</h2><p>因为TCP是有链接的 , 这就导致只能有一个服务端 , 但是可以有多个客户端</p>
-<p>tcpqq_server.py</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line">sock = socket.socket()</span><br><span class="line">sock.bind((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))</span><br><span class="line">sock.listen(<span class="number">5</span>)</span><br><span class="line"><span class="comment"># 实现链接循环</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    print(<span class="string">"Watiting for the link..."</span>)</span><br><span class="line">    conn, addr = sock.accept()</span><br><span class="line">    print(<span class="string">"Your friend &#123;&#125; is online..."</span>.format(addr))</span><br><span class="line">    <span class="comment"># 实现通信循环</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        messages = conn.recv(<span class="number">1024</span>)</span><br><span class="line">        print(<span class="string">"Messages from [&#123;&#125;]:&#123;&#125;"</span>.format(addr, messages.decode(<span class="string">'utf-8'</span>)))</span><br><span class="line">        <span class="keyword">if</span> messages == <span class="string">b'q'</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">                data = input(<span class="string">"Please input the messages to be sent:"</span>).strip().encode(<span class="string">'utf-8'</span>)</span><br><span class="line">                <span class="comment"># 注意发送的内容不能为空,否则接收方就会一直等下去</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> data:</span><br><span class="line">                    print(<span class="string">"Can't be empty..."</span>)</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                conn.send(data)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    print(<span class="string">"Your friend &#123;&#125; is offline..."</span>.format(addr))</span><br><span class="line">    conn.close()</span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
-<p>tcpqq_client.py</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line">sock = socket.socket()</span><br><span class="line">sock.connect((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))</span><br><span class="line"><span class="comment"># 实现通信循环</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    messages = input(<span class="string">"Please input your messages to be sent:"</span>).strip().encode(<span class="string">'utf-8'</span>)</span><br><span class="line">    <span class="comment"># 注意发送的内容不能为空,否则接收方就会一直等下去</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> messages:</span><br><span class="line">        print(<span class="string">"Can't be empty..."</span>)</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">elif</span> messages == <span class="string">b'q'</span>:</span><br><span class="line">    	<span class="keyword">break</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">    	sock.send(messages)</span><br><span class="line">        data = sock.recv(<span class="number">1024</span>)</span><br><span class="line">        print(<span class="string">"Messages from [&#123;&#125;]:&#123;&#125;"</span>.format((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>), data.decode(<span class="string">'utf-8'</span>)))</span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
+          <h1 id="Python之路-反射"><a href="#Python之路-反射" class="headerlink" title="Python之路 - 反射"></a>Python之路 - 反射</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>反射主要是指程序可以访问、检测和修改它本身状态或行为的一种能力 </p>
+<p>Python面向对象中的反射是通过字符串的形式来操作对象相关的属性 , 在Python中一切皆对象 , 并且只要是对象就可以使用反射</p>
+<h2 id="hasattr-🍀"><a href="#hasattr-🍀" class="headerlink" title="hasattr  🍀"></a>hasattr  🍀</h2><p>判断对象中是否具有给定名称的属性</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hasattr</span><span class="params">(*args, **kwargs)</span>:</span> <span class="comment"># real signature unknown</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Return whether the object has an attribute with the given name.  </span></span><br><span class="line"><span class="string">    This is done by calling getattr(obj, name) and catching AttributeError.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p>实例1</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义一个字符串</span></span><br><span class="line">name = <span class="string">'lyon'</span></span><br><span class="line"><span class="comment"># 查看是否具有给定名称的属性</span></span><br><span class="line">bool = hasattr(name,<span class="string">'__len__'</span>)</span><br><span class="line"><span class="comment"># 打印bool</span></span><br><span class="line">print(bool)</span><br><span class="line"><span class="comment"># 执行结果:True</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">说明:很多初学者可能一直不理解为什么说Python里一切皆对象,因为没有意识到,在Python中str、list、int ...等这些数据类型,其实就是用class写出来的一个模型,那么既然是类就会有属性这一说,就可以利用反射来操作对象了</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<p>实例2</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">s1</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">s2</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line">this_modules = sys.modules[__name__]</span><br><span class="line">print(type(this_modules),hasattr(this_modules,<span class="string">'s1'</span>))</span><br><span class="line">module1</span><br></pre></td></tr></table></figure>
+<h2 id="getattr-🍀"><a href="#getattr-🍀" class="headerlink" title="getattr  🍀"></a>getattr  🍀</h2><p>从一个对象中获取属性名称</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/" itemprop="url">32.Python之路 - 异常处理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">Object-Oriented</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-异常处理"><a href="#Python之路-异常处理" class="headerlink" title="Python之路 - 异常处理"></a>Python之路 - 异常处理</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在我们写程序时难免会出现错误 , 一种为语法错误 , 即为python解释器的语法检测都通不过的错误 , 这种错误只能我们在程序执行前就处理好 . 另一种为逻辑错误 , 这是我们在程序设计时所出现的错误 , 也就是我们通常所说的bug </p>
+<p>在编程过程中为了增加友好性 , 在程序出现bug时一般不会将错误信息显示给用户 , 而是显示一个提示错误的页面</p>
+<p>基本语法</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/" itemprop="url">33.Python之路 - 特殊操作符</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">Object-Oriented</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-特殊操作符"><a href="#Python之路-特殊操作符" class="headerlink" title="Python之路 - 特殊操作符"></a>Python之路 - 特殊操作符</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在 Python 中 , 我们自定义类都是基于 Object 对象实现的 , 而在 Object 对象中有一些特殊的操作符 (<code>__method__</code>) 控制着整个对象的行为 , 所以 , 如果我们想对对象的行为进行控制 , 我们就需要自己来实现这些方法 ; 当然很多人称这些方法为 Python 魔法方法 (魔术方法) </p>
+<p>下面 , 看看这些方法吧</p>
+<h2 id="基本行为-🍀"><a href="#基本行为-🍀" class="headerlink" title="基本行为  🍀"></a>基本行为  🍀</h2><table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>控制行为</th>
+<th>调用说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__new__</code></td>
+<td>对象创建</td>
+<td><code>__init__</code> 只是用处初始化 , <code>__new__</code> 调用的结果会交给 <code>__init__</code> 进一步处理</td>
+</tr>
+<tr>
+<td><code>__init__</code></td>
+<td>对象初始化</td>
+<td>构造函数 , 进行属性设置</td>
+</tr>
+<tr>
+<td><code>__del__</code></td>
+<td>对象删除</td>
+<td>析构函数 , 进行对象的销毁</td>
+</tr>
+<tr>
+<td><code>__repr__</code></td>
+<td>对象显示 , 针对对象</td>
+<td>终端显示 , 返回值必须为字符串 , 实例见表下方</td>
+</tr>
+<tr>
+<td><code>__str__</code></td>
+<td>对象显示 , 针对 <code>print</code></td>
+<td><code>print</code> 显示结果 , 返回值必须为字符串 , 如果未实现该方法 , <code>print</code> 将使用 <code>__repr__</code></td>
+</tr>
+<tr>
+<td><code>__bytes__</code></td>
+<td>字节对象转换</td>
+<td>返回值必须为一个bytes对象 , bytes(obj)</td>
+</tr>
+<tr>
+<td><code>__format__</code></td>
+<td>格式化字符串</td>
+<td>返回值必须为字符串对象 , format(obj)</td>
+</tr>
+<tr>
+<td><code>__lt__</code></td>
+<td><code>&lt;</code> 运算</td>
+<td><code>x &lt; y</code> , 返回布尔值 , 下同</td>
+</tr>
+<tr>
+<td><code>__le__</code></td>
+<td><code>&lt;=</code> 运算</td>
+<td><code>x &lt;= y</code></td>
+</tr>
+<tr>
+<td><code>__eq__</code></td>
+<td><code>=</code> 运算</td>
+<td><code>x == y</code></td>
+</tr>
+<tr>
+<td><code>__ne__</code></td>
+<td><code>!=</code> 运算</td>
+<td><code>x != y</code></td>
+</tr>
+<tr>
+<td><code>__gt__</code></td>
+<td><code>&gt;</code> 运算</td>
+<td><code>x &gt; y</code></td>
+</tr>
+<tr>
+<td><code>__ge__</code></td>
+<td><code>&gt;=</code> 运算</td>
+<td><code>x &gt;= y</code></td>
+</tr>
+<tr>
+<td><code>__hash__</code></td>
+<td>可哈希</td>
+<td>返回一个哈希对象 , hash(obj) , 注意 : 定义该方法同时应该定义 <code>__eq__</code></td>
+</tr>
+<tr>
+<td><code>__bool__</code></td>
+<td>真假测试</td>
+<td>返回布尔值</td>
+</tr>
+<tr>
+<td><code>__call__</code></td>
+<td>对象调用</td>
+<td>在对象被调用时执行</td>
+</tr>
+<tr>
+<td><code>__len__</code></td>
+<td><code>len()</code></td>
+<td>使用 <code>len(obj)</code> 时被调用 , 为防止值测试抛出 <code>OverflowError</code> , 必须定义 <code>__bool__()</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>__repr__</code> 与 <code>__str__</code> 对比实例 : </p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -626,6 +1071,178 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/zabbix监控ES集群/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/监控/zabbix监控ES集群/" itemprop="url">zabbix监控ES集群</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/监控/" itemprop="url" rel="index">
+                    <span itemprop="name">监控</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/监控/zabbix监控ES集群/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/zabbix监控ES集群/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="zabbix监控ES集群"><a href="#zabbix监控ES集群" class="headerlink" title="zabbix监控ES集群"></a>zabbix监控ES集群</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本节以 zabbix 为例，介绍如何使用监控系统完成 Elasticsearch 的监控报警。</p>
+<p>本文档的源码地址: <a href="https://github.com/huangyonghome/zabbix-es_cluster" target="_blank" rel="noopener">https://github.com/huangyonghome/zabbix-es_cluster</a></p>
+<hr>
+<h3 id="安装配置"><a href="#安装配置" class="headerlink" title="安装配置"></a>安装配置</h3><ol>
+<li>仓库中包括三个文件： 1、ESzabbix.py 2、ESzabbix-userparm.conf 3、ESzabbix_templates.xml</li>
+</ol>
+<p>其中，前两个文件需要分发到每个 ES 节点上，我们环境中的默认位置分别是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/etc/zabbix/scripts/ESzabbix.py</span><br><span class="line">/etc/zabbix/zabbix_agentd.d/ESzabbix-userparm.conf</span><br><span class="line"></span><br><span class="line">#移动文件到zabbix相关目录下</span><br><span class="line">work@hsq-mq-node1-temp:~$ cd zabbix-es</span><br><span class="line">work@hsq-mq-node1-temp:~/zabbix-es$ sudo mv ESzabbix.py /etc/zabbix/scripts/</span><br><span class="line">work@hsq-mq-node1-temp:~/zabbix-es$ sudo mv ESzabbix.userparm /etc/zabbix/zabbix_agentd.conf.d/ESzabbix-userparm.conf</span><br><span class="line"></span><br><span class="line">#修改ESzabbix-userparm.conf文件中的路径</span><br><span class="line">#cat ESzabbix-userparm.conf</span><br><span class="line">UserParameter=ESzabbix[*],/etc/zabbix/scripts/ESzabbix.py $1 $2</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>给文件赋权</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo chown zabbix:zabbix /etc/zabbix/scripts/ESzabbix.py</span><br><span class="line">sudo chmod +x /etc/zabbix/scripts/ESzabbix.py</span><br><span class="line"></span><br><span class="line">sudo chown zabbix:zabbix /etc/zabbix/zabbix_agentd.d/ESzabbix-userparm.conf</span><br></pre></td></tr></table></figure>
+<p>3.修改/etc/zabbix/scripts/ESzabbix.py脚本文件</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/监控/zabbix监控ES集群/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -798,7 +1415,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -817,7 +1434,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/" itemprop="url">45.Python之路 - 并发编程之IO多路复用</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/" itemprop="url">36.Python之路 - Socket实现QQ聊天</a></h1>
         
 
         <div class="post-meta">
@@ -863,8 +1480,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Concurrent/" itemprop="url" rel="index">
-                    <span itemprop="name">Concurrent</span>
+                  <a href="/categories/python/Network/" itemprop="url" rel="index">
+                    <span itemprop="name">Network</span>
                   </a>
                 </span>
 
@@ -881,8 +1498,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -911,24 +1528,15 @@
 
       
         
-          <h1 id="Python之路-并发编程之IO多路复用"><a href="#Python之路-并发编程之IO多路复用" class="headerlink" title="Python之路 - 并发编程之IO多路复用"></a>Python之路 - 并发编程之IO多路复用</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>在网络编程中 , 如果服务端需要面临同时接收上千甚至上万次的客户端请求 , 利用 “进程池” 或 “线程池” 或许可以缓解部分压力 , 但是并不是一个好的选择 , 因为超过数量还是得等 ; 又或者线程一旦进行堵塞 ; 以及任务之间的高度独立 , 并不需要互相通信或者等待时 , 我们就需要用到I/O多路复用(IO Multiplexing) 了 , 又叫做事件驱动IO (Event driven IO)</p>
-<h2 id="I-O多路复用-🍀"><a href="#I-O多路复用-🍀" class="headerlink" title="I/O多路复用  🍀"></a>I/O多路复用  🍀</h2><blockquote>
-<p>I/O多路复用是指单个线程中 , 通过记录跟踪每个I/O流(sock)的状态 , 来同时管理多个I/O流</p>
-</blockquote>
-<p>在I/O多路复用中只要一遇到IO就注册一个事件 , 然后主程序就可以继续干其他的事情了 , 直到IO处理完毕 , 继续恢复之前中断的任务 , 也就是说<strong>一个线程可以同时处理多个请求</strong> </p>
-<p>举🌰</p>
-<p>在UI编程中 , 常常要对鼠标点击进行响应 , 还要同时对键盘敲击也进行响应 </p>
-<p><strong>多进程多线程方式 : </strong> </p>
-<p>创建一个进程 , 进程中由两个线程 , 一个循环检测鼠标点击 , 一个循环检测键盘敲击 , 一旦检测到有情况就再开一个线程去处理 , 然后一直开下去……基本上是由创建进程/线程 , 维护进程/线程来解决的 , 这样对于CPU的资源是很浪费的</p>
-<p><strong>IO多路复用(事件驱动) : </strong> </p>
-<p>创建一个事件(消息)队列 , 鼠标点击就往队列中增加一个鼠标点击事件 , 键盘敲击就往队列中增加一个键盘敲击事件 , 创建一个线程(IO线程)负责不断从队列中取出事件 , 根据不同的事件 , 调用不同的函数 , 如onClick() , onKeyDown()等 , 即一个线程解决了所有事件的问题 , 这就是复用</p>
-<p><strong>比较 :</strong>  与多进程多线程技术相比 , I/O多路复用最大的优势是系统开销小 , 系统不必创建进程/线程 , 也不必维护这些进程/线程 , 从而大大减小了系统的开销</p>
-<p>目前常见支持I/O多路复用的系统调用select , poll , epoll ,I/O多路复用就是通过一种机制 , 一个进程可以监视多个描述符 , 一旦某个描述符就绪(一般是读就绪或者写就绪) , 能够通知程序进行相应的读写操作</p>
-<p>而I/O多路复用的具体实现就是 , select , poll , epoll</p>
-<hr>
+          <h1 id="Python之路-Socket实现QQ聊天"><a href="#Python之路-Socket实现QQ聊天" class="headerlink" title="Python之路 - Socket实现QQ聊天"></a>Python之路 - Socket实现QQ聊天</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在上一篇中写了最基本版的socket服务端和客户端 , 即仅能通信一次后就自动关闭了 , 显然实际应用中可不是这样的 , 那就来写一个像QQ一样的聊天程序吧</p>
+<h2 id="TCP实现-🍀"><a href="#TCP实现-🍀" class="headerlink" title="TCP实现  🍀"></a>TCP实现  🍀</h2><p>因为TCP是有链接的 , 这就导致只能有一个服务端 , 但是可以有多个客户端</p>
+<p>tcpqq_server.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line">sock = socket.socket()</span><br><span class="line">sock.bind((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))</span><br><span class="line">sock.listen(<span class="number">5</span>)</span><br><span class="line"><span class="comment"># 实现链接循环</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    print(<span class="string">"Watiting for the link..."</span>)</span><br><span class="line">    conn, addr = sock.accept()</span><br><span class="line">    print(<span class="string">"Your friend &#123;&#125; is online..."</span>.format(addr))</span><br><span class="line">    <span class="comment"># 实现通信循环</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        messages = conn.recv(<span class="number">1024</span>)</span><br><span class="line">        print(<span class="string">"Messages from [&#123;&#125;]:&#123;&#125;"</span>.format(addr, messages.decode(<span class="string">'utf-8'</span>)))</span><br><span class="line">        <span class="keyword">if</span> messages == <span class="string">b'q'</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">                data = input(<span class="string">"Please input the messages to be sent:"</span>).strip().encode(<span class="string">'utf-8'</span>)</span><br><span class="line">                <span class="comment"># 注意发送的内容不能为空,否则接收方就会一直等下去</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> data:</span><br><span class="line">                    print(<span class="string">"Can't be empty..."</span>)</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                conn.send(data)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    print(<span class="string">"Your friend &#123;&#125; is offline..."</span>.format(addr))</span><br><span class="line">    conn.close()</span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
+<p>tcpqq_client.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line">sock = socket.socket()</span><br><span class="line">sock.connect((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))</span><br><span class="line"><span class="comment"># 实现通信循环</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    messages = input(<span class="string">"Please input your messages to be sent:"</span>).strip().encode(<span class="string">'utf-8'</span>)</span><br><span class="line">    <span class="comment"># 注意发送的内容不能为空,否则接收方就会一直等下去</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> messages:</span><br><span class="line">        print(<span class="string">"Can't be empty..."</span>)</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">elif</span> messages == <span class="string">b'q'</span>:</span><br><span class="line">    	<span class="keyword">break</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">    	sock.send(messages)</span><br><span class="line">        data = sock.recv(<span class="number">1024</span>)</span><br><span class="line">        print(<span class="string">"Messages from [&#123;&#125;]:&#123;&#125;"</span>.format((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>), data.decode(<span class="string">'utf-8'</span>)))</span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -983,7 +1591,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/05-Python之路 - 网络编程之粘包/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1002,7 +1610,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/" itemprop="url">46.Python之路 - 实现线程池</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/05-Network/05-Python之路 - 网络编程之粘包/" itemprop="url">38.Python之路 - 网络编程之粘包</a></h1>
         
 
         <div class="post-meta">
@@ -1048,8 +1656,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Concurrent/" itemprop="url" rel="index">
-                    <span itemprop="name">Concurrent</span>
+                  <a href="/categories/python/Network/" itemprop="url" rel="index">
+                    <span itemprop="name">Network</span>
                   </a>
                 </span>
 
@@ -1066,8 +1674,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/05-Network/05-Python之路 - 网络编程之粘包/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/05-Python之路 - 网络编程之粘包/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1096,350 +1704,23 @@
 
       
         
-          <h1 id="Python之路-实现线程池-🍀"><a href="#Python之路-实现线程池-🍀" class="headerlink" title="Python之路 - 实现线程池  🍀"></a>Python之路 - 实现线程池  🍀</h1><h2 id="方式一-🍀"><a href="#方式一-🍀" class="headerlink" title="方式一  🍀"></a>方式一  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Queue</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadPool</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, max_num=<span class="number">20</span>)</span>:</span></span><br><span class="line">        self.queue = Queue.Queue(max_num)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(max_num):</span><br><span class="line">            self.queue.put(threading.Thread)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_thread</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.queue.get()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_thread</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.queue.put(threading.Thread)</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">使用:</span></span><br><span class="line"><span class="string">pool = ThreadPool(10)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">def func(arg, p):</span></span><br><span class="line"><span class="string">    import time</span></span><br><span class="line"><span class="string">    time.sleep(2)</span></span><br><span class="line"><span class="string">    p.add_thread()</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">for i in range(30):</span></span><br><span class="line"><span class="string">    thread = pool.get_thread()</span></span><br><span class="line"><span class="string">    t = thread(target=func, args=(i, pool))</span></span><br><span class="line"><span class="string">    t.start()</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/" itemprop="url">44.Python之路 - 并发编程之协程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Concurrent/" itemprop="url" rel="index">
-                    <span itemprop="name">Concurrent</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-并发编程之协程"><a href="#Python之路-并发编程之协程" class="headerlink" title="Python之路 - 并发编程之协程"></a>Python之路 - 并发编程之协程</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>在前面的文章中 , 基本已经可以解决并发编程中的基本问题了 , 但是如果我们要利用单线程来实现并发 , 线程是轻量级的进程 , 为了使计算机资源能更充分的利用 , 那么我们就需要用到协程了</p>
-<p>并发的本质就是<em>上下文切换</em>加上<em>保存状态</em> , 那么我们就可以想到关键字<code>yield</code> , 我们在生成器篇章中 , 就是利用了<code>yield</code>实现了状态的保存 , 来看一个廖大大的例子</p>
-<p>生产者消费者模型yield版</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">()</span>:</span></span><br><span class="line">    r = <span class="string">''</span></span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        n = <span class="keyword">yield</span> r</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> n:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        print(<span class="string">'[CONSUMER] Consuming %s...'</span> % n)</span><br><span class="line">        r = <span class="string">'200 OK'</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">produce</span><span class="params">(c)</span>:</span></span><br><span class="line">    c.send(<span class="keyword">None</span>)</span><br><span class="line">    n = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> n &lt; <span class="number">5</span>:</span><br><span class="line">        n = n + <span class="number">1</span></span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        print(<span class="string">'[PRODUCER] Producing %s...'</span> % n)</span><br><span class="line">        r = c.send(n)</span><br><span class="line">        print(<span class="string">'[PRODUCER] Consumer return: %s'</span> % r)</span><br><span class="line">    c.close()</span><br><span class="line">c = consumer()</span><br><span class="line">produce(c)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string"># yiled可以保存状态,yield的状态保存与操作系统的保存线程状态很像,但是yield是代码级别控制的,更轻量级</span></span><br><span class="line"><span class="string"># send可以把一个函数的结果传给另外一个函数,以此实现单线程内程序之间的切换 </span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<p>上述例子中<code>yield</code>确实实现了并发 , 但是并没有实现遇到IO操作进行自动切换 , 所以协程出场了</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/Zabbix 监控Dell服务器硬件/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/" itemprop="url">Zabbix 监控Dell服务器硬件</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/监控/" itemprop="url" rel="index">
-                    <span itemprop="name">监控</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/Zabbix 监控Dell服务器硬件/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Zabbix-监控Dell服务器硬件"><a href="#Zabbix-监控Dell服务器硬件" class="headerlink" title="Zabbix 监控Dell服务器硬件"></a>Zabbix 监控Dell服务器硬件</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>​     OMSA（全称Openmanage Server Administrator),是戴尔公司自主研发的IT系统管理解决方案。其通过提供web的图形用户界面和操作系统的命令行工具对本地和远程的服务器进行管理和监控。</p>
-<p>OMSA和IDRAC类似,产品,功能也相似.Zabbix可以通过OMSA和IDRAC来监控Dell服务器的硬件.</p>
-<p>由于Dell服务器官网下载OMSA工具非常慢,所以安装很难.如果可以的花,首选还是建议通过IDRAC来监控服务器硬件状态</p>
+          <h1 id="Python之路-网络编程之粘包"><a href="#Python之路-网络编程之粘包" class="headerlink" title="Python之路 - 网络编程之粘包"></a>Python之路 - 网络编程之粘包</h1><h2 id="粘包-🍀"><a href="#粘包-🍀" class="headerlink" title="粘包  🍀"></a>粘包  🍀</h2><p>由上一篇&lt;<a href="https://lyonyang.gitbooks.io/blog/05-Python%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/04-Python%E4%B9%8B%E8%B7%AF%20-%20Socket%E5%AE%9E%E7%8E%B0%E8%BF%9C%E7%A8%8B%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4.html" target="_blank" rel="noopener">Python之路 - Socket实现远程执行命令</a>&gt;中所出现的问题引出了粘包这个问题 , 粘包到底是什么?</p>
+<p>首先 ,  <code>粘包现象只出现在TCP中</code>  ,  为什么说只有在TCP中才会发生粘包现象 , 先来详细解释一下TCP与UDP吧</p>
 <blockquote>
-<p>我在另一篇笔记<zabbix 通过dell="" idrac监控服务器硬件状态="">中介绍了如何通过IDRAC来监控Dell服务器硬件</zabbix></p>
+<p><strong>TCP</strong> </p>
 </blockquote>
+<p>TCP (transprot control protocol, 传输控制协议) 是面向连接的 , 面向流的 , 提供高可靠性服务 .  收发两端都有要一一对应的socket(一对一模式) , 因此发送端为了将多个发往接收端的包 , 更有效的发到对方 , 使用了优化方法(Nagle算法) , <code>将多次间隔较小且数据量小的数据 , 合并成一个大的数据块 , 然后进行封包 .</code> 必须提供科学的拆包机制 , 才能进行合理的分辨 , 所以说面向流的通信是无消息保护边界的</p>
+<blockquote>
+<p><strong>UDP</strong> </p>
+</blockquote>
+<p>UDP(user datagram protocol, 用户数据报协议) 是无连接的 , 面向消息的 , 提供高效率服务 . 不使用块的合并优化算法 , 由于UDP支持的是一对多的模式 , 所以接收端的skbuff (套接字缓冲区) 采用了链式结构来记录每一个到达的UDP包 , 在每个UDP包中就有了消息头 (消息来源地址 , 端口等信息) , 这样 , 对于接收端来说 , 就容易进行区分处理了 . 即面向的通信是有消息保护边界的</p>
+<blockquote>
+<p><strong>区别</strong> </p>
+</blockquote>
+<p>TCP是基于数据流的 , 于是收发的消息不能为空 , 这就需要在客户端和服务端都添加空消息的处理机制 , 防止程序卡住 , 而UDP是基于数据报的 , 就算收发空内容 , 也不是空消息 , UDP协议会自动帮你封装上消息头</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/python/05-Network/05-Python之路 - 网络编程之粘包/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1494,7 +1775,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/Zabbix 监控Rabbitmq集群/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1513,7 +1794,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/监控/Zabbix 监控Rabbitmq集群/" itemprop="url">Zabbix 监控Rabbitmq集群</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/" itemprop="url">39.Python之路 - Socketserver实现多并发</a></h1>
         
 
         <div class="post-meta">
@@ -1548,175 +1829,19 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/监控/" itemprop="url" rel="index">
-                    <span itemprop="name">监控</span>
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
                   </a>
                 </span>
 
                 
                 
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/监控/Zabbix 监控Rabbitmq集群/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/Zabbix 监控Rabbitmq集群/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="Zabbix-监控Rabbitmq集群"><a href="#Zabbix-监控Rabbitmq集群" class="headerlink" title="Zabbix 监控Rabbitmq集群"></a>Zabbix 监控Rabbitmq集群</h3><p>github上有一个非常不错的rabbitmq监控模板:<a href="https://github.com/jasonmcintosh/rabbitmq-zabbix" target="_blank" rel="noopener">rabbitmq-zabbix</a></p>
-<p>本文档不赘述zabbix的配置细节,仅仅记录该rabbitmq监控模板的使用</p>
-<p>一. 将github的模板文件克隆到服务器上:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">oot@hsq-mq-node1:~/rabbitmq-zabbix# ll</span><br><span class="line">total 132</span><br><span class="line">drwxr-xr-x  6 root root  4096 May 30 18:36 ./</span><br><span class="line">drwx------ 11 root root  4096 Jun 18 09:27 ../</span><br><span class="line">drwxr-xr-x  8 root root  4096 May 30 11:05 .git/</span><br><span class="line">-rw-r--r--  1 root root    40 May 30 11:05 .gitignore</span><br><span class="line">-rw-r--r--  1 root root 10273 May 30 11:05 LICENSE</span><br><span class="line">-rw-r--r--  1 root root 76316 May 30 11:05 rabbitmq.template.xml</span><br><span class="line">-rw-r--r--  1 root root  3274 May 30 11:05 README.ja.md</span><br><span class="line">-rw-r--r--  1 root root  5598 May 30 11:05 README.md</span><br><span class="line">drwxr-xr-x  3 root root  4096 May 30 11:05 scripts/</span><br><span class="line">drwxr-xr-x  2 root root  4096 May 30 11:05 tests/</span><br><span class="line">-rw-r--r--  1 root root   500 May 30 11:05 .travis.yml</span><br><span class="line">drwxr-xr-x  2 root root  4096 May 30 11:05 zabbix_agentd.d/</span><br></pre></td></tr></table></figure>
-<p>其中:</p>
-<p>scripts目录下是监控脚本文件</p>
-<p>zabbix_agentd.d目录下是zabbix监控配置文件</p>
-<p>rabbitmq.template.xml是zabbix监控模板.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/监控/Zabbix 监控Rabbitmq集群/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+                  ， 
                 
-                <a class="post-title-link" href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/" itemprop="url">Zabbix 通过Dell Idrac监控服务器硬件状态群</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/监控/" itemprop="url" rel="index">
-                    <span itemprop="name">监控</span>
+                  <a href="/categories/python/Network/" itemprop="url" rel="index">
+                    <span itemprop="name">Network</span>
                   </a>
                 </span>
 
@@ -1733,8 +1858,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1763,190 +1888,201 @@
 
       
         
-          <h2 id="Zabbix-通过Dell-Idrac监控服务器硬件状态"><a href="#Zabbix-通过Dell-Idrac监控服务器硬件状态" class="headerlink" title="Zabbix 通过Dell Idrac监控服务器硬件状态"></a>Zabbix 通过Dell Idrac监控服务器硬件状态</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近登陆vsphere控制台发现一台Dell服务器告警,已经损坏了.于是想通过zabbix监控Dell服务器的硬件状态.</p>
-<p>有2种方法可以监控dell服务器的硬件状态</p>
-<ul>
-<li>通过Dell的OMSA工具监控</li>
-<li>通过Dell的Idrac模块的SNMP协议监控</li>
-</ul>
-<p>Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere的虚拟主机上,没办法获取到硬件状态.而且OMSA工具从Dell官网下载太慢.安装很麻烦</p>
-<p>所以本文主要介绍如何通过idrac模块的snmp协议监控硬件状态.监控方法非常的简单</p>
-<hr>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/监控/zabbix 通过Dell Idrac监控服务器硬件状态/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/zabbix监控ES集群/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/监控/zabbix监控ES集群/" itemprop="url">zabbix监控ES集群</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/监控/" itemprop="url" rel="index">
-                    <span itemprop="name">监控</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/监控/zabbix监控ES集群/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/zabbix监控ES集群/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="zabbix监控ES集群"><a href="#zabbix监控ES集群" class="headerlink" title="zabbix监控ES集群"></a>zabbix监控ES集群</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本节以 zabbix 为例，介绍如何使用监控系统完成 Elasticsearch 的监控报警。</p>
-<p>本文档的源码地址: <a href="https://github.com/huangyonghome/zabbix-es_cluster" target="_blank" rel="noopener">https://github.com/huangyonghome/zabbix-es_cluster</a></p>
-<hr>
-<h3 id="安装配置"><a href="#安装配置" class="headerlink" title="安装配置"></a>安装配置</h3><ol>
-<li>仓库中包括三个文件： 1、ESzabbix.py 2、ESzabbix-userparm.conf 3、ESzabbix_templates.xml</li>
+          <h1 id="Python之路-Socketserver实现多并发"><a href="#Python之路-Socketserver实现多并发" class="headerlink" title="Python之路 - Socketserver实现多并发"></a>Python之路 - Socketserver实现多并发</h1><h2 id="阅读指引-🍀"><a href="#阅读指引-🍀" class="headerlink" title="阅读指引  🍀"></a>阅读指引  🍀</h2><p>在上面的整理篇章中 , 简单的网络编程基本已经会了 , 一个TCP , 一个UDP , 然后就是粘包问题</p>
+<p>但是在上述中有一个问题 , 在现实生活中 , 一个服务端肯定常常需要同时服务好几个客户端 , 而上述篇章中并没有实现一对多同时进行的情况 , TCP中只能等前一个链接断开后续的才能连上 , 没连上就一直等 ; UDP则是接一次发一次 , 并不能同时接两次发两次 . 为了处理这个问题 , 即实现并发 (后续文章详细讲解) , Python中有一个socketserver模块可以满足我们的要求</p>
+<h2 id="socketserver-🍀"><a href="#socketserver-🍀" class="headerlink" title="socketserver  🍀"></a>socketserver  🍀</h2><p>Python提供了两个级别访问的网络服务:</p>
+<ol>
+<li>低级别的网络服务支持基本的socket , 它提供了标准的BSD Socket API , 可以访问底层操作系统Socket接口的全部方法</li>
+<li>高级别的网络服务模块socketserver , 它提供了服务器中心类 , 可以简化网络服务器的开发</li>
 </ol>
-<p>其中，前两个文件需要分发到每个 ES 节点上，我们环境中的默认位置分别是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/etc/zabbix/scripts/ESzabbix.py</span><br><span class="line">/etc/zabbix/zabbix_agentd.d/ESzabbix-userparm.conf</span><br><span class="line"></span><br><span class="line">#移动文件到zabbix相关目录下</span><br><span class="line">work@hsq-mq-node1-temp:~$ cd zabbix-es</span><br><span class="line">work@hsq-mq-node1-temp:~/zabbix-es$ sudo mv ESzabbix.py /etc/zabbix/scripts/</span><br><span class="line">work@hsq-mq-node1-temp:~/zabbix-es$ sudo mv ESzabbix.userparm /etc/zabbix/zabbix_agentd.conf.d/ESzabbix-userparm.conf</span><br><span class="line"></span><br><span class="line">#修改ESzabbix-userparm.conf文件中的路径</span><br><span class="line">#cat ESzabbix-userparm.conf</span><br><span class="line">UserParameter=ESzabbix[*],/etc/zabbix/scripts/ESzabbix.py $1 $2</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>给文件赋权</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo chown zabbix:zabbix /etc/zabbix/scripts/ESzabbix.py</span><br><span class="line">sudo chmod +x /etc/zabbix/scripts/ESzabbix.py</span><br><span class="line"></span><br><span class="line">sudo chown zabbix:zabbix /etc/zabbix/zabbix_agentd.d/ESzabbix-userparm.conf</span><br></pre></td></tr></table></figure>
-<p>3.修改/etc/zabbix/scripts/ESzabbix.py脚本文件</p>
+<p>socket就不用说了 , now socketserver</p>
+<p>我们知道基于TCP的套接字 , 关键就是两个循环 , 一个链接循环(多人) , 一个通信循环(多消息)</p>
+<p>在socketserver模块中分为两大类 : server类 (解决链接问题) 和request类 (解决通信问题) </p>
+<p>如果想进一步了解 , 可以看看官方文档 , &lt; <a href="https://docs.python.org/3/library/socketserver.html?highlight=socketserver#module-socketserver" target="_blank" rel="noopener">socketserver官方文档 </a>&gt;</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/监控/zabbix监控ES集群/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/01-Python之路 - 进程与线程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/01-Python之路 - 进程与线程/" itemprop="url">40.Python之路 - 进程与线程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/Concurrent/" itemprop="url" rel="index">
+                    <span itemprop="name">Concurrent</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/06-Concurrent/01-Python之路 - 进程与线程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/01-Python之路 - 进程与线程/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-进程与线程"><a href="#Python之路-进程与线程" class="headerlink" title="Python之路 - 进程与线程"></a>Python之路 - 进程与线程</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>进程与线程是操作系统中的概念 , 这也是操作系统中最核心的概念</p>
+<h2 id="进程-🍀"><a href="#进程-🍀" class="headerlink" title="进程  🍀"></a>进程  🍀</h2><p>进程是对正在运行程序的一个抽象 , 即一个进程就是一个正在执行程序的实例 </p>
+<p>从概念上说 , 每个进程拥有它自己的虚拟CPU . 当然 ,  实际上真正的CPU在各进程之间来回切换 . 这种快速切换就是多道程序设计 . 但是某一瞬间 , CPU只能运行一个进程 , 但在1秒钟期间 , 它可能运行多个进程 , 就是CPU在进行快速切换 , 有时人们所说的 <code>伪并行</code> 就是指这种情形</p>
+<h3 id="创建进程-🍀"><a href="#创建进程-🍀" class="headerlink" title="创建进程  🍀"></a>创建进程  🍀</h3><p>操作系统中 , 有4种事件导致进程的创建 </p>
+<ol>
+<li>系统初始化 , 启动操作系统时 , 通常会创建若干个进程 , 分为前台进程和后台进程</li>
+<li>执行了正在运行的进程所调用的进程创建系统调用</li>
+<li>用户请求创建一个新的进程</li>
+<li>一个批处理作业的初始化</li>
+</ol>
+<p>从技术上看 , 在所有这些情况中 ,  新进程都是由一个已存在的进程执行了一个用于创建进程的系统调用而创建的 . 这个进程可以是一个运行的用户进程 , 一个由键盘或鼠标启动的系统进程或者一个批处理管理进程 . 这个进程所做的工作是 , 执行一个用来创建新进程的系统调用 . 在Linux/Unix中提供了一个<code>fork()</code> 系统调用就是用来创建进程的 (子进程) , 当然在Windows中也有相对应的系统调用</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/06-Concurrent/01-Python之路 - 进程与线程/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
