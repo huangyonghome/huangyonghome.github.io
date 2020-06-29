@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="docker学习笔记— docker容器篇一.创建并启动容器  创建容器  1docker create -it 镜像名:tag  查看所有容器(包括运行中,已退出,错误容器)  1docker ps -a  查看所有容器的ID  1docker ps -qa  启动容器  1docker start container_id  使用指定的镜像直接创建并启动容器  1234docker run -">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-29T14:16:52.202Z">
+<meta property="og:updated_time" content="2020-06-29T14:25:52.251Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker学习笔记---docker容器篇">
 <meta name="twitter:description" content="docker学习笔记— docker容器篇一.创建并启动容器  创建容器  1docker create -it 镜像名:tag  查看所有容器(包括运行中,已退出,错误容器)  1docker ps -a  查看所有容器的ID  1docker ps -qa  启动容器  1docker start container_id  使用指定的镜像直接创建并启动容器  1234docker run -">
@@ -430,10 +430,10 @@
 <li><strong>exited 表示容器已经退出</strong></li>
 <li><strong>up 表示容器正在运行</strong></li>
 </ul>
-<figure class="highlight docker"><figcaption><span>run```启动容器时还可以指定其他的配置参数:</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* -h HOSTNAME 或者 --hostname=HOSTNAME.设置容器的主机名</span><br><span class="line">* --dns=IP_ADDRESS:设置容器的DNS.写在容器的/etc/resolv.conf文件中.</span><br></pre></td></tr></table></figure>
+<figure class="highlight docker"><figcaption><span>run``` 启动容器时还可以指定其他的配置参数:</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* -h HOSTNAME 或者 --hostname=HOSTNAME.设置容器的主机名</span><br><span class="line">* --dns=IP_ADDRESS:设置容器的DNS.写在容器的/etc/resolv.conf文件中.</span><br></pre></td></tr></table></figure>
 <p>[root@localhost test]$docker run -itd –name busybox1 -h dwd-busybox –dns=8.8.8.8 busybox<br>c25dac9c641705e00f02aefe302987f39f853a1feb8c0d3f32dc1675747edd84</p>
 <p>[root@localhost test]$docker exec -it busybox1 hostname<br>dwd-busybox</p>
-<p>[root@localhost test]$docker exec -it busybox1 cat /etc/resolv.conf<br>nameserver 8.8.8.8<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">但是需要注意的是.这些修改不会被```docker commit```保存,也就是不会保存在镜像中</span><br></pre></td></tr></table></figure></p>
+<p>[root@localhost test]$docker exec -it busybox1 cat /etc/resolv.conf<br>nameserver 8.8.8.8<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">但是需要注意的是.这些修改不会被 ```docker commit``` 保存,也就是不会保存在镜像中</span><br></pre></td></tr></table></figure></p>
 <p>#将busybox1容器保存为busybox1:test镜像<br>[root@localhost test]$docker commit -m ‘test’ -a ‘jesse’ busybox1 busybox1:test<br>sha256:3c8faee532f177cf8bb8736db89694c2c3ff5be1a30a15d604e450130909d123</p>
 <p>#用这个镜像,启动一个新的busybox1-test的容器<br>[root@localhost test]$docker run –name busybox1-test -itd busybox1:test<br>9326b615e9e3af64336683f7f82e048929de560d4ad0a5caf2485bbc4a62e18c</p>
 <p>#可以看到hostname和dns信息没有被保留<br>[root@localhost test]$docker exec -it busybox1-test hostname<br>9326b615e9e3</p>
@@ -532,8 +532,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/29/docker/docker学习笔记——镜像篇/" rel="next" title="docker学习笔记---Docker镜像篇">
-                <i class="fa fa-chevron-left"></i> docker学习笔记---Docker镜像篇
+              <a href="/2020/06/29/docker/docker官网学习--docker网络之overlay/" rel="next" title="docker学习笔记---docker网络之overlay">
+                <i class="fa fa-chevron-left"></i> docker学习笔记---docker网络之overlay
               </a>
             
           </div>
@@ -542,8 +542,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/29/docker/docker官网学习--docker网络之overlay/" rel="prev" title="docker学习笔记---docker网络之overlay">
-                docker学习笔记---docker网络之overlay <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/29/Linux-Web/使用goreplay收集线上真实http流量/" rel="prev" title="使用goreplay收集线上真实http流量">
+                使用goreplay收集线上真实http流量 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
