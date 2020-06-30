@@ -95,14 +95,14 @@
 <meta name="description" content="Rsync同步本地和远程主机有差异的目录结构需求将BETA服务器的代码和配置文件数据迁移到IDC环境，IDC的BETA服务器已经存在一份数据，不能将本机所有的数据全部同步过去。一来耗时，占用带宽。二来会覆盖IDC BETA上正在使用的数据 所以， 1.需要判断如果对方（IDC BETA）如果不存在某个文件或者目录，则同步过去。 2.不能将目录上所有数据传递过去，因为代码目录包含很多不需要的旧版本r">
 <meta name="keywords" content="scripts">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Rsync同步本地和远程主机有差异的目录结构">
+<meta property="og:title" content="Rsync差异同步目录结构">
 <meta property="og:url" content="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/Rsync同步本地和远程主机有差异的目录结构/index.html">
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="Rsync同步本地和远程主机有差异的目录结构需求将BETA服务器的代码和配置文件数据迁移到IDC环境，IDC的BETA服务器已经存在一份数据，不能将本机所有的数据全部同步过去。一来耗时，占用带宽。二来会覆盖IDC BETA上正在使用的数据 所以， 1.需要判断如果对方（IDC BETA）如果不存在某个文件或者目录，则同步过去。 2.不能将目录上所有数据传递过去，因为代码目录包含很多不需要的旧版本r">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-30T12:35:51.904Z">
+<meta property="og:updated_time" content="2020-06-30T13:17:02.855Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Rsync同步本地和远程主机有差异的目录结构">
+<meta name="twitter:title" content="Rsync差异同步目录结构">
 <meta name="twitter:description" content="Rsync同步本地和远程主机有差异的目录结构需求将BETA服务器的代码和配置文件数据迁移到IDC环境，IDC的BETA服务器已经存在一份数据，不能将本机所有的数据全部同步过去。一来耗时，占用带宽。二来会覆盖IDC BETA上正在使用的数据 所以， 1.需要判断如果对方（IDC BETA）如果不存在某个文件或者目录，则同步过去。 2.不能将目录上所有数据传递过去，因为代码目录包含很多不需要的旧版本r">
 
 
@@ -139,7 +139,7 @@
 
 
 
-  <title>Rsync同步本地和远程主机有差异的目录结构 | Jesse's home</title>
+  <title>Rsync差异同步目录结构 | Jesse's home</title>
   
 
 
@@ -293,7 +293,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Rsync同步本地和远程主机有差异的目录结构</h1>
+          <h1 class="post-title" itemprop="name headline">Rsync差异同步目录结构</h1>
         
 
         <div class="post-meta">
@@ -415,11 +415,11 @@
   <!-- JS库 sweetalert 可修改路径 -->
   <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <p><span>本文标题:</span><a href="/2018/06/12/Linux-Basic/shell&shell脚本/Rsync同步本地和远程主机有差异的目录结构/">Rsync同步本地和远程主机有差异的目录结构</a></p>
+  <p><span>本文标题:</span><a href="/2018/06/12/Linux-Basic/shell&shell脚本/Rsync同步本地和远程主机有差异的目录结构/">Rsync差异同步目录结构</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2018年06月12日 - 22:06</p>
-  <p><span>最后更新:</span>2020年06月30日 - 20:06</p>
-  <p><span>原始链接:</span><a href="/2018/06/12/Linux-Basic/shell&shell脚本/Rsync同步本地和远程主机有差异的目录结构/" title="Rsync同步本地和远程主机有差异的目录结构">https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/Rsync同步本地和远程主机有差异的目录结构/</a>
+  <p><span>最后更新:</span>2020年06月30日 - 21:06</p>
+  <p><span>原始链接:</span><a href="/2018/06/12/Linux-Basic/shell&shell脚本/Rsync同步本地和远程主机有差异的目录结构/" title="Rsync差异同步目录结构">https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/Rsync同步本地和远程主机有差异的目录结构/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/Rsync同步本地和远程主机有差异的目录结构/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
@@ -503,8 +503,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/12/Linux-Basic/shell&shell脚本/使用inotify监控新创建的文件/" rel="prev" title="使用inotify监控新创建的文件">
-                使用inotify监控新创建的文件 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/12/Linux-Basic/shell&shell脚本/02-shell脚本特殊变量/" rel="prev" title="Shell脚本特殊变量">
+                Shell脚本特殊变量 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -537,7 +537,7 @@
   
     <div class="comments" id="comments">
       <div class="ds-thread" data-thread-key="2018/06/12/Linux-Basic/shell&shell脚本/Rsync同步本地和远程主机有差异的目录结构/"
-           data-title="Rsync同步本地和远程主机有差异的目录结构" data-url="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/Rsync同步本地和远程主机有差异的目录结构/">
+           data-title="Rsync差异同步目录结构" data-url="https://jesse.top/2018/06/12/Linux-Basic/shell&shell脚本/Rsync同步本地和远程主机有差异的目录结构/">
       </div>
     </div>
 
