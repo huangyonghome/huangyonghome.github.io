@@ -79,7 +79,7 @@ repository是一个镜像集合,包含了多个不同版本的镜像.使用标�
 
 * **拉取镜像**
 
-```docker pull [OPTIONS] NAME[:TAG|@DIGEST]```
+`docker pull [OPTIONS] NAME[:TAG|@DIGEST]`
 
 如果只指定了镜像名,则默认从docker hub官方拉取该镜像的最新latest版本
 
@@ -121,7 +121,7 @@ Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/jesse_image
 
 命令格式:
 
-```docker rmi [OPTIONS] IMAGE [IMAGE…]```
+`docker rmi [OPTIONS] IMAGE [IMAGE…]`
 
 可以是docker rmi 镜像ID 或者 docker rmi 镜像名:tag
 
@@ -155,7 +155,7 @@ Untagged: nginx:1.15
 
 * **查看镜像**
 
-```docker history 镜像名```可以看到镜像的构建分层
+`docker history 镜像名`可以看到镜像的构建分层
 
 ```
 [root@localhost ~]$docker history nginx
@@ -172,13 +172,13 @@ IMAGE               CREATED             CREATED BY                              
 <missing>           8 days ago          /bin/sh -c #(nop) ADD file:fcb9328ea4c115670…   55.3MB
 ```
 
-```docker inspect 镜像名``` 可以看到镜像的具体信息
+`docker inspect 镜像名` 可以看到镜像的具体信息
 
 ---
 
 * **创建镜像**
 
-```docker commit```命令可以基于现有的容器创建出一个镜像
+`docker commit`命令可以基于现有的容器创建出一个镜像
 
 ```
 #用法格式:
@@ -207,9 +207,9 @@ sha256:028f5e2b21a66a1bf5f70727f20cac04e8918f57d5584cc2aeb09f18791d9680
 
 命令: 
 
-```docker save -o 保存文件名 镜像名:tag```  ————将某个镜像保存为一个文件
+`docker save -o 保存文件名 镜像名:tag`  ————将某个镜像保存为一个文件
 
-```docker load < 文件名``` or ```docker load —input 文件名``` ——将某个文件导入到本地镜像
+`docker load < 文件名` or `docker load —input 文件名`——将某个文件导入到本地镜像
 
 例如
 

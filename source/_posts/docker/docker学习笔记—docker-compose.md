@@ -142,7 +142,7 @@ redis服务比较简单,就不再赘述..
 docker-compose up -d #后台启动
 ```
 
-默认情况下```docker-compose```命令会寻找当前目录下名为docker-compose.yml或者docker-compose.yaml的Compose文件.如果Compose文件是其他文件名.则需要-f参数来指定具体文件名:
+默认情况下`docker-compose`命令会寻找当前目录下名为docker-compose.yml或者docker-compose.yaml的Compose文件.如果Compose文件是其他文件名.则需要-f参数来指定具体文件名:
 
 ```
 docker-compose -f compose_file up -d 
@@ -214,7 +214,7 @@ Removing network counter-app_counter-net
 * 移除容器
 * 移除docker网络
 
-此时,无论是执行```docker ps ```还是```docker ps -a```都看不到容器
+此时,无论是执行`docker ps `还是`docker ps -a`都看不到容器
 
 
 
@@ -241,7 +241,7 @@ root   32703   32582   4   13:21   ?     00:00:00   /usr/local/bin/python /code/
 
 #### 停止应用容器.但是并不删除资源
 
-执行完```docker-compose stop```命令后,容器还存在
+执行完`docker-compose stop`命令后,容器还存在
 
 ```
 [root@localhost counter-app]$docker-compose stop
@@ -269,7 +269,7 @@ docker-compose restart #重启
 
 #### 拉取服务镜像
 
-```docker-compose pull server_name ```这个命令会先拉取服务镜像到本地.例如在本文的docker compose例子中有2个服务:web-fe和redis.如果执行下列命令,会仅仅拉取redis镜像到本地
+`docker-compose pull server_name `这个命令会先拉取服务镜像到本地.例如在本文的docker compose例子中有2个服务:web-fe和redis.如果执行下列命令,会仅仅拉取redis镜像到本地
 
 ```
 docker-compose pull redis
@@ -279,7 +279,7 @@ docker-compose pull redis
 
 #### 其他命令
 
-日常docker管理容器的命令都可以使用```docker-compose```替代.例如:
+日常docker管理容器的命令都可以使用`docker-compose`替代.例如:
 
 ```
 docker-compose logs service_name #查看服务容器日志
@@ -458,9 +458,9 @@ container_name: my-web-container
 
 用于在多个services之间指定依赖性.service dependencies会导致以下行为
 
-* ```docker-compose up``` 启动时会参考depndency顺序.在下面这个例子中.db和redis服务会先于web服务启动
-* ```docker-compose up SERVICE``` 会自动启动该SERVICE的依赖服务.在下面例子中```docker-compose up web```命令会自动创建和启动db和redis
-* ```docker-compose stop```会参考依赖顺序而停止服务.在下面例子中,web服务会先于db和redis服务停止
+* `docker-compose up` 启动时会参考depndency顺序.在下面这个例子中.db和redis服务会先于web服务启动
+* `docker-compose up SERVICE`会自动启动该SERVICE的依赖服务.在下面例子中`docker-compose up web`命令会自动创建和启动db和redis
+* `docker-compose stop`会参考依赖顺序而停止服务.在下面例子中,web服务会先于db和redis服务停止
 
 ```
 version: "3.7"
@@ -513,7 +513,7 @@ command: ["./wait-for-postgres.sh", "db", "python", "app.py"]
 
 #### deploy指令
 
-该指令用于配置服务相关的配置和部署方式.这个指令只在version3版本支持,而且只在swarm模式下才生效.单机```docker-compose up```方式执行会被忽略
+该指令用于配置服务相关的配置和部署方式.这个指令只在version3版本支持,而且只在swarm模式下才生效.单机`docker-compose up`方式执行会被忽略
 
 ```
 version: "3.7"
@@ -535,9 +535,9 @@ services:
 
 > version 3.3 only
 
-```endpoint_mode: VIP```  Docker为service分配一个虚拟IP.作为用户的前端入口.docker路由用户请求到所有可用的worker节点..这也是默认模式
+`endpoint_mode: VIP`  Docker为service分配一个虚拟IP.作为用户的前端入口.docker路由用户请求到所有可用的worker节点..这也是默认模式
 
-```endpoint_mode: dnsrr``` DNS轮询服务,Docker发起一个service name的DNS查询,并且返回一个包含多个IP地址的列表.客户端通过轮询方式链接其中一个IP地址.
+`endpoint_mode: dnsrr` DNS轮询服务,Docker发起一个service name的DNS查询,并且返回一个包含多个IP地址的列表.客户端通过轮询方式链接其中一个IP地址.
 
 * LABLES
 
@@ -647,13 +647,13 @@ services:
 
 配置当容器停止时如何重新启动容器的策略.有以下几种子指令
 
-1.```condition``` 重启容器的约束条件.有: ```none```,```on-failure```,和```any```(default:any)
+1.`condition` 重启容器的约束条件.有: `none`,`on-failure`,和`any`(default:any)
 
-2.```delay```: 尝试重启容器的时间间隔.默认是0
+2.`delay`: 尝试重启容器的时间间隔.默认是0
 
-3.```max_attempts```:如果容器重启失败,重启最大尝试次数,默认是一直尝试
+3.`max_attempts`:如果容器重启失败,重启最大尝试次数,默认是一直尝试
 
-4.```window```:重启后等待多久认定重启成功.默认是immediately
+4.`window`:重启后等待多久认定重启成功.默认是immediately
 
 ```
 version: "3.7"
@@ -765,7 +765,7 @@ healthcheck:
   start_period: 40s
 ```
 
-```test```指令必须为一个字符串或者一个列表.如果是个上例子中的列表格式.则第一个参数必须为```NONE```,```CMD```,或者```CMD-SHELL```.如果是字符串相当于指定了```CMD-SHELL```参数
+`test`指令必须为一个字符串或者一个列表.如果是个上例子中的列表格式.则第一个参数必须为`NONE`,`CMD`,或者`CMD-SHELL`.如果是字符串相当于指定了`CMD-SHELL`参数
 
 下面2个写法和上文的例子效果一样
 
@@ -777,7 +777,7 @@ test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
 test: curl -f https://localhost || exit 1
 ```
 
-要关闭健康检查,可以使用```disable:true```.等同于```test:["NONE"]```
+要关闭健康检查,可以使用`disable:true`.等同于`test:["NONE"]`
 
 ```
 healthcheck:
@@ -786,7 +786,7 @@ healthcheck:
 
 #### image
 
-指定容器的启动镜像.可以是指定的repository/tag 或者一个镜像ID.如果本地不存在该镜像,会尝试去pull镜像到本地.如果指定了```build```指定,会使用指定的命令来构建一个镜像
+指定容器的启动镜像.可以是指定的repository/tag 或者一个镜像ID.如果本地不存在该镜像,会尝试去pull镜像到本地.如果指定了`build`指定,会使用指定的命令来构建一个镜像
 
 下面这几种写法均正确
 
@@ -809,7 +809,7 @@ logging:
     syslog-address: "tcp://192.168.0.42:123"
 ```
 
-```driver```为容器指定logging的驱动,一共以下3种驱动方式,默认是json-file
+`driver`为容器指定logging的驱动,一共以下3种驱动方式,默认是json-file
 
 ```
 driver: "json-file"
@@ -839,7 +839,7 @@ network_mode: "container:[container name/id]"
 
 #### networks
 
-services加入的网络.这些网络名在顶级```network```指令中有指定
+services加入的网络.这些网络名在顶级`network`指令中有指定
 
 ```
 services:
@@ -899,7 +899,7 @@ ports:
 
 #### restart
 
-默认的restart策略是```no```有以下四种重启策略
+默认的restart策略是`no`有以下四种重启策略
 
 
 
@@ -940,9 +940,9 @@ ulimits:
 
 挂载一个路径或者一个卷.
 
-如果是在service层级挂载宿主机上的路径到容器,那么不需要在顶级指令中定义```volumes```key.但是如果是挂载一个卷到多个service,可以在顶级指令中定义个卷名.然后使用这个卷名去挂载
+如果是在service层级挂载宿主机上的路径到容器,那么不需要在顶级指令中定义`volumes`key.但是如果是挂载一个卷到多个service,可以在顶级指令中定义个卷名.然后使用这个卷名去挂载
 
-下面这个例子在顶级```volumes```指令中定义了2个卷名:mydata和dbdata. mydata被web service挂载.dbdata被db service挂载.下面2个挂载格式都可以.
+下面这个例子在顶级`volumes`指令中定义了2个卷名:mydata和dbdata. mydata被web service挂载.dbdata被db service挂载.下面2个挂载格式都可以.
 
 ```
 version: "3.7"
@@ -1026,7 +1026,7 @@ volumes:
 
 #### driver
 
-指定volume卷的驱动,docker引擎默认指定的驱动是```local```.
+指定volume卷的驱动,docker引擎默认指定的驱动是`local`.
 
 ---
 
@@ -1036,7 +1036,7 @@ volumes:
 
 默认情况下Compose启动单一网络,一个services的每个容器加入到默认的网络,并且该网络下的所有容器之间都能互相访问
 
-假如下面的compose文件在```myapp```目录下.
+假如下面的compose文件在`myapp`目录下.
 
 ```
 version: "3"
@@ -1051,23 +1051,23 @@ services:
       - "8001:5432"
 ```
 
-当执行```docker-compose up```命令启动时,会执行以下几个步骤
+当执行`docker-compose up`命令启动时,会执行以下几个步骤
 
-1.创建一个```myapp_default```的网络
+1.创建一个`myapp_default`的网络
 
-2.使用web的配置文件启动一个容器,加入到```myapp_default```网络中
+2.使用web的配置文件启动一个容器,加入到`myapp_default`网络中
 
-3.使用db的配置文件启动一个容器.加入到```myapp_default```的网络中
+3.使用db的配置文件启动一个容器.加入到`myapp_default`的网络中
 
-所有容器成功启动后,每个容器都能访问对方的```hostname```和对方的IP地址.
+所有容器成功启动后,每个容器都能访问对方的`hostname`和对方的IP地址.
 
-另外,需要理解```HOST_PORT```和```COMTAINER_PORT```的区别.在上面这个例子中,db的```host_port```是8001,容器的端口是5432,services之间的容器都是通过```CONTAINER_PORT```也就是容器的IP进行通信的.例如访问数据库地址应该是:```postgres://db:5432```
+另外,需要理解`HOST_PORT`和`COMTAINER_PORT`的区别.在上面这个例子中,db的`host_port`是8001,容器的端口是5432,services之间的容器都是通过`CONTAINER_PORT`也就是容器的IP进行通信的.例如访问数据库地址应该是:`postgres://db:5432`
 
 
 
 #### driver
 
-指定网络驱动.在单主机下Docker引擎默认使用```bridge```模式.在swarm集群环境中,默认使用```overlay```模式
+指定网络驱动.在单主机下Docker引擎默认使用`bridge`模式.在swarm集群环境中,默认使用`overlay`模式
 
 ```
 driver: overlay

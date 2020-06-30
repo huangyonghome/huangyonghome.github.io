@@ -11,7 +11,7 @@ copyright: true
 
 ### Dockerfile
 
-Dockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用docker build命令,用户可以依据dockerfile和上下文编译一个镜像.
+Dockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用`docker build`命令,用户可以依据dockerfile和上下文编译一个镜像.
 
 使用dockerfile需要注意一些事项
 
@@ -19,7 +19,7 @@ Dockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系�
 
 docker build编译镜像时,会将当前目录下的Dockerfile和所有文件打包添加发送到docker daemon服务端.所以一般情况下创建一个空目录编辑dockerfile文件.然后将需要copy和add的文件放进和dockerfile同一目录下.
 
-dockerfile中的copy以及add命令,添加文件到docker镜像中时.不要使用绝对路径.例如/home/work/a.txt..docker deamon只能识别到当前上下文环境,无法识别到其他目录.但是可以使用当前上下文的相对路径.
+dockerfile中的`copy`以及`add`命令,添加文件到docker镜像中时.不要使用绝对路径.例如/home/work/a.txt..docker deamon只能识别到当前上下文环境,无法识别到其他目录.但是可以使用当前上下文的相对路径.
 
 **2.分层**
 
@@ -134,9 +134,9 @@ Successfully built bd61817d7526
 Successfully tagged test:v1
 ```
 
-4.使用no-install-recommends
+4.使用`no-install-recommends`
 
-如果是使用APT包管理器,则应该在执行apt-get install 命令时加上no-install-recommends参数.这样ATP就仅安装核心依赖.而不安装其他推荐和建议的包,这会显著减少不必要包的下载数量
+如果是使用APT包管理器,则应该在执行apt-get install 命令时加上`no-install-recommends``参数.这样ATP就仅安装核心依赖.而不安装其他推荐和建议的包,这会显著减少不必要包的下载数量
 
 ---
 
@@ -174,7 +174,7 @@ CMD ["python", "app.py"]
 
 * FROM 
 
-格式: FROM image 或者 FROM image:tag
+格式: `FROM image` 或者 `FROM image:tag`
 
 表示从一个基础镜像构建.Dockerfile必须以FROM语句作为第一条非注释语句.
 
@@ -182,15 +182,15 @@ CMD ["python", "app.py"]
 
 * COPY
 
-格式: copy src dest
+格式: `copy src dest`
 
-复制宿主机上的文件到镜像中.src是当前上下文中的文件或者目录.dest是容器中的目标文件或者目录.src指定的源可以有多个.此外 src还支持通配符.例如: COPY hom* /mydir/ 表示添加所有当前目录下的hom开头的文件到目录/mydir/下
+复制宿主机上的文件到镜像中.src是当前上下文中的文件或者目录.dest是容器中的目标文件或者目录.src指定的源可以有多个.此外 src还支持通配符.例如: `COPY hom* /mydir/` 表示添加所有当前目录下的hom开头的文件到目录/mydir/下
 
 <dest>可以是文件或者目录.但是必须是镜像中的绝对路径,或者是WORKDIR的相对路径.若<dest>以反斜杠/结尾,则指向的是目录,否则指向文件.当 src 有多个源时, dest必须是目录.如果 dest 目录不存在,则会自动被创建
 
 * ADD
 
-格式: ADD src dest
+格式: `ADD src dest`
 
  ADD和COPY命令有相同功能,都支持复制本地文件到镜像里.但ADD能从互联网的URL下载文件到镜像..src还可以是一个本地的压缩归档文件.ADD会自动将tar,gz等压缩包上传到镜像后进行解压.
 
@@ -201,12 +201,14 @@ CMD ["python", "app.py"]
 
 RUN命令有两种格式:
 
+```
 RUN <command> (shell格式)  
 RUN ["executable","param1","param2"] (exec格式)
+```
 
-RUN指令的两种格式表示命令在容器中的两种运行方式.当使用shell格式时,命令通过 /bin/sh -c 运行.当使用exec格式时.命令直接运行,不调用shell程序.exec格式中的参数会被当成JSON数组被Docker解析.所以必须使用双引号,不能使用单引号. 
+RUN指令的两种格式表示命令在容器中的两种运行方式.当使用shell格式时,命令通过` /bin/sh -c `运行.当使用exec格式时.命令直接运行,不调用shell程序.exec格式中的参数会被当成JSON数组被Docker解析.所以必须使用双引号,不能使用单引号. 
 
-另外由于exec格式不会在shell中运行.所以无法识别ENV环境变量.例如当执行CMD ["echo","$HOME"]时,$HOME不会被变量替换.如果希望运行shell程序.可以写成
+另外由于exec格式不会在shell中运行.所以无法识别ENV环境变量.例如当执行`CMD ["echo","$HOME"]`时,$HOME不会被变量替换.如果希望运行shell程序.可以写成
 
 ```
 CMD ["sh","-c","echo","$HOME"]
@@ -219,9 +221,9 @@ CMD ["sh","-c","echo","$HOME"]
 
 * ENV
 
-  格式: ENV <key> <value> 或者 ENV <key>=<value>
+  格式: `ENV <key> <value>` 或者 `ENV <key>=<value>`
   
-  ENV指令用来声明环境变量,并且可以被(ADD,COPY,WORKDIR等)指令调用.调用ENV环境变量的格式和shell一样:\$variable_name或者 \${variable_name}
+  ENV指令用来声明环境变量,并且可以被(ADD,COPY,WORKDIR等)指令调用.调用ENV环境变量的格式和shell一样:`\$variable_name`或者 `\${variable_name}`
   
 * CMD 
 
@@ -240,7 +242,7 @@ CMD提供容器启动后执行的命令.或者是为ENTRYPOINT传递一些参数
 
 ENTRYPOINT有两种格式.和上文CMD一样分为shell格式和exec格式.
 
-ENTRYPOINT和CMD类似,指定容器启动时执行的命令.和CMD一样一个Dockerfile文件中可以有多个ENTRYPOINT命令.但只有最后一条生效.但是又有一些区别.当使用shell格式时,ENTRYPOINT会忽略任何CMD指令和 docker run启动容器时手动输入的指令.并且会运行在 /bin/sh -c环境中,成为它的子进程.进程在容器中PID不是1,也不能接收UNIX信号.(也就是在执行 docker stop <container>时,进程接收不到SIGTERM指令)
+ENTRYPOINT和CMD类似,指定容器启动时执行的命令.和CMD一样一个Dockerfile文件中可以有多个ENTRYPOINT命令.但只有最后一条生效.但是又有一些区别.当使用shell格式时,ENTRYPOINT会忽略任何CMD指令和 `docker run`启动容器时手动输入的指令.并且会运行在 /bin/sh -c环境中,成为它的子进程.进程在容器中PID不是1,也不能接收UNIX信号.(也就是在执行 `docker stop <container>`时,进程接收不到SIGTERM指令)
 
 当使用exec格式时, docker run 手动指定的命令,将作为参数覆盖CMD指定的参数传递到ENTRYPOINT.(也就是说 docker run启动容器时指定的不再是具体命令,而是命令的参数).
 

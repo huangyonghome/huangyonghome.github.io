@@ -20,7 +20,7 @@ overlay网卡在多个docker宿主机之间创建一个分布式的网络,允许
 * ingress: 负责swarm集群的控制以及数据流量
 * docker_gwbridge:一个Bridge网络,负责连接swarm集群中的每个docker节点
 
-overlay网络的创建方式和bridge一样.也是docker network create命令
+overlay网络的创建方式和bridge一样.也是`docker network create`命令
 
 ---
 
@@ -36,7 +36,7 @@ overlay网络的创建方式和bridge一样.也是docker network create命令
 * TCP,UPD 7946—节点间通信
 * UDP 4789—overlay网络流量
 
-2.初始化docker宿主机为swarm集群的manager角色.命令为```docker swarm init```.或者使用```docker swarm join```命令加入到一个现有的swarm集群.
+2.初始化docker宿主机为swarm集群的manager角色.命令为`docker swarm init`.或者使用`docker swarm join`命令加入到一个现有的swarm集群.
 
 这两种方式都会创建默认的ingress overlay网络.
 
@@ -51,7 +51,7 @@ overlay网络的创建方式和bridge一样.也是docker network create命令
 docker network create -d overlay my-overlay
 ```
 
-如果swarm服务或者独立容器需要和其他docker宿主机上的独立容器通信.需要加上```—attachable```参数
+如果swarm服务或者独立容器需要和其他docker宿主机上的独立容器通信.需要加上`—attachable`参数
 
 ```
 #创建个overlay网络,名字为my-overlay.并且和其他docker宿主机的standalone容器通信.
@@ -70,11 +70,11 @@ docker network create -d overlay --attachable my-overlay
 
 **自定义默认ingress网络步骤如下:**
 
-1.查看当前ingress网络.```docker network inspect ingress```.删除所有连接到ingress的容器的服务.
+1.查看当前ingress网络.`docker network inspect ingress`.删除所有连接到ingress的容器的服务.
 
-2.移除现有的ingress网络.```docker network rm ingress```
+2.移除现有的ingress网络.`docker network rm ingress`
 
-3.使用```--ingress```参数重新创建一个overlay网络.定义自定义参数.例如:
+3.使用`--ingress`参数重新创建一个overlay网络.定义自定义参数.例如:
 
 ```
  docker network create \
@@ -102,7 +102,7 @@ docker_gwbridge是连接overlay网络和docker宿主机物理网卡之间的虚�
 
 1.停止docker
 
-2.删除当前```docker_gwbridge```
+2.删除当前`docker_gwbridge`
 
 ```
 $ sudo ip link set docker_gwbridge down
@@ -112,7 +112,7 @@ $ sudo ip link del dev docker_gwbridge
 
 3.开启docker.不要加入或者初始化swarm
 
-4.手动创建```docker_gwbridge```.下面这个例子定义了网络iP地址范围
+4.手动创建`docker_gwbridge`.下面这个例子定义了网络iP地址范围
 
 > 关于docker_gwbridge的更多参数请参考[Bridg dirver options](<https://docs.docker.com/engine/reference/commandline/network_create/#bridge-driver-options>)
 

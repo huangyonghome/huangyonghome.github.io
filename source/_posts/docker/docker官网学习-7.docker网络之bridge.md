@@ -28,7 +28,7 @@ docker的网络支持插件化,驱动化定制.有一些网络驱动已经默认
 
 #### bridge
 
-​    bridge是docker默认的网络驱动.如果在```docker run```启动一个容器时没有指定任何网络驱动.那么默认就是bridge桥接网络.桥接网络通常适用于应用进程部署在多个独立的容器中,并且容器之间需要互相通信的场景中.
+​    bridge是docker默认的网络驱动.如果在`docker run`启动一个容器时没有指定任何网络驱动.那么默认就是bridge桥接网络.桥接网络通常适用于应用进程部署在多个独立的容器中,并且容器之间需要互相通信的场景中.
 
    在docker环境中.bridge使用软件桥接允许容器之间通过同一个bridge互联.隔离没有连到这个bridge网络的其他容器网络.docker网络自动创建iptables规则阻止其他网络的容器访问.
 
@@ -91,7 +91,7 @@ bridge网络模式如下所示:
 
   连到同一个自定义的bridge网络的Nginx容器和mysql容器.及时mysql容器没有暴露任何端口.nginx也可以访问mysql容器的3306端口.
 
-  而默认的Bridge网络,则需要将mysql容器通过```-p```参数暴露3306端口给宿主机.
+  而默认的Bridge网络,则需要将mysql容器通过`-p`参数暴露3306端口给宿主机.
 
 * 自定义bridge网络提供容器的主机名DNS解析
 
@@ -99,7 +99,7 @@ bridge网络模式如下所示:
 
 * 自定义bridge网络配置更方便
 
-​        配置一个默认bridge网络,会影响到全局所有容器.而且需要重启docker服务.使用```docker network create```可以创建一个自定义bridge网络.,而且可以分别配置
+​        配置一个默认bridge网络,会影响到全局所有容器.而且需要重启docker服务.使用`docker network create`可以创建一个自定义bridge网络.,而且可以分别配置
 
 ---
 
