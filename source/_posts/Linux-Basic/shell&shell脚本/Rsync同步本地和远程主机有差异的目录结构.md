@@ -1,7 +1,7 @@
 ---
-title: Rsync同步本地和远程主机有差异的目录结构
+title: Rsync差异同步目录结构
 date: 2018-06-12 22:59:58
-tags:  scripts
+tags: scripts
 categories: [Linux-Basic,shell&shell脚本 ]
 comments: true
 copyright: true
@@ -34,13 +34,15 @@ for dir in $(ls);do if ! `ssh work@172.16.20.1 "ls -d /data/apps/$dir" > /dev/nu
 
 以下是2个知识点:
 
-`ssh work@iP COMMAND`可以在本地远程执行shell命令
+```
+ssh work@iP COMMAND   #可以在本地远程执行shell命令
+```
 
 以下命令只同步目录结构(包括所有子目录),但是不同步文件
 
-`rsync -avz LOCAL_PATH --include '*/' --exclude '*' work@IP:REMOTE_PATH`
-
-
+```
+rsync -avz LOCAL_PATH --include '*/' --exclude '*' work@IP:REMOTE_PATH
+```
 
 那么同样,同步nginx配置文件.这个时候因为是同步文件,所以使用scp命令.
 
