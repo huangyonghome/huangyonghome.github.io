@@ -43,7 +43,7 @@ emptyDir类型的存储卷和pod容器的生命周期相关联当pod容器删除
 
 * cephfs,glusterfs等----- 分布式集群存储
 
-> 使用```kubectl explain pods.spec.volumes```命令可以查看k8s支持的许多存储卷类型
+> 使用`kubectl explain pods.spec.volumes`命令可以查看k8s支持的许多存储卷类型
 
 ----
 
@@ -80,12 +80,12 @@ ADD fortuneloop.sh /bin/fortuneloop.sh
 ENTRYPOINT /bin/fortuneloop.sh
 
 ```
-使用```kubectl explain pod.volumes```命令可以查看k8s支持哪些存储卷类型
+使用`kubectl explain pod.volumes`命令可以查看k8s支持哪些存储卷类型
 
 
 在pod定义的sepc.containers.volumeMounts字段中详细介绍了挂载磁盘卷的配置参数.
 
-使用命令 ``` kubectl explian pod.spec.containers.volumeMounts```可以看到支持以下主要挂载参数
+使用命令 ` kubectl explian pod.spec.containers.volumeMounts`可以看到支持以下主要挂载参数
 
 ```
 [root@k8s-master ~]# kubectl explain pod.spec.containers.volumeMounts

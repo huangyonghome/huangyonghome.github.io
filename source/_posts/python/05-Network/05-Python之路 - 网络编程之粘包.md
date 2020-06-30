@@ -2,7 +2,7 @@
 title: 38.Python之路 - 网络编程之粘包
 date: 2020-06-26 09:20:58
 tags:  python
-categories: [python,Network]
+categories: [python,05-Network]
 comments: true
 copyright: true
 ---
@@ -14,7 +14,7 @@ copyright: true
 ## 粘包  🍀
 
 
-由上一篇<[Python之路 - Socket实现远程执行命令](https://lyonyang.gitbooks.io/blog/05-Python%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/04-Python%E4%B9%8B%E8%B7%AF%20-%20Socket%E5%AE%9E%E7%8E%B0%E8%BF%9C%E7%A8%8B%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4.html)>中所出现的问题引出了粘包这个问题 , 粘包到底是什么?
+由上一篇<Python之路 - Socket实现远程执行命令>中所出现的问题引出了粘包这个问题 , 粘包到底是什么?
 
 首先 ,  ` 粘包现象只出现在TCP中 `  ,  为什么说只有在TCP中才会发生粘包现象 , 先来详细解释一下TCP与UDP吧
 

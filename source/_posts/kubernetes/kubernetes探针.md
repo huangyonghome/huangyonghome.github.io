@@ -99,7 +99,7 @@ pods的READY是0.表示pod容器虽然正在运行中,但是未准备就绪
 [root@k8s-master ~]# kubectl exec kubia-6gvhg -- touch /var/ready
 ```
 
-但是容器并不会马上就绪.这是因为pod默认每隔10s探测一次.通过```kubectl describe pod kubia-6gvhg```可以看到就绪探针的策略
+但是容器并不会马上就绪.这是因为pod默认每隔10s探测一次.通过`kubectl describe pod kubia-6gvhg`可以看到就绪探针的策略
 
 ```
 [root@k8s-master ~]# kubectl describe pods kubia-6gvhg

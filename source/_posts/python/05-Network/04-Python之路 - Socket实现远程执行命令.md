@@ -2,7 +2,7 @@
 title: 37.Python之路 - Socket实现远程执行命令
 date: 2020-06-26 09:20:58
 tags:  python
-categories: [python,Network]
+categories: [python,05-Network]
 comments: true
 copyright: true
 ---

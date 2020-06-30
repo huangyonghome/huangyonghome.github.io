@@ -2,7 +2,7 @@
 title:  15.Python之路 - Python迭代器和生成器
 date: 2020-06-07 17:20:58
 tags:  python
-categories: [python,Advanced]
+categories: [python,02-Advanced]
 comments: true
 copyright: true
 ---

@@ -2,7 +2,7 @@
 title: 34.Python之路 - 网络编程初识
 date: 2020-06-26 09:20:58
 tags:  python
-categories: [python,Network]
+categories: [python,05-Network]
 comments: true
 copyright: true
 ---

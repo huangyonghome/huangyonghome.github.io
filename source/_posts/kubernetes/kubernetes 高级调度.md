@@ -45,7 +45,7 @@ Taints:             node-role.kubernetes.io/master:NoSchedule
 
 master节点包含一个污点(taints).污点包含一个key,value,effect.格式为:<key>=<value>:<effect>
 
-上面的污点信息包含一个`node-role.kubernetes.io/master`的key.一个空的value,以及值为```NoSchedule```的effect.
+上面的污点信息包含一个`node-role.kubernetes.io/master`的key.一个空的value,以及值为`NoSchedule`的effect.
 
 这个污点将阻止pod调度到这个节点上,除非有pod能容忍这个污点.通常能容忍这个污点的Pod都是kubernetes系统级别的Pod.
 
@@ -60,11 +60,11 @@ Tolerations:     CriticalAddonsOnly
                  node.kubernetes.io/unreachable:NoExecute for 300s
 ```
 
-该pod容忍度(tolerations)包含了4个容忍度,其中```node-role.kubernetes.io/master:NoSchedule```容忍度显示该pod可以容忍master节点上的污点.从而该pod可以调度到master节点上
+该pod容忍度(tolerations)包含了4个容忍度,其中`node-role.kubernetes.io/master:NoSchedule`容忍度显示该pod可以容忍master节点上的污点.从而该pod可以调度到master节点上
 
 ##### 污点效果
 
-上面列出的pod展示了2种污点effect(污点效果):```NoSchedule```和```NoExecute```.每一个污点都可以关联一个effect.下面介绍各污点效果.
+上面列出的pod展示了2种污点effect(污点效果):`NoSchedule`和`NoExecute`.每一个污点都可以关联一个effect.下面介绍各污点效果.
 
 * **NoSechedule**: 如果pod没有容忍这些污点,这pod不能被调度到包含这个污点的节点
 * **PreferNoSechedule** NoSechedule的宽松版本,表示尽量阻止pod被调度到这个节点.但是如果没有其他节点可以调度,pod依然会被调度到这个节点
@@ -76,11 +76,11 @@ Tolerations:     CriticalAddonsOnly
 
 如果一个单独K8s集群上同时有生产环境和非生产环境的应用.那么可以在生产环境上添加自定义污点来防止其他环境的Pod调度到生产节点.
 
-添加污点命令:```kubectl taint```
+添加污点命令:`kubectl taint`
 
-命令格式: ```kubectl taint node NodeName key=value:effect```
+命令格式: `kubectl taint node NodeName key=value:effect`
 
-例如下面命令将node1的节点添加一个key为```node-type```.value为```production```.效果为```NoSchedule```的污点
+例如下面命令将node1的节点添加一个key为`node-type`.value为`production`.效果为`NoSchedule`的污点
 
 ```
 root@k8s-master ~]# kubectl taint node k8s-node1 node-type=production:NoSchedule
@@ -104,7 +104,7 @@ test-69c6778cfb-xc2sp           1/1     Running   0          4m38s   10.100.169.
 
 #### 在pod上添加污点容忍度
 
-如果想让pod部署到node1这个已经打了```NoSchedule```污点标签的节点上.那么Pod必须声明能匹配该节点污点的容忍度.下面是一个例子
+如果想让pod部署到node1这个已经打了`NoSchedule`污点标签的节点上.那么Pod必须声明能匹配该节点污点的容忍度.下面是一个例子
 
 ```yaml
 apiVersion: apps/v1
@@ -134,7 +134,7 @@ spec:
           effect: NoSchedule
 ```
 
-在pod的```tempalte.spec.tolerations```属性下定义污点key.该key的值匹配(Equal)node1节点上的污点.所以该pod能够被调度到node1节点
+在pod的`tempalte.spec.tolerations`属性下定义污点key.该key的值匹配(Equal)node1节点上的污点.所以该pod能够被调度到node1节点
 
 ```bash
 [root@k8s-master ~]# kubectl get pods -o wide
@@ -207,7 +207,7 @@ statefulset-kubia-v1-3          1/1     Running       0          10d     10.100.
 
 #### 了解污点和污点容忍度使用场景
 
-​       节点可以拥有多个污点信息,而pod也可以有多个污点容忍度.污点容忍度可以通过操作符```Equal```来匹配一个污点信息,也可以通过```Exists```操作符来匹配污点的key
+​       节点可以拥有多个污点信息,而pod也可以有多个污点容忍度.污点容忍度可以通过操作符`Equal`来匹配一个污点信息,也可以通过`Exists`操作符来匹配污点的key
 
 ---
 
@@ -326,7 +326,7 @@ spec:
 
 ##### 节点亲缘性属性
 
-pod的```affinity```属性配置了节点亲缘性相关信息.该属性下有以下几种亲缘性:
+pod的`affinity`属性配置了节点亲缘性相关信息.该属性下有以下几种亲缘性:
 
 * **nodeAffinity** 顾名思义,节点亲缘性调度规则
 * **podAffinity**  Pod亲缘性调度规则,例如某类节点调度到同一个节点,地域,可用区
@@ -349,13 +349,13 @@ pod的```affinity```属性配置了节点亲缘性相关信息.该属性下有�
   - **operator**: 必要字段,key和value关系的表达式,有**In**,**NotIn**,**Exists**,**DoesNotExist**,**Gt**,**Lt**
   - **values**: key的值,是一个字符串的数组格式.
 
-> 通过```kubectl explain pods.spec.affinity```可以查询属性字段的含义以及配置用法
+> 通过`kubectl explain pods.spec.affinity`可以查询属性字段的含义以及配置用法
 
 ---
 
 ### pod调度节点优先
 
-节点亲缘性还有一个属性```preferredDuringSchedulingIgnoredDuringExecution```这个属性字段指定调度器优先考虑哪些节点.
+节点亲缘性还有一个属性`preferredDuringSchedulingIgnoredDuringExecution`这个属性字段指定调度器优先考虑哪些节点.
 
 想象一下如果你在阿里云同一地域下的多个可用区都有部署节点服务器,你想要将Pod优先部署在zone1,并且是部署在专有服务器上.如果zone1下没有足够的服务器资源,那么部署到其他可用区(zone2)也是可以接受的.那么节点亲缘性就可以实现这种功能.
 
@@ -647,8 +647,8 @@ pod软非亲缘性就不再介绍了
 ### 总结
 
 * 如果节点上添加了1个污点信息.除非Pod容忍这些污点,否则pod不会被调度到该节点
-* 有3种类型的污点:```Noschdule```完全阻止pod调度,```PreferNoSchedule```不完全阻止,```NoExecute```将已经在运行的Pod从节点驱逐
-* ```NoExecute```污点的节点可以设置等待时间,当节点不可用时,pod重新调度时,最长等待时间
+* 有3种类型的污点:`Noschdule`完全阻止pod调度,`PreferNoSchedule`不完全阻止,`NoExecute`将已经在运行的Pod从节点驱逐
+* `NoExecute`污点的节点可以设置等待时间,当节点不可用时,pod重新调度时,最长等待时间
 * 节点亲缘性允许指定pod应该被调度到哪些节点.有硬性(**required**)要求,也有软性优先级(**preferred**)
 * pod亲缘性用于将pod调度到和另一个pod相同的一个节点.(基于pod的标签)
 * pod亲缘性的topologyKey属性表示了被调度的pod和另一组pod的距离.(在同一个节点,同一个机柜,同一个可用区,或者同一个地域)

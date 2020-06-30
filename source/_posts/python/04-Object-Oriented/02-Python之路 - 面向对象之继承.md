@@ -2,7 +2,7 @@
 title:  26.Python之路 - 面向对象之继承
 date: 2020-06-26 09:20:58
 tags:  python
-categories: [python,Object-Oriented]
+categories: [python,04-Object-Oriented]
 comments: true
 copyright: true
 ---

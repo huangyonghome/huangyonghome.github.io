@@ -2,7 +2,7 @@
 title: 39.Python之路 - Socketserver实现多并发
 date: 2020-06-26 09:20:58
 tags:  python
-categories: [python,Network]
+categories: [python,05-Network]
 comments: true
 copyright: true
 ---

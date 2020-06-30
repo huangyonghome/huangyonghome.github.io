@@ -3,7 +3,7 @@
 title:  02.Python之路 - python数据类型和变量
 date: 2020-05-26 22:59:58
 tags:  python
-categories: [python,basic]
+categories: [python,01-basic]
 comments: true
 copyright: true
 

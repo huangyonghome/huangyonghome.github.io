@@ -28,9 +28,9 @@ Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere�
 
 ### 1.登陆服务器的idrac平台.开启snmp协议(v2版本).
 
-如果是idrac8版本,SNMP配置在左侧菜单栏```IDRAC设置```---```网络```----```服务```
+如果是idrac8版本,SNMP配置在左侧菜单栏`IDRAC设置`---`网络`----`服务`
 
-如果是idrac9版本,SNMP配置在菜单栏```iDRAC设置```---```服务```---```SNMP代理```
+如果是idrac9版本,SNMP配置在菜单栏`iDRAC设置`---`服务`---`SNMP代理`
 
 > 根据我们的实际情况来看,无论是8还是9版本,SNMP都默认开启,端口是161,团体名是public
 
@@ -38,7 +38,7 @@ Dell的OMSA工具需要安装在物理机系统上,我尝试过安装在vsphere�
 
 ### 2.在zabbix服务端通过snmp命令检查是否能正确获取到服务器的snmp oid:
 
-命令: ```snmpwalk -v 2c -c 团体名 idrac IP地址```
+命令: `snmpwalk -v 2c -c 团体名 idrac IP地址`
 
 ```
 [work@server-4 ~]$ snmpwalk -v 2c -c public 172.16.250.53
@@ -66,15 +66,15 @@ SNMPv2-MIB::sysORID.5 = OID: UDP-MIB::udpMIB
 
 **在dell/idrac下有3个文件:**
 
-```ValueMaps_Dell_iDRAC.zbx.xml```-------导入键值对映射 (需要zabbix3.0版本以上)
+`ValueMaps_Dell_iDRAC.zbx.xml`-------导入键值对映射 (需要zabbix3.0版本以上)
 
-```Template_Dell_iDRAC_SNMPv{23}.zbx.xml```-----监控模板(我们的idrac snmp协议是v2版本.所以采用snmpv2版本的模板)
+`Template_Dell_iDRAC_SNMPv{23}.zbx.xml`-----监控模板(我们的idrac snmp协议是v2版本.所以采用snmpv2版本的模板)
 
 
 
 ### 4.配置全局变量
 
-在Zabbix的```Administration```----```General```---右上角下拉框中选择宏Macros,新增宏定义:
+在Zabbix的`Administration`----`General`---右上角下拉框中选择宏Macros,新增宏定义:
 
 ```
 #我这里Idrac的snmp团体名是public
@@ -85,9 +85,9 @@ SNMPv2-MIB::sysORID.5 = OID: UDP-MIB::udpMIB
 
 ### 5.导入模板
 
-1.导入键值对映射```ValueMaps_Dell_iDRAC.zbx.xml```
+1.导入键值对映射`ValueMaps_Dell_iDRAC.zbx.xml`
 
-2.导入监控模板```Template_Dell_iDRAC_SNMPv2.zbx.xml```
+2.导入监控模板`Template_Dell_iDRAC_SNMPv2.zbx.xml`
 
 
 
@@ -164,7 +164,7 @@ Dell Open Manage System Status
 
 在模板中,有一个触发器的名称是:Overall System Status Error
 
-表达式为```{exsi-idrac-53:GlobalSystemStatus.last()}<>3```
+表达式为`{exsi-idrac-53:GlobalSystemStatus.last()}<>3`
 
 用意是监控系统状态,如果值不为3(OK)则告警.但是根据实际情况来看,这个监控项GlobalSystemStatus.SNMP OID:1.3.6.1.4.1.674.10892.2.2.1.0正常情况下的值为0
 

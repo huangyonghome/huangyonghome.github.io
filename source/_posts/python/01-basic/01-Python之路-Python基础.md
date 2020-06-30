@@ -2,7 +2,7 @@
 title:  01.Python之路 - Python基础
 date: 2020-05-26 22:59:58
 tags:  python
-categories: [python,basic]
+categories: [python,01-basic]
 comments: true
 copyright: true
 ---

@@ -2,7 +2,7 @@
 title:  09.Python之路 - 字符编码
 date: 2020-05-27 22:59:58
 tags:  python
-categories: [python,basic]
+categories: [python,01-basic]
 comments: true
 copyright: true
 

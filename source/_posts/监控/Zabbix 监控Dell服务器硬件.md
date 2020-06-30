@@ -100,7 +100,7 @@ sudo systemctl restart zabbix-agent
 
 #### 5.在zabbix服务端测试
 
-命令:```zabbix_get -s 客户端IP -k 监控项```
+命令:`zabbix_get -s 客户端IP -k 监控项`
 
 ```
 #服务端的监控结果和客户端本地的执行结果一样

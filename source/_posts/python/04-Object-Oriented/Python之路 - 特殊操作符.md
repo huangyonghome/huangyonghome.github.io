@@ -2,7 +2,7 @@
 title: 33.Python之路 - 特殊操作符
 date: 2020-06-26 09:20:58
 tags:  python
-categories: [python,Object-Oriented]
+categories: [python,04-Object-Oriented]
 comments: true
 copyright: true
 ---

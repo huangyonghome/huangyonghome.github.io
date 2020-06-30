@@ -2,7 +2,7 @@
 title: 41.Python之路 - 多线程编程
 date: 2020-06-26 09:20:58
 tags:  python
-categories: [python,Concurrent]
+categories: [python,06-Concurrent]
 comments: true
 copyright: true
 ---

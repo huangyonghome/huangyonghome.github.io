@@ -2,7 +2,7 @@
 title:  13.Python之路 - python匿名函数
 date: 2020-06-07 17:20:58
 tags:  python
-categories: [python,Advanced]
+categories: [python,02-Advanced]
 comments: true
 copyright: true
 ---

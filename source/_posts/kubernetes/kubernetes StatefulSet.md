@@ -7,19 +7,63 @@ comments: true
 copyright: true
 ---
 
+## kubernetes StatefulSet
 
+### 介绍
+
+​     我们之前学习过ReplicaController(RC),ReplicaSet(RS),Deployment(deploy)等,这些资源均可以通过一个Pod模板创建多个Pod副本.这些pod除了IP和名字不一样外,其他均一模一样.
+
+​     如果pod模板关联到特定的持久卷声明,那么这些pod都共享同一个存储.这些pod是完全一样,也无所谓运行在哪个节点上.可以任何删除和替换.
+
+​     但是在实际场景中,并不是所有的应用都满足这样的要求.比如主从关系,主备关系,数据存储类应用等.这些场景每个pod都会在本地保留一份数据,而且与其他Pod有数据对应关系.如果pod一旦被删除,即便新创建个pod出来,实例之间的对应关系也会失败,从而导致应用失败.
+
+   为了支持有状态的应用,Kubernetes在Deployment的基础上扩展出了StatefulSet资源
 
 ---
 
-###   kubernetes headless Service
+### StatefulSet 特点
+
+statefulSet的特点即是有状态的应用特点:
+
+1. 稳定且需要唯一的网络标识符;
+
+   * 这要求pod的主机名和IP地址永久不变,即使删除了一个pod,新创建的Pod也必须继承前一个Pod的主机标识符
+
+
+2. 稳定且持久的存储;
+
+   * 可实现持久存储,新增或者减少pod,存储不会随之变化,并且删除一个pod时,关联到此pod的存储不会随之删除
+
+3. 要求有序,平滑的部署和扩展
+   * 在Mysql等集群,要先启动主节点,然后启动从节点,第二从节点等等
+
+4. 要求有序,平滑的终止和删除
+   * 同样,应用的终止和删除也是有顺序的,按照启动的逆序进行.例如Mysql启动时,先启动主节点,再启动从节点.终止的时候,先关闭从节点,再关闭主节点
+
+5. 有序的滚动更新
+   * 在Mysql更新时,也应该先更新所有从节点.最后更新主节点
+
+<!--more-->
+
+---
+
+   ### StatefulSet 依赖组件
+
+结合以上的特点,StatefulSet依赖以下组件:
+
+* headless service(无头服务): 用于DNS发现各pod网络地址
+* pv存储卷: 底层存储卷
+* volumeClaimTemplate(PVC申请模板): 用于每个Pod申请独立的存储卷
+
+---
+
+###   headless Service
 
 ​     我们以前学习过,Service是Kubernetes项目中用来将一组Pod暴露给外界访问的一种机制.外部客户端通过Service地址可以随机访问到某个具体的Pod
 
 ​     之前学过几种Service类型,包括nodeport,loadbalancer等等.所有这类Service都有一个VIP(虚拟IP),访问Service VIP,Service会将请求转发到后端的Pod上,
 
 ​     还有一种Service是Headless Service(无头服务),这类Service自身不需要VIP,当DNS解析该Service时,会解析出Service后端的Pod地址.这样设置的好处是Kubernetes项目为Pod分配唯一的"可解析身份",只要知道一个pod的名字和对应的Headless Service名字,就可以通过这条DNS访问到后端的Pod
-
-<!--more-->
 
 ---
 
@@ -29,7 +73,7 @@ copyright: true
 
 ​      之前在学习kubernetes的存储时,我们学习过PV,PVC存储卷,通过pod模板关联一个持久卷声明就可以为pod提供一个持久卷存储.因为持久卷声明(PVC)和持久卷(PV)是一对一关系.但是之前接触过的ReplicationController,ReplicaSet,Deployment等资源创建的pod是同一个模板创建的,所以共享的是同一个持久卷存储.而StatefulSet要求每个pod都需要有独立的持久卷声明和存储.所以StatefulSet要求关联到一个或多个不同的持久卷声明模板.这些持久卷声明会在pod创建之前准备就绪,并且关联到每个pod中.
 
-
+---
 
 ### 持久卷的创建和删除
 

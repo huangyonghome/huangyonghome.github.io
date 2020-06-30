@@ -2,7 +2,7 @@
 title:  29.Python之路 - 属性方法,类方法,静态方法
 date: 2020-06-26 09:20:58
 tags:  python
-categories: [python,Object-Oriented]
+categories: [python,04-Object-Oriented]
 comments: true
 copyright: true
 ---
