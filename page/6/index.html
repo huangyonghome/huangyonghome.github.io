@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/" itemprop="url">31.Python之路 - 反射</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/" itemprop="url">44.Python之路 - 并发编程之协程</a></h1>
         
 
         <div class="post-meta">
@@ -340,8 +340,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/04-Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">04-Object-Oriented</span>
+                  <a href="/categories/python/06-Concurrent/" itemprop="url" rel="index">
+                    <span itemprop="name">06-Concurrent</span>
                   </a>
                 </span>
 
@@ -358,8 +358,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -388,18 +388,14 @@
 
       
         
-          <h1 id="Python之路-反射"><a href="#Python之路-反射" class="headerlink" title="Python之路 - 反射"></a>Python之路 - 反射</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>反射主要是指程序可以访问、检测和修改它本身状态或行为的一种能力 </p>
-<p>Python面向对象中的反射是通过字符串的形式来操作对象相关的属性 , 在Python中一切皆对象 , 并且只要是对象就可以使用反射</p>
-<h2 id="hasattr-🍀"><a href="#hasattr-🍀" class="headerlink" title="hasattr  🍀"></a>hasattr  🍀</h2><p>判断对象中是否具有给定名称的属性</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hasattr</span><span class="params">(*args, **kwargs)</span>:</span> <span class="comment"># real signature unknown</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Return whether the object has an attribute with the given name.  </span></span><br><span class="line"><span class="string">    This is done by calling getattr(obj, name) and catching AttributeError.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-<p>实例1</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义一个字符串</span></span><br><span class="line">name = <span class="string">'lyon'</span></span><br><span class="line"><span class="comment"># 查看是否具有给定名称的属性</span></span><br><span class="line">bool = hasattr(name,<span class="string">'__len__'</span>)</span><br><span class="line"><span class="comment"># 打印bool</span></span><br><span class="line">print(bool)</span><br><span class="line"><span class="comment"># 执行结果:True</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">说明:很多初学者可能一直不理解为什么说Python里一切皆对象,因为没有意识到,在Python中str、list、int ...等这些数据类型,其实就是用class写出来的一个模型,那么既然是类就会有属性这一说,就可以利用反射来操作对象了</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<p>实例2</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">s1</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">s2</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line">this_modules = sys.modules[__name__]</span><br><span class="line">print(type(this_modules),hasattr(this_modules,<span class="string">'s1'</span>))</span><br><span class="line">module1</span><br></pre></td></tr></table></figure>
-<h2 id="getattr-🍀"><a href="#getattr-🍀" class="headerlink" title="getattr  🍀"></a>getattr  🍀</h2><p>从一个对象中获取属性名称</p>
+          <h1 id="Python之路-并发编程之协程"><a href="#Python之路-并发编程之协程" class="headerlink" title="Python之路 - 并发编程之协程"></a>Python之路 - 并发编程之协程</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>在前面的文章中 , 基本已经可以解决并发编程中的基本问题了 , 但是如果我们要利用单线程来实现并发 , 线程是轻量级的进程 , 为了使计算机资源能更充分的利用 , 那么我们就需要用到协程了</p>
+<p>并发的本质就是<em>上下文切换</em>加上<em>保存状态</em> , 那么我们就可以想到关键字<code>yield</code> , 我们在生成器篇章中 , 就是利用了<code>yield</code>实现了状态的保存 , 来看一个廖大大的例子</p>
+<p>生产者消费者模型yield版</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">()</span>:</span></span><br><span class="line">    r = <span class="string">''</span></span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        n = <span class="keyword">yield</span> r</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> n:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        print(<span class="string">'[CONSUMER] Consuming %s...'</span> % n)</span><br><span class="line">        r = <span class="string">'200 OK'</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">produce</span><span class="params">(c)</span>:</span></span><br><span class="line">    c.send(<span class="keyword">None</span>)</span><br><span class="line">    n = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> n &lt; <span class="number">5</span>:</span><br><span class="line">        n = n + <span class="number">1</span></span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        print(<span class="string">'[PRODUCER] Producing %s...'</span> % n)</span><br><span class="line">        r = c.send(n)</span><br><span class="line">        print(<span class="string">'[PRODUCER] Consumer return: %s'</span> % r)</span><br><span class="line">    c.close()</span><br><span class="line">c = consumer()</span><br><span class="line">produce(c)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string"># yiled可以保存状态,yield的状态保存与操作系统的保存线程状态很像,但是yield是代码级别控制的,更轻量级</span></span><br><span class="line"><span class="string"># send可以把一个函数的结果传给另外一个函数,以此实现单线程内程序之间的切换 </span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<p>上述例子中<code>yield</code>确实实现了并发 , 但是并没有实现遇到IO操作进行自动切换 , 所以协程出场了</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -454,7 +450,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/06-Python之路 - 特殊成员方法/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -473,7 +469,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/06-Python之路 - 特殊成员方法/" itemprop="url">30.Python之路 - 特殊成员方法</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/" itemprop="url">46.Python之路 - 实现线程池</a></h1>
         
 
         <div class="post-meta">
@@ -519,8 +515,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/04-Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">04-Object-Oriented</span>
+                  <a href="/categories/python/06-Concurrent/" itemprop="url" rel="index">
+                    <span itemprop="name">06-Concurrent</span>
                   </a>
                 </span>
 
@@ -537,8 +533,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/06-Python之路 - 特殊成员方法/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/06-Python之路 - 特殊成员方法/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -567,1048 +563,10 @@
 
       
         
-          <h1 id="Python之路-特殊成员方法"><a href="#Python之路-特殊成员方法" class="headerlink" title="Python之路 - 特殊成员方法"></a>Python之路 - 特殊成员方法</h1><h2 id="doc-🍀"><a href="#doc-🍀" class="headerlink" title="__doc__   🍀"></a>__doc__   🍀</h2><p>查看类的描述信息</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    这是一个类,什么都没有的类</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">print(Foo.__doc__)</span><br><span class="line"><span class="comment"># 执行结果: 这是一个类,什么都没有的类</span></span><br></pre></td></tr></table></figure>
-<h2 id="module-🍀"><a href="#module-🍀" class="headerlink" title="__module__  🍀"></a>__module__  🍀</h2><p>查看当前操作对象位于哪个模块</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_module.py</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># test.py</span></span><br><span class="line"><span class="keyword">from</span> my_module <span class="keyword">import</span> Foo</span><br><span class="line">print(Foo.__module__)</span><br><span class="line"><span class="comment"># 执行结果: my_module</span></span><br></pre></td></tr></table></figure>
-<h2 id="class-🍀"><a href="#class-🍀" class="headerlink" title="__class__  🍀"></a>__class__  🍀</h2><p>查看对象的类</p>
+          <h1 id="Python之路-实现线程池-🍀"><a href="#Python之路-实现线程池-🍀" class="headerlink" title="Python之路 - 实现线程池  🍀"></a>Python之路 - 实现线程池  🍀</h1><h2 id="方式一-🍀"><a href="#方式一-🍀" class="headerlink" title="方式一  🍀"></a>方式一  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Queue</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadPool</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, max_num=<span class="number">20</span>)</span>:</span></span><br><span class="line">        self.queue = Queue.Queue(max_num)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(max_num):</span><br><span class="line">            self.queue.put(threading.Thread)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_thread</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.queue.get()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_thread</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.queue.put(threading.Thread)</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">使用:</span></span><br><span class="line"><span class="string">pool = ThreadPool(10)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">def func(arg, p):</span></span><br><span class="line"><span class="string">    import time</span></span><br><span class="line"><span class="string">    time.sleep(2)</span></span><br><span class="line"><span class="string">    p.add_thread()</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">for i in range(30):</span></span><br><span class="line"><span class="string">    thread = pool.get_thread()</span></span><br><span class="line"><span class="string">    t = thread(target=func, args=(i, pool))</span></span><br><span class="line"><span class="string">    t.start()</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/06-Python之路 - 特殊成员方法/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/监控/Zabbix 监控Dell服务器硬件/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/" itemprop="url">Zabbix 监控Dell服务器硬件</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/监控/" itemprop="url" rel="index">
-                    <span itemprop="name">监控</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/监控/Zabbix 监控Dell服务器硬件/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Zabbix-监控Dell服务器硬件"><a href="#Zabbix-监控Dell服务器硬件" class="headerlink" title="Zabbix 监控Dell服务器硬件"></a>Zabbix 监控Dell服务器硬件</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>​     OMSA（全称Openmanage Server Administrator),是戴尔公司自主研发的IT系统管理解决方案。其通过提供web的图形用户界面和操作系统的命令行工具对本地和远程的服务器进行管理和监控。</p>
-<p>OMSA和IDRAC类似,产品,功能也相似.Zabbix可以通过OMSA和IDRAC来监控Dell服务器的硬件.</p>
-<p>由于Dell服务器官网下载OMSA工具非常慢,所以安装很难.如果可以的花,首选还是建议通过IDRAC来监控服务器硬件状态</p>
-<blockquote>
-<p>我在另一篇笔记<zabbix 通过dell="" idrac监控服务器硬件状态="">中介绍了如何通过IDRAC来监控Dell服务器硬件</zabbix></p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/监控/Zabbix 监控Dell服务器硬件/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/" itemprop="url">29.Python之路 - 属性方法,类方法,静态方法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/04-Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">04-Object-Oriented</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-属性方法-类方法-静态方法"><a href="#Python之路-属性方法-类方法-静态方法" class="headerlink" title="Python之路 - 属性方法,类方法,静态方法"></a>Python之路 - 属性方法,类方法,静态方法</h1><h2 id="属性方法-🍀"><a href="#属性方法-🍀" class="headerlink" title="属性方法  🍀"></a>属性方法  🍀</h2><p>属性方法就是通过使用装饰器 <code>@property</code> , 将一个方法变成一个静态属性 , 于是我们就可以通过访问属性 , 来或得一个方法的返回值</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlopen</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Web_page</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, url)</span>:</span></span><br><span class="line">        self.url = url</span><br><span class="line">        self.__content = <span class="keyword">None</span></span><br><span class="line">    <span class="comment"># 将content方法变成属性</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">content</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 返回私有属性</span></span><br><span class="line">        <span class="keyword">return</span> self.__content <span class="keyword">if</span> self.__content <span class="keyword">else</span> urlopen(self.url).read()</span><br><span class="line">con = Web_page(<span class="string">'www.baidu.com'</span>)</span><br><span class="line">res = con.content</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/" itemprop="url">36.Python之路 - Socket实现QQ聊天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/05-Network/" itemprop="url" rel="index">
-                    <span itemprop="name">05-Network</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-Socket实现QQ聊天"><a href="#Python之路-Socket实现QQ聊天" class="headerlink" title="Python之路 - Socket实现QQ聊天"></a>Python之路 - Socket实现QQ聊天</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在上一篇中写了最基本版的socket服务端和客户端 , 即仅能通信一次后就自动关闭了 , 显然实际应用中可不是这样的 , 那就来写一个像QQ一样的聊天程序吧</p>
-<h2 id="TCP实现-🍀"><a href="#TCP实现-🍀" class="headerlink" title="TCP实现  🍀"></a>TCP实现  🍀</h2><p>因为TCP是有链接的 , 这就导致只能有一个服务端 , 但是可以有多个客户端</p>
-<p>tcpqq_server.py</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line">sock = socket.socket()</span><br><span class="line">sock.bind((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))</span><br><span class="line">sock.listen(<span class="number">5</span>)</span><br><span class="line"><span class="comment"># 实现链接循环</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    print(<span class="string">"Watiting for the link..."</span>)</span><br><span class="line">    conn, addr = sock.accept()</span><br><span class="line">    print(<span class="string">"Your friend &#123;&#125; is online..."</span>.format(addr))</span><br><span class="line">    <span class="comment"># 实现通信循环</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        messages = conn.recv(<span class="number">1024</span>)</span><br><span class="line">        print(<span class="string">"Messages from [&#123;&#125;]:&#123;&#125;"</span>.format(addr, messages.decode(<span class="string">'utf-8'</span>)))</span><br><span class="line">        <span class="keyword">if</span> messages == <span class="string">b'q'</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">                data = input(<span class="string">"Please input the messages to be sent:"</span>).strip().encode(<span class="string">'utf-8'</span>)</span><br><span class="line">                <span class="comment"># 注意发送的内容不能为空,否则接收方就会一直等下去</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> data:</span><br><span class="line">                    print(<span class="string">"Can't be empty..."</span>)</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                conn.send(data)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    print(<span class="string">"Your friend &#123;&#125; is offline..."</span>.format(addr))</span><br><span class="line">    conn.close()</span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
-<p>tcpqq_client.py</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line">sock = socket.socket()</span><br><span class="line">sock.connect((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))</span><br><span class="line"><span class="comment"># 实现通信循环</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    messages = input(<span class="string">"Please input your messages to be sent:"</span>).strip().encode(<span class="string">'utf-8'</span>)</span><br><span class="line">    <span class="comment"># 注意发送的内容不能为空,否则接收方就会一直等下去</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> messages:</span><br><span class="line">        print(<span class="string">"Can't be empty..."</span>)</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">elif</span> messages == <span class="string">b'q'</span>:</span><br><span class="line">    	<span class="keyword">break</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">    	sock.send(messages)</span><br><span class="line">        data = sock.recv(<span class="number">1024</span>)</span><br><span class="line">        print(<span class="string">"Messages from [&#123;&#125;]:&#123;&#125;"</span>.format((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>), data.decode(<span class="string">'utf-8'</span>)))</span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/05-Network/03-Python之路 - Socket实现QQ聊天/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/" itemprop="url">32.Python之路 - 异常处理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/04-Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">04-Object-Oriented</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-异常处理"><a href="#Python之路-异常处理" class="headerlink" title="Python之路 - 异常处理"></a>Python之路 - 异常处理</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在我们写程序时难免会出现错误 , 一种为语法错误 , 即为python解释器的语法检测都通不过的错误 , 这种错误只能我们在程序执行前就处理好 . 另一种为逻辑错误 , 这是我们在程序设计时所出现的错误 , 也就是我们通常所说的bug </p>
-<p>在编程过程中为了增加友好性 , 在程序出现bug时一般不会将错误信息显示给用户 , 而是显示一个提示错误的页面</p>
-<p>基本语法</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/02-Python之路 - 网络编程之Socket/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/05-Network/02-Python之路 - 网络编程之Socket/" itemprop="url">35.Python之路 - 网络编程之Socket</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/05-Network/" itemprop="url" rel="index">
-                    <span itemprop="name">05-Network</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/05-Network/02-Python之路 - 网络编程之Socket/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/02-Python之路 - 网络编程之Socket/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-网络编程之Socket"><a href="#Python之路-网络编程之Socket" class="headerlink" title="Python之路 - 网络编程之Socket"></a>Python之路 - 网络编程之Socket</h1><h2 id="C-S架构-🍀"><a href="#C-S架构-🍀" class="headerlink" title="C/S架构  🍀"></a>C/S架构  🍀</h2><p>在网络通信中 , 一般是一方求一方应 , 求的一方就是客户端即 <code>Client</code>  , 应的一方就是服务端即<code>Server</code> , 这就是C/S架构 , 在互联网中处处是C/S架构 , 比如我们访问百度 ,  百度就是一个服务端 , 而我们的浏览器就是一个客户端</p>
-<h2 id="Socket-🍀"><a href="#Socket-🍀" class="headerlink" title="Socket  🍀"></a>Socket  🍀</h2><p>Socket是应用层与TCP/IP协议族通信的中间软件抽象层 , 它是一组接口 , 是从顶上三层 (osi七层协议的应用层) 进入传输层的接口 ; 顶上三层通常构成所谓的用户进程 , 底下四层却通常作为操作系统内核的一个部分提供</p>
-<p>Socket又叫做套接字 , Python中socket为我们封装好了TCP/UDP协议 , 所以我们无需深入理解 , 只要遵循socket的规定去编程就可以了</p>
-<p><strong>创建socket对象</strong> </p>
-<p>创建socket对象就是一个建立TCP的过程 , 即三次握手 , 断开当然就是四次挥手了<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/05-Network/02-Python之路 - 网络编程之Socket/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/" itemprop="url">34.Python之路 - 网络编程初识</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/05-Network/" itemprop="url" rel="index">
-                    <span itemprop="name">05-Network</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-网络编程初识"><a href="#Python之路-网络编程初识" class="headerlink" title="Python之路 - 网络编程初识"></a>Python之路 - 网络编程初识</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>在互联网没有诞生之前 , 我们都是在自己的计算机上自娱自乐 , 那时候的程序也都是单机版的程序 , 随后互联网诞生了 , 用网络把各个计算机连接到了一起 , 让处在网络中的计算机可以互相通信 , 网络编程就是如何在程序中实现两台计算机之间的通信</p>
-<p>最基本的例子莫过于我们传输文件了 , 没有网络的情况下我们只能利用U盘或者硬盘 , 先从我的计算机上将要传输的文件写入到我们的U盘或者硬盘 , 然后再用已有文件的U盘或者硬盘写入其他计算机 , 这样的局限性有多大可想而知 ; 利用网络我们可以直接十万八千里进行文件传输 , 比如用我的QQ传文件给你的QQ , 当然这个例子可能不怎么好 , 因为你传文件一般可能不会用QQ来传</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/python/06-Concurrent/Python之路 - 实现线程池/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1841,7 +799,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1860,7 +818,179 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/" itemprop="url">22.Python之路 - logging日志模块</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/" itemprop="url">34.Python之路 - 网络编程初识</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/05-Network/" itemprop="url" rel="index">
+                    <span itemprop="name">05-Network</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-网络编程初识"><a href="#Python之路-网络编程初识" class="headerlink" title="Python之路 - 网络编程初识"></a>Python之路 - 网络编程初识</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>在互联网没有诞生之前 , 我们都是在自己的计算机上自娱自乐 , 那时候的程序也都是单机版的程序 , 随后互联网诞生了 , 用网络把各个计算机连接到了一起 , 让处在网络中的计算机可以互相通信 , 网络编程就是如何在程序中实现两台计算机之间的通信</p>
+<p>最基本的例子莫过于我们传输文件了 , 没有网络的情况下我们只能利用U盘或者硬盘 , 先从我的计算机上将要传输的文件写入到我们的U盘或者硬盘 , 然后再用已有文件的U盘或者硬盘写入其他计算机 , 这样的局限性有多大可想而知 ; 利用网络我们可以直接十万八千里进行文件传输 , 比如用我的QQ传文件给你的QQ , 当然这个例子可能不怎么好 , 因为你传文件一般可能不会用QQ来传</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/" itemprop="url">23.Python之路 - hashlib加密</a></h1>
         
 
         <div class="post-meta">
@@ -1924,8 +1054,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1954,12 +1084,901 @@
 
       
         
-          <h1 id="Python之路-logging日志模块"><a href="#Python之路-logging日志模块" class="headerlink" title="Python之路 -  logging日志模块"></a>Python之路 -  logging日志模块</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍 🍀"></a>介绍 🍀</h2><p>logging模块是Python内置的标准模块，主要用于输出运行日志，可以设置输出日志的等级、日志保存路径、日志文件回滚等；相比print，具备如下优点：</p>
-<p>可以通过设置不同的日志等级，在release版本中只输出重要信息，而不必显示大量的调试信息；</p>
-<p>print将所有信息都输出到标准输出中，严重影响开发者从标准输出中查看其它数据；logging则可以由开发者决定将信息输出到什么地方，以及怎么输出。</p>
+          <h1 id="Python之路-hashlib加密"><a href="#Python之路-hashlib加密" class="headerlink" title="Python之路 - hashlib加密"></a>Python之路 - hashlib加密</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍 🍀"></a>介绍 🍀</h2><p>此模块有人称为摘要算法，也叫做加密算法，或者是哈希算法，散列算法等等，这么多title不用大家记，那么有同学就问他到底是干啥的？ 简单来说就是做加密和校验使用，它的工作原理给大家简单描述一下：它通过一个函数，把任意长度的数据按照一定规则转换为一个固定长度的数据串（通常用16进制的字符串表示）。</p>
+<h4 id="hashlib的特征以及使用要点："><a href="#hashlib的特征以及使用要点：" class="headerlink" title="hashlib的特征以及使用要点："></a>hashlib的特征以及使用要点：</h4><p>1.bytes类型数据 —&gt; 通过hashlib算法 —&gt; 固定长度的字符串</p>
+<p>2.不同的bytes类型数据转化成的结果一定不同。</p>
+<p>3.相同的bytes类型数据转化成的结果一定相同。</p>
+<p>4.此转化过程不可逆。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/06-Python之路 - 序列化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/" itemprop="url">21.Python之路 - 序列化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/03-Modules/" itemprop="url" rel="index">
+                    <span itemprop="name">03-Modules</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/06-Python之路 - 序列化/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-序列化"><a href="#Python之路-序列化" class="headerlink" title="Python之路 - 序列化"></a>Python之路 - 序列化</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>先说个例子 , 当我们将一个字典或者列表再或者变量存入磁盘中 , 而存入磁盘后原本数据类型就得不到保持了 . 这个时候我们就得用序列化和反序列化了</p>
+<p>序列化是将对象进行存储时保持当时对象的状态 , 实现其生命周期的延长 </p>
+<p>反序列化则是将存储的对象读取出来并转成原本的数据类型</p>
+<p>序列化的目的</p>
+<ol>
+<li>以某种存储形式使自定义对象持久化</li>
+<li>将对象从一个地方传递到另一个地方</li>
+<li>使程序更具维护性</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/03-Modules/06-Python之路 - 序列化/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/02-Python之路 - 网络编程之Socket/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/05-Network/02-Python之路 - 网络编程之Socket/" itemprop="url">35.Python之路 - 网络编程之Socket</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/05-Network/" itemprop="url" rel="index">
+                    <span itemprop="name">05-Network</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/05-Network/02-Python之路 - 网络编程之Socket/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/02-Python之路 - 网络编程之Socket/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-网络编程之Socket"><a href="#Python之路-网络编程之Socket" class="headerlink" title="Python之路 - 网络编程之Socket"></a>Python之路 - 网络编程之Socket</h1><h2 id="C-S架构-🍀"><a href="#C-S架构-🍀" class="headerlink" title="C/S架构  🍀"></a>C/S架构  🍀</h2><p>在网络通信中 , 一般是一方求一方应 , 求的一方就是客户端即 <code>Client</code>  , 应的一方就是服务端即<code>Server</code> , 这就是C/S架构 , 在互联网中处处是C/S架构 , 比如我们访问百度 ,  百度就是一个服务端 , 而我们的浏览器就是一个客户端</p>
+<h2 id="Socket-🍀"><a href="#Socket-🍀" class="headerlink" title="Socket  🍀"></a>Socket  🍀</h2><p>Socket是应用层与TCP/IP协议族通信的中间软件抽象层 , 它是一组接口 , 是从顶上三层 (osi七层协议的应用层) 进入传输层的接口 ; 顶上三层通常构成所谓的用户进程 , 底下四层却通常作为操作系统内核的一个部分提供</p>
+<p>Socket又叫做套接字 , Python中socket为我们封装好了TCP/UDP协议 , 所以我们无需深入理解 , 只要遵循socket的规定去编程就可以了</p>
+<p><strong>创建socket对象</strong> </p>
+<p>创建socket对象就是一个建立TCP的过程 , 即三次握手 , 断开当然就是四次挥手了<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/05-Network/02-Python之路 - 网络编程之Socket/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/05-Python之路 - 正则表达式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/03-Modules/05-Python之路 - 正则表达式/" itemprop="url">21.Python之路 - 正则表达式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/03-Modules/" itemprop="url" rel="index">
+                    <span itemprop="name">03-Modules</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/03-Modules/05-Python之路 - 正则表达式/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/05-Python之路 - 正则表达式/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-正则表达式"><a href="#Python之路-正则表达式" class="headerlink" title="Python之路 - 正则表达式"></a>Python之路 - 正则表达式</h1><h2 id="正则介绍-🍀"><a href="#正则介绍-🍀" class="headerlink" title="正则介绍  🍀"></a>正则介绍  🍀</h2><p>正则表达式并不是python的一部分，而是在各个编程语言都有的一种用于处理字符串的强大工具。</p>
+<p>使用正则处理字符串在效率上可能不如str自带的方法，但是它的功能十分强大。python中的正则封装在re模块中。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/03-Modules/05-Python之路 - 正则表达式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/" itemprop="url">45.Python之路 - 并发编程之IO多路复用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/06-Concurrent/" itemprop="url" rel="index">
+                    <span itemprop="name">06-Concurrent</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-并发编程之IO多路复用"><a href="#Python之路-并发编程之IO多路复用" class="headerlink" title="Python之路 - 并发编程之IO多路复用"></a>Python之路 - 并发编程之IO多路复用</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>在网络编程中 , 如果服务端需要面临同时接收上千甚至上万次的客户端请求 , 利用 “进程池” 或 “线程池” 或许可以缓解部分压力 , 但是并不是一个好的选择 , 因为超过数量还是得等 ; 又或者线程一旦进行堵塞 ; 以及任务之间的高度独立 , 并不需要互相通信或者等待时 , 我们就需要用到I/O多路复用(IO Multiplexing) 了 , 又叫做事件驱动IO (Event driven IO)</p>
+<h2 id="I-O多路复用-🍀"><a href="#I-O多路复用-🍀" class="headerlink" title="I/O多路复用  🍀"></a>I/O多路复用  🍀</h2><blockquote>
+<p>I/O多路复用是指单个线程中 , 通过记录跟踪每个I/O流(sock)的状态 , 来同时管理多个I/O流</p>
+</blockquote>
+<p>在I/O多路复用中只要一遇到IO就注册一个事件 , 然后主程序就可以继续干其他的事情了 , 直到IO处理完毕 , 继续恢复之前中断的任务 , 也就是说<strong>一个线程可以同时处理多个请求</strong> </p>
+<p>举🌰</p>
+<p>在UI编程中 , 常常要对鼠标点击进行响应 , 还要同时对键盘敲击也进行响应 </p>
+<p><strong>多进程多线程方式 :</strong> </p>
+<p>创建一个进程 , 进程中有两个线程 , 一个循环检测鼠标点击 , 一个循环检测键盘敲击 , 一旦检测到有情况就再开一个线程去处理 , 然后一直开下去……基本上是由创建进程/线程 , 维护进程/线程来解决的 , 这样对于CPU的资源是很浪费的</p>
+<p><strong>IO多路复用(事件驱动) :</strong> </p>
+<p>创建一个事件(消息)队列 , 鼠标点击就往队列中增加一个鼠标点击事件 , 键盘敲击就往队列中增加一个键盘敲击事件 , 创建一个线程(IO线程)负责不断从队列中取出事件 , 根据不同的事件 , 调用不同的函数 , 如onClick() , onKeyDown()等 , 即一个线程解决了所有事件的问题 , 这就是复用</p>
+<p><strong>比较 :</strong>  与多进程多线程技术相比 , I/O多路复用最大的优势是系统开销小 , 系统不必创建进程/线程 , 也不必维护这些进程/线程 , 从而大大减小了系统的开销</p>
+<p>目前常见支持I/O多路复用的系统调用select , poll , epoll ,I/O多路复用就是通过一种机制 , 一个进程可以监视多个描述符 , 一旦某个描述符就绪(一般是读就绪或者写就绪) , 能够通知程序进行相应的读写操作</p>
+<p>而I/O多路复用的具体实现就是 , select , poll , epoll</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/06-Concurrent/06-Python之路 - 并发编程之IO多路复用/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/" itemprop="url">20.Python之路 - 时间和日期模块</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/03-Modules/" itemprop="url" rel="index">
+                    <span itemprop="name">03-Modules</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-时间和日期模块"><a href="#Python之路-时间和日期模块" class="headerlink" title="Python之路 - 时间和日期模块"></a>Python之路 - 时间和日期模块</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>python提供了 time , datetimme 和 calendar 模块可以用于格式化如期和时间 ; 时间间隔是以秒为单位的浮点数 , 每个时间戳都以自从1970年1月1日午夜（历元）经过了多长时间来表示 , 所以1970年之前的日期就不能用时间戳来表示了 , 时间戳是最适合用来做日期运算的</p>
+<p>python中时间的三种类型 : </p>
+<ol>
+<li>float   浮点数 , 即时间戳</li>
+<li>struct tuple   时间元组</li>
+<li>str    字符串 , 规定格式表示</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

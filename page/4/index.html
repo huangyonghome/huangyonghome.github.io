@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes Deployment/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes Ingress/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes Deployment/" itemprop="url">kuberentes Deployment</a></h1>
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes Ingress/" itemprop="url">kuberentes Ingress</a></h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/kubernetes/kubernetes Deployment/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes Deployment/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/kubernetes/kubernetes Ingress/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes Ingress/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,17 +377,21 @@
 
       
         
-          <h2 id="kuberentes-Deployment"><a href="#kuberentes-Deployment" class="headerlink" title="kuberentes Deployment"></a>kuberentes Deployment</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>之前学习过使用ReplicationController和ReplicaSet实现托管和更新pod容器.<br>客户端通过Service服务访问RC或者RS托管的一组pod.这也是Kubernetes典型的应用程序运行方式</p>
-<p>假设这个时候应用程序需要更新,从v1版本更新到v2,有以下两种方式更新pod镜像:</p>
+          <h2 id="kuberentes-Ingress"><a href="#kuberentes-Ingress" class="headerlink" title="kuberentes Ingress"></a>kuberentes Ingress</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><a href="https://segmentfault.com/a/1190000019908991" target="_blank" rel="noopener">K8s ingress 学习博客</a></p>
+<p>ingress是暴露服务给外部客户端的另外一种方法.(前面我们学习过2种服务类型可以实现同样的目的:NodePort和LoadBalance)</p>
+<p>但是这几种Service都有局限性:</p>
 <ul>
-<li>直接删除所有现有的pod,然后创建新的pod</li>
-<li>可以先创建新的Pod,并等待他们运行成功后,再删除旧的.</li>
+<li>ClusterIP的默认Serivce方式只能在集群内部访问。</li>
+<li><p>NodePort:当有几十上百的服务在集群中运行时，NodePort的端口管理是灾难。</p>
+</li>
+<li><p>LoadBalance方式受限于云平台，且通常在云平台部署ELB还需要额外的费用。</p>
+</li>
 </ul>
-<p>这2中方法各有优缺点.第一种方法将导致服务在端在时间内不可用.第二种方法要求应用程序同时支持2个版本对外提供服务.</p>
-<p>本文具体介绍kubernetes上述两种更新方式.然后介绍通过手动方式,replicatController的更新方式.最后再引入deployment机制的用法介绍</p>
+<p>所幸k8s还提供了一种集群维度暴露服务的方式，也就是ingress。ingress可以简单理解为service的service，他通过独立的ingress对象来制定请求转发的规则，把请求路由到一个或多个service中。这样就把服务与请求规则解耦了，可以从业务维度统一考虑业务的暴露，而不用为每个service单独考虑。</p>
+<p>Ingress可以为多个Service提供服务,可以根据请求的HOST和PATH,将请求代理到相关的Service中.而且Ingres工作在HTTP层,可以实现7层代理特性,诸如:coockies和会话亲和力</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/kubernetes/kubernetes Deployment/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/kubernetes/kubernetes Ingress/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -442,7 +446,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes StatefulSet/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/docker/harbor私有仓库部署/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -461,7 +465,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes StatefulSet/" itemprop="url">kubernetes StatefulSet</a></h1>
+                <a class="post-title-link" href="/2020/06/26/docker/harbor私有仓库部署/" itemprop="url">harbor私有仓库部署</a></h1>
         
 
         <div class="post-meta">
@@ -496,8 +500,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">kubernetes</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
 
@@ -514,8 +518,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/kubernetes/kubernetes StatefulSet/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes StatefulSet/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/docker/harbor私有仓库部署/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/docker/harbor私有仓库部署/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -544,44 +548,28 @@
 
       
         
-          <h2 id="kubernetes-StatefulSet"><a href="#kubernetes-StatefulSet" class="headerlink" title="kubernetes StatefulSet"></a>kubernetes StatefulSet</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>​     我们之前学习过ReplicaController(RC),ReplicaSet(RS),Deployment(deploy)等,这些资源均可以通过一个Pod模板创建多个Pod副本.这些pod除了IP和名字不一样外,其他均一模一样.</p>
-<p>​     如果pod模板关联到特定的持久卷声明,那么这些pod都共享同一个存储.这些pod是完全一样,也无所谓运行在哪个节点上.可以任何删除和替换.</p>
-<p>​     但是在实际场景中,并不是所有的应用都满足这样的要求.比如主从关系,主备关系,数据存储类应用等.这些场景每个pod都会在本地保留一份数据,而且与其他Pod有数据对应关系.如果pod一旦被删除,即便新创建个pod出来,实例之间的对应关系也会失败,从而导致应用失败.</p>
-<p>   为了支持有状态的应用,Kubernetes在Deployment的基础上扩展出了StatefulSet资源</p>
+          <h2 id="harbor私有仓库部署"><a href="#harbor私有仓库部署" class="headerlink" title="harbor私有仓库部署"></a>harbor私有仓库部署</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>harbor是docker的私有仓库,可以部署在局域网服务器上,用来管理docker镜像.虽然docker官方也提供公共镜像仓库,但是由于是境外网站,拉取镜像速度非常慢,而且有被墙的可能.部署私有仓库非常有必要</p>
+<p>harbor是vmware公司开源的企业级的docker registry管理项目.</p>
+<blockquote>
+<p>处于数据脱敏需要,以下内容中隐藏了真实域名.而使用hub.xxxxxx.com替代</p>
+</blockquote>
 <hr>
-<h3 id="StatefulSet-特点"><a href="#StatefulSet-特点" class="headerlink" title="StatefulSet 特点"></a>StatefulSet 特点</h3><p>statefulSet的特点即是有状态的应用特点:</p>
-<ol>
-<li><p>稳定且需要唯一的网络标识符;</p>
-<ul>
-<li>这要求pod的主机名和IP地址永久不变,即使删除了一个pod,新创建的Pod也必须继承前一个Pod的主机标识符</li>
-</ul>
-</li>
-</ol>
-<ol start="2">
-<li><p>稳定且持久的存储;</p>
-<ul>
-<li>可实现持久存储,新增或者减少pod,存储不会随之变化,并且删除一个pod时,关联到此pod的存储不会随之删除</li>
-</ul>
-</li>
-<li><p>要求有序,平滑的部署和扩展</p>
-<ul>
-<li>在Mysql等集群,要先启动主节点,然后启动从节点,第二从节点等等</li>
-</ul>
-</li>
-<li><p>要求有序,平滑的终止和删除</p>
-<ul>
-<li>同样,应用的终止和删除也是有顺序的,按照启动的逆序进行.例如Mysql启动时,先启动主节点,再启动从节点.终止的时候,先关闭从节点,再关闭主节点</li>
-</ul>
-</li>
-<li><p>有序的滚动更新</p>
-<ul>
-<li>在Mysql更新时,也应该先更新所有从节点.最后更新主节点</li>
-</ul>
-</li>
-</ol>
+<h3 id="社区"><a href="#社区" class="headerlink" title="社区"></a>社区</h3><p>harbor github: <a href="https://github.com/goharbor/harbor" target="_blank" rel="noopener">goharbor/harbor</a></p>
+<p>官网文档介绍: <a href="https://goharbor.io/docs/1.10/" target="_blank" rel="noopener">harbor doc</a></p>
+<p>在部署中遇到的各种坑,都可以通过查阅文档,或者搜索github的issue解决</p>
+<hr>
+<h3 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h3><p>harbor是docker-compose部署的.包括一系列组件:nginx.core,log,register等等.</p>
+<p>但是由于本机已经存在一个Nginx镜像.所以用Nginx代理到harbor的Nginx.<strong>如果是独立的服务器部署Harbor的话,则不会存在这个问题,可以直接跳过这一章节.</strong></p>
+<p>nginx代理框架大概是:</p>
+<p><strong>nginx—-&gt;harbor-nginx—–&gt;habor</strong></p>
+<p>由于docker提交镜像需要Https协议,所以:</p>
+<p><strong>nginx—301跳转到nginx https—–&gt;harbor-nginx http—-&gt; habor</strong></p>
+<p>但是这样的部署方式,有一个问题:</p>
+<p>私有仓库可以正常login但是push镜像的时候,又提示未验证.</p>
+<p>该问题尝试过很多解决方案,但是均无法解决</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/kubernetes/kubernetes StatefulSet/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/docker/harbor私有仓库部署/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -818,7 +806,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/02-Python之路 - 模块导入详解/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/01-Python之路 - 模块初识/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -837,7 +825,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/03-Modules/02-Python之路 - 模块导入详解/" itemprop="url">18.Python之路 - 模块导入详解</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/03-Modules/01-Python之路 - 模块初识/" itemprop="url">17.Python之路 - Python递归函数</a></h1>
         
 
         <div class="post-meta">
@@ -901,8 +889,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/03-Modules/02-Python之路 - 模块导入详解/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/02-Python之路 - 模块导入详解/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/03-Modules/01-Python之路 - 模块初识/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/01-Python之路 - 模块初识/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -931,12 +919,12 @@
 
       
         
-          <h1 id="Python之路-模块导入详解"><a href="#Python之路-模块导入详解" class="headerlink" title="Python之路 - 模块导入详解"></a>Python之路 - 模块导入详解</h1><h2 id="import-🍀"><a href="#import-🍀" class="headerlink" title="import 🍀"></a>import 🍀</h2><p>我们知道一个模块就是一个py文件 , 当我们执行py文件时 , python解释器会先加载内置命名空间 , 其次是加载全局命名空间( 学习函数就已知道 )  , 还有个局部命名空间就不说了</p>
-<p>当python解释器遇到我们的import语句时 , import会将模块进行初始化 , 即会将模块中的内容执行一遍 , 既然执行 , 那么被import的模块的全局命名空间就创建成功了 , 并且会将这个创建成功的命名空间加载到使用import语句的本地的全局命名空间 . 于是我们就可以在本地使用被导入模块了</p>
-<p>自定义模块my_module.py , 文件名my_module.py , 模块名my_module</p>
+          <h1 id="Python之路-模块初识"><a href="#Python之路-模块初识" class="headerlink" title="Python之路 -  模块初识"></a>Python之路 -  模块初识</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍 🍀"></a>介绍 🍀</h2><p>Python 模块 , 说白了就是一个 .py 文件 , 里面放了一坨函数和变量或者类 , 总而言之就是放了一堆代码 , 那么问题来了 , 我要它有什么用?</p>
+<p>当我们写一个比较复杂的程序 , 程序里面定义了100个函数和200个变量 , 然后这些函数和变量要来回调用 , 于是我们就得到处找函数名 , 找变量名 ,找了一个小时终于找到了 , 好的 , 我们开始找下一个 … </p>
+<p>所以 , 这个时候我们就需要模块了 , 我们可以将一类作用的函数和变量放到一个 .py 文件中 , 这样分成好几个文件 , 我们就可以快速维护我们的代码了</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/03-Modules/02-Python之路 - 模块导入详解/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/python/03-Modules/01-Python之路 - 模块初识/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -991,7 +979,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1010,7 +998,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/" itemprop="url">39.Python之路 - Socketserver实现多并发</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/" itemprop="url">28.Python之路 - 面向对象特性之封装</a></h1>
         
 
         <div class="post-meta">
@@ -1056,8 +1044,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/05-Network/" itemprop="url" rel="index">
-                    <span itemprop="name">05-Network</span>
+                  <a href="/categories/python/04-Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">04-Object-Oriented</span>
                   </a>
                 </span>
 
@@ -1074,8 +1062,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1104,20 +1092,16 @@
 
       
         
-          <h1 id="Python之路-Socketserver实现多并发"><a href="#Python之路-Socketserver实现多并发" class="headerlink" title="Python之路 - Socketserver实现多并发"></a>Python之路 - Socketserver实现多并发</h1><h2 id="阅读指引-🍀"><a href="#阅读指引-🍀" class="headerlink" title="阅读指引  🍀"></a>阅读指引  🍀</h2><p>在上面的整理篇章中 , 简单的网络编程基本已经会了 , 一个TCP , 一个UDP , 然后就是粘包问题</p>
-<p>但是在上述中有一个问题 , 在现实生活中 , 一个服务端肯定常常需要同时服务好几个客户端 , 而上述篇章中并没有实现一对多同时进行的情况 , TCP中只能等前一个链接断开后续的才能连上 , 没连上就一直等 ; UDP则是接一次发一次 , 并不能同时接两次发两次 . 为了处理这个问题 , 即实现并发 (后续文章详细讲解) , Python中有一个socketserver模块可以满足我们的要求</p>
-<h2 id="socketserver-🍀"><a href="#socketserver-🍀" class="headerlink" title="socketserver  🍀"></a>socketserver  🍀</h2><p>Python提供了两个级别访问的网络服务:</p>
-<ol>
-<li>低级别的网络服务支持基本的socket , 它提供了标准的BSD Socket API , 可以访问底层操作系统Socket接口的全部方法</li>
-<li>高级别的网络服务模块socketserver , 它提供了服务器中心类 , 可以简化网络服务器的开发</li>
-</ol>
-<p>socket就不用说了 , now socketserver</p>
-<p>我们知道基于TCP的套接字 , 关键就是两个循环 , 一个链接循环(多人) , 一个通信循环(多消息)</p>
-<p>在socketserver模块中分为两大类 : server类 (解决链接问题) 和request类 (解决通信问题) </p>
-<p>如果想进一步了解 , 可以看看官方文档 , &lt; <a href="https://docs.python.org/3/library/socketserver.html?highlight=socketserver#module-socketserver" target="_blank" rel="noopener">socketserver官方文档 </a>&gt;</p>
+          <h1 id="Python之路-面向对象特性之封装"><a href="#Python之路-面向对象特性之封装" class="headerlink" title="Python之路 - 面向对象特性之封装"></a>Python之路 - 面向对象特性之封装</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>封装就是把客观事物封装成抽象的类 , 并且类可以把自己的数据和方法只让可信的类或者对象操作 , 对不可信的进行信息隐藏</p>
+<h2 id="私有问题-🍀"><a href="#私有问题-🍀" class="headerlink" title="私有问题  🍀"></a>私有问题  🍀</h2><p>当我们类中的一些属性或者方法想要对不可信的类或者对象隐藏时 , 我们就可以将这些属性或者方法 , 定义成私有属性或者私有方法</p>
+<p>在Python中用双下划线开头的方式将属性隐藏起来 , 即带双下划线就为私有属性或者私有方法</p>
+<ul>
+<li>私有属性</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,name)</span>:</span></span><br><span class="line">        <span class="comment"># 定义私有属性</span></span><br><span class="line">        self.__name = name</span><br><span class="line"><span class="comment"># 实例化</span></span><br><span class="line">a = A(<span class="string">"Lyon"</span>)</span><br><span class="line"><span class="comment"># 访问a中的__name属性</span></span><br><span class="line">print(a.__name)</span><br><span class="line"><span class="comment"># 执行结果 : AttributeError: 'A' object has no attribute '__name'</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">结果报错,意思是对象A中没有__name这个属性</span></span><br><span class="line"><span class="string">也就是说,外部已经不能直接利用 .__name 来访问这个属性了</span></span><br><span class="line"><span class="string">因为此时它是一个私有属性</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/05-Network/06-Python之路 - Socketserver实现多并发/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1172,7 +1156,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/03-Python之路 - 并发编程之多进程/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1191,7 +1175,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/03-Python之路 - 并发编程之多进程/" itemprop="url">42.Python之路 - 多进程编程</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/" itemprop="url">25.Python之路 - 面向对象</a></h1>
         
 
         <div class="post-meta">
@@ -1237,8 +1221,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/06-Concurrent/" itemprop="url" rel="index">
-                    <span itemprop="name">06-Concurrent</span>
+                  <a href="/categories/python/04-Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">04-Object-Oriented</span>
                   </a>
                 </span>
 
@@ -1255,8 +1239,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/06-Concurrent/03-Python之路 - 并发编程之多进程/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/03-Python之路 - 并发编程之多进程/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1285,108 +1269,369 @@
 
       
         
-          <h1 id="Python之路-多进程编程"><a href="#Python之路-多进程编程" class="headerlink" title="Python之路 - 多进程编程"></a>Python之路 - 多进程编程</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>上一篇《<a href="https://lyonyang.gitbooks.io/blog/01-Python/06-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%AF%87/02-Python%E4%B9%8B%E8%B7%AF%20-%20%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B.html" target="_blank" rel="noopener">多线程编程</a>》中已经对Python中多线程部分进行了整理 , 进程中有很多也是相似的</p>
-<p>概念在并发编程第一篇中就已经介绍了 , So直接开始操作</p>
-<h2 id="multiprocessing-🍀"><a href="#multiprocessing-🍀" class="headerlink" title="multiprocessing  🍀"></a>multiprocessing  🍀</h2><p>从上一篇我们也已经知道了 , Python中的多线程无法利用多核优势 , 所以如果我们想要充分地使用多核CPU的资源 , 那么就只能靠多进程了 , 因为进程是系统调度的 , Python提供了<code>multiprocessing</code>模块了对多进程的支持</p>
-<p>multiprocessing模块中提供了Process , Queue , Pipe , Lock , RLock , Event , Condition等组件 , 与threading模块有很多相似之处</p>
-<h2 id="Process-🍀"><a href="#Process-🍀" class="headerlink" title="Process  🍀"></a>Process  🍀</h2><p>用于创建进程的类 , 与threading模块中的<code>_Thread</code>类类似 </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">Process类的构造函数</span></span><br><span class="line"><span class="string">def __init__(self, group=None, target=None, name=None, args=(), kwargs=&#123;&#125;):</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<p>参数说明</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>group</td>
-<td>未使用 , 值始终</td>
-</tr>
-<tr>
-<td>target</td>
-<td>与threading.Tread中的target参数一样 , 表示调用对象 , 即子进程要执行的任务</td>
-</tr>
-<tr>
-<td>name</td>
-<td>子进程的名称</td>
-</tr>
-<tr>
-<td>args</td>
-<td>传入target函数中的位置参数 , 是一个元组 , 与线程一样 , 参数后必须加逗号</td>
-</tr>
-<tr>
-<td>kwargs</td>
-<td>表示调用对象的字典</td>
-</tr>
-</tbody>
-</table>
-<p>方法说明</p>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Process.run (self)</td>
-<td>进程启动时运行的方法 , 由该方法调用target参数所指定的函数 , 在子类中可以进行重构 , 与线程中一样</td>
-</tr>
-<tr>
-<td>Process.start (self)</td>
-<td>启动进程 , start方法就是去帮你调用run方法</td>
-</tr>
-<tr>
-<td>Process.terminate (self)</td>
-<td>强制终止进程 , 不会进行任何清理操作 , 使用时需小心其子进程与锁的问题</td>
-</tr>
-<tr>
-<td>Process.join (self, timeout=None)</td>
-<td>与线程中一样 , 阻塞调用 , 主进程进行等待 , timeout为超时时间</td>
-</tr>
-<tr>
-<td>Process.is_alive (self)</td>
-<td>判断进程是否正在运行 , 返回bool值</td>
-</tr>
-</tbody>
-</table>
-<p>实例属性说明</p>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Process.daemon</td>
-<td>默认值为False , True则为守护进程</td>
-</tr>
-<tr>
-<td>Process.name</td>
-<td>进程的名称</td>
-</tr>
-<tr>
-<td>Process.pid</td>
-<td>进程的pid</td>
-</tr>
-<tr>
-<td>Process.exitcode</td>
-<td>进程运行时为None , 如果为-N , 表示被信号N结束</td>
-</tr>
-<tr>
-<td>Process.authkey</td>
-<td>进程的身份验证键 , 默认是由os.urandom()随机生成的32字符的字符串 .  这个键的用途是为涉及网络连接的底层进程间通信提供安全性 , 这类连接只有在具有相同的身份验证键时才能成功</td>
-</tr>
-</tbody>
-</table>
+          <h1 id="Python之路-面向对象"><a href="#Python之路-面向对象" class="headerlink" title="Python之路 - 面向对象"></a>Python之路 - 面向对象</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>编程范式</p>
+<p>编程是程序员用 特定的语法 + 数据结构 + 算法组成的代码来告诉计算机如何执行任务的过程 , 而实现一个任务的方式有很多种不同的方式 ,  对这些不同的编程方式的特点进行归纳总结得出来的编程方式类别，即为编程范式</p>
+<ul>
+<li>面向过程编程  Procedural Programming</li>
+</ul>
+<p>面向过程编程就是程序从上到下一步步执行 , 基本设计思路就是程序一开始是要着手解决一个大的问题 , 然后把一个大问题分解成很多个小问题或子过程 , 这些子过程再执行的过程再继续分解直到小问题足够简单到可以在一个小步骤范围内解决</p>
+<p>在Python中 , 我们通过把大段代码拆成函数 , 通过一层一层的函数调用 , 就可以把复杂任务分解成简单的任务 , 这种分解可以称之为面向过程的程序设计 . 函数就是面向过程的程序设计的基本单元</p>
+<ul>
+<li>函数式编程  Functional Programming</li>
+</ul>
+<p>函数式编程就是一种抽象程度很高的编程范式 , 纯粹的函数式编程语言编写的函数没有变量 , 函数式编程的一个特点就是 , 允许把函数本身作为参数传入另一个函数 , 还允许返回一个函数  , Python对函数式编程提供部分支持 . 由于Python允许使用变量 , 因此 , Python不是纯函数式编程语言</p>
+<ul>
+<li>面向对象编程  Object Oriented Programming</li>
+</ul>
+<p>面向对象编程是利用”类”和”对象”来创建各种模型来实现对真实世界的描述 , 使用面向对象编程的原因一方面是因为它可以使程序的维护和扩展变得更简单 , 并且可以大大提高程序开发效率 , 另外 , 基于面向对象的程序可以使它人更加容易理解你的代码逻辑 , 从而使团队开发变得更从容</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/06-Concurrent/03-Python之路 - 并发编程之多进程/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/" itemprop="url">29.Python之路 - 属性方法,类方法,静态方法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/04-Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">04-Object-Oriented</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-属性方法-类方法-静态方法"><a href="#Python之路-属性方法-类方法-静态方法" class="headerlink" title="Python之路 - 属性方法,类方法,静态方法"></a>Python之路 - 属性方法,类方法,静态方法</h1><h2 id="属性方法-🍀"><a href="#属性方法-🍀" class="headerlink" title="属性方法  🍀"></a>属性方法  🍀</h2><p>属性方法就是通过使用装饰器 <code>@property</code> , 将一个方法变成一个静态属性 , 于是我们就可以通过访问属性 , 来或得一个方法的返回值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlopen</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Web_page</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, url)</span>:</span></span><br><span class="line">        self.url = url</span><br><span class="line">        self.__content = <span class="keyword">None</span></span><br><span class="line">    <span class="comment"># 将content方法变成属性</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">content</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 返回私有属性</span></span><br><span class="line">        <span class="keyword">return</span> self.__content <span class="keyword">if</span> self.__content <span class="keyword">else</span> urlopen(self.url).read()</span><br><span class="line">con = Web_page(<span class="string">'www.baidu.com'</span>)</span><br><span class="line">res = con.content</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/05-Python之路 - 属性方法-类方法-静态方法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/" itemprop="url">32.Python之路 - 异常处理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/04-Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">04-Object-Oriented</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-异常处理"><a href="#Python之路-异常处理" class="headerlink" title="Python之路 - 异常处理"></a>Python之路 - 异常处理</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在我们写程序时难免会出现错误 , 一种为语法错误 , 即为python解释器的语法检测都通不过的错误 , 这种错误只能我们在程序执行前就处理好 . 另一种为逻辑错误 , 这是我们在程序设计时所出现的错误 , 也就是我们通常所说的bug </p>
+<p>在编程过程中为了增加友好性 , 在程序出现bug时一般不会将错误信息显示给用户 , 而是显示一个提示错误的页面</p>
+<p>基本语法</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1625,7 +1870,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/02-Python之路 - 并发编程之多线程/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1644,7 +1889,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/02-Python之路 - 并发编程之多线程/" itemprop="url">41.Python之路 - 多线程编程</a></h1>
+                <a class="post-title-link" href="/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/" itemprop="url">22.Python之路 - logging日志模块</a></h1>
         
 
         <div class="post-meta">
@@ -1690,8 +1935,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/06-Concurrent/" itemprop="url" rel="index">
-                    <span itemprop="name">06-Concurrent</span>
+                  <a href="/categories/python/03-Modules/" itemprop="url" rel="index">
+                    <span itemprop="name">03-Modules</span>
                   </a>
                 </span>
 
@@ -1708,8 +1953,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/06-Concurrent/02-Python之路 - 并发编程之多线程/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/02-Python之路 - 并发编程之多线程/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1738,368 +1983,12 @@
 
       
         
-          <h1 id="Python之路-多线程编程"><a href="#Python之路-多线程编程" class="headerlink" title="Python之路 - 多线程编程"></a>Python之路 - 多线程编程</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>在上一篇中说了一大堆理论 , 那么现在就开始实践了 </p>
-<p>先说线程再说进程 , 为什么 ?  因为在Python中有一个<code>Python GIL</code>全局解释器锁 , 这是个什么东西? 最后来说</p>
-<p>总之线程和进程都是与操作系统有关的知识 , 所以操作系统基础 , 对于这两节内容的理解会有很大的帮助</p>
-<h2 id="Threading-🍀"><a href="#Threading-🍀" class="headerlink" title="Threading  🍀"></a>Threading  🍀</h2><p>Python通过两个标准库<code>_thread</code> (built-in) 和<code>threading</code>提供对线程的支持 , threading对_thread进行了封装</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">_thread.py</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">This module provides primitive operations to write multi-threaded programs.</span></span><br><span class="line"><span class="string">The 'threading' module provides a more convenient interface.</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<p>So , 明显我们一般直接使用threading</p>
-<p>threading模块中提供了Thread , Lock , RLock , Semaphore , Event , Condition , Timer等组件</p>
+          <h1 id="Python之路-logging日志模块"><a href="#Python之路-logging日志模块" class="headerlink" title="Python之路 -  logging日志模块"></a>Python之路 -  logging日志模块</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍 🍀"></a>介绍 🍀</h2><p>logging模块是Python内置的标准模块，主要用于输出运行日志，可以设置输出日志的等级、日志保存路径、日志文件回滚等；相比print，具备如下优点：</p>
+<p>可以通过设置不同的日志等级，在release版本中只输出重要信息，而不必显示大量的调试信息；</p>
+<p>print将所有信息都输出到标准输出中，严重影响开发者从标准输出中查看其它数据；logging则可以由开发者决定将信息输出到什么地方，以及怎么输出。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/06-Concurrent/02-Python之路 - 并发编程之多线程/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/" itemprop="url">28.Python之路 - 面向对象特性之封装</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/04-Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">04-Object-Oriented</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-面向对象特性之封装"><a href="#Python之路-面向对象特性之封装" class="headerlink" title="Python之路 - 面向对象特性之封装"></a>Python之路 - 面向对象特性之封装</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>封装就是把客观事物封装成抽象的类 , 并且类可以把自己的数据和方法只让可信的类或者对象操作 , 对不可信的进行信息隐藏</p>
-<h2 id="私有问题-🍀"><a href="#私有问题-🍀" class="headerlink" title="私有问题  🍀"></a>私有问题  🍀</h2><p>当我们类中的一些属性或者方法想要对不可信的类或者对象隐藏时 , 我们就可以将这些属性或者方法 , 定义成私有属性或者私有方法</p>
-<p>在Python中用双下划线开头的方式将属性隐藏起来 , 即带双下划线就为私有属性或者私有方法</p>
-<ul>
-<li>私有属性</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,name)</span>:</span></span><br><span class="line">        <span class="comment"># 定义私有属性</span></span><br><span class="line">        self.__name = name</span><br><span class="line"><span class="comment"># 实例化</span></span><br><span class="line">a = A(<span class="string">"Lyon"</span>)</span><br><span class="line"><span class="comment"># 访问a中的__name属性</span></span><br><span class="line">print(a.__name)</span><br><span class="line"><span class="comment"># 执行结果 : AttributeError: 'A' object has no attribute '__name'</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">结果报错,意思是对象A中没有__name这个属性</span></span><br><span class="line"><span class="string">也就是说,外部已经不能直接利用 .__name 来访问这个属性了</span></span><br><span class="line"><span class="string">因为此时它是一个私有属性</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/04-Python之路 - 面向对象之封装/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/" itemprop="url">44.Python之路 - 并发编程之协程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/06-Concurrent/" itemprop="url" rel="index">
-                    <span itemprop="name">06-Concurrent</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Python之路-并发编程之协程"><a href="#Python之路-并发编程之协程" class="headerlink" title="Python之路 - 并发编程之协程"></a>Python之路 - 并发编程之协程</h1><h2 id="前言-🍀"><a href="#前言-🍀" class="headerlink" title="前言  🍀"></a>前言  🍀</h2><p>在前面的文章中 , 基本已经可以解决并发编程中的基本问题了 , 但是如果我们要利用单线程来实现并发 , 线程是轻量级的进程 , 为了使计算机资源能更充分的利用 , 那么我们就需要用到协程了</p>
-<p>并发的本质就是<em>上下文切换</em>加上<em>保存状态</em> , 那么我们就可以想到关键字<code>yield</code> , 我们在生成器篇章中 , 就是利用了<code>yield</code>实现了状态的保存 , 来看一个廖大大的例子</p>
-<p>生产者消费者模型yield版</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">()</span>:</span></span><br><span class="line">    r = <span class="string">''</span></span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        n = <span class="keyword">yield</span> r</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> n:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        print(<span class="string">'[CONSUMER] Consuming %s...'</span> % n)</span><br><span class="line">        r = <span class="string">'200 OK'</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">produce</span><span class="params">(c)</span>:</span></span><br><span class="line">    c.send(<span class="keyword">None</span>)</span><br><span class="line">    n = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> n &lt; <span class="number">5</span>:</span><br><span class="line">        n = n + <span class="number">1</span></span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        print(<span class="string">'[PRODUCER] Producing %s...'</span> % n)</span><br><span class="line">        r = c.send(n)</span><br><span class="line">        print(<span class="string">'[PRODUCER] Consumer return: %s'</span> % r)</span><br><span class="line">    c.close()</span><br><span class="line">c = consumer()</span><br><span class="line">produce(c)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string"># yiled可以保存状态,yield的状态保存与操作系统的保存线程状态很像,但是yield是代码级别控制的,更轻量级</span></span><br><span class="line"><span class="string"># send可以把一个函数的结果传给另外一个函数,以此实现单线程内程序之间的切换 </span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<p>上述例子中<code>yield</code>确实实现了并发 , 但是并没有实现遇到IO操作进行自动切换 , 所以协程出场了</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/06-Concurrent/05-Python之路 - 并发编程之协程/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/python/03-Modules/07-Python之路 -logging日志模块/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
