@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="kubernets探针介绍kubernetes一共有2种探针: 存活探针 就绪探针  就绪探针就绪探针工作介绍就绪探针会定期调用,检查特定的pod是否准备就绪接收客户端的请求.当容器启动时,会等待一个时间,然后执行第一次准备就绪检查.如果某个Pod没有通过探针探测,则会从服务中删除该pod,如果pod再次准备就绪,则会重新添加到Service 就绪探针确保客户端只与正常的Pod交互.  就绪探针的">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-26T10:05:50.556Z">
+<meta property="og:updated_time" content="2020-06-30T12:32:51.212Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernets探针">
 <meta name="twitter:description" content="kubernets探针介绍kubernetes一共有2种探针: 存活探针 就绪探针  就绪探针就绪探针工作介绍就绪探针会定期调用,检查特定的pod是否准备就绪接收客户端的请求.当容器启动时,会等待一个时间,然后执行第一次准备就绪检查.如果某个Pod没有通过探针探测,则会从服务中删除该pod,如果pod再次准备就绪,则会重新添加到Service 就绪探针确保客户端只与正常的Pod交互.  就绪探针的">
@@ -401,11 +401,12 @@
 <p>pods的READY是0.表示pod容器虽然正在运行中,但是未准备就绪</p>
 <p>向其中一个pod容器创建/var/ready文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl exec kubia-6gvhg -- touch /var/ready</span><br></pre></td></tr></table></figure>
-<p>但是容器并不会马上就绪.这是因为pod默认每隔10s探测一次.通过<figure class="highlight plain"><figcaption><span>describe pod kubia-6gvhg```可以看到就绪探针的策略</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<p>[root@k8s-master ~]# kubectl describe pods kubia-6gvhg</p>
-<p>Readiness:      exec [ls /var/ready] delay=0s timeout=1s period=10s #success=1 #failure=3<br>Warning  Unhealthy  2m53s (x30 over 7m43s)  kubelet, k8s-node2  Readiness probe failed: ls: cannot access /var/ready: No such file or directory<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">10s后,可以看到就只有一个pod准备就绪</span><br></pre></td></tr></table></figure></p>
-<p>[root@k8s-master ~]# kubectl get pods<br>NAME                READY   STATUS    RESTARTS   AGE<br>kubia-6gvhg         1/1     Running   0          9m45s<br>kubia-qlpdt         0/1     Running   0          9m45s<br>kubia-w8c82         0/1     Running   0          9m45s<br>kubia-w9spj         0/1     Running   0          9m45s<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过测试发现,客户端的请求永远只转发到已经准备就绪的Pod容器内,而其他容器则不接受请求</span><br></pre></td></tr></table></figure></p>
-<p>[work@k8s-node1 ~]$ while true;do curl <a href="http://10.96.170.37;sleep" target="_blank" rel="noopener">http://10.96.170.37;sleep</a> 1;done<br>You’ve hit kubia-6gvhg<br>You’ve hit kubia-6gvhg<br>You’ve hit kubia-6gvhg<br>You’ve hit kubia-6gvhg<br>You’ve hit kubia-6gvhg<br>You’ve hit kubia-6gvhg<br>You’ve hit kubia-6gvhg<br><code>`</code></p>
+<p>但是容器并不会马上就绪.这是因为pod默认每隔10s探测一次.通过<code>kubectl describe pod kubia-6gvhg</code>可以看到就绪探针的策略</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl describe pods kubia-6gvhg</span><br><span class="line"></span><br><span class="line">Readiness:      exec [ls /var/ready] delay=0s timeout=1s period=10s #success=1 #failure=3</span><br><span class="line">Warning  Unhealthy  2m53s (x30 over 7m43s)  kubelet, k8s-node2  Readiness probe failed: ls: cannot access /var/ready: No such file or directory</span><br></pre></td></tr></table></figure>
+<p>10s后,可以看到就只有一个pod准备就绪</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl get pods</span><br><span class="line">NAME                READY   STATUS    RESTARTS   AGE</span><br><span class="line">kubia-6gvhg         1/1     Running   0          9m45s</span><br><span class="line">kubia-qlpdt         0/1     Running   0          9m45s</span><br><span class="line">kubia-w8c82         0/1     Running   0          9m45s</span><br><span class="line">kubia-w9spj         0/1     Running   0          9m45s</span><br></pre></td></tr></table></figure>
+<p>通过测试发现,客户端的请求永远只转发到已经准备就绪的Pod容器内,而其他容器则不接受请求</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[work@k8s-node1 ~]$ while true;do curl http://10.96.170.37;sleep 1;done</span><br><span class="line">You&apos;ve hit kubia-6gvhg</span><br><span class="line">You&apos;ve hit kubia-6gvhg</span><br><span class="line">You&apos;ve hit kubia-6gvhg</span><br><span class="line">You&apos;ve hit kubia-6gvhg</span><br><span class="line">You&apos;ve hit kubia-6gvhg</span><br><span class="line">You&apos;ve hit kubia-6gvhg</span><br><span class="line">You&apos;ve hit kubia-6gvhg</span><br></pre></td></tr></table></figure>
 <p>其他两种探测类型的是否方法也类似</p>
 <hr>
 
@@ -427,7 +428,7 @@
   <p><span>本文标题:</span><a href="/2020/06/26/kubernetes/kubernetes探针/">kubernets探针</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2020年06月26日 - 11:06</p>
-  <p><span>最后更新:</span>2020年06月26日 - 18:06</p>
+  <p><span>最后更新:</span>2020年06月30日 - 20:06</p>
   <p><span>原始链接:</span><a href="/2020/06/26/kubernetes/kubernetes探针/" title="kubernets探针">https://jesse.top/2020/06/26/kubernetes/kubernetes探针/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/kubernetes/kubernetes探针/"  aria-label="复制成功！"></i></span>
   </p>
@@ -502,7 +503,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/26/kubernetes/kubernetes headless Service/" rel="next" title="kubernetes headless Service">
+              <a href="/2020/06/26/kubernetes/kubernetes StatefulSet/" rel="next" title="kubernetes headless Service">
                 <i class="fa fa-chevron-left"></i> kubernetes headless Service
               </a>
             
@@ -512,8 +513,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/26/kubernetes/kubernetes 高级调度/" rel="prev" title="kubernetes 高级调度">
-                kubernetes 高级调度 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/29/docker/docker学习笔记—docker-compose/" rel="prev" title="docker学习笔记---docker-compose">
+                docker学习笔记---docker-compose <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -602,7 +603,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">162</span>
+                  <span class="site-state-item-count">173</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -624,7 +625,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

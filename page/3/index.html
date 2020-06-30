@@ -275,169 +275,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/" itemprop="url">kubernetes API服务器权限(ServiceAccount && RBAC)</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">kubernetes</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="kubernetes-API服务器权限-ServiceAccount-amp-amp-RBAC"><a href="#kubernetes-API服务器权限-ServiceAccount-amp-amp-RBAC" class="headerlink" title="kubernetes API服务器权限(ServiceAccount &amp;&amp; RBAC)"></a>kubernetes API服务器权限(ServiceAccount &amp;&amp; RBAC)</h2><h3 id="ServiceAccount介绍"><a href="#ServiceAccount介绍" class="headerlink" title="ServiceAccount介绍"></a>ServiceAccount介绍</h3><p>​        每个Pod都与一个ServiceAccount相关联,它代表了运行在pod中应用程序的身份证明.每个pod在启动的时候kubernetes会自动挂载ServiceAccount的TOKEN到pod容器的<code>/var/run/secretes/kubernetes.io/serviceaccount/token</code>文件.pod内的应用程序通过这个token连接API服务器.API服务器的身份验证插件会对ServiceAccount进行身份认证.ServiceAccount所拥有的权限决定了pod内的应用程序所尝试执行的操作是否被允许</p>
-<p>​        ServiceAccount只不过是一种运行在pod中的应用程序和API服务器身份认证的一种方式.应用程序通过在请求中传递serviceaccount的token和API服务器通信</p>
-<hr>
-<h3 id="了解ServiceAccount资源"><a href="#了解ServiceAccount资源" class="headerlink" title="了解ServiceAccount资源"></a>了解ServiceAccount资源</h3><p>​        ServiceAccount和pod,Secret,ConfigMap等一样,本身也是一种资源.他们作用在单独的命名空间.kubernetes为每个命名空间自动创建一个默认的ServiceAccount(名字是default),可以像查看其它资源一样使用<code>kubectl get sa</code>来查看ServiceAccount列表</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/使用kubeadmin安装kubernetes集群文档/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -642,6 +479,177 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes Ingress/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes Ingress/" itemprop="url">kuberentes Ingress</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/kubernetes/kubernetes Ingress/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes Ingress/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="kuberentes-Ingress"><a href="#kuberentes-Ingress" class="headerlink" title="kuberentes Ingress"></a>kuberentes Ingress</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><a href="https://segmentfault.com/a/1190000019908991" target="_blank" rel="noopener">K8s ingress 学习博客</a></p>
+<p>ingress是暴露服务给外部客户端的另外一种方法.(前面我们学习过2种服务类型可以实现同样的目的:NodePort和LoadBalance)</p>
+<p>但是这几种Service都有局限性:</p>
+<ul>
+<li>ClusterIP的默认Serivce方式只能在集群内部访问。</li>
+<li><p>NodePort:当有几十上百的服务在集群中运行时，NodePort的端口管理是灾难。</p>
+</li>
+<li><p>LoadBalance方式受限于云平台，且通常在云平台部署ELB还需要额外的费用。</p>
+</li>
+</ul>
+<p>所幸k8s还提供了一种集群维度暴露服务的方式，也就是ingress。ingress可以简单理解为service的service，他通过独立的ingress对象来制定请求转发的规则，把请求路由到一个或多个service中。这样就把服务与请求规则解耦了，可以从业务维度统一考虑业务的暴露，而不用为每个service单独考虑。</p>
+<p>Ingress可以为多个Service提供服务,可以根据请求的HOST和PATH,将请求代理到相关的Service中.而且Ingres工作在HTTP层,可以实现7层代理特性,诸如:coockies和会话亲和力</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/kubernetes/kubernetes Ingress/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/docker/harbor私有仓库部署/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -766,181 +774,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/06/26/docker/harbor私有仓库部署/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/kong casssandra集群环境部署/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/" itemprop="url">kong+casssandra集群环境部署</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Web</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
-                    <span itemprop="name">kong</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/kong casssandra集群环境部署/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="kong-casssandra集群环境部署"><a href="#kong-casssandra集群环境部署" class="headerlink" title="kong+casssandra集群环境部署"></a>kong+casssandra集群环境部署</h2><h3 id="kong简介"><a href="#kong简介" class="headerlink" title="kong简介"></a>kong简介</h3><p>Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和API之间的中间层，加上众多功能强大的插件，可以实现认证授权、访问控制等功能。并且提供易于使用的RESTful API来操作和配置系统。</p>
-<p>有关kong的详细介绍请参考官网.</p>
-<p>–</p>
-<h3 id="cassandra简介"><a href="#cassandra简介" class="headerlink" title="cassandra简介"></a>cassandra简介</h3><p>Cassandra 是一个来自 Apache 的分布式数据库，具有高度可扩展性，可用于管理大量的结构化数据。它提供了高可用性，没有单点故障。kong支持PostgreSQL或者Cassandra两种数据库.这里我们选择了cassandra.</p>
-<p>有关cassandra的详细介绍和使用方法.请参考官网</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1177,7 +1010,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1196,7 +1029,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/" itemprop="url">Linux 使用parted+LVM分区</a></h1>
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/" itemprop="url">kubernetes API服务器权限(ServiceAccount && RBAC)</a></h1>
         
 
         <div class="post-meta">
@@ -1208,7 +1041,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T10:59:58+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
                 2020-06-26
               </time>
             
@@ -1231,19 +1064,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/Skills/" itemprop="url" rel="index">
-                    <span itemprop="name">Skills</span>
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
                   </a>
                 </span>
 
@@ -1260,8 +1082,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1290,21 +1112,13 @@
 
       
         
-          <h2 id="Linux-使用parted-LVM分区"><a href="#Linux-使用parted-LVM分区" class="headerlink" title="Linux 使用parted+LVM分区"></a>Linux 使用parted+LVM分区</h2><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>fdisk使用MBR分区硬盘,但是最大只能识别到2T的磁盘,如果单块磁盘超过2T则需要使用GPT分区格式</p>
+          <h2 id="kubernetes-API服务器权限-ServiceAccount-amp-amp-RBAC"><a href="#kubernetes-API服务器权限-ServiceAccount-amp-amp-RBAC" class="headerlink" title="kubernetes API服务器权限(ServiceAccount &amp;&amp; RBAC)"></a>kubernetes API服务器权限(ServiceAccount &amp;&amp; RBAC)</h2><h3 id="ServiceAccount介绍"><a href="#ServiceAccount介绍" class="headerlink" title="ServiceAccount介绍"></a>ServiceAccount介绍</h3><p>​        每个Pod都与一个ServiceAccount相关联,它代表了运行在pod中应用程序的身份证明.每个pod在启动的时候kubernetes会自动挂载ServiceAccount的TOKEN到pod容器的<code>/var/run/secretes/kubernetes.io/serviceaccount/token</code>文件.pod内的应用程序通过这个token连接API服务器.API服务器的身份验证插件会对ServiceAccount进行身份认证.ServiceAccount所拥有的权限决定了pod内的应用程序所尝试执行的操作是否被允许</p>
+<p>​        ServiceAccount只不过是一种运行在pod中的应用程序和API服务器身份认证的一种方式.应用程序通过在请求中传递serviceaccount的token和API服务器通信</p>
 <hr>
-<h4 id="分区步骤"><a href="#分区步骤" class="headerlink" title="分区步骤"></a>分区步骤</h4><p>分区方法和fdisk大同小异</p>
-<ul>
-<li>1.parted 磁盘名 .进入交互式界面</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@archiver-mysql ~]# parted /dev/vdb</span><br><span class="line">GNU Parted 3.1</span><br><span class="line">Using /dev/vdb</span><br><span class="line">Welcome to GNU Parted! Type &apos;help&apos; to view a list of commands.</span><br></pre></td></tr></table></figure>
-<ul>
-<li>2.mklabel gpt 转换为gpt分区</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(parted) mklabel gpt</span><br><span class="line">Warning: The existing disk label on /dev/vdb will be destroyed and all data on this disk will be lost. Do you want to continue?</span><br><span class="line">Yes/No? yes</span><br></pre></td></tr></table></figure>
-<p>3.mkpart分区</p>
+<h3 id="了解ServiceAccount资源"><a href="#了解ServiceAccount资源" class="headerlink" title="了解ServiceAccount资源"></a>了解ServiceAccount资源</h3><p>​        ServiceAccount和pod,Secret,ConfigMap等一样,本身也是一种资源.他们作用在单独的命名空间.kubernetes为每个命名空间自动创建一个默认的ServiceAccount(名字是default),可以像查看其它资源一样使用<code>kubectl get sa</code>来查看ServiceAccount列表</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1359,7 +1173,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes Deployment/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1378,7 +1192,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/" itemprop="url">25.Python之路 - 面向对象</a></h1>
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes Deployment/" itemprop="url">kuberentes Deployment</a></h1>
         
 
         <div class="post-meta">
@@ -1390,7 +1204,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
                 2020-06-26
               </time>
             
@@ -1413,19 +1227,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
                   </a>
                 </span>
 
@@ -1442,8 +1245,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/kubernetes/kubernetes Deployment/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes Deployment/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1472,24 +1275,17 @@
 
       
         
-          <h1 id="Python之路-面向对象"><a href="#Python之路-面向对象" class="headerlink" title="Python之路 - 面向对象"></a>Python之路 - 面向对象</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>编程范式</p>
-<p>编程是程序员用 特定的语法 + 数据结构 + 算法组成的代码来告诉计算机如何执行任务的过程 , 而实现一个任务的方式有很多种不同的方式 ,  对这些不同的编程方式的特点进行归纳总结得出来的编程方式类别，即为编程范式</p>
+          <h2 id="kuberentes-Deployment"><a href="#kuberentes-Deployment" class="headerlink" title="kuberentes Deployment"></a>kuberentes Deployment</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>之前学习过使用ReplicationController和ReplicaSet实现托管和更新pod容器.<br>客户端通过Service服务访问RC或者RS托管的一组pod.这也是Kubernetes典型的应用程序运行方式</p>
+<p>假设这个时候应用程序需要更新,从v1版本更新到v2,有以下两种方式更新pod镜像:</p>
 <ul>
-<li>面向过程编程  Procedural Programming</li>
+<li>直接删除所有现有的pod,然后创建新的pod</li>
+<li>可以先创建新的Pod,并等待他们运行成功后,再删除旧的.</li>
 </ul>
-<p>面向过程编程就是程序从上到下一步步执行 , 基本设计思路就是程序一开始是要着手解决一个大的问题 , 然后把一个大问题分解成很多个小问题或子过程 , 这些子过程再执行的过程再继续分解直到小问题足够简单到可以在一个小步骤范围内解决</p>
-<p>在Python中 , 我们通过把大段代码拆成函数 , 通过一层一层的函数调用 , 就可以把复杂任务分解成简单的任务 , 这种分解可以称之为面向过程的程序设计 . 函数就是面向过程的程序设计的基本单元</p>
-<ul>
-<li>函数式编程  Functional Programming</li>
-</ul>
-<p>函数式编程就是一种抽象程度很高的编程范式 , 纯粹的函数式编程语言编写的函数没有变量 , 函数式编程的一个特点就是 , 允许把函数本身作为参数传入另一个函数 , 还允许返回一个函数  , Python对函数式编程提供部分支持 . 由于Python允许使用变量 , 因此 , Python不是纯函数式编程语言</p>
-<ul>
-<li>面向对象编程  Object Oriented Programming</li>
-</ul>
-<p>面向对象编程是利用”类”和”对象”来创建各种模型来实现对真实世界的描述 , 使用面向对象编程的原因一方面是因为它可以使程序的维护和扩展变得更简单 , 并且可以大大提高程序开发效率 , 另外 , 基于面向对象的程序可以使它人更加容易理解你的代码逻辑 , 从而使团队开发变得更从容</p>
+<p>这2中方法各有优缺点.第一种方法将导致服务在端在时间内不可用.第二种方法要求应用程序同时支持2个版本对外提供服务.</p>
+<p>本文具体介绍kubernetes上述两种更新方式.然后介绍通过手动方式,replicatController的更新方式.最后再引入deployment机制的用法介绍</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/01-Python之路 - 面向对象初识/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/kubernetes/kubernetes Deployment/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1544,7 +1340,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes 高级调度/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1563,7 +1359,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/" itemprop="url">32.Python之路 - 异常处理</a></h1>
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes 高级调度/" itemprop="url">kubernetes 高级调度</a></h1>
         
 
         <div class="post-meta">
@@ -1575,7 +1371,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
                 2020-06-26
               </time>
             
@@ -1598,19 +1394,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
                   </a>
                 </span>
 
@@ -1627,8 +1412,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/kubernetes/kubernetes 高级调度/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes 高级调度/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1657,12 +1442,20 @@
 
       
         
-          <h1 id="Python之路-异常处理"><a href="#Python之路-异常处理" class="headerlink" title="Python之路 - 异常处理"></a>Python之路 - 异常处理</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在我们写程序时难免会出现错误 , 一种为语法错误 , 即为python解释器的语法检测都通不过的错误 , 这种错误只能我们在程序执行前就处理好 . 另一种为逻辑错误 , 这是我们在程序设计时所出现的错误 , 也就是我们通常所说的bug </p>
-<p>在编程过程中为了增加友好性 , 在程序出现bug时一般不会将错误信息显示给用户 , 而是显示一个提示错误的页面</p>
-<p>基本语法</p>
+          <h2 id="kubernetes-高级调度"><a href="#kubernetes-高级调度" class="headerlink" title="kubernetes 高级调度"></a>kubernetes 高级调度</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本章主要介绍pod的高级调度功能.主要涵盖2方面调度特性:</p>
+<ul>
+<li>节点污染和pod容忍度</li>
+<li>节点亲缘性</li>
+</ul>
+<hr>
+<h3 id="一-节点污染和pod容忍度"><a href="#一-节点污染和pod容忍度" class="headerlink" title="一.节点污染和pod容忍度"></a>一.节点污染和pod容忍度</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p><strong>节点污点</strong>: 该特性用于限制哪些Pod可以被调度到某一个节点.</p>
+<p><strong>pod容忍度</strong>:当一个Pod容忍某个节点的污点,这个pod才能被调度到该节点</p>
+<p>默认情况下k8s集群中的master主节点就设置了污点,.这样才能保证只有控制面板等系统组件才能部署在主节点上.应用pod只能被调度到工作节点</p>
+<hr>
+<h4 id="显示节点污点信息"><a href="#显示节点污点信息" class="headerlink" title="显示节点污点信息"></a>显示节点污点信息</h4>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/kubernetes/kubernetes 高级调度/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1717,7 +1510,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes volume存储卷/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1736,7 +1529,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/" itemprop="url">23.Python之路 - hashlib加密</a></h1>
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes volume存储卷/" itemprop="url">kubernetes volume</a></h1>
         
 
         <div class="post-meta">
@@ -1748,7 +1541,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
                 2020-06-26
               </time>
             
@@ -1771,19 +1564,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Modules/" itemprop="url" rel="index">
-                    <span itemprop="name">Modules</span>
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
                   </a>
                 </span>
 
@@ -1800,8 +1582,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/kubernetes/kubernetes volume存储卷/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes volume存储卷/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1830,14 +1612,13 @@
 
       
         
-          <h1 id="Python之路-hashlib加密"><a href="#Python之路-hashlib加密" class="headerlink" title="Python之路 - hashlib加密"></a>Python之路 - hashlib加密</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍 🍀"></a>介绍 🍀</h2><p>此模块有人称为摘要算法，也叫做加密算法，或者是哈希算法，散列算法等等，这么多title不用大家记，那么有同学就问他到底是干啥的？ 简单来说就是做加密和校验使用，它的工作原理给大家简单描述一下：它通过一个函数，把任意长度的数据按照一定规则转换为一个固定长度的数据串（通常用16进制的字符串表示）。</p>
-<h4 id="hashlib的特征以及使用要点："><a href="#hashlib的特征以及使用要点：" class="headerlink" title="hashlib的特征以及使用要点："></a>hashlib的特征以及使用要点：</h4><p>1.bytes类型数据 —&gt; 通过hashlib算法 —&gt; 固定长度的字符串</p>
-<p>2.不同的bytes类型数据转化成的结果一定不同。</p>
-<p>3.相同的bytes类型数据转化成的结果一定相同。</p>
-<p>4.此转化过程不可逆。</p>
+          <h2 id="kubernetes-volume"><a href="#kubernetes-volume" class="headerlink" title="kubernetes volume"></a>kubernetes volume</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>在学习docker时,学习了如何将宿主机上的文件系统挂载到容器当中,实现持久化存储,以及多个容器共享同一个文件目录.</p>
+<p>在k8s中,我们也希望pod容器中的数据能够持久化存储.当一个容器因为故障或者其他原因需要删除时,我们希望新的容器能够在上一个容器结束的位置继续运行.</p>
+<p>但是和docker一样,容器默认情况下删除后,所有该容器产生的数据都会消失.并且,虽然容器和宿主机共享CPU,网络,内存等资源,但是并不会共享文件存储.甚至同一个Pod中每个容器都有自己独立的文件系统,彼此互相隔离.</p>
+<p>和docker容器一样,这就需要有一种存储卷能够挂载到Pod容器中,并脱离Pod的生命周期之外,将容器运行产生的数据保存在宿主机或者独立的外部存储卷中</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/03-Modules/08-Python之路 -hashlib加密模块/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/kubernetes/kubernetes volume存储卷/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1892,7 +1673,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/kong casssandra集群环境部署/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1911,7 +1692,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/" itemprop="url">31.Python之路 - 反射</a></h1>
+                <a class="post-title-link" href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/" itemprop="url">kong+casssandra集群环境部署</a></h1>
         
 
         <div class="post-meta">
@@ -1923,7 +1704,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
                 2020-06-26
               </time>
             
@@ -1946,8 +1727,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
+                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Web</span>
                   </a>
                 </span>
 
@@ -1957,8 +1738,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/Object-Oriented/" itemprop="url" rel="index">
-                    <span itemprop="name">Object-Oriented</span>
+                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
+                    <span itemprop="name">kong</span>
                   </a>
                 </span>
 
@@ -1975,8 +1756,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/kong casssandra集群环境部署/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2005,18 +1786,199 @@
 
       
         
-          <h1 id="Python之路-反射"><a href="#Python之路-反射" class="headerlink" title="Python之路 - 反射"></a>Python之路 - 反射</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>反射主要是指程序可以访问、检测和修改它本身状态或行为的一种能力 </p>
-<p>Python面向对象中的反射是通过字符串的形式来操作对象相关的属性 , 在Python中一切皆对象 , 并且只要是对象就可以使用反射</p>
-<h2 id="hasattr-🍀"><a href="#hasattr-🍀" class="headerlink" title="hasattr  🍀"></a>hasattr  🍀</h2><p>判断对象中是否具有给定名称的属性</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hasattr</span><span class="params">(*args, **kwargs)</span>:</span> <span class="comment"># real signature unknown</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Return whether the object has an attribute with the given name.  </span></span><br><span class="line"><span class="string">    This is done by calling getattr(obj, name) and catching AttributeError.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-<p>实例1</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义一个字符串</span></span><br><span class="line">name = <span class="string">'lyon'</span></span><br><span class="line"><span class="comment"># 查看是否具有给定名称的属性</span></span><br><span class="line">bool = hasattr(name,<span class="string">'__len__'</span>)</span><br><span class="line"><span class="comment"># 打印bool</span></span><br><span class="line">print(bool)</span><br><span class="line"><span class="comment"># 执行结果:True</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">说明:很多初学者可能一直不理解为什么说Python里一切皆对象,因为没有意识到,在Python中str、list、int ...等这些数据类型,其实就是用class写出来的一个模型,那么既然是类就会有属性这一说,就可以利用反射来操作对象了</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<p>实例2</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">s1</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">s2</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line">this_modules = sys.modules[__name__]</span><br><span class="line">print(type(this_modules),hasattr(this_modules,<span class="string">'s1'</span>))</span><br><span class="line">module1</span><br></pre></td></tr></table></figure>
-<h2 id="getattr-🍀"><a href="#getattr-🍀" class="headerlink" title="getattr  🍀"></a>getattr  🍀</h2><p>从一个对象中获取属性名称</p>
+          <h2 id="kong-casssandra集群环境部署"><a href="#kong-casssandra集群环境部署" class="headerlink" title="kong+casssandra集群环境部署"></a>kong+casssandra集群环境部署</h2><h3 id="kong简介"><a href="#kong简介" class="headerlink" title="kong简介"></a>kong简介</h3><p>Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和API之间的中间层，加上众多功能强大的插件，可以实现认证授权、访问控制等功能。并且提供易于使用的RESTful API来操作和配置系统。</p>
+<p>有关kong的详细介绍请参考官网.</p>
+<p>–</p>
+<h3 id="cassandra简介"><a href="#cassandra简介" class="headerlink" title="cassandra简介"></a>cassandra简介</h3><p>Cassandra 是一个来自 Apache 的分布式数据库，具有高度可扩展性，可用于管理大量的结构化数据。它提供了高可用性，没有单点故障。kong支持PostgreSQL或者Cassandra两种数据库.这里我们选择了cassandra.</p>
+<p>有关cassandra的详细介绍和使用方法.请参考官网</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/python/04-Object-Oriented/07-Python之路 - 反射/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" itemprop="url">docker安装最新版Kong(v1.0)+konga</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Web</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
+                    <span itemprop="name">kong</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="docker安装最新版Kong-v1-0-konga"><a href="#docker安装最新版Kong-v1-0-konga" class="headerlink" title="docker安装最新版Kong(v1.0)+konga"></a>docker安装最新版Kong(v1.0)+konga</h3><p>参考以下文档:</p>
+<p><a href="https://docs.konghq.com/install/docker/?_ga=2.167535422.1288669860.1553147426-917309945.1539077269" target="_blank" rel="noopener">Kong installation</a></p>
+<p><a href="https://github.com/pantsel/konga#installation" target="_blank" rel="noopener">konga github</a></p>
+<hr>
+<h4 id="docker安装kong-postgresql"><a href="#docker安装kong-postgresql" class="headerlink" title="docker安装kong+postgresql"></a>docker安装kong+postgresql</h4><p>1.创建一个docker网络用于docker,postgresql和konga容器间通信</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create kong-net</span><br></pre></td></tr></table></figure>
+<p>2.启动posgtresql容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name kong-database \</span><br><span class="line">               --network=kong-net \</span><br><span class="line">               -p 5432:5432 \</span><br><span class="line">               -e &quot;POSTGRES_USER=kong&quot; \</span><br><span class="line">               -e &quot;POSTGRES_DB=kong&quot; \</span><br><span class="line">               postgres:9.6</span><br></pre></td></tr></table></figure>
+<p>3.初始化postgresql数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm \</span><br><span class="line">    --network=kong-net \</span><br><span class="line">    -e &quot;KONG_DATABASE=postgres&quot; \</span><br><span class="line">    -e &quot;KONG_PG_HOST=kong-database&quot; \</span><br><span class="line">    -e &quot;KONG_CASSANDRA_CONTACT_POINTS=kong-database&quot; \</span><br><span class="line">    kong:latest kong migrations bootstrap</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意两点:</p>
+<p>1.最好是先删除本地的kong镜像.因为本地的Kong:lastest镜像不一定就是最新版</p>
+<p>2.如果本地的kong:latest镜像地域0.15版本,则不支持bootstrap命令.可以将bootstrap命令替换成up</p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2062,7 +2024,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2112,7 +2074,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">162</span>
+                  <span class="site-state-item-count">173</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2134,7 +2096,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

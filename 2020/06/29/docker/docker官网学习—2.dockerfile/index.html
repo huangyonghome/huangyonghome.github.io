@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="Jesse&#39;s home">
 <meta property="og:description" content="DockerfileDockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用docker build命令,用户可以依据dockerfile和上下文编译一个镜像. 使用dockerfile需要注意一些事项 1.上下文 docker build编译镜像时,会将当前目录下的Dockerfile和所有文件打包添加发送到docker daemon服务端.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-29T14:31:51.094Z">
+<meta property="og:updated_time" content="2020-06-30T12:32:51.210Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker学习笔记---Dockerfile">
 <meta name="twitter:description" content="DockerfileDockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用docker build命令,用户可以依据dockerfile和上下文编译一个镜像. 使用dockerfile需要注意一些事项 1.上下文 docker build编译镜像时,会将当前目录下的Dockerfile和所有文件打包添加发送到docker daemon服务端.">
@@ -375,11 +375,11 @@
       
 
       
-        <h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><p>Dockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用docker build命令,用户可以依据dockerfile和上下文编译一个镜像.</p>
+        <h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><p>Dockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,使用<code>docker build</code>命令,用户可以依据dockerfile和上下文编译一个镜像.</p>
 <p>使用dockerfile需要注意一些事项</p>
 <p><strong>1.上下文</strong></p>
 <p>docker build编译镜像时,会将当前目录下的Dockerfile和所有文件打包添加发送到docker daemon服务端.所以一般情况下创建一个空目录编辑dockerfile文件.然后将需要copy和add的文件放进和dockerfile同一目录下.</p>
-<p>dockerfile中的copy以及add命令,添加文件到docker镜像中时.不要使用绝对路径.例如/home/work/a.txt..docker deamon只能识别到当前上下文环境,无法识别到其他目录.但是可以使用当前上下文的相对路径.</p>
+<p>dockerfile中的<code>copy</code>以及<code>add</code>命令,添加文件到docker镜像中时.不要使用绝对路径.例如/home/work/a.txt..docker deamon只能识别到当前上下文环境,无法识别到其他目录.但是可以使用当前上下文的相对路径.</p>
 <p><strong>2.分层</strong></p>
 <p>dockerfile编译镜像时,每条指令都是一个镜像层.除了From指令外,每一行指令都是基于上一行生成的临时镜像运行一个容器.执行一条指令就类似于docker commit命令生成一个新的镜像.所以两条指令之间互不关联.</p>
 <a id="more"></a>
@@ -399,8 +399,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">From ubuntu</span><br><span class="line">RUN apt-get update \</span><br><span class="line">    &amp;&amp; apt-get -y install \</span><br><span class="line">       vim \</span><br><span class="line">       git \</span><br><span class="line">       wget \</span><br><span class="line">       net-tools</span><br><span class="line"></span><br><span class="line">RUN useradd foo</span><br><span class="line">RUN mkdir /data &amp;&amp;  touch /data/file &amp;&amp;  chown -R foo:foo /data</span><br></pre></td></tr></table></figure>
 <p>这次编译只需构建4层镜像</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost test]$docker build -t test:v1 .</span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br><span class="line">Step 1/4 : From ubuntu</span><br><span class="line"> ---&gt; 94e814e2efa8</span><br><span class="line">Step 2/4 : RUN apt-get update     &amp;&amp; apt-get -y install        vim        git        wget        net-tools</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 7aa2bc9041e0</span><br><span class="line">Step 3/4 : RUN useradd foo</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 5a13764414e6</span><br><span class="line">Step 4/4 : RUN mkdir /data &amp;&amp;  touch /data/file &amp;&amp;  chown -R foo:foo /data</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; bd61817d7526</span><br><span class="line">Successfully built bd61817d7526</span><br><span class="line">Successfully tagged test:v1</span><br></pre></td></tr></table></figure>
-<p>4.使用no-install-recommends</p>
-<p>如果是使用APT包管理器,则应该在执行apt-get install 命令时加上no-install-recommends参数.这样ATP就仅安装核心依赖.而不安装其他推荐和建议的包,这会显著减少不必要包的下载数量</p>
+<p>4.使用<code>no-install-recommends</code></p>
+<p>如果是使用APT包管理器,则应该在执行apt-get install 命令时加上<code>no-install-recommends`</code>参数.这样ATP就仅安装核心依赖.而不安装其他推荐和建议的包,这会显著减少不必要包的下载数量</p>
 <hr>
 <h3 id="Dockerfile指令介绍"><a href="#Dockerfile指令介绍" class="headerlink" title="Dockerfile指令介绍"></a>Dockerfile指令介绍</h3><p>介绍完Dockerfile的概念和特点后,接下来了解一下Dockerfile语法中的具体指令的介绍和用法</p>
 <p>下面是一个例子:</p>
@@ -409,7 +409,7 @@
 <ul>
 <li>FROM </li>
 </ul>
-<p>格式: FROM image 或者 FROM image:tag</p>
+<p>格式: <code>FROM image</code> 或者 <code>FROM image:tag</code></p>
 <p>表示从一个基础镜像构建.Dockerfile必须以FROM语句作为第一条非注释语句.</p>
 <ul>
 <li><p>WORKDIR: 表示工作目录,后续的相对路径也是基于这个目录</p>
@@ -417,22 +417,22 @@
 <li><p>COPY</p>
 </li>
 </ul>
-<p>格式: copy src dest</p>
-<p>复制宿主机上的文件到镜像中.src是当前上下文中的文件或者目录.dest是容器中的目标文件或者目录.src指定的源可以有多个.此外 src还支持通配符.例如: COPY hom* /mydir/ 表示添加所有当前目录下的hom开头的文件到目录/mydir/下</p>
+<p>格式: <code>copy src dest</code></p>
+<p>复制宿主机上的文件到镜像中.src是当前上下文中的文件或者目录.dest是容器中的目标文件或者目录.src指定的源可以有多个.此外 src还支持通配符.例如: <code>COPY hom* /mydir/</code> 表示添加所有当前目录下的hom开头的文件到目录/mydir/下</p>
 <p><dest>可以是文件或者目录.但是必须是镜像中的绝对路径,或者是WORKDIR的相对路径.若<dest>以反斜杠/结尾,则指向的是目录,否则指向文件.当 src 有多个源时, dest必须是目录.如果 dest 目录不存在,则会自动被创建</dest></dest></p>
 <ul>
 <li>ADD</li>
 </ul>
-<p>格式: ADD src dest</p>
+<p>格式: <code>ADD src dest</code></p>
 <p> ADD和COPY命令有相同功能,都支持复制本地文件到镜像里.但ADD能从互联网的URL下载文件到镜像..src还可以是一个本地的压缩归档文件.ADD会自动将tar,gz等压缩包上传到镜像后进行解压.</p>
 <p> 但是如果src是一个URL的归档格式文件,则不会自动解压.</p>
 <ul>
 <li>RUN</li>
 </ul>
 <p>RUN命令有两种格式:</p>
-<p>RUN <command> (shell格式)<br>RUN [“executable”,”param1”,”param2”] (exec格式)</p>
-<p>RUN指令的两种格式表示命令在容器中的两种运行方式.当使用shell格式时,命令通过 /bin/sh -c 运行.当使用exec格式时.命令直接运行,不调用shell程序.exec格式中的参数会被当成JSON数组被Docker解析.所以必须使用双引号,不能使用单引号. </p>
-<p>另外由于exec格式不会在shell中运行.所以无法识别ENV环境变量.例如当执行CMD [“echo”,”$HOME”]时,$HOME不会被变量替换.如果希望运行shell程序.可以写成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RUN &lt;command&gt; (shell格式)  </span><br><span class="line">RUN [&quot;executable&quot;,&quot;param1&quot;,&quot;param2&quot;] (exec格式)</span><br></pre></td></tr></table></figure>
+<p>RUN指令的两种格式表示命令在容器中的两种运行方式.当使用shell格式时,命令通过<code>/bin/sh -c</code>运行.当使用exec格式时.命令直接运行,不调用shell程序.exec格式中的参数会被当成JSON数组被Docker解析.所以必须使用双引号,不能使用单引号. </p>
+<p>另外由于exec格式不会在shell中运行.所以无法识别ENV环境变量.例如当执行<code>CMD [&quot;echo&quot;,&quot;$HOME&quot;]</code>时,$HOME不会被变量替换.如果希望运行shell程序.可以写成</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMD [&quot;sh&quot;,&quot;-c&quot;,&quot;echo&quot;,&quot;$HOME&quot;]</span><br></pre></td></tr></table></figure>
 <ul>
 <li>EXPOSE: 镜像需要暴露出来的端口. </li>
@@ -442,8 +442,8 @@
 </blockquote>
 <ul>
 <li><p>ENV</p>
-<p>格式: ENV <key> <value> 或者 ENV <key>=<value></value></key></value></key></p>
-<p>ENV指令用来声明环境变量,并且可以被(ADD,COPY,WORKDIR等)指令调用.调用ENV环境变量的格式和shell一样:\$variable_name或者 \${variable_name}</p>
+<p>格式: <code>ENV &lt;key&gt; &lt;value&gt;</code> 或者 <code>ENV &lt;key&gt;=&lt;value&gt;</code></p>
+<p>ENV指令用来声明环境变量,并且可以被(ADD,COPY,WORKDIR等)指令调用.调用ENV环境变量的格式和shell一样:<code>\$variable_name</code>或者 <code>\${variable_name}</code></p>
 </li>
 <li><p>CMD </p>
 </li>
@@ -455,7 +455,7 @@
 <li>ENTRYPOINT</li>
 </ul>
 <p>ENTRYPOINT有两种格式.和上文CMD一样分为shell格式和exec格式.</p>
-<p>ENTRYPOINT和CMD类似,指定容器启动时执行的命令.和CMD一样一个Dockerfile文件中可以有多个ENTRYPOINT命令.但只有最后一条生效.但是又有一些区别.当使用shell格式时,ENTRYPOINT会忽略任何CMD指令和 docker run启动容器时手动输入的指令.并且会运行在 /bin/sh -c环境中,成为它的子进程.进程在容器中PID不是1,也不能接收UNIX信号.(也就是在执行 docker stop <container>时,进程接收不到SIGTERM指令)</container></p>
+<p>ENTRYPOINT和CMD类似,指定容器启动时执行的命令.和CMD一样一个Dockerfile文件中可以有多个ENTRYPOINT命令.但只有最后一条生效.但是又有一些区别.当使用shell格式时,ENTRYPOINT会忽略任何CMD指令和 <code>docker run</code>启动容器时手动输入的指令.并且会运行在 /bin/sh -c环境中,成为它的子进程.进程在容器中PID不是1,也不能接收UNIX信号.(也就是在执行 <code>docker stop &lt;container&gt;</code>时,进程接收不到SIGTERM指令)</p>
 <p>当使用exec格式时, docker run 手动指定的命令,将作为参数覆盖CMD指定的参数传递到ENTRYPOINT.(也就是说 docker run启动容器时指定的不再是具体命令,而是命令的参数).</p>
 <hr>
 <p>创建上面dockerfile中所需要的app.py和requirements.txt文件,并且将他们和Dockerfile文件放在同一目录下:</p>
@@ -523,7 +523,7 @@
   <p><span>本文标题:</span><a href="/2020/06/29/docker/docker官网学习—2.dockerfile/">docker学习笔记---Dockerfile</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2020年06月29日 - 11:06</p>
-  <p><span>最后更新:</span>2020年06月29日 - 22:06</p>
+  <p><span>最后更新:</span>2020年06月30日 - 20:06</p>
   <p><span>原始链接:</span><a href="/2020/06/29/docker/docker官网学习—2.dockerfile/" title="docker学习笔记---Dockerfile">https://jesse.top/2020/06/29/docker/docker官网学习—2.dockerfile/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/29/docker/docker官网学习—2.dockerfile/"  aria-label="复制成功！"></i></span>
   </p>
@@ -598,8 +598,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/29/Linux-Web/使用goreplay收集线上真实http流量/" rel="next" title="使用goreplay收集线上真实http流量">
-                <i class="fa fa-chevron-left"></i> 使用goreplay收集线上真实http流量
+              <a href="/2020/06/29/docker/docker学习笔记——镜像篇/" rel="next" title="docker学习笔记---Docker镜像篇">
+                <i class="fa fa-chevron-left"></i> docker学习笔记---Docker镜像篇
               </a>
             
           </div>
@@ -698,7 +698,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">162</span>
+                  <span class="site-state-item-count">173</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -720,7 +720,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
