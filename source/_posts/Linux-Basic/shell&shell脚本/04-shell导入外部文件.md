@@ -1,7 +1,7 @@
 ---
 title: shell脚本导入外部文件
 date: 2018-06-12 22:59:58
-tags:  Linux
+tags:  scripts
 categories: [Linux-Basic,shell&shell脚本 ]
 comments: true
 copyright: true

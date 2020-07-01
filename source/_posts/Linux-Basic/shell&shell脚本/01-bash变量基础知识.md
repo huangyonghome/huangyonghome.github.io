@@ -1,7 +1,7 @@
 ---
 title: bash变量基础知识  
 date: 2018-06-14 00:44:48  
-tags: Linux  
+tags: scripts
 categories: [Linux-Basic,shell&shell脚本 ]  
 comments: true  
 copyright: true  

@@ -1,5 +1,5 @@
 ---
-title: kubernetes headless Service
+title: kubernetes StatefulSet
 date: 2020-06-26 11:59:58
 tags: k8s
 categories: kubernetes
