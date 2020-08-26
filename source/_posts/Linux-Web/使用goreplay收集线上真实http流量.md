@@ -1,8 +1,8 @@
 ---
-title: 使用goreplay收集线上真实http流量
-date: 2020-06-29 11:59:58
-tags: goreplay
-categories: Linux-Web
+title:  使用goreplay收集线上真实http流量
+date: 2020-08-25 22:59:58
+tags:  goreplay
+categories: elk
 comments: true
 copyright: true
 ---
@@ -121,7 +121,7 @@ Version: 1.0.0
 /data/requests_10.gor
 ```
 
-使用`--output-file-append`选项可以将捕获流量保存为一个单独的文件
+使用```--output-file-append```选项可以将捕获流量保存为一个单独的文件
 
 ```
 [root@dwd-tongji-3 ~]#./gor --input-raw :80 --output-file /data/gor.gor --output-file-append
