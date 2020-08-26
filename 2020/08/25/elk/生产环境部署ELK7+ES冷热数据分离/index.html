@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="elk," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="生产环境部署ELK7+ES冷热数据分离需求整理当前公司还没有日志收集系统,.线上故障排错需要开发和运维人员通过跳板机登陆到业务服务器去查看日志,如果集群下服务器节点较多,可能需要登陆到每一台服务器才能找到准确的故障信息.这种方式会带来许多问题:  效率低下 需要给研发人员分配生产服务器账号,有安全隐患 查看日志的方式极为麻烦,复杂 每台业务服务器需要大容量磁盘保存日志文件   Elasticsea">
+<meta name="keywords" content="elk">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生产环境部署ELK7+ES冷热数据分离">
+<meta property="og:url" content="https://jesse.top/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="生产环境部署ELK7+ES冷热数据分离需求整理当前公司还没有日志收集系统,.线上故障排错需要开发和运维人员通过跳板机登陆到业务服务器去查看日志,如果集群下服务器节点较多,可能需要登陆到每一台服务器才能找到准确的故障信息.这种方式会带来许多问题:  效率低下 需要给研发人员分配生产服务器账号,有安全隐患 查看日志的方式极为麻烦,复杂 每台业务服务器需要大容量磁盘保存日志文件   Elasticsea">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img2.jesse.top/image-20200724092916238.png">
+<meta property="og:updated_time" content="2020-08-26T23:55:20.314Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="生产环境部署ELK7+ES冷热数据分离">
+<meta name="twitter:description" content="生产环境部署ELK7+ES冷热数据分离需求整理当前公司还没有日志收集系统,.线上故障排错需要开发和运维人员通过跳板机登陆到业务服务器去查看日志,如果集群下服务器节点较多,可能需要登陆到每一台服务器才能找到准确的故障信息.这种方式会带来许多问题:  效率低下 需要给研发人员分配生产服务器账号,有安全隐患 查看日志的方式极为麻烦,复杂 每台业务服务器需要大容量磁盘保存日志文件   Elasticsea">
+<meta name="twitter:image" content="https://img2.jesse.top/image-20200724092916238.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/"/>
+
+
+
+
+
+  <title>生产环境部署ELK7+ES冷热数据分离 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">生产环境部署ELK7+ES冷热数据分离</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="生产环境部署ELK7-ES冷热数据分离"><a href="#生产环境部署ELK7-ES冷热数据分离" class="headerlink" title="生产环境部署ELK7+ES冷热数据分离"></a>生产环境部署ELK7+ES冷热数据分离</h2><h3 id="需求整理"><a href="#需求整理" class="headerlink" title="需求整理"></a>需求整理</h3><p>当前公司还没有日志收集系统,.线上故障排错需要开发和运维人员通过跳板机登陆到业务服务器去查看日志,如果集群下服务器节点较多,可能需要登陆到每一台服务器才能找到准确的故障信息.这种方式会带来许多问题:</p>
+<ul>
+<li>效率低下</li>
+<li>需要给研发人员分配生产服务器账号,有安全隐患</li>
+<li>查看日志的方式极为麻烦,复杂</li>
+<li>每台业务服务器需要大容量磁盘保存日志文件</li>
+</ul>
+<hr>
+<h3 id="Elasticsearch冷热数据分离"><a href="#Elasticsearch冷热数据分离" class="headerlink" title="Elasticsearch冷热数据分离"></a>Elasticsearch冷热数据分离</h3><p>公司目前共有4个APP产品,每天的nginx日志+业务日志+php日志总共预计在1.5T左右.一周的日志数据量在10T左右.Elasticsearch规划了20T的SSD磁盘用来一周的日志数据(7天日志+1个副本).这些数据保存在Elasticsearch的热节点.</p>
+<p>考虑到1周以后的日志数据查询频率非常低,所以可以将这部分的日志迁移和归档到Elasticsearch的冷节点.并且冷节点日志无需索引.所以预留了10T的SAS磁盘保留1周的冷数据.</p>
+<p>总共是20TSSD磁盘的热节点和10TSAS机械磁盘的冷节点</p>
+<a id="more"></a>
+<hr>
+<h3 id="Elasticsearch集群节点规划"><a href="#Elasticsearch集群节点规划" class="headerlink" title="Elasticsearch集群节点规划"></a>Elasticsearch集群节点规划</h3><ul>
+<li><strong>热节点规划</strong></li>
+</ul>
+<p>ES集群的DATA节点负责保存收集到的日志数据,索引,整理和查询日志等工作.所以data节点对硬件资源要求较高.</p>
+<p>计划使用3台物理服务器(VMware虚拟化集群),每台物理机的配置是32核134G,每台物理机有2个VM.一共计划6个elasticsearch的节点.</p>
+<p>每个物理服务器上使用4块1.92T的SSD磁盘.平均每个VM虚拟机可以使用16核67G内存4TSSD磁盘.</p>
+<blockquote>
+<p>后期又增加了一台服务器,配置为16核48G内存2TSSD</p>
+</blockquote>
+<p>7个节点一共有20TSSD磁盘空间,刚好满足7天的日志数据的需求.</p>
+<blockquote>
+<p>为了避免磁盘IO竞争.每个节点使用独立的单块SSD磁盘,</p>
+</blockquote>
+<ul>
+<li><strong>冷节点规划</strong></li>
+</ul>
+<p>集群冷节点可以适当放低硬件资源.计划使用2台VM作为ES冷节点.每台服务器为8核32G.为了更充分利用带宽和CPU资源.以及合理规划ES的节点角色.冷节点同时又作为集群的master节点和logstash的角色.</p>
+<blockquote>
+<p>这样热节点就有充分资源作为data角色</p>
+</blockquote>
+<hr>
+<h3 id="ELK架构规划"><a href="#ELK架构规划" class="headerlink" title="ELK架构规划"></a>ELK架构规划</h3><p>为了ELK的高性能和数据传输安全性,完整的架构如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Filebeat------&gt;logstash-------&gt;Elasticsearch--------&gt;kibana-------&gt;nginx</span><br></pre></td></tr></table></figure>
+<h5 id="以下是各组件作用介绍"><a href="#以下是各组件作用介绍" class="headerlink" title="以下是各组件作用介绍:"></a>以下是各组件作用介绍:</h5><ul>
+<li>Filebeat: 轻量级的日志收集Agent,部署在每台业务服务器</li>
+<li>logstash(5节点): 从filebeat费日志数据,并对数据进行加工处理,传输给ES.由于集群资源本身的稳定和健壮,logstash并不需要使用持久化数据特性.</li>
+<li>Elasticsearch(7节点):保存和索引数据.7个热节点和2个冷节点</li>
+<li>kibana:从Elasticsearch获取数据并在web界面展示</li>
+<li>nginx: kibana的代理服务器</li>
+</ul>
+<p>官网要求ELK组件必须使用相同的版本,这次部署的是ELK的最新版.7.7版本</p>
+<hr>
+<h3 id="ELK服务器信息"><a href="#ELK服务器信息" class="headerlink" title="ELK服务器信息"></a>ELK服务器信息</h3><table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP地址</th>
+<th>操作系统</th>
+<th>运行组件</th>
+<th>功能</th>
+<th>配置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>idc-function-elk01</td>
+<td>172.16.20.101</td>
+<td>CentOS7.7</td>
+<td>logstash,es</td>
+<td>logstash节点,data,master节点</td>
+<td>16核80G3.84TSSD</td>
+</tr>
+<tr>
+<td>idc-function-elk02</td>
+<td>172.16.20.102</td>
+<td>CentOS7.7</td>
+<td>es</td>
+<td>ES data节点</td>
+<td>16核54G3.84TSSD</td>
+</tr>
+<tr>
+<td>idc-function-elk03</td>
+<td>172.16.20.103</td>
+<td>CentOS7.7</td>
+<td>logstash,es</td>
+<td>logstash节点,data节点</td>
+<td>16核80G3.84TSSD</td>
+</tr>
+<tr>
+<td>idc-function-elk04</td>
+<td>172.16.20.104</td>
+<td>CentOS7.7</td>
+<td>es</td>
+<td>ES data节点</td>
+<td>16核54G3.84TSSD</td>
+</tr>
+<tr>
+<td>idc-function-elk05</td>
+<td>172.16.20.105</td>
+<td>CentOS7.7</td>
+<td>logstash,es</td>
+<td>logstash节点,data节点</td>
+<td>16核80G3.84TSSD</td>
+</tr>
+<tr>
+<td>idc-function-elk06</td>
+<td>172.16.20.106</td>
+<td>CentOS7.7</td>
+<td>es</td>
+<td>ES data节点</td>
+<td>16核54G3.84TSSD</td>
+</tr>
+<tr>
+<td>idc-function-elk07</td>
+<td>172.16.20.107</td>
+<td>CentOS7.7</td>
+<td>es</td>
+<td>ES data节点</td>
+<td>16核54G1.92TSSD</td>
+</tr>
+<tr>
+<td>idc-function-elk08</td>
+<td>172.16.20.108</td>
+<td>CentOS7.7</td>
+<td>logstash,es</td>
+<td>ES的master,冷节点,logstash节点</td>
+<td>8核32G9.6TSAS</td>
+</tr>
+<tr>
+<td>idc-function-elk09</td>
+<td>172.16.20.109</td>
+<td>CentOS7.7</td>
+<td>logstash,es</td>
+<td>ES的主master节点,冷节点,logstash节点</td>
+<td>16核32G5TSAS</td>
+</tr>
+<tr>
+<td>idc-function-docker</td>
+<td>172.16.20.30</td>
+<td>CentOS7.7</td>
+<td>nginx</td>
+<td>一台现有的服务器</td>
+<td></td>
+</tr>
+<tr>
+<td>idc-function-elk10</td>
+<td>172.16.20.110</td>
+<td>CentOS7.7</td>
+<td>logstash,es</td>
+<td>仅仅作为ES的master节点,,logstash节点</td>
+<td>8核8G200GSAS</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="部署安装"><a href="#部署安装" class="headerlink" title="部署安装"></a>部署安装</h3><h4 id="部署elasticsearch"><a href="#部署elasticsearch" class="headerlink" title="部署elasticsearch"></a>部署elasticsearch</h4><ul>
+<li><strong>部署JAVA环境</strong>.</li>
+</ul>
+<p>官网要求需要JDK8或者11版本.这里部署的是11版本.在Oracle有rpm包.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[work@idc-function-elk01 ~]$ java -version</span><br><span class="line">java version &quot;11.0.7&quot; 2020-04-14 LTS</span><br><span class="line">Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>安装elasticsearch</strong></li>
+</ul>
+<p>官网的yum安装非常慢.先从elasticsearch中文社区下载rpm包.然后使用yum本地安装</p>
+<p>中文社区下载中心:<a href="https://elasticsearch.cn/download/" target="_blank" rel="noopener">https://elasticsearch.cn/download/</a></p>
+<ul>
+<li><strong>配置elasticserch</strong></li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#以下是ES的配置文件</span></span><br><span class="line"><span class="string">[root@idc-function-elk01</span> <span class="string">~]#</span> <span class="string">cat</span> <span class="string">/etc/elasticsearch/elasticsearch.yml</span> <span class="string">| sed '/^#/d'</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#ES集群名.每个节点需要定义同一个集群名</span></span><br><span class="line"><span class="string">cluster.name: dwd-elk  </span></span><br><span class="line"><span class="string">#节点名,一般和主机名一致</span></span><br><span class="line"><span class="string">node.name: idc-function-elk01</span></span><br><span class="line"><span class="string">#节点是否为master节点</span></span><br><span class="line"><span class="string">node.master: true</span></span><br><span class="line"><span class="string">#节点是否为data节点</span></span><br><span class="line"><span class="string">node.data: true</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#添加属性,标志位热节点.如果是冷节点,该值为cold</span></span><br><span class="line"><span class="string">node.attr.box_type: hot </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#数据存储路径,指定多块磁盘</span></span><br><span class="line"><span class="string">path.data: /data,/data1</span></span><br><span class="line"><span class="string">#日志存储路径</span></span><br><span class="line"><span class="string">path.logs: /data/logs/elasticsearch</span></span><br><span class="line"><span class="string">#是否需要锁定内存,不适应swap虚拟内存</span></span><br><span class="line"><span class="string">bootstrap.memory_lock: true</span></span><br><span class="line"><span class="string">#绑定IP.本机的内网IP</span></span><br><span class="line"><span class="string">network.host: 172.16.20.101</span></span><br><span class="line"><span class="string">#默认端口</span></span><br><span class="line"><span class="string">http.port: 9200</span></span><br><span class="line"><span class="string">#集群内其他ES节点地址</span></span><br><span class="line"><span class="string">discovery.seed_hosts: ["172.16.20.101","172.16.20.102","172.16.20.103","172.16.20.104","172.16.20.105","172.16.20.106","172.16.20.107","172.16.20.108","172.16.20.109"]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#初始化master节点,#master节点分布在不同的物理服务器</span></span><br><span class="line"><span class="string">cluster.initial_master_nodes: ["172.16.20.101","172.16.20.108","172.16.20.109"] </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#磁盘水位线</span></span><br><span class="line"><span class="string">cluster.routing.allocation.disk.watermark.low: 85%</span></span><br><span class="line"><span class="string">cluster.routing.allocation.disk.watermark.high: 90%</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#用于 fielddata 的最大内存，如果 fielddata 达到该阈值，就会把旧数据交换出去。该参数可以设置百分比或者绝对值。默认设置是不限制，所#以强烈建议设置该值</span></span><br><span class="line"><span class="string">indices.fielddata.cache.size: 10%</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#limit值需要大于indices.fielddata.cache.size的值。否则的话fielddata大小一到limit阈值就报错,就永远道不了size阈值,无法触发对##旧数据的交换任务</span></span><br><span class="line"><span class="string">indices.breaker.fielddata.limit: 30%</span></span><br><span class="line"><span class="string">[root@idc-function-elk01 ~]#</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>优化系统和elasticsearch配置</strong></p>
+<ul>
+<li><strong>优化内核参数</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">[root@idc-function-elk01 ~]<span class="comment"># cat /etc/sysctl.conf</span></span><br><span class="line"></span><br><span class="line">net.ipv4.ip_forward=1</span><br><span class="line">net.ipv6.conf.all.disable_ipv6 = 1</span><br><span class="line">net.ipv6.conf.default.disable_ipv6 = 1</span><br><span class="line">net.ipv6.conf.lo.disable_ipv6 = 1</span><br><span class="line">vm.swappiness = 0</span><br><span class="line">net.ipv4.neigh.default.gc_stale_time=120</span><br><span class="line">net.ipv4.conf.all.rp_filter=0</span><br><span class="line">net.ipv4.conf.default.rp_filter=0</span><br><span class="line">net.ipv4.conf.default.arp_announce = 2</span><br><span class="line">net.ipv4.conf.lo.arp_announce=2</span><br><span class="line">net.ipv4.conf.all.arp_announce=2</span><br><span class="line">net.ipv4.tcp_max_tw_buckets = 5000</span><br><span class="line">net.ipv4.tcp_syncookies = 1</span><br><span class="line">net.ipv4.tcp_max_syn_backlog = 1024</span><br><span class="line">net.ipv4.tcp_synack_retries = 2</span><br><span class="line">kernel.core_uses_pid = 1 <span class="comment">#追加进程号到core文件名中</span></span><br><span class="line">fs.suid_dumpable = 2 <span class="comment">#确保设置属主的进程也可以生成core文件</span></span><br><span class="line">kernel.core_pattern = /tmp/core-%e-%s-%u-%g-%p-%t <span class="comment">#指定core文件生成的位置和文件名规则。</span></span><br><span class="line">vm.overcommit_memory = 1</span><br><span class="line">net.ipv4.conf.lo.arp_announce=2</span><br><span class="line">kernel.sysrq=1</span><br><span class="line">fs.file-max=6553500 <span class="comment">#最大文件句柄</span></span><br><span class="line">fs.nr_open=6553500  <span class="comment">#最大文件句柄</span></span><br><span class="line">net.core.somaxconn = 65535</span><br><span class="line">vm.max_map_count=262144  <span class="comment">#ES官网推荐</span></span><br><span class="line">net.ipv4.tcp_keepalive_time = 600</span><br><span class="line">net.ipv4.tcp_keepalive_probes = 3</span><br><span class="line">net.ipv4.tcp_keepalive_intvl = 15</span><br><span class="line">net.ipv4.tcp_tw_reuse = 1</span><br><span class="line">net.ipv4.tcp_tw_recycle = 0</span><br><span class="line">net.ipv4.tcp_syn_retries = 1</span><br><span class="line">net.ipv4.tcp_synack_retries = 1</span><br><span class="line">net.ipv4.tcp_timestamps=0</span><br><span class="line">net.ipv4.tcp_fin_timeout=30</span><br><span class="line">net.ipv4.ip_local_port_range = 10000 65000</span><br><span class="line">net.nf_conntrack_max = 655360</span><br><span class="line">net.netfilter.nf_conntrack_tcp_timeout_established = 1200</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>设置文件句柄,内存</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@idc-function-elk01 ~]<span class="comment"># cat /etc/security/limits.conf</span></span><br><span class="line">elasticsearch soft memlock unlimited</span><br><span class="line">elasticsearch  hard memlock unlimited</span><br><span class="line">* soft nofile 655360</span><br><span class="line">* hard nofile 655360</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>关闭Selinux和防火墙</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl disable firewalld</span><br><span class="line"></span><br><span class="line">setenforce 0</span><br><span class="line"></span><br><span class="line">[root@idc-function-elk01 ~]# cat /etc/selinux/config</span><br><span class="line"></span><br><span class="line">SELINUX=disabled</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>创建目录,并且修改权限</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@idc-function-elk01 ~]# ll /data/elasticsearch/ -d</span><br><span class="line">drwxr-xr-x 3 elasticsearch elasticsearch 27 May 25 23:08 /data/elasticsearch/</span><br><span class="line"></span><br><span class="line">[root@idc-function-elk01 ~]# ll /data/logs/elasticsearch/ -d</span><br><span class="line">drwxr-xr-x 2 elasticsearch elasticsearch 4096 May 26 00:00 /data/logs/elasticsearch/</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>修改elasticsearch的systemctl启动文件,加入下面这一行</strong>:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@idc-function-elk01 ~]# cat /usr/lib/systemd/system/elasticsearch.service</span><br><span class="line"></span><br><span class="line">#新增这一行.否则启动的时候会提示在配置文件中开启了bootstrap.memory_lock: true.但是系统中没有检测到配置</span><br><span class="line">#unlimit memory</span><br><span class="line">LimitMEMLOCK=infinity</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>修改elasticsearch的JVM内存</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@idc-function-elk01 ~]# cat /etc/elasticsearch/jvm.options</span><br><span class="line"></span><br><span class="line">-Xms32g</span><br><span class="line">-Xmx32g</span><br></pre></td></tr></table></figure>
+<ul>
+<li>启动elasticsearch</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable elasticsearch</span><br><span class="line">  systemctl start elasticsearch</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="Elasticsearch集群监控工具"><a href="#Elasticsearch集群监控工具" class="headerlink" title="Elasticsearch集群监控工具"></a>Elasticsearch集群监控工具</h3><p>这里推荐使用cerebro工具,是一个独立的小工具,无需安装到es插件.具体使用方法请参考:<a href="https://github.com/lmenezes/cerebro" target="_blank" rel="noopener">github项目地址</a></p>
+<p>启动cerebro后.访问cerebro的9000端口.可以看到ES集群状态监控界面,界面还挺不错</p>
+<p><img src="https://img2.jesse.top/image-20200724092916238.png" alt="image-20200724092916238"></p>
+<blockquote>
+<p>从上面的集群截图中可以看到,每个ES节点都有<code>hot</code>或者<code>cold</code>标签以区分节点属性.这就说明冷热节点属性配置正常</p>
+</blockquote>
+<p>但是每次登陆cerebro都需要选择连接的ES节点.无法实现登陆自动连接.这非常不方便,我在github上提交了相关<a href="https://github.com/lmenezes/cerebro/issues/450" target="_blank" rel="noopener">issue</a>.得到回复是使用以下URL:  <a href="http://localhost:9000/#/overview?host=http:%2F%2Flocalhost:9200" target="_blank" rel="noopener">http://localhost:9000/#/overview?host=http:%2F%2Flocalhost:9200</a></p>
+<p>所以.可以配置Nginx反向代理:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line"> listen 80;</span><br><span class="line"> server_name elk.doweidu.com;</span><br><span class="line"></span><br><span class="line"> access_log /data/logs/nginx/elk_access.log main;</span><br><span class="line"> error_log /data/logs/nginx/elk_error.log;</span><br><span class="line"></span><br><span class="line">location / &#123;</span><br><span class="line">        proxy_set_header   Host  $host;</span><br><span class="line">        proxy_set_header   X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">   rewrite ^/(.*)  http://172.16.20.101:9000/#/overview?host=http:%2F%2Flocalhost:9200/$1 permanent;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>172.16.20.101:9000这个为cerebro所在服务器.localhost:9200是同台服务器的ES节点.如果ES节点为其他服务器,使用IP地址指定即可</p>
+</blockquote>
+<hr>
+<h3 id="部署logstash"><a href="#部署logstash" class="headerlink" title="部署logstash"></a>部署logstash</h3><p>logstash也是运行在JVM的java环境中.安装方法和ES一样.</p>
+<ul>
+<li><strong>配置logstash文件</strong></li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[root@idc-function-elk01</span> <span class="string">~]#</span> <span class="string">vim</span> <span class="string">/etc/logstash/logstash.yml</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#这个参数是指单次接收的块大小.可以根据实际场景和性能压力不断的调整和测试</span></span><br><span class="line"><span class="string">pipeline.batch.size:</span> <span class="number">1500</span></span><br><span class="line"><span class="string">pipeline.batch.delay:</span> <span class="number">10</span></span><br><span class="line"><span class="comment">#节点名称</span></span><br><span class="line"><span class="string">node.name:</span> <span class="string">idc-function-elk01</span></span><br><span class="line"><span class="comment">#数据路径</span></span><br><span class="line"><span class="string">path.data:</span> <span class="string">/data/logstash</span></span><br><span class="line"><span class="comment">#日志路径</span></span><br><span class="line"><span class="string">path.logs:</span> <span class="string">/data/logs/logstash</span></span><br><span class="line"><span class="comment">#绑定IP,本机内网IP地址</span></span><br><span class="line"><span class="string">http.host:</span> <span class="string">"172.16.20.101"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#下面这个对logstash性能比较重要的配置保持默认即可.默认就是CPU的内核数</span></span><br><span class="line"><span class="comment"># This defaults to the number of the host's CPU cores.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># pipeline.workers: 2</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>修改JVM内存</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@idc-function-elk01 ~]# vim /etc/logstash/jvm.options</span><br><span class="line">-Xms16g</span><br><span class="line">-Xmx16g</span><br></pre></td></tr></table></figure>
+<ul>
+<li>systemctl启动logstash</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service logstash start</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="部署到其他服务器"><a href="#部署到其他服务器" class="headerlink" title="部署到其他服务器"></a>部署到其他服务器</h3><p>如果通过克隆或者模板的方式部署到其他服务器,那么ES集群应该会报错,提示无法将节点加入到集群中.这是因为集群中所有节点的data数据目录拥有同一个ID.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">can&apos;t add node &#123;idc-function-elk03&#125;&#123;dt57hBjCQ9uCAp8G6sxJYw&#125;&#123;7-s_05ZMSl6CtpmMZGZEUA&#125;&#123;172.16.20.103&#125;&#123;172.16.20.103:9300&#125;&#123;dilmrt&#125;&#123;ml.machine_memory=61044445184, ml.max_open_jobs=20, xpack.installed=true, transform.node=true&#125;, found existing node &#123;idc-function-elk01&#125;&#123;dt57hBjCQ9uCAp8G6sxJYw&#125;&#123;biZPCqjCSx-PX3eU-CquUw&#125;&#123;172.16.20.101&#125;&#123;172.16.20.101:9300&#125;&#123;dilmrt&#125;&#123;ml.machine_memory=61044445184, ml.max_open_jobs=20, xpack.installed=true, transform.node=true&#125; with the same id but is a different node instance</span><br></pre></td></tr></table></figure>
+<p>删除data数据路径下的内容,然后重启ES.等待集群自动同步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@idc-function-elk03 ~]# rm -rf /data/elasticsearch/nodes</span><br><span class="line"></span><br><span class="line">[root@idc-function-elk03 ~]# ll /data/elasticsearch/</span><br><span class="line">total 0</span><br><span class="line"></span><br><span class="line">[root@idc-function-elk03 ~]# systemctl restart elasticsearch</span><br><span class="line"></span><br><span class="line">[root@idc-function-elk03 ~]# ll /data/elasticsearch/</span><br><span class="line">drwxr-xr-x 3 elasticsearch elasticsearch 15 May 26 17:30 nodes</span><br><span class="line">[root@idc-function-elk03 ~]#</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="kibana安装"><a href="#kibana安装" class="headerlink" title="kibana安装"></a>kibana安装</h3><p>安装方式非常简单,直接下载rpm包安装即可.安装完成后修改<code>/etc/kibana/kibana.yaml</code>配置文件.新增以下配置.将kibana的web界面改为中文:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">i18n.locale: &quot;zh-CN&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>我这里是采用rpm包安装,如果是其他安装方式,请自行寻找配置文件路径</p>
+</blockquote>
+<p><strong>nginx反向代理配置</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  server_name kibana.doweidu.com;</span><br><span class="line"></span><br><span class="line">  error_log /data/logs/nginx/kibana.error.log;</span><br><span class="line">  access_log /data/logs/nginx/kibana.access.log main;</span><br><span class="line"></span><br><span class="line">listen 443 ssl http2;</span><br><span class="line">  ssl_certificate /data/letsencrypt/kibana.doweidu.com/fullchain.cer;</span><br><span class="line">  ssl_certificate_key /data/letsencrypt/kibana.doweidu.com/kibana.doweidu.com.key;</span><br><span class="line">  include /data/letsencrypt/options-ssl-nginx.conf;</span><br><span class="line">  ssl_dhparam /data/letsencrypt/ssl-dhparams.pem;</span><br><span class="line"></span><br><span class="line">  location / &#123;</span><br><span class="line">    proxy_pass http://172.16.20.105:5601;</span><br><span class="line">    proxy_set_header Host $host;</span><br><span class="line">    proxy_redirect off;</span><br><span class="line">    proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">    proxy_connect_timeout    60;</span><br><span class="line">    proxy_read_timeout       60;</span><br><span class="line">    proxy_send_timeout       60;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">if ($host = kibana.doweidu.com) &#123;</span><br><span class="line">    return 301 https://$host$request_uri;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">listen 80;</span><br><span class="line">server_name kibana.doweidu.com;</span><br><span class="line">return 404;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="安装filebeat"><a href="#安装filebeat" class="headerlink" title="安装filebeat."></a>安装filebeat.</h4><p>对于有supervisor的服务器,采用二进制安装,否则使用rpm包安装</p>
+<p>二进制包下载地址:<a href="http://repo.doweidu.com/ELK/filebeat-7.7.0-linux-x86_64.tar.gz" target="_blank" rel="noopener">http://repo.doweidu.com/ELK/filebeat-7.7.0-linux-x86_64.tar.gz</a></p>
+<p>rpm包下载地址:<a href="http://repo.doweidu.com/ELK/filebeat-7.7.0-x86_64.rpm" target="_blank" rel="noopener">http://repo.doweidu.com/ELK/filebeat-7.7.0-x86_64.rpm</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/">生产环境部署ELK7+ES冷热数据分离</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年08月25日 - 22:08</p>
+  <p><span>最后更新:</span>2020年08月27日 - 07:08</p>
+  <p><span>原始链接:</span><a href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/" title="生产环境部署ELK7+ES冷热数据分离">https://jesse.top/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/elk/" rel="tag"># elk</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/25/elk/记一次生产ELK性能优化/" rel="next" title="记一次生产ELK性能优化">
+                <i class="fa fa-chevron-left"></i> 记一次生产ELK性能优化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" rel="prev" title="使用ElastAlert+ELK实现日志监控告警">
+                使用ElastAlert+ELK实现日志监控告警 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/"
+           data-title="生产环境部署ELK7+ES冷热数据分离" data-url="https://jesse.top/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">186</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#生产环境部署ELK7-ES冷热数据分离"><span class="nav-number">1.</span> <span class="nav-text">生产环境部署ELK7+ES冷热数据分离</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求整理"><span class="nav-number">1.1.</span> <span class="nav-text">需求整理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Elasticsearch冷热数据分离"><span class="nav-number">1.2.</span> <span class="nav-text">Elasticsearch冷热数据分离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Elasticsearch集群节点规划"><span class="nav-number">1.3.</span> <span class="nav-text">Elasticsearch集群节点规划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELK架构规划"><span class="nav-number">1.4.</span> <span class="nav-text">ELK架构规划</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#以下是各组件作用介绍"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">以下是各组件作用介绍:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELK服务器信息"><span class="nav-number">1.5.</span> <span class="nav-text">ELK服务器信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署安装"><span class="nav-number">1.6.</span> <span class="nav-text">部署安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#部署elasticsearch"><span class="nav-number">1.6.1.</span> <span class="nav-text">部署elasticsearch</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Elasticsearch集群监控工具"><span class="nav-number">1.7.</span> <span class="nav-text">Elasticsearch集群监控工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署logstash"><span class="nav-number">1.8.</span> <span class="nav-text">部署logstash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署到其他服务器"><span class="nav-number">1.9.</span> <span class="nav-text">部署到其他服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kibana安装"><span class="nav-number">1.10.</span> <span class="nav-text">kibana安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装filebeat"><span class="nav-number">1.10.1.</span> <span class="nav-text">安装filebeat.</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="elk," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="kibana索引及索引冷热分离管理介绍本篇文档简单介绍一下kibana的索引管理.主要包括:  索引模板 索引模式 索引生命周期 索引冷热分离管理 索引模板配置   索引模板ES自带一个默认的logstash-*的索引模板,es内部维护了template，template定义好了mapping，只要index的名称被template匹配到，那么该index的mapping就按照template中定">
+<meta name="keywords" content="elk">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kibana索引及索引冷热分离管理">
+<meta property="og:url" content="https://jesse.top/2020/08/25/elk/kibana索引及索引冷热分离管理/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="kibana索引及索引冷热分离管理介绍本篇文档简单介绍一下kibana的索引管理.主要包括:  索引模板 索引模式 索引生命周期 索引冷热分离管理 索引模板配置   索引模板ES自带一个默认的logstash-*的索引模板,es内部维护了template，template定义好了mapping，只要index的名称被template匹配到，那么该index的mapping就按照template中定">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img2.jesse.top/image-20200728094858891.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200728095100748.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200728095631533.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200728100440229.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200728100507970.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200728100625572.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200728100714384.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200729091321456.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200729092222991.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200729092332714.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200729102204264.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200729103131421.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200817153710670.png">
+<meta property="og:updated_time" content="2020-08-26T23:55:20.313Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kibana索引及索引冷热分离管理">
+<meta name="twitter:description" content="kibana索引及索引冷热分离管理介绍本篇文档简单介绍一下kibana的索引管理.主要包括:  索引模板 索引模式 索引生命周期 索引冷热分离管理 索引模板配置   索引模板ES自带一个默认的logstash-*的索引模板,es内部维护了template，template定义好了mapping，只要index的名称被template匹配到，那么该index的mapping就按照template中定">
+<meta name="twitter:image" content="https://img2.jesse.top/image-20200728094858891.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/08/25/elk/kibana索引及索引冷热分离管理/"/>
+
+
+
+
+
+  <title>kibana索引及索引冷热分离管理 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/kibana索引及索引冷热分离管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kibana索引及索引冷热分离管理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/elk/kibana索引及索引冷热分离管理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/kibana索引及索引冷热分离管理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="kibana索引及索引冷热分离管理"><a href="#kibana索引及索引冷热分离管理" class="headerlink" title="kibana索引及索引冷热分离管理"></a>kibana索引及索引冷热分离管理</h3><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本篇文档简单介绍一下kibana的索引管理.主要包括:</p>
+<ul>
+<li>索引模板</li>
+<li>索引模式</li>
+<li>索引生命周期</li>
+<li>索引冷热分离管理</li>
+<li>索引模板配置</li>
+</ul>
+<hr>
+<h3 id="索引模板"><a href="#索引模板" class="headerlink" title="索引模板"></a>索引模板</h3><p>ES自带一个默认的logstash-*的索引模板,es内部维护了template，template定义好了mapping，只要index的名称被template匹配到，那么该index的mapping就按照template中定义的mapping自动创建。而且template中定义了index的shard分片数量、replica副本数量等等属性。</p>
+<p>所以我们每次新建一个索引的时候,不需要手动创建mapping映射,也不需要手动设置副本和分片数量.</p>
+<p>在Kibana的图形化界面中可以看到ES默认的索引模板</p>
+<a id="more"></a>
+<p><img src="https://img2.jesse.top/image-20200728094858891.png" alt="image-20200728094858891"></p>
+<p>点击进入logstash索引模板,还能对模板进行编辑.比如设置以下重要2个参数:</p>
+<p><code>refresh_interval</code> —-索引刷新间隔,一般在5-10秒范围内,周期可以设置长一点,有助于提高ES性能,减少不必要的刷新</p>
+<p><code>number_of_shards</code>—–索引分片数量,在ES7版本中默认为1,在以前的版本默认为5.一般情况下设置为等同于ES data节点的数量</p>
+<p><code>number_of_replicas</code>—-默认副本数量为1,如果有特殊需要,可以在下方设置.</p>
+<p><img src="https://img2.jesse.top/image-20200728095100748.png" alt="image-20200728095100748"></p>
+<p>由于ES默认索引模板的存在,所以logstash在向ES传输数据的时候,索引最好是以<code>logstash-</code>开头.例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">output &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; [&quot;172.16.20.101:9200&quot;]</span><br><span class="line">            index =&gt; &quot;logstash-%&#123;[fields][project]&#125;-%&#123;[fields][type]&#125;-%&#123;[fields][level]&#125;-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="索引模式"><a href="#索引模式" class="headerlink" title="索引模式"></a>索引模式</h3><p>当一个新建的索引传输到ES时,需要将这个索引关联到刚才提到的索引模板中.比如下面的<code>logstash-msf-mysql-slow-2020.02.28</code>的索引</p>
+<p><img src="https://img2.jesse.top/image-20200728095631533.png" alt="image-20200728095631533"></p>
+<p><strong>在Kibana的索引模式界面中,创建一个索引模式</strong></p>
+<p><img src="https://img2.jesse.top/image-20200728100440229.png" alt="image-20200728100440229"></p>
+<p><strong>由于每天创建一个索引,所以定义一个索引前缀,使用通配符匹配后面的日期</strong></p>
+<p><code>logstash-msf-mysql-slow-*</code></p>
+<p><img src="https://img2.jesse.top/image-20200728100507970.png" alt="image-20200728100507970"></p>
+<p>默认使用日期来筛选字段</p>
+<p><img src="https://img2.jesse.top/image-20200728100625572.png" alt="image-20200728100625572"></p>
+<p><strong>创建完成后,字段已经自动映射</strong></p>
+<p><img src="https://img2.jesse.top/image-20200728100714384.png" alt="image-20200728100714384"></p>
+<p><strong>此时在discovery界面就能看到该索引并且该索引下的数据了</strong>.</p>
+<hr>
+<h3 id="索引生命周期"><a href="#索引生命周期" class="headerlink" title="索引生命周期"></a>索引生命周期</h3><p>Kibana的管理界面可以管理索引的生命周期,在下面的图示中,创建一个新的生命周期策略</p>
+<p><img src="https://img2.jesse.top/image-20200729091321456.png" alt="image-20200729091321456"></p>
+<p>可以管理索引的生命周期,例如,下面的截图中配置超过2天的索引自动删除</p>
+<p><img src="https://img2.jesse.top/image-20200729092222991.png" alt="image-20200729092222991"></p>
+<p><strong>保存策略,然后将该策略关联到索引模板.</strong></p>
+<p><img src="https://img2.jesse.top/image-20200729092332714.png" alt="image-20200729092332714"></p>
+<hr>
+<h3 id="索引冷热分离管理"><a href="#索引冷热分离管理" class="headerlink" title="索引冷热分离管理"></a>索引冷热分离管理</h3><p>在&lt;生产环境部署ELK+冷热数据分离&gt;笔记中提到,当前业务每天大概1.5T左右的日志,规划了20T的SSD磁盘,刚好可以保留7天的日志(副本数为1).开发人员需要将日志保留更久(例如一个月),以便有些故障未能及时发现,可能数周后才去追踪日志,排查故障.</p>
+<p>但是,将一个月的日志都存储在SSD的磁盘中成本较高.在这种场景中,可以使用冷热分离,将索引数据分开..例如,7天内的日志为热数据,该日志查询频率非常高,可以作为热数据,存储在ES的热节点,.7天后的日志查询频率就非常低,几乎很少查询,此时可以做为冷数据,存储在ES的冷节点.</p>
+<p>ES冷节点通常硬件资源较低,CPU和内存配置相对热节点较低,磁盘通常采用机械磁盘,一方面冷节点无需太高配置,另一方面节省服务器成本费用</p>
+<blockquote>
+<p>在&lt;生产环境部署ELK+冷热数据分离&gt;笔记中的ES集群截图中,可以看到每个ES的data节点都有hot或者cold属性..该属性定义了ES的冷热节点角色</p>
+</blockquote>
+<p>还是在上面的Kibana索引生命周期中配置冷热分离.只需开启冷阶段配置即可.配置参考如下:</p>
+<p><img src="https://img2.jesse.top/image-20200729102204264.png" alt="image-20200729102204264"></p>
+<p>接着在Kibana的dev tool工具中,给索引模板新增以下配置,将索引数据分配到hot节点ES服务器:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PUT _template/logstash</span><br><span class="line">&#123;</span><br><span class="line">    &quot;index_patterns&quot;: &quot;logstash-*&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;index.number_of_replicas&quot;: &quot;1&quot;,</span><br><span class="line">         &quot;index.number_of_shards&quot;: &quot;7&quot;,</span><br><span class="line">         &quot;index.refresh_interval&quot;: &quot;10s&quot;,</span><br><span class="line">        &quot;index.routing.allocation.require.box_type&quot;: &quot;hot&quot;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查看默认的logstash-*索引模板.可以看到设置已经生效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;routing&quot;: &#123;</span><br><span class="line">     &quot;allocation&quot;: &#123;</span><br><span class="line">       &quot;require&quot;: &#123;</span><br><span class="line">         &quot;box_type&quot;: &quot;hot&quot;</span><br><span class="line">       &#125;</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+<p>此后进来的索引数据,会自动存储到hot节点的ES服务器上.cold服务器不存储任何热数据</p>
+<hr>
+<p>PS: 为了测试冷热数据是否正常工作,也可以手动将索引从Hot节点迁移到cold节点,以索引<code>logstash-msf-fpm-error-2020.07.27</code>为例,在Kibana的<code>dev tool</code>工具中执行下面的语句,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PUT /logstash-msf-fpm-error-2020.07.27/_settings </span><br><span class="line">&#123; </span><br><span class="line">  &quot;settings&quot;: &#123; </span><br><span class="line">    &quot;index.routing.allocation.require.box_type&quot;: &quot;cold&quot;</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>则该索引会增加下列属性:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;routing&quot;: &#123; - </span><br><span class="line">         &quot;allocation&quot;: &#123; - </span><br><span class="line">           &quot;require&quot;: &#123; - </span><br><span class="line">             &quot;box_type&quot;: &quot;cold&quot;</span><br><span class="line">           &#125;</span><br><span class="line">         &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Kibana7版本的索引生命周期会自动迁移旧的索引数据到cold节点,所以无需手动或者写脚本定时迁移</p>
+</blockquote>
+<p>Kibana的索引生命周期生效后,旧的索引就会自动从hot节点迁移到cold节点:</p>
+<p><img src="https://img2.jesse.top/image-20200729103131421.png" alt="image-20200729103131421"></p>
+<blockquote>
+<p>当配置了Kibana的索引生命周期后,logstash数据传输到ES时,只需要指定ES的Hot节点(或者master)节点即可,,cold节点(如果不是master)则无需写入到output配置中</p>
+</blockquote>
+<hr>
+<h3 id="索引模板配置"><a href="#索引模板配置" class="headerlink" title="索引模板配置"></a>索引模板配置</h3><p>总结下来,索引模板需要做如下配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PUT _template/logstash</span><br><span class="line">&#123;</span><br><span class="line">    &quot;index_patterns&quot;: &quot;logstash-*&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;index.number_of_replicas&quot;: &quot;1&quot;,  #副本数量</span><br><span class="line">         &quot;index.number_of_shards&quot;: &quot;7&quot;,   #分片数量</span><br><span class="line">         &quot;index.refresh_interval&quot;: &quot;10s&quot;, #索引刷新间隔</span><br><span class="line">        &quot;index.routing.allocation.require.box_type&quot;: &quot;hot&quot;, #索引分配节点</span><br><span class="line">        &quot;mapping.total_fields.limit&quot;:5000 #索引最大字段数量</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>索引设置效果如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;index&quot;: &#123;</span><br><span class="line">    &quot;lifecycle&quot;: &#123;</span><br><span class="line">      &quot;name&quot;: &quot;索引冷热分离&quot;  #索引生命周期策略</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;routing&quot;: &#123;</span><br><span class="line">      &quot;allocation&quot;: &#123;</span><br><span class="line">        &quot;require&quot;: &#123;</span><br><span class="line">          &quot;box_type&quot;: &quot;hot&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;mapping&quot;: &#123;</span><br><span class="line">      &quot;total_fields&quot;: &#123;</span><br><span class="line">        &quot;limit&quot;: &quot;5000&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;refresh_interval&quot;: &quot;10s&quot;,</span><br><span class="line">    &quot;number_of_shards&quot;: &quot;7&quot;,</span><br><span class="line">    &quot;number_of_replicas&quot;: &quot;1&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外,有时候索引找不到geoip.location字段.此时就需要在索引模板中手动映射字段</p>
+<p>手动添加映射字段:</p>
+<p>字段名: geoip.location<br>字段值: 地理坐标点</p>
+<p><img src="https://img2.jesse.top/image-20200817153710670.png" alt="image-20200817153607943"></p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/08/25/elk/kibana索引及索引冷热分离管理/">kibana索引及索引冷热分离管理</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年08月25日 - 22:08</p>
+  <p><span>最后更新:</span>2020年08月27日 - 07:08</p>
+  <p><span>原始链接:</span><a href="/2020/08/25/elk/kibana索引及索引冷热分离管理/" title="kibana索引及索引冷热分离管理">https://jesse.top/2020/08/25/elk/kibana索引及索引冷热分离管理/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/08/25/elk/kibana索引及索引冷热分离管理/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/elk/" rel="tag"># elk</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/" rel="next" title="Filebeat+logstash收集Nginx访问日志">
+                <i class="fa fa-chevron-left"></i> Filebeat+logstash收集Nginx访问日志
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/26/监控/zabbix监控vmware主机以及GuestOS/" rel="prev" title="zabbix监控vmware主机以及GuestOS">
+                zabbix监控vmware主机以及GuestOS <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/08/25/elk/kibana索引及索引冷热分离管理/"
+           data-title="kibana索引及索引冷热分离管理" data-url="https://jesse.top/2020/08/25/elk/kibana索引及索引冷热分离管理/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">186</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#kibana索引及索引冷热分离管理"><span class="nav-number">1.</span> <span class="nav-text">kibana索引及索引冷热分离管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引模板"><span class="nav-number">3.</span> <span class="nav-text">索引模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引模式"><span class="nav-number">4.</span> <span class="nav-text">索引模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引生命周期"><span class="nav-number">5.</span> <span class="nav-text">索引生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引冷热分离管理"><span class="nav-number">6.</span> <span class="nav-text">索引冷热分离管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引模板配置"><span class="nav-number">7.</span> <span class="nav-text">索引模板配置</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

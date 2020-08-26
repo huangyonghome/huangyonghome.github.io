@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="elk," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="使用ElastAlert+ELK实现日志监控告警介绍目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警  ElastAlert介绍ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告">
+<meta name="keywords" content="elk">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用ElastAlert+ELK实现日志监控告警">
+<meta property="og:url" content="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="使用ElastAlert+ELK实现日志监控告警介绍目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警  ElastAlert介绍ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img2.jesse.top/image-20200826094746820.png">
+<meta property="og:updated_time" content="2020-08-26T23:55:20.313Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用ElastAlert+ELK实现日志监控告警">
+<meta name="twitter:description" content="使用ElastAlert+ELK实现日志监控告警介绍目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警  ElastAlert介绍ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告">
+<meta name="twitter:image" content="https://img2.jesse.top/image-20200826094746820.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/"/>
+
+
+
+
+
+  <title>使用ElastAlert+ELK实现日志监控告警 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用ElastAlert+ELK实现日志监控告警</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="使用ElastAlert-ELK实现日志监控告警"><a href="#使用ElastAlert-ELK实现日志监控告警" class="headerlink" title="使用ElastAlert+ELK实现日志监控告警"></a>使用ElastAlert+ELK实现日志监控告警</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警</p>
+<hr>
+<h3 id="ElastAlert介绍"><a href="#ElastAlert介绍" class="headerlink" title="ElastAlert介绍"></a>ElastAlert介绍</h3><p>ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告警.github项目地址如下:<a href="https://github.com/Yelp/elastalert" target="_blank" rel="noopener">https://github.com/Yelp/elastalert</a></p>
+<p>官方文档如下:<a href="https://elastalert.readthedocs.io/en/latest/elastalert.html" target="_blank" rel="noopener">https://elastalert.readthedocs.io/en/latest/elastalert.html</a></p>
+<p>它支持多种监控模式和告警方式,具体可以查阅Github项目介绍.但是自带的ElastAlert并不支持钉钉告警,在github上有第三方的钉钉python项目.地址如下:<a href="https://github.com/xuyaoqiang/elastalert-dingtalk-plugin" target="_blank" rel="noopener">https://github.com/xuyaoqiang/elastalert-dingtalk-plugin</a></p>
+<hr>
+<a id="more"></a>
+<h3 id="ElastAlert安装"><a href="#ElastAlert安装" class="headerlink" title="ElastAlert安装"></a>ElastAlert安装</h3><blockquote>
+<p>新版的ElastAlert不支持python2了.所以需要安装Python3环境</p>
+</blockquote>
+<ul>
+<li>安装依赖</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y install python3 python3-devel python3-libs python3-setuptools git gcc</span><br></pre></td></tr></table></figure>
+<p>如果是Ubuntu系统:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt -y upgrade</span><br><span class="line">sudo apt install -y python3.6-dev</span><br><span class="line">sudo apt install -y libffi-dev libssl-dev</span><br><span class="line">sudo apt install -y python3-pip</span><br><span class="line">sudo apt install -y python3-venv</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装elastalert模块</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install elastalert  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com</span><br></pre></td></tr></table></figure>
+<ul>
+<li>克隆ElastAlert项目</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/Yelp/elastalert.git</span><br><span class="line">cp -r elastalert /data/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装模块</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /data/elastalert/</span><br><span class="line">pip3 install &quot;setuptools&gt;=11.3&quot;</span><br><span class="line"></span><br><span class="line">pip install -r requirements.txt  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建ElastAlert的索引</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo elastalert-create-index --index elastalert</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改ElastAlert的配置文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cp config.yaml.example config.yaml</span><br><span class="line">vim config.yaml</span><br><span class="line"></span><br><span class="line">rules_folder: rule  #rule匹配模式的目录,可以自定义一个/data/elastalert路径下的相对目录</span><br><span class="line">run_every:          #ElastAlert多久向Elasticsearch发送一次请求</span><br><span class="line">  minutes: 1</span><br><span class="line">buffer_time:        #如果某些日志源不是实时的，则ElastAlert将缓冲最近一段时间的结果.这个值默认是15,但是无法触发告警,设置为1正常</span><br><span class="line">  minutes: 1</span><br><span class="line">es_host: localhost      #ES集群节点,随便指定任意一台均可</span><br><span class="line">es_port: 9200           #ES端口号</span><br><span class="line">es_username: elastic    # 如果ES使用了X-pack安全验证,则需要配置此项,否则注释</span><br><span class="line">es_password: password   # 同上</span><br><span class="line">writeback_index: elastalert_status  #ElastAlert索引名</span><br><span class="line">alert_time_limit:       #如果告警发送失败,则会在下面时间范围内尝试重新发送</span><br><span class="line">  days: 2</span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置钉钉报警</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/xuyaoqiang/elastalert-dingtalk-plugin.git</span><br><span class="line">cd elastalert-dingtalk-plugin</span><br><span class="line">pip3 install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com</span><br><span class="line">cp -r elastalert_modules /data/elastalert/</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="Rule规则"><a href="#Rule规则" class="headerlink" title="Rule规则"></a>Rule规则</h3><p>官方支持很多Rule模式,在<code>example_rules</code>目录下也有很多参考Rule可以参考.一般常用的是类型(type)是<code>frequence</code></p>
+<p>rule的yaml配置要放在<code>config.yml</code>配置文件中定义的目录下,我这里是rule目录.</p>
+<p>下面这个rule是监控Nginx的5XX状态码,并且调用钉钉告警</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">#rule名字,必须唯一</span><br><span class="line">name:  the count of servnginx log that reponse status code is 5xx and it appears greater than 5 in the period 1 minute</span><br><span class="line"></span><br><span class="line">#类型,官方提供多种类型</span><br><span class="line">type: frequency</span><br><span class="line"></span><br><span class="line">#ES索引,支持通配符</span><br><span class="line">index: logstash-*-nginx-access-*</span><br><span class="line"></span><br><span class="line">#在timeframe时间内,匹配到多少个结果便告警</span><br><span class="line">num_events: 1</span><br><span class="line"></span><br><span class="line">#监控周期.默认是minutes: 1</span><br><span class="line">timeframe:</span><br><span class="line">  seconds: 5  </span><br><span class="line">  </span><br><span class="line">#匹配模式.</span><br><span class="line">filter:</span><br><span class="line">- range:</span><br><span class="line">    status:</span><br><span class="line">      from: 500</span><br><span class="line">      to: 599</span><br><span class="line">      </span><br><span class="line">#告警方式,下面是调用第三方的钉钉告警</span><br><span class="line">alert:</span><br><span class="line">- &quot;elastalert_modules.dingtalk_alert.DingTalkAlerter&quot;</span><br><span class="line"></span><br><span class="line">#钉钉的webhook</span><br><span class="line">dingtalk_webhook: &quot;https://oapi.dingtalk.com/robot/send?access_token=&quot;  #参考地址,需要自行配置</span><br><span class="line">dingtalk_msgtype: text</span><br><span class="line"></span><br><span class="line">#原生的告警信息不友好,自定义告警内容的格式</span><br><span class="line">alert_text: &quot;</span><br><span class="line">域    名: &#123;&#125;\n</span><br><span class="line">调用方式: &#123;&#125;\n</span><br><span class="line">请求链接: &#123;&#125;\n</span><br><span class="line">状 态 码: &#123;&#125;\n</span><br><span class="line">后端服务器: &#123;&#125;\n</span><br><span class="line">数      量: &#123;&#125;</span><br><span class="line">&quot;</span><br><span class="line">alert_text_type: alert_text_only</span><br><span class="line"></span><br><span class="line">#告警内容</span><br><span class="line">alert_text_args:</span><br><span class="line">- domain</span><br><span class="line">- request_method</span><br><span class="line">- request</span><br><span class="line">- status</span><br><span class="line">- upstreamaddr</span><br><span class="line">- num_hits</span><br></pre></td></tr></table></figure>
+<p>测试Rule文件是否正确.在elastalert目录下执行下个命令可以测试某个rule是否正常工作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/bin/elastalert-test-rule --config config.yaml rule/nginx.yaml</span><br></pre></td></tr></table></figure>
+<p>这一步可能会有一些报错情况.一般都是扩展模块版本或者依赖关系的问题.比如下面这个问题,就需要执行<code>pip3 install jira==2.0.0</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;/usr/local/bin/elastalert-test-rule&quot;, line 11, in &lt;module&gt;</span><br><span class="line">    load_entry_point(&apos;elastalert==0.1.20&apos;, &apos;console_scripts&apos;, &apos;elastalert-test-rule&apos;)()</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 476, in load_entry_point</span><br><span class="line">    return get_distribution(dist).load_entry_point(group, name)</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 2700, in load_entry_point</span><br><span class="line">    return ep.load()</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 2318, in load</span><br><span class="line">    return self.resolve()</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 2324, in resolve</span><br><span class="line">    module = __import__(self.module_name, fromlist=[&apos;__name__&apos;], level=0)</span><br><span class="line">  File &quot;/usr/local/lib/python3.6/site-packages/elastalert/test_rule.py&quot;, line 20, in &lt;module&gt;</span><br><span class="line">    import elastalert.config</span><br><span class="line">  File &quot;/usr/local/lib/python3.6/site-packages/elastalert/config.py&quot;, line 99</span><br><span class="line">    raise EAException(&quot;Could not import module %s: %s&quot; % (module_name, e)), None, sys.exc_info()[2]</span><br><span class="line">                                                                          ^</span><br><span class="line">SyntaxError: invalid syntax</span><br><span class="line"></span><br><span class="line">或者下面这个错误</span><br><span class="line"></span><br><span class="line">[work@idc-function-elk10 elastalert]$ /usr/local/bin/elastalert-test-rule --config config.yaml rule/nginx.yaml</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 570, in _build_master</span><br><span class="line">    ws.require(__requires__)</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 888, in require</span><br><span class="line">    needed = self.resolve(parse_requirements(requirements))</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 779, in resolve</span><br><span class="line">    raise VersionConflict(dist, req).with_context(dependent_req)</span><br><span class="line">pkg_resources.VersionConflict: (elastalert 0.1.20 (/usr/local/lib/python3.6/site-packages), Requirement.parse(&apos;elastalert==0.2.4&apos;))</span><br><span class="line"></span><br><span class="line">During handling of the above exception, another exception occurred:</span><br><span class="line"></span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;/usr/local/bin/elastalert-test-rule&quot;, line 6, in &lt;module&gt;</span><br><span class="line">    from pkg_resources import load_entry_point</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 3095, in &lt;module&gt;</span><br><span class="line">    @_call_aside</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 3079, in _call_aside</span><br><span class="line">    f(*args, **kwargs)</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 3108, in _initialize_master_working_set</span><br><span class="line">    working_set = WorkingSet._build_master()</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 572, in _build_master</span><br><span class="line">    return cls._build_from_requirements(__requires__)</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 585, in _build_from_requirements</span><br><span class="line">    dists = ws.resolve(reqs, Environment())</span><br><span class="line">  File &quot;/usr/lib/python3.6/site-packages/pkg_resources/__init__.py&quot;, line 774, in resolve</span><br><span class="line">    raise DistributionNotFound(req, requirers)</span><br><span class="line">pkg_resources.DistributionNotFound: The &apos;jira&gt;=2.0.0&apos; distribution was not found and is required by elastalert</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="执行ElastAlert"><a href="#执行ElastAlert" class="headerlink" title="执行ElastAlert"></a>执行ElastAlert</h3><p>一切没问题后,就可以执行ElastAlert.如果是针对单个Rule执行就使用下列命令.(在ElastAlert目录下)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@idc-function-elk10 elastalert]# python3  -m elastalert.elastalert --verbose --rule /data/elastalert/rule/nginx.yaml</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">1 rules loaded</span><br><span class="line">INFO:elastalert:Starting up</span><br><span class="line">INFO:elastalert:Disabled rules are: []</span><br><span class="line">INFO:elastalert:Sleeping for 59.999906 seconds</span><br><span class="line">INFO:elastalert:Queried rule the count of servnginx log that reponse status code is 5xx and it appears greater than 5 in the period 1 minute from 2020-08-26 09:11 CST to 2020-08-26 09:26 CST: 10000 / 10000 hits (scrolling..)</span><br><span class="line">INFO:elastalert:Queried rule the count of servnginx log that reponse status code is 5xx and it appears greater than 5 in the period 1 minute from 2020-08-26 09:11 CST to 2020-08-26 09:26 CST: 20000 / 10000 hits (scrolling..)</span><br></pre></td></tr></table></figure>
+<p>等待几秒钟后,钉钉会收到告警(我这里用的是200状态码测试).报警内容是Rule配置文件中自定义的格式和内容</p>
+<p><img src="https://img2.jesse.top/image-20200826094746820.png" alt="image-20200826094746820"></p>
+<hr>
+<h3 id="Rule2-监控php-fpm的Fatal错误信息"><a href="#Rule2-监控php-fpm的Fatal错误信息" class="headerlink" title="Rule2. 监控php-fpm的Fatal错误信息"></a>Rule2. 监控php-fpm的Fatal错误信息</h3><p>fpm的错误日志也收集到了ELK中.我们期望只要pfm日志中出现”Fatal”关键字错误信息就立即告警.最初计划是用ElastAlert的黑名单(blacklist)类型的Rule.但是由于fpm的错误日志没有解析,而是直接保存原始日志,所以不符合要求.</p>
+<p>参考github上我提的ISSUE:<a href="https://github.com/Yelp/elastalert/issues/2937" target="_blank" rel="noopener">balacklist query hits but no matches no alerts</a></p>
+<p>也可以用Any类型的type.Rule文件如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[root@idc-function-elk10 elastalert]# sed &apos;/^#/d&apos; rule/php-fpm.yaml | sed &apos;/^$/d&apos;</span><br><span class="line">name: monitor the fatal,error log in php-fpm log</span><br><span class="line">type: any</span><br><span class="line">index: logstash-*-fpm-error-*</span><br><span class="line">num_events: 1</span><br><span class="line">timeframe:</span><br><span class="line">  seconds: 5</span><br><span class="line">filter:</span><br><span class="line"> - query:</span><br><span class="line">     query_string:</span><br><span class="line">       query: &quot;message: \&quot;PHP Fatal\&quot;&quot;  #匹配Fatal关键字</span><br><span class="line">alert:</span><br><span class="line">- &quot;elastalert_modules.dingtalk_alert.DingTalkAlerter&quot;</span><br><span class="line">dingtalk_webhook: &quot;https://oapi.dingtalk.com/robot/send?access_token=&quot; </span><br><span class="line">dingtalk_msgtype: text</span><br><span class="line">alert_text: &quot;</span><br><span class="line"> 主机: &#123;&#125;\n</span><br><span class="line"> IP地址: &#123;&#125;\n</span><br><span class="line"> 业务线: &#123;&#125;\n</span><br><span class="line"> 日志类型: &#123;&#125;\n</span><br><span class="line"> 完整日志: &#123;&#125;</span><br><span class="line">&quot;</span><br><span class="line">alert_text_type: alert_text_only</span><br><span class="line">alert_text_args:</span><br><span class="line">  - host.name</span><br><span class="line">  - host.ip</span><br><span class="line">  - fields.project</span><br><span class="line">  - fields.type</span><br><span class="line">  - message</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="启动ElastAlert"><a href="#启动ElastAlert" class="headerlink" title="启动ElastAlert"></a>启动ElastAlert</h3><p>开启一个Screen然后,使用nohup挂起执行.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup python3  -m elastalert.elastalert --verbose &amp;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">使用ElastAlert+ELK实现日志监控告警</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年08月25日 - 22:08</p>
+  <p><span>最后更新:</span>2020年08月27日 - 07:08</p>
+  <p><span>原始链接:</span><a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" title="使用ElastAlert+ELK实现日志监控告警">https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/elk/" rel="tag"># elk</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/" rel="next" title="生产环境部署ELK7+ES冷热数据分离">
+                <i class="fa fa-chevron-left"></i> 生产环境部署ELK7+ES冷热数据分离
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/" rel="prev" title="Filebeat+logstash收集Nginx访问日志">
+                Filebeat+logstash收集Nginx访问日志 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/"
+           data-title="使用ElastAlert+ELK实现日志监控告警" data-url="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">186</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用ElastAlert-ELK实现日志监控告警"><span class="nav-number">1.</span> <span class="nav-text">使用ElastAlert+ELK实现日志监控告警</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ElastAlert介绍"><span class="nav-number">1.2.</span> <span class="nav-text">ElastAlert介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ElastAlert安装"><span class="nav-number">1.3.</span> <span class="nav-text">ElastAlert安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rule规则"><span class="nav-number">1.4.</span> <span class="nav-text">Rule规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行ElastAlert"><span class="nav-number">1.5.</span> <span class="nav-text">执行ElastAlert</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rule2-监控php-fpm的Fatal错误信息"><span class="nav-number">1.6.</span> <span class="nav-text">Rule2. 监控php-fpm的Fatal错误信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动ElastAlert"><span class="nav-number">1.7.</span> <span class="nav-text">启动ElastAlert</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

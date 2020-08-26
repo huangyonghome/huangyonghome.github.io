@@ -101,7 +101,7 @@
 <meta property="og:description" content="kong+postgresql+konga集群环境部署kong简介Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和AP">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://img1.jesse.top/kong-flow.png">
-<meta property="og:updated_time" content="2020-06-26T03:09:18.121Z">
+<meta property="og:updated_time" content="2020-08-26T23:55:20.310Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kong+postgresql+konga集群环境部署">
 <meta name="twitter:description" content="kong+postgresql+konga集群环境部署kong简介Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和AP">
@@ -482,6 +482,9 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">work@dwd-kong-node1 konga]$ npm run bower-deps</span><br></pre></td></tr></table></figure>
 <p>这个程序默认是前台启动</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[work@dwd-kong-node1 konga]$ npm start</span><br><span class="line"></span><br><span class="line">&gt; kongadmin@0.14.3 start /home/work/konga</span><br><span class="line">&gt; node --harmony app.js</span><br><span class="line"></span><br><span class="line">No DB Adapter defined. Using localDB...</span><br><span class="line">debug: Hook:api_health_checks:process() called</span><br><span class="line">debug: Hook:health_checks:process() called</span><br><span class="line">debug: Hook:start-scheduled-snapshots:process() called</span><br><span class="line">debug: Hook:upstream_health_checks:process() called</span><br><span class="line">debug: Hook:user_events_hook:process() called</span><br><span class="line">debug: User had models, so no seed needed</span><br><span class="line">debug: Kongnode had models, so no seed needed</span><br><span class="line">debug: Emailtransport seeds updated</span><br><span class="line">debug: -------------------------------------------------------</span><br><span class="line">debug: :: Mon Apr 08 2019 18:34:31 GMT+0800 (China Standard Time)</span><br><span class="line">debug: Environment : development</span><br><span class="line">debug: Port        : 1337</span><br><span class="line">debug: -------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意: 如果kong是1.0版本(我这里是1.0.3).那么konga的版本不能超过0.14.3.否则会有兼容性问题</p>
+</blockquote>
 <p>此时在浏览器输入:<a href="http://10.111.30.174:1337" target="_blank" rel="noopener">http://10.111.30.174:1337</a> 就能访问konga了.</p>
 <hr>
 <h3 id="systemctl管理kong和konga进程"><a href="#systemctl管理kong和konga进程" class="headerlink" title="systemctl管理kong和konga进程"></a>systemctl管理kong和konga进程</h3><ul>
@@ -518,7 +521,7 @@
   <p><span>本文标题:</span><a href="/2020/06/26/Linux-Web/kong postgresql konga/">kong+postgresql+konga集群环境部署</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2020年06月26日 - 11:06</p>
-  <p><span>最后更新:</span>2020年06月26日 - 11:06</p>
+  <p><span>最后更新:</span>2020年08月27日 - 07:08</p>
   <p><span>原始链接:</span><a href="/2020/06/26/Linux-Web/kong postgresql konga/" title="kong+postgresql+konga集群环境部署">https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/"  aria-label="复制成功！"></i></span>
   </p>
@@ -593,8 +596,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/26/kubernetes/kubernetes 高级调度/" rel="next" title="kubernetes 高级调度">
-                <i class="fa fa-chevron-left"></i> kubernetes 高级调度
+              <a href="/2020/06/26/Linux-Basic/Skills/Linux 使用parted LVM分区/" rel="next" title="Linux 使用parted+LVM分区">
+                <i class="fa fa-chevron-left"></i> Linux 使用parted+LVM分区
               </a>
             
           </div>
@@ -603,8 +606,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/26/docker/harbor私有仓库部署/" rel="prev" title="harbor私有仓库部署">
-                harbor私有仓库部署 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/" rel="prev" title="kong+casssandra集群环境部署">
+                kong+casssandra集群环境部署 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -693,7 +696,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">174</span>
+                  <span class="site-state-item-count">186</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -704,7 +707,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -715,7 +718,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

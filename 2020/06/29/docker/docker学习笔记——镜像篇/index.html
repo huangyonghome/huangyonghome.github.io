@@ -430,7 +430,7 @@
 <p>[root@localhost ~]$docker commit -h</p>
 <p>Usage:    docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]</p>
 <p>Create a new image from a container’s changes</p>
-<p>Options:<br>  -a, –author string    Author (e.g., “John Hannibal Smith <a href="mailto:&#104;&#97;&#x6e;&#110;&#x69;&#98;&#x61;&#108;&#64;&#97;&#45;&#x74;&#x65;&#97;&#x6d;&#x2e;&#x63;&#111;&#x6d;" target="_blank" rel="noopener">&#104;&#97;&#x6e;&#110;&#x69;&#98;&#x61;&#108;&#64;&#97;&#45;&#x74;&#x65;&#97;&#x6d;&#x2e;&#x63;&#111;&#x6d;</a>“)<br>  -c, –change list      Apply Dockerfile instruction to the created image<br>  -m, –message string   Commit message<br>  -p, –pause            Pause container during commit (default true)</p>
+<p>Options:<br>  -a, –author string    Author (e.g., “John Hannibal Smith <a href="mailto:&#x68;&#x61;&#110;&#110;&#105;&#x62;&#97;&#x6c;&#64;&#x61;&#45;&#x74;&#x65;&#97;&#x6d;&#x2e;&#99;&#x6f;&#x6d;" target="_blank" rel="noopener">&#x68;&#x61;&#110;&#110;&#105;&#x62;&#97;&#x6c;&#64;&#x61;&#45;&#x74;&#x65;&#97;&#x6d;&#x2e;&#99;&#x6f;&#x6d;</a>“)<br>  -c, –change list      Apply Dockerfile instruction to the created image<br>  -m, –message string   Commit message<br>  -p, –pause            Pause container during commit (default true)</p>
 <p>  #例如.将正在运行中的Nginx容器提交为一个新的nginx:test镜像<br>[root@localhost ~]$docker commit -m ‘test’ -a ‘jesse’ nginx nginx:test<br>sha256:028f5e2b21a66a1bf5f70727f20cac04e8918f57d5584cc2aeb09f18791d9680<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">* 导入导出镜像</span><br><span class="line"></span><br><span class="line">命令: </span><br><span class="line"></span><br><span class="line">`docker save -o 保存文件名 镜像名:tag`  ————将某个镜像保存为一个文件</span><br><span class="line"></span><br><span class="line">`docker load &lt; 文件名` or `docker load —input 文件名`——将某个文件导入到本地镜像</span><br><span class="line"></span><br><span class="line">例如</span><br></pre></td></tr></table></figure></p>
 <p>#将nginx:test这个镜像保存为Nginx_test.tar文件<br>[root@localhost ~]$docker save -o nginx_test.tar nginx:test<br>[root@localhost ~]$ll nginx_test.tar<br>-rw——- 1 root root 113036800 5月  16 10:29 nginx_test.tar</p>
 <p>#删除ningx:test这个镜像.然后再从该文件恢复<br>[root@localhost ~]$docker load &lt; nginx_test.tar<br>67392954caf5: Loading layer [==================================================&gt;]  8.192kB/8.192kB<br>Loaded image: nginx:test</p>
@@ -629,7 +629,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">174</span>
+                  <span class="site-state-item-count">186</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -640,7 +640,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -651,7 +651,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
