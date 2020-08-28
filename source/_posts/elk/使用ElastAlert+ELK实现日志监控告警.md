@@ -1,5 +1,5 @@
 ---
-title:  使用ElastAlert+ELK实现日志监控告警
+title:  使用ElastAlert+ELK实现日志监控钉钉告警
 date: 2020-08-25 22:59:58
 tags:  elk
 categories: elk
@@ -9,7 +9,7 @@ copyright: true
 
 
 
-## 使用ElastAlert+ELK实现日志监控告警
+## 使用ElastAlert+ELK实现日志监控钉钉告警
 
 ### 介绍
 
@@ -24,6 +24,8 @@ ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根�
 官方文档如下:https://elastalert.readthedocs.io/en/latest/elastalert.html
 
 它支持多种监控模式和告警方式,具体可以查阅Github项目介绍.但是自带的ElastAlert并不支持钉钉告警,在github上有第三方的钉钉python项目.地址如下:https://github.com/xuyaoqiang/elastalert-dingtalk-plugin
+
+第三方的钉钉告警插件并没有艾特相关人员的功能,所以我再此基础上进行了二次开发,增加了这个功能
 
 ---
 
@@ -301,5 +303,95 @@ alert_text_args:
 
 ```
 nohup python3  -m elastalert.elastalert --verbose &
+```
+
+---
+
+### 钉钉告警二次开发
+
+当前日志告警只是简单的发送到告警群,由于没有艾特相关人员,所以大家还是无法第一时间看到告警信息,所以需要增加这个功能,大致思路是根据业务线来艾特相关负责人.
+
+但是中台的业务线有些复杂,因为不同的项目负责人不同.所以需要特殊对待.
+
+**准备工作**:
+
+日志告警中必须含有以下几个字段:
+
+* 业务线
+* 日志类型
+* 如果是Nginx日志,则需要有Nginx的域名
+
+修改原生的钉钉告警的alert动态方法,内容如下
+
+```
+import re
+   
+   def alert(self, matches):
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json;charset=utf-8"
+        }
+        #body拿到的是告警内容字符串
+        body = self.create_alert_body(matches) 
+        #利用正则找到告警日志中的type关键字,也就是日志类别.当前主要有Nginx日志和fpm日志
+        res_type = re.findall("type: ([a-z]+)", body)
+        #找到业务线,当前有hsq,iqg,msf.bbh,mg等业务线
+        res_Project = re.findall(r"业务线: ([a-z]+)", body)
+        #如果告警日志没有相关字段,则抛出异常
+        if not res_type or not res_Project:
+            raise EAException("告警字段中日志类型或者业务线没有配置")
+            
+        #将正则匹配到的列表类型转换为字符串
+        Type = "".join(res_type)
+        Project = "".join(res_Project)
+        
+        #根据相关业务,艾特相关人员
+        if Project == "hsq":
+            at_list = ['1560xxxxxx']
+        elif Project == "iqg":
+            at_list = ["137xxxxxx"]
+        elif Project == "bbh":
+            at_list = ["176xxxxxx"]
+        elif Project == "msf":
+            at_list = ["180xxxxxx"]
+        #如果是中台业务线,并且是Nginx的告警,则需要艾特具体人员
+        elif Project == "mg":
+            if "nginx" in Type:
+            	  #匹配到域名
+                mg_Project = re.findall("domain: (.*)\.doweidu\.com", body)[0]
+                #如果是交易中台的域名
+                if mg_Project == "trade": 
+                    at_list = ["177xxxxxx"]
+                #如果是消息中台域名
+                elif mg_Project == "message.center":
+                    at_list = ["170xxxxxx"]
+                #如果是商品中台域名
+                elif mg_Project == "goods.center":
+                    at_list = ["186xxxxxx"]
+                #否则艾特中台负责人
+                else:
+                    at_list = ["186xxxxx"]
+            else:
+                at_list = ["186xxxxx"]
+				
+				#为了防止遗漏,如果没有at_list变量,则艾特我本人.使用locals().keys()可以判断某个变量是否被定义
+        if (not "at_list" in locals().keys()): at_list = ["17749739691"]
+        payload = {
+            "msgtype": self.dingtalk_msgtype,
+            "text": {
+                "content": body
+            },
+            "at": {
+                "atMobiles": at_list,   #艾特相关人员
+                "isAtAll":False
+            }
+        }
+        try:
+            response = requests.post(self.dingtalk_webhook_url, 
+                        data=json.dumps(payload, cls=DateTimeEncoder),
+                        headers=headers)
+            response.raise_for_status()
+        except RequestException as e:
+            raise EAException("Error request to Dingtalk: {0}".format(str(e)))
 ```
 
