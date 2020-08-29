@@ -92,19 +92,19 @@
 
 
 
-<meta name="description" content="使用ElastAlert+ELK实现日志监控告警介绍目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警  ElastAlert介绍ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告">
+<meta name="description" content="使用ElastAlert+ELK实现日志监控钉钉告警介绍目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警  ElastAlert介绍ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发">
 <meta name="keywords" content="elk">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用ElastAlert+ELK实现日志监控告警">
+<meta property="og:title" content="使用ElastAlert+ELK实现日志监控钉钉告警">
 <meta property="og:url" content="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/index.html">
 <meta property="og:site_name" content="Jesse&#39;s home">
-<meta property="og:description" content="使用ElastAlert+ELK实现日志监控告警介绍目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警  ElastAlert介绍ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告">
+<meta property="og:description" content="使用ElastAlert+ELK实现日志监控钉钉告警介绍目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警  ElastAlert介绍ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://img2.jesse.top/image-20200826094746820.png">
-<meta property="og:updated_time" content="2020-08-26T23:55:20.313Z">
+<meta property="og:updated_time" content="2020-08-29T01:51:30.236Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用ElastAlert+ELK实现日志监控告警">
-<meta name="twitter:description" content="使用ElastAlert+ELK实现日志监控告警介绍目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警  ElastAlert介绍ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告">
+<meta name="twitter:title" content="使用ElastAlert+ELK实现日志监控钉钉告警">
+<meta name="twitter:description" content="使用ElastAlert+ELK实现日志监控钉钉告警介绍目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警  ElastAlert介绍ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发">
 <meta name="twitter:image" content="https://img2.jesse.top/image-20200826094746820.png">
 
 
@@ -141,7 +141,7 @@
 
 
 
-  <title>使用ElastAlert+ELK实现日志监控告警 | Jesse's home</title>
+  <title>使用ElastAlert+ELK实现日志监控钉钉告警 | Jesse's home</title>
   
 
 
@@ -295,7 +295,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">使用ElastAlert+ELK实现日志监控告警</h1>
+          <h1 class="post-title" itemprop="name headline">使用ElastAlert+ELK实现日志监控钉钉告警</h1>
         
 
         <div class="post-meta">
@@ -377,11 +377,12 @@
       
 
       
-        <h2 id="使用ElastAlert-ELK实现日志监控告警"><a href="#使用ElastAlert-ELK实现日志监控告警" class="headerlink" title="使用ElastAlert+ELK实现日志监控告警"></a>使用ElastAlert+ELK实现日志监控告警</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警</p>
+        <h2 id="使用ElastAlert-ELK实现日志监控钉钉告警"><a href="#使用ElastAlert-ELK实现日志监控钉钉告警" class="headerlink" title="使用ElastAlert+ELK实现日志监控钉钉告警"></a>使用ElastAlert+ELK实现日志监控钉钉告警</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警</p>
 <hr>
 <h3 id="ElastAlert介绍"><a href="#ElastAlert介绍" class="headerlink" title="ElastAlert介绍"></a>ElastAlert介绍</h3><p>ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告警.github项目地址如下:<a href="https://github.com/Yelp/elastalert" target="_blank" rel="noopener">https://github.com/Yelp/elastalert</a></p>
 <p>官方文档如下:<a href="https://elastalert.readthedocs.io/en/latest/elastalert.html" target="_blank" rel="noopener">https://elastalert.readthedocs.io/en/latest/elastalert.html</a></p>
 <p>它支持多种监控模式和告警方式,具体可以查阅Github项目介绍.但是自带的ElastAlert并不支持钉钉告警,在github上有第三方的钉钉python项目.地址如下:<a href="https://github.com/xuyaoqiang/elastalert-dingtalk-plugin" target="_blank" rel="noopener">https://github.com/xuyaoqiang/elastalert-dingtalk-plugin</a></p>
+<p>第三方的钉钉告警插件并没有艾特相关人员的功能,所以我再此基础上进行了二次开发,增加了这个功能</p>
 <hr>
 <a id="more"></a>
 <h3 id="ElastAlert安装"><a href="#ElastAlert安装" class="headerlink" title="ElastAlert安装"></a>ElastAlert安装</h3><blockquote>
@@ -439,6 +440,18 @@
 <hr>
 <h3 id="启动ElastAlert"><a href="#启动ElastAlert" class="headerlink" title="启动ElastAlert"></a>启动ElastAlert</h3><p>开启一个Screen然后,使用nohup挂起执行.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup python3  -m elastalert.elastalert --verbose &amp;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="钉钉告警二次开发"><a href="#钉钉告警二次开发" class="headerlink" title="钉钉告警二次开发"></a>钉钉告警二次开发</h3><p>当前日志告警只是简单的发送到告警群,由于没有艾特相关人员,所以大家还是无法第一时间看到告警信息,所以需要增加这个功能,大致思路是根据业务线来艾特相关负责人.</p>
+<p>但是中台的业务线有些复杂,因为不同的项目负责人不同.所以需要特殊对待.</p>
+<p><strong>准备工作</strong>:</p>
+<p>日志告警中必须含有以下几个字段:</p>
+<ul>
+<li>业务线</li>
+<li>日志类型</li>
+<li>如果是Nginx日志,则需要有Nginx的域名</li>
+</ul>
+<p>修改原生的钉钉告警的alert动态方法,内容如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">   </span><br><span class="line">   def alert(self, matches):</span><br><span class="line">        headers = &#123;</span><br><span class="line">            &quot;Content-Type&quot;: &quot;application/json&quot;,</span><br><span class="line">            &quot;Accept&quot;: &quot;application/json;charset=utf-8&quot;</span><br><span class="line">        &#125;</span><br><span class="line">        #body拿到的是告警内容字符串</span><br><span class="line">        body = self.create_alert_body(matches) </span><br><span class="line">        #利用正则找到告警日志中的type关键字,也就是日志类别.当前主要有Nginx日志和fpm日志</span><br><span class="line">        res_type = re.findall(&quot;type: ([a-z]+)&quot;, body)</span><br><span class="line">        #找到业务线,当前有hsq,iqg,msf.bbh,mg等业务线</span><br><span class="line">        res_Project = re.findall(r&quot;业务线: ([a-z]+)&quot;, body)</span><br><span class="line">        #如果告警日志没有相关字段,则抛出异常</span><br><span class="line">        if not res_type or not res_Project:</span><br><span class="line">            raise EAException(&quot;告警字段中日志类型或者业务线没有配置&quot;)</span><br><span class="line">            </span><br><span class="line">        #将正则匹配到的列表类型转换为字符串</span><br><span class="line">        Type = &quot;&quot;.join(res_type)</span><br><span class="line">        Project = &quot;&quot;.join(res_Project)</span><br><span class="line">        </span><br><span class="line">        #根据相关业务,艾特相关人员</span><br><span class="line">        if Project == &quot;hsq&quot;:</span><br><span class="line">            at_list = [&apos;1560xxxxxx&apos;]</span><br><span class="line">        elif Project == &quot;iqg&quot;:</span><br><span class="line">            at_list = [&quot;137xxxxxx&quot;]</span><br><span class="line">        elif Project == &quot;bbh&quot;:</span><br><span class="line">            at_list = [&quot;176xxxxxx&quot;]</span><br><span class="line">        elif Project == &quot;msf&quot;:</span><br><span class="line">            at_list = [&quot;180xxxxxx&quot;]</span><br><span class="line">        #如果是中台业务线,并且是Nginx的告警,则需要艾特具体人员</span><br><span class="line">        elif Project == &quot;mg&quot;:</span><br><span class="line">            if &quot;nginx&quot; in Type:</span><br><span class="line">            	  #匹配到域名</span><br><span class="line">                mg_Project = re.findall(&quot;domain: (.*)\.doweidu\.com&quot;, body)[0]</span><br><span class="line">                #如果是交易中台的域名</span><br><span class="line">                if mg_Project == &quot;trade&quot;: </span><br><span class="line">                    at_list = [&quot;177xxxxxx&quot;]</span><br><span class="line">                #如果是消息中台域名</span><br><span class="line">                elif mg_Project == &quot;message.center&quot;:</span><br><span class="line">                    at_list = [&quot;170xxxxxx&quot;]</span><br><span class="line">                #如果是商品中台域名</span><br><span class="line">                elif mg_Project == &quot;goods.center&quot;:</span><br><span class="line">                    at_list = [&quot;186xxxxxx&quot;]</span><br><span class="line">                #否则艾特中台负责人</span><br><span class="line">                else:</span><br><span class="line">                    at_list = [&quot;186xxxxx&quot;]</span><br><span class="line">            else:</span><br><span class="line">                at_list = [&quot;186xxxxx&quot;]</span><br><span class="line">				</span><br><span class="line">				#为了防止遗漏,如果没有at_list变量,则艾特我本人.使用locals().keys()可以判断某个变量是否被定义</span><br><span class="line">        if (not &quot;at_list&quot; in locals().keys()): at_list = [&quot;17749739691&quot;]</span><br><span class="line">        payload = &#123;</span><br><span class="line">            &quot;msgtype&quot;: self.dingtalk_msgtype,</span><br><span class="line">            &quot;text&quot;: &#123;</span><br><span class="line">                &quot;content&quot;: body</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;at&quot;: &#123;</span><br><span class="line">                &quot;atMobiles&quot;: at_list,   #艾特相关人员</span><br><span class="line">                &quot;isAtAll&quot;:False</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        try:</span><br><span class="line">            response = requests.post(self.dingtalk_webhook_url, </span><br><span class="line">                        data=json.dumps(payload, cls=DateTimeEncoder),</span><br><span class="line">                        headers=headers)</span><br><span class="line">            response.raise_for_status()</span><br><span class="line">        except RequestException as e:</span><br><span class="line">            raise EAException(&quot;Error request to Dingtalk: &#123;0&#125;&quot;.format(str(e)))</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -455,11 +468,11 @@
   <!-- JS库 sweetalert 可修改路径 -->
   <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <p><span>本文标题:</span><a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">使用ElastAlert+ELK实现日志监控告警</a></p>
+  <p><span>本文标题:</span><a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">使用ElastAlert+ELK实现日志监控钉钉告警</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2020年08月25日 - 22:08</p>
-  <p><span>最后更新:</span>2020年08月27日 - 07:08</p>
-  <p><span>原始链接:</span><a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" title="使用ElastAlert+ELK实现日志监控告警">https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/</a>
+  <p><span>最后更新:</span>2020年08月29日 - 09:08</p>
+  <p><span>原始链接:</span><a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" title="使用ElastAlert+ELK实现日志监控钉钉告警">https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
@@ -533,8 +546,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/" rel="next" title="生产环境部署ELK7+ES冷热数据分离">
-                <i class="fa fa-chevron-left"></i> 生产环境部署ELK7+ES冷热数据分离
+              <a href="/2020/08/25/elk/kibana索引及索引冷热分离管理/" rel="next" title="kibana索引及索引冷热分离管理">
+                <i class="fa fa-chevron-left"></i> kibana索引及索引冷热分离管理
               </a>
             
           </div>
@@ -543,8 +556,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/" rel="prev" title="Filebeat+logstash收集Nginx访问日志">
-                Filebeat+logstash收集Nginx访问日志 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/" rel="prev" title="生产环境部署ELK7+ES冷热数据分离">
+                生产环境部署ELK7+ES冷热数据分离 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -577,7 +590,7 @@
   
     <div class="comments" id="comments">
       <div class="ds-thread" data-thread-key="2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/"
-           data-title="使用ElastAlert+ELK实现日志监控告警" data-url="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">
+           data-title="使用ElastAlert+ELK实现日志监控钉钉告警" data-url="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">
       </div>
     </div>
 
@@ -695,7 +708,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用ElastAlert-ELK实现日志监控告警"><span class="nav-number">1.</span> <span class="nav-text">使用ElastAlert+ELK实现日志监控告警</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ElastAlert介绍"><span class="nav-number">1.2.</span> <span class="nav-text">ElastAlert介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ElastAlert安装"><span class="nav-number">1.3.</span> <span class="nav-text">ElastAlert安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rule规则"><span class="nav-number">1.4.</span> <span class="nav-text">Rule规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行ElastAlert"><span class="nav-number">1.5.</span> <span class="nav-text">执行ElastAlert</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rule2-监控php-fpm的Fatal错误信息"><span class="nav-number">1.6.</span> <span class="nav-text">Rule2. 监控php-fpm的Fatal错误信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动ElastAlert"><span class="nav-number">1.7.</span> <span class="nav-text">启动ElastAlert</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用ElastAlert-ELK实现日志监控钉钉告警"><span class="nav-number">1.</span> <span class="nav-text">使用ElastAlert+ELK实现日志监控钉钉告警</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ElastAlert介绍"><span class="nav-number">1.2.</span> <span class="nav-text">ElastAlert介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ElastAlert安装"><span class="nav-number">1.3.</span> <span class="nav-text">ElastAlert安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rule规则"><span class="nav-number">1.4.</span> <span class="nav-text">Rule规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行ElastAlert"><span class="nav-number">1.5.</span> <span class="nav-text">执行ElastAlert</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rule2-监控php-fpm的Fatal错误信息"><span class="nav-number">1.6.</span> <span class="nav-text">Rule2. 监控php-fpm的Fatal错误信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动ElastAlert"><span class="nav-number">1.7.</span> <span class="nav-text">启动ElastAlert</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#钉钉告警二次开发"><span class="nav-number">1.8.</span> <span class="nav-text">钉钉告警二次开发</span></a></li></ol></li></ol></div>
             
 
           </div>
