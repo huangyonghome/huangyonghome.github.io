@@ -628,7 +628,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/27/python/01-basic/05-Python之路 - 元组/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/27/python/01-basic/09-Python之路 - 字符编码/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -647,7 +647,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/05/27/python/01-basic/05-Python之路 - 元组/" itemprop="url">05.Python之路 - 元组</a></h1>
+                <a class="post-title-link" href="/2020/05/27/python/01-basic/09-Python之路 - 字符编码/" itemprop="url">09.Python之路 - 字符编码</a></h1>
         
 
         <div class="post-meta">
@@ -711,8 +711,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/05/27/python/01-basic/05-Python之路 - 元组/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/27/python/01-basic/05-Python之路 - 元组/" itemprop="commentCount"></span>
+                <a href="/2020/05/27/python/01-basic/09-Python之路 - 字符编码/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/27/python/01-basic/09-Python之路 - 字符编码/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -741,13 +741,29 @@
 
       
         
-          <h1 id="Python之路-元组"><a href="#Python之路-元组" class="headerlink" title="Python之路 - 元组"></a>Python之路 - 元组</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>元组和字符串一样 , 元组也是不可修改的 , 元组使用小括号</p>
-<p>元组的创建很简单 , 只需要在括号中添加元素 , 并使用逗号隔开即可</p>
-<p>元组需要掌握的分别有<strong>创建、访问、修改、切片、删除、检测等</strong></p>
-<h2 id="创建-🍀"><a href="#创建-🍀" class="headerlink" title="创建  🍀"></a>创建  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个带有元素的元组</span></span><br><span class="line">mytuple = (<span class="string">"Lyon"</span>, <span class="string">"Alex"</span>, <span class="string">"Leon"</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"><span class="comment"># 也可以不加括号,但是一定要加引号</span></span><br><span class="line">mytuple = <span class="string">"Lyon"</span>, <span class="string">"Alex"</span>, <span class="string">"Leon"</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span></span><br><span class="line"><span class="comment"># 创建一个空元组</span></span><br><span class="line">mytuple = ()</span><br><span class="line"><span class="comment"># 当元组中只有一个元素,加逗号来消除歧义哟,这是一个好习惯,因为()既可以表示tuple又可以表示数学公式中的小括号</span></span><br><span class="line">only_one = (<span class="string">"Lyon"</span>,)</span><br></pre></td></tr></table></figure>
+          <h1 id="Python之路-字符编码"><a href="#Python之路-字符编码" class="headerlink" title="Python之路 - 字符编码"></a>Python之路 - 字符编码</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p><strong>字符编码</strong></p>
+<p>字符编码 (Character encoding) 也称字集码 , 它是一套<strong>法则</strong> , 使用该法则能够对自然语言的字符的一个集合 (如字母表或音节表) , 与其他东西的一个集合 (如号码或电脉冲) 进行配对 , 即在符号集合与数字系统之间建立对应关系</p>
+<p>再简单一点说其实就是一张具有对应关系的表格 , 如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+----+-----------+</span><br><span class="line">| id | character | </span><br><span class="line">+----+-----------+</span><br><span class="line">| 65 |     A     | </span><br><span class="line">| 66 |     B     | </span><br><span class="line">| 67 |     C     | </span><br><span class="line">+----+-----------+</span><br></pre></td></tr></table></figure>
+<p>如上表所示 , 这就是一套法则 , 使我们用数字成功的表示了字符</p>
+<blockquote>
+<p><em>为什么要一套这样的法则 ?</em></p>
+</blockquote>
+<p>众所周知 , 计算机只认识机器码 , 也就是一堆0101之类的二进制数字 , 计算机并不认识我们的 “A” , “B” ,”C” , 我们为了使其友好的显示 , 就需要一套这样的法则 , 来完成这些转换 , 于是两个名词诞生了</p>
+<p><strong>编码</strong> </p>
+<p>通俗的说 , 就是按照何种规则将字符存储在计算机中 . 比如 “A” 用65表示 , 也就是把字符”A”以二进制的方式存储在计算机中</p>
+<p><strong>解码</strong> </p>
+<p> 反之 , 将存储在计算机中的二进制数解析显示出来 , 这就是解码</p>
+<p>在Python中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''既然是对于字符,那么自然对应着Python中的字符串了'''</span></span><br><span class="line"><span class="string">'''Python中提供了两个函数来完成编码和解码'''</span></span><br><span class="line"><span class="comment"># 编码函数encode()</span></span><br><span class="line">encode()  </span><br><span class="line">character  →  byte</span><br><span class="line"><span class="comment"># 解码函数decode()</span></span><br><span class="line">byte  →  character</span><br></pre></td></tr></table></figure>
+<p><strong>PS : 必须采用相对应的法则 , 否则就会出错 , 也就是我们常说的乱码</strong></p>
+<p>最后还有一个名词 , 字符集</p>
+<p><strong>字符集</strong></p>
+<p>是一个系统支持的所有抽象字符的集合 , 字符是各种文字和符号的总称 , 包括各国家文字、标点符号、图形符号、数字等</p>
+<p>字符编码就是在字符集与数字系统之间建立的对应关系</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/05/27/python/01-basic/05-Python之路 - 元组/#more" rel="contents">
+            <a class="btn" href="/2020/05/27/python/01-basic/09-Python之路 - 字符编码/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1014,7 +1030,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/27/python/01-basic/09-Python之路 - 字符编码/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/27/python/01-basic/08-Python之路 - 集合/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1033,7 +1049,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/05/27/python/01-basic/09-Python之路 - 字符编码/" itemprop="url">09.Python之路 - 字符编码</a></h1>
+                <a class="post-title-link" href="/2020/05/27/python/01-basic/08-Python之路 - 集合/" itemprop="url">08.Python之路 - 集合</a></h1>
         
 
         <div class="post-meta">
@@ -1097,8 +1113,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/05/27/python/01-basic/09-Python之路 - 字符编码/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/27/python/01-basic/09-Python之路 - 字符编码/" itemprop="commentCount"></span>
+                <a href="/2020/05/27/python/01-basic/08-Python之路 - 集合/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/27/python/01-basic/08-Python之路 - 集合/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1127,29 +1143,21 @@
 
       
         
-          <h1 id="Python之路-字符编码"><a href="#Python之路-字符编码" class="headerlink" title="Python之路 - 字符编码"></a>Python之路 - 字符编码</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p><strong>字符编码</strong></p>
-<p>字符编码 (Character encoding) 也称字集码 , 它是一套<strong>法则</strong> , 使用该法则能够对自然语言的字符的一个集合 (如字母表或音节表) , 与其他东西的一个集合 (如号码或电脉冲) 进行配对 , 即在符号集合与数字系统之间建立对应关系</p>
-<p>再简单一点说其实就是一张具有对应关系的表格 , 如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+----+-----------+</span><br><span class="line">| id | character | </span><br><span class="line">+----+-----------+</span><br><span class="line">| 65 |     A     | </span><br><span class="line">| 66 |     B     | </span><br><span class="line">| 67 |     C     | </span><br><span class="line">+----+-----------+</span><br></pre></td></tr></table></figure>
-<p>如上表所示 , 这就是一套法则 , 使我们用数字成功的表示了字符</p>
-<blockquote>
-<p><em>为什么要一套这样的法则 ?</em></p>
-</blockquote>
-<p>众所周知 , 计算机只认识机器码 , 也就是一堆0101之类的二进制数字 , 计算机并不认识我们的 “A” , “B” ,”C” , 我们为了使其友好的显示 , 就需要一套这样的法则 , 来完成这些转换 , 于是两个名词诞生了</p>
-<p><strong>编码</strong> </p>
-<p>通俗的说 , 就是按照何种规则将字符存储在计算机中 . 比如 “A” 用65表示 , 也就是把字符”A”以二进制的方式存储在计算机中</p>
-<p><strong>解码</strong> </p>
-<p> 反之 , 将存储在计算机中的二进制数解析显示出来 , 这就是解码</p>
-<p>在Python中</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''既然是对于字符,那么自然对应着Python中的字符串了'''</span></span><br><span class="line"><span class="string">'''Python中提供了两个函数来完成编码和解码'''</span></span><br><span class="line"><span class="comment"># 编码函数encode()</span></span><br><span class="line">encode()  </span><br><span class="line">character  →  byte</span><br><span class="line"><span class="comment"># 解码函数decode()</span></span><br><span class="line">byte  →  character</span><br></pre></td></tr></table></figure>
-<p><strong>PS : 必须采用相对应的法则 , 否则就会出错 , 也就是我们常说的乱码</strong></p>
-<p>最后还有一个名词 , 字符集</p>
-<p><strong>字符集</strong></p>
-<p>是一个系统支持的所有抽象字符的集合 , 字符是各种文字和符号的总称 , 包括各国家文字、标点符号、图形符号、数字等</p>
-<p>字符编码就是在字符集与数字系统之间建立的对应关系</p>
+          <h1 id="Python之路-集合"><a href="#Python之路-集合" class="headerlink" title="Python之路 - 集合"></a>Python之路 - 集合</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>集合是一个无序的 , 不重复的数据组合 , 它的主要作用如下 : </p>
+<ul>
+<li>去重 , 把一个列表变成集合 , 就自动去重了</li>
+<li>关系测试 , 测试两组数据之间的交集 , 差集 , 并集关系</li>
+</ul>
+<p>在Python 2.7中集合表示如下 : </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br></pre></td></tr></table></figure>
+<p>在Python 3.x 中则是如下 : </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">s1 = &#123;1,2,3,4&#125;</span><br><span class="line">print(s1)</span><br><span class="line">print(type(s1))</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#123;1, 2, 3, 4&#125;</span><br><span class="line">&lt;class &apos;set&apos;&gt;</span><br></pre></td></tr></table></figure>
+<p>集合支持一系列标准操作 , 包括并集 , 交集 , 差集 , 对称差集</p>
+<h2 id="创建-🍀"><a href="#创建-🍀" class="headerlink" title="创建  🍀"></a>创建  🍀</h2><p>与字符串等数据类型一样 , 集合支持如下方式创建</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建空集合只能用这种方式,参数为一个可迭代对象</span></span><br><span class="line">s = set()</span><br><span class="line"><span class="comment"># 注意集合是单个元素,字典是键值对</span></span><br><span class="line">s = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/05/27/python/01-basic/09-Python之路 - 字符编码/#more" rel="contents">
+            <a class="btn" href="/2020/05/27/python/01-basic/08-Python之路 - 集合/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1204,7 +1212,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/27/python/01-basic/10-Python之路 - 文件操作/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/27/python/01-basic/05-Python之路 - 元组/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1223,7 +1231,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/05/27/python/01-basic/10-Python之路 - 文件操作/" itemprop="url">10.Python之路 - 文件操作</a></h1>
+                <a class="post-title-link" href="/2020/05/27/python/01-basic/05-Python之路 - 元组/" itemprop="url">05.Python之路 - 元组</a></h1>
         
 
         <div class="post-meta">
@@ -1287,8 +1295,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/05/27/python/01-basic/10-Python之路 - 文件操作/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/27/python/01-basic/10-Python之路 - 文件操作/" itemprop="commentCount"></span>
+                <a href="/2020/05/27/python/01-basic/05-Python之路 - 元组/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/27/python/01-basic/05-Python之路 - 元组/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1317,14 +1325,190 @@
 
       
         
-          <h1 id="Python之路-文件操作"><a href="#Python之路-文件操作" class="headerlink" title="Python之路 - 文件操作"></a>Python之路 - 文件操作</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在磁盘上读写文件的功能都是由操作系统提供的 , 现代操作系统不允许普通的程序直接操作磁盘 , 所以 , 读写文件就是请求操作系统打开一个文件对象 (通常称为文件描述符) ; 然后 , 通过操作系统提供的接口从这个文件对象中读取数据 (读文件) , 或者把数据写入这个文件对象 (写文件) </p>
-<p>在Python中我们进行文件操作需要首先利用<code>open()</code> 函数获取一个文件流来操作文件</p>
-<p>这个流就是我们所使用的文件描述符 , 是一个I/O通道</p>
-<h2 id="open-🍀"><a href="#open-🍀" class="headerlink" title="open()  🍀"></a>open()  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">open(file, mode=<span class="string">'r'</span>, buffering=<span class="number">-1</span>, encoding=<span class="keyword">None</span>, errors=<span class="keyword">None</span>, newline=<span class="keyword">None</span>, closefd=<span class="keyword">True</span>, opener=<span class="keyword">None</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    file:文件名</span></span><br><span class="line"><span class="string">    mode:模式</span></span><br><span class="line"><span class="string">    buffering:设置缓冲策略</span></span><br><span class="line"><span class="string">    encoding:指定使用编码</span></span><br><span class="line"><span class="string">    errors:指定处理编码和解码错误的方式</span></span><br><span class="line"><span class="string">    newline:控制通用换行模式的工作方式(只适用文本模式)</span></span><br><span class="line"><span class="string">    closefd:如果为False并且给出了文件描述符而不是文件名,则文件关闭时,文件描述符将保持打开;如果给定文件名,则closefd必须为True,否则将抛出异常</span></span><br><span class="line"><span class="string">    opener:自定义开启器</span></span><br><span class="line"><span class="string">    """</span></span><br></pre></td></tr></table></figure>
-<p>对于上述参数中 , 我们主要需要了解的就是<code>file</code> , <code>mode</code> , <code>encoding</code> 这三个</p>
+          <h1 id="Python之路-元组"><a href="#Python之路-元组" class="headerlink" title="Python之路 - 元组"></a>Python之路 - 元组</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>元组和字符串一样 , 元组也是不可修改的 , 元组使用小括号</p>
+<p>元组的创建很简单 , 只需要在括号中添加元素 , 并使用逗号隔开即可</p>
+<p>元组需要掌握的分别有<strong>创建、访问、修改、切片、删除、检测等</strong></p>
+<h2 id="创建-🍀"><a href="#创建-🍀" class="headerlink" title="创建  🍀"></a>创建  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个带有元素的元组</span></span><br><span class="line">mytuple = (<span class="string">"Lyon"</span>, <span class="string">"Alex"</span>, <span class="string">"Leon"</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"><span class="comment"># 也可以不加括号,但是一定要加引号</span></span><br><span class="line">mytuple = <span class="string">"Lyon"</span>, <span class="string">"Alex"</span>, <span class="string">"Leon"</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span></span><br><span class="line"><span class="comment"># 创建一个空元组</span></span><br><span class="line">mytuple = ()</span><br><span class="line"><span class="comment"># 当元组中只有一个元素,加逗号来消除歧义哟,这是一个好习惯,因为()既可以表示tuple又可以表示数学公式中的小括号</span></span><br><span class="line">only_one = (<span class="string">"Lyon"</span>,)</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/05/27/python/01-basic/10-Python之路 - 文件操作/#more" rel="contents">
+            <a class="btn" href="/2020/05/27/python/01-basic/05-Python之路 - 元组/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/26/python/01-basic/01-Python之路-Python基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/26/python/01-basic/01-Python之路-Python基础/" itemprop="url">01.Python之路 - Python基础</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-26T22:59:58+08:00">
+                2020-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/01-basic/" itemprop="url" rel="index">
+                    <span itemprop="name">01-basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/26/python/01-basic/01-Python之路-Python基础/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/26/python/01-basic/01-Python之路-Python基础/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python之路-Python基础"><a href="#Python之路-Python基础" class="headerlink" title="Python之路 - Python基础"></a>Python之路 - Python基础</h1><h2 id="Hello-World-🍀"><a href="#Hello-World-🍀" class="headerlink" title="Hello World  🍀"></a>Hello World  🍀</h2><p>学一门语言基本都是从Hello World开始的 , 如下一个最简单的Hello World程序</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Python <span class="number">3.5</span><span class="number">.2</span> (v3<span class="number">.5</span><span class="number">.2</span>:<span class="number">4</span>def2a2901a5, Jun <span class="number">25</span> <span class="number">2016</span>, <span class="number">22</span>:<span class="number">18</span>:<span class="number">55</span>) [MSC v<span class="number">.1900</span> <span class="number">64</span> bit (AMD64)] on win32</span><br><span class="line">Type <span class="string">"help"</span>, <span class="string">"copyright"</span>, <span class="string">"credits"</span> <span class="keyword">or</span> <span class="string">"license"</span> <span class="keyword">for</span> more information.</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Hello World"</span>)</span><br><span class="line">Hello World</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>此为Python 3.5.2版本 , 上述代码为在Windows环境命令行中执行 , 即以管理员身份运行 “命令提示符”</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 已添加环境变量</span></span><br><span class="line">C:\Windows\system32&gt;python</span><br></pre></td></tr></table></figure>
+<p>Python 2.7.x 版本的Hello World程序</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Python <span class="number">2.7</span><span class="number">.13</span> (v2<span class="number">.7</span><span class="number">.13</span>:a06454b1afa1, Dec <span class="number">17</span> <span class="number">2016</span>, <span class="number">20</span>:<span class="number">53</span>:<span class="number">40</span>) [MSC v<span class="number">.1500</span> <span class="number">64</span> bit (AMD64)] on win32</span><br><span class="line">Type <span class="string">"help"</span>, <span class="string">"copyright"</span>, <span class="string">"credits"</span> <span class="keyword">or</span> <span class="string">"license"</span> <span class="keyword">for</span> more information.</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> <span class="string">"Hello World"</span></span><br><span class="line">Hello World</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>当然使用<code>Python shell</code> 仅仅适合处理一些非常简单的小程序 , 对于比较复杂 , 代码量稍微大一点的就不适合了</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/26/python/01-basic/01-Python之路-Python基础/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1557,7 +1741,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/05/26/python/01-basic/01-Python之路-Python基础/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2019/01/07/experience/net.ipv4.tcp_tw_recycle踩的坑/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1576,7 +1760,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/05/26/python/01-basic/01-Python之路-Python基础/" itemprop="url">01.Python之路 - Python基础</a></h1>
+                <a class="post-title-link" href="/2019/01/07/experience/net.ipv4.tcp_tw_recycle踩的坑/" itemprop="url">net.ipv4.tcp_tw_recycle踩的坑</a></h1>
         
 
         <div class="post-meta">
@@ -1588,8 +1772,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-26T22:59:58+08:00">
-                2020-05-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-07T09:59:58+08:00">
+                2019-01-07
               </time>
             
 
@@ -1611,19 +1795,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/01-basic/" itemprop="url" rel="index">
-                    <span itemprop="name">01-basic</span>
+                  <a href="/categories/experence/" itemprop="url" rel="index">
+                    <span itemprop="name">experence</span>
                   </a>
                 </span>
 
@@ -1640,8 +1813,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/05/26/python/01-basic/01-Python之路-Python基础/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/05/26/python/01-basic/01-Python之路-Python基础/" itemprop="commentCount"></span>
+                <a href="/2019/01/07/experience/net.ipv4.tcp_tw_recycle踩的坑/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2019/01/07/experience/net.ipv4.tcp_tw_recycle踩的坑/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1670,16 +1843,16 @@
 
       
         
-          <h1 id="Python之路-Python基础"><a href="#Python之路-Python基础" class="headerlink" title="Python之路 - Python基础"></a>Python之路 - Python基础</h1><h2 id="Hello-World-🍀"><a href="#Hello-World-🍀" class="headerlink" title="Hello World  🍀"></a>Hello World  🍀</h2><p>学一门语言基本都是从Hello World开始的 , 如下一个最简单的Hello World程序</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Python <span class="number">3.5</span><span class="number">.2</span> (v3<span class="number">.5</span><span class="number">.2</span>:<span class="number">4</span>def2a2901a5, Jun <span class="number">25</span> <span class="number">2016</span>, <span class="number">22</span>:<span class="number">18</span>:<span class="number">55</span>) [MSC v<span class="number">.1900</span> <span class="number">64</span> bit (AMD64)] on win32</span><br><span class="line">Type <span class="string">"help"</span>, <span class="string">"copyright"</span>, <span class="string">"credits"</span> <span class="keyword">or</span> <span class="string">"license"</span> <span class="keyword">for</span> more information.</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Hello World"</span>)</span><br><span class="line">Hello World</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
-<p>此为Python 3.5.2版本 , 上述代码为在Windows环境命令行中执行 , 即以管理员身份运行 “命令提示符”</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 已添加环境变量</span></span><br><span class="line">C:\Windows\system32&gt;python</span><br></pre></td></tr></table></figure>
-<p>Python 2.7.x 版本的Hello World程序</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Python <span class="number">2.7</span><span class="number">.13</span> (v2<span class="number">.7</span><span class="number">.13</span>:a06454b1afa1, Dec <span class="number">17</span> <span class="number">2016</span>, <span class="number">20</span>:<span class="number">53</span>:<span class="number">40</span>) [MSC v<span class="number">.1500</span> <span class="number">64</span> bit (AMD64)] on win32</span><br><span class="line">Type <span class="string">"help"</span>, <span class="string">"copyright"</span>, <span class="string">"credits"</span> <span class="keyword">or</span> <span class="string">"license"</span> <span class="keyword">for</span> more information.</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> <span class="string">"Hello World"</span></span><br><span class="line">Hello World</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
-<p>当然使用<code>Python shell</code> 仅仅适合处理一些非常简单的小程序 , 对于比较复杂 , 代码量稍微大一点的就不适合了</p>
+          <h2 id="net-ipv4-tcp-tw-recycle踩的坑"><a href="#net-ipv4-tcp-tw-recycle踩的坑" class="headerlink" title="net.ipv4.tcp_tw_recycle踩的坑"></a>net.ipv4.tcp_tw_recycle踩的坑</h2><p>参考博文:<a href="https://www.cnxct.com/coping-with-the-tcp-time_wait-state-on-busy-linux-servers-in-chinese-and-dont-enable-tcp_tw_recycle/" target="_blank" rel="noopener">https://www.cnxct.com/coping-with-the-tcp-time_wait-state-on-busy-linux-servers-in-chinese-and-dont-enable-tcp_tw_recycle/</a></p>
+<p>在做系统调优的时候希望能加快<code>TIME_WAIT</code>状态的回收，通常将<code>net.ipv4.tcp_tw_recycle</code>选项开启，但是,请注意这里有个坑</p>
+<h3 id="故障现象"><a href="#故障现象" class="headerlink" title="故障现象"></a>故障现象</h3><p>我们阿里云上有一台BETA测试服务器自从上次将CPU配置从4核升级到8核,然后重启服务器以后..访问该服务器上的web网站经常出现卡顿的现象,大概是每隔几分钟出现一次,很快又恢复.</p>
+<p>1.初步怀疑是BETA服务器性能不行,包括后端数据库拥挤导致</p>
+<p>但是经过排查发现,故障发生时,服务器性能没有任何压力,后端数据库也正常.</p>
+<p>2.在服务器上创建一个hello world 的静态网站,发现连静态网站都无法访问.</p>
+<p>在访问网站的时候,长时间停留在TCP_NODELAY set阶段:</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/05/26/python/01-basic/01-Python之路-Python基础/#more" rel="contents">
+            <a class="btn" href="/2019/01/07/experience/net.ipv4.tcp_tw_recycle踩的坑/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1845,172 +2018,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/01/07/elasticsearch/ES集群优化文档/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2019/01/07/experience/net.ipv4.tcp_tw_recycle踩的坑/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/07/experience/net.ipv4.tcp_tw_recycle踩的坑/" itemprop="url">net.ipv4.tcp_tw_recycle踩的坑</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-07T09:59:58+08:00">
-                2019-01-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/experence/" itemprop="url" rel="index">
-                    <span itemprop="name">experence</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/01/07/experience/net.ipv4.tcp_tw_recycle踩的坑/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2019/01/07/experience/net.ipv4.tcp_tw_recycle踩的坑/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="net-ipv4-tcp-tw-recycle踩的坑"><a href="#net-ipv4-tcp-tw-recycle踩的坑" class="headerlink" title="net.ipv4.tcp_tw_recycle踩的坑"></a>net.ipv4.tcp_tw_recycle踩的坑</h2><p>参考博文:<a href="https://www.cnxct.com/coping-with-the-tcp-time_wait-state-on-busy-linux-servers-in-chinese-and-dont-enable-tcp_tw_recycle/" target="_blank" rel="noopener">https://www.cnxct.com/coping-with-the-tcp-time_wait-state-on-busy-linux-servers-in-chinese-and-dont-enable-tcp_tw_recycle/</a></p>
-<p>在做系统调优的时候希望能加快<code>TIME_WAIT</code>状态的回收，通常将<code>net.ipv4.tcp_tw_recycle</code>选项开启，但是,请注意这里有个坑</p>
-<h3 id="故障现象"><a href="#故障现象" class="headerlink" title="故障现象"></a>故障现象</h3><p>我们阿里云上有一台BETA测试服务器自从上次将CPU配置从4核升级到8核,然后重启服务器以后..访问该服务器上的web网站经常出现卡顿的现象,大概是每隔几分钟出现一次,很快又恢复.</p>
-<p>1.初步怀疑是BETA服务器性能不行,包括后端数据库拥挤导致</p>
-<p>但是经过排查发现,故障发生时,服务器性能没有任何压力,后端数据库也正常.</p>
-<p>2.在服务器上创建一个hello world 的静态网站,发现连静态网站都无法访问.</p>
-<p>在访问网站的时候,长时间停留在TCP_NODELAY set阶段:</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/07/experience/net.ipv4.tcp_tw_recycle踩的坑/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
