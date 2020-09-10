@@ -15,7 +15,7 @@ copyright: true
 
 <!--more-->
 
-#### * service
+#### service
 
 Service 顾名思义，就是我们自己定义的上游服务，通过Kong匹配到相应的请求要转发的地方
 
@@ -27,7 +27,7 @@ Service可以是一个实际的地址，也可以是定义的一个upstream
 
 ---
 
-#### * route
+#### route
 
    Route 字面意思就是路由，实际就是我们通过定义一些规则来匹配客户端的请求，每个路由都会关联一个Service,并且Service可以关联多个Route，当匹配到客户端的请求时，每个请求都会被代理到其配置的Service中
 
@@ -35,7 +35,6 @@ Route作为客户端的入口，通过将Route和Service的松耦合，可以通
 
 例如，我们规定api.example.com 和 api.service.com的登录请求都能够代理到123.11.11.11:8000端口上，那我们可以通过hosts和path来路由
 
-```
 1. 创建一个Service s1，其相应的host和port以及协议为http://123.11.11.11:8000
 
 2. 创建一个Route，关联的Service为s1，其hosts为[api.service.com, api.example.com],path为login
@@ -43,10 +42,10 @@ Route作为客户端的入口，通过将Route和Service的松耦合，可以通
 3. 将域名api.example.com和api.service.com的请求转到到我们的Kong服务器的前面的负载均衡调度器上
 
 那么，当我们请求api.example.com/login和api.service.com/login时，其通过Route匹配，然后转发到Service，最终将会请求我们自己的服务。
-```
+
 ---
 
-#### * upstream
+#### upstream
 
 和nginx的upstream概念一模一样..这是指您自己的后端真实服务器位于Kong后面，客户端请求被转发到该服务器。
 相当于Kong提供了一个负载的功能，基于Nginx的虚拟主机的方式做的负载功能
@@ -57,7 +56,7 @@ upstream的功能和nginx也类似,可以指定后端真实的target服务器.�
 
 ---
 
-#### * target
+#### target
 
 target 就是在upstream进行负载均衡的终端，当我们部署集群时，需要将每个节点作为一个target，并设置负载的权重，当然也可以通过upstream的设置对target进行健康检查。
 ​    
@@ -65,13 +64,13 @@ target 就是在upstream进行负载均衡的终端，当我们部署集群时�
 
 ---
 
-#### * api
+#### api
 
 用于表示您的上游服务的传统实体。自0.13.0起已经被弃用。
 
 ---
 
-#### * consumer
+#### consumer
 
 Consumer 可以代表一个服务，可以代表一个用户，也可以代表消费者，可以根据我们自己的需求来定义
 
@@ -79,7 +78,7 @@ Consumer 可以代表一个服务，可以代表一个用户，也可以代表�
 
 ---
 
-#### * plugin
+#### plugin
 
 kong官方提供了各种各样的插件,比如限流,认证,签名,http远程日志等..这些插件在请求被代理到上游API之前或之后执行。例如，请求之前的Authentication或者是请求限流插件的使用
 
@@ -172,7 +171,7 @@ curl -X PATCH http://localhost:8001/services/bb45687e-7cf5-48b2-b3ae-6847e28736b
 {"host":"beta_background_server","created_at":1541230207,"connect_timeout":60000,"id":"bb45687e-7cf5-48b2-b3ae-6847e28736bf","protocol":"http","name":"beta","read_timeout":60000,"port":80,"path":null,"updated_at":1541231842,"retries":5,"write_timeout":60000}
 ```
 
-#### * route配置
+#### route配置
 
 route定义为访问某个服务的路径,类似于网络设备中的路由的概念,它定义了访问某个服务或者域名(目的地)时,转交给某个service组件(类似于下一跳).
 
@@ -247,7 +246,7 @@ Content-Length: 324
 
 ---
 
-#### * upstream配置
+#### upstream配置
 
 upstream的名字应该要和service的host匹配
 
@@ -339,7 +338,7 @@ upstream的名字应该要和service的host匹配
 ```
 ---
 
-#### *target配置
+#### target配置
 
 定义target时需要指定upstreams组件路径下,而且需要指定在哪个upstream的ID下配置targets.
 
