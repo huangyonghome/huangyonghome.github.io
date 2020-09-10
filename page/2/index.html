@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/ELK收集mysql5.7慢日志/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Kibana图表制作/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/25/elk/ELK收集mysql5.7慢日志/" itemprop="url">ELK收集mysql5.7慢日志</a></h1>
+                <a class="post-title-link" href="/2020/08/25/elk/Kibana图表制作/" itemprop="url">Kibana图表制作</a></h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/25/elk/ELK收集mysql5.7慢日志/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/ELK收集mysql5.7慢日志/" itemprop="commentCount"></span>
+                <a href="/2020/08/25/elk/Kibana图表制作/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Kibana图表制作/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,15 +377,180 @@
 
       
         
-          <h2 id="ELK收集mysql5-7慢日志"><a href="#ELK收集mysql5-7慢日志" class="headerlink" title="ELK收集mysql5.7慢日志"></a>ELK收集mysql5.7慢日志</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>公司ELK平台计划收集生产业务的所有mysql慢日志.由于所有环境中均使用mysql5.7版本,所以其他mysql版本的慢日志格式不在讨论范围之内.</p>
-<p>慢日志的grok正则匹配我折腾了很久,网上的大多文档中给出的logstash的grok正则其实并不能正确的解析到mysql慢日志的字段.</p>
-<p>这个博客的grok正则经过实践可行.而且filebeat,logstash的filter配置也是参考这个博客配置的:<a href="https://www.cnblogs.com/minseo/p/10441913.html" target="_blank" rel="noopener">博客地址</a></p>
+          <h2 id="Kibana图表制作"><a href="#Kibana图表制作" class="headerlink" title="Kibana图表制作"></a>Kibana图表制作</h2><p>kibana的可视化可以制作各种统计分析图表,然后合并展示到dashbord中.下面介绍一些常用的nginx的访问图表.</p>
+<blockquote>
+<p>在kibana7.7版本中可以配置kibana web界面的中文语言.</p>
+</blockquote>
+<p>编辑kibana配置文件,<code>/etc/kibana/kibana.yml</code>,加入以下配置: </p>
+<p><code>i18n.locale: &quot;zh-CN&quot;</code></p>
+<h4 id="一-统计过去XXX时间的访问量"><a href="#一-统计过去XXX时间的访问量" class="headerlink" title="一.统计过去XXX时间的访问量"></a>一.统计过去XXX时间的访问量</h4><p>在可视化界面,添加仪表盘图表.指定nginx的openapi access访问日志索引.</p>
+<p>无需进行任何配置,选择右上角的时间范围,会显示计数,也就是日志量的计数</p>
+<p><img src="https://img2.jesse.top/image-20200723154706247.png" alt="image-20200723154706247"></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/25/elk/Kibana图表制作/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="url">Filebeat+logstash收集Nginx错误日志</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Filebeat-logstash收集Nginx错误日志"><a href="#Filebeat-logstash收集Nginx错误日志" class="headerlink" title="Filebeat+logstash收集Nginx错误日志"></a>Filebeat+logstash收集Nginx错误日志</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在上一个笔记&lt;Filebeat+logstash收集Nginx访问日志&gt;中分享了如何收集logstash的访问日志,这篇笔记主要是记录如何收集nginx的错误日志</p>
+<p>Nginx 错误日志是运维人员最常见但又极其容易忽略的日志类型之一。Nginx 错误日志即没有统一明确的分隔符，也没有特别方便的正则模式，但通过 logstash 不同插件的组合，还是可以轻松做到数据处理。</p>
 <hr>
-<h3 id="MySQL慢日志"><a href="#MySQL慢日志" class="headerlink" title="MySQL慢日志"></a>MySQL慢日志</h3><p>慢日志格式如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[work@msf-mysql-master log]$ sudo head slow_2019072103.log</span><br><span class="line">/usr/local/mysql5.7/bin/mysqld, Version: 5.7.24-log (MySQL Community Server (GPL)). started with:</span><br><span class="line">Tcp port: 3306  Unix socket: /mysql_log/msf/tmp/mysql.sock</span><br><span class="line">Time                 Id Command    Argument</span><br><span class="line"># Time: 2019-07-21T08:54:04.145255+08:00</span><br><span class="line"># User@Host: u_msf[u_msf] @  [10.111.10.40]  Id: 131421254</span><br><span class="line"># Query_time: 1.595300  Lock_time: 0.000031 Rows_sent: 20  Rows_examined: 809259</span><br><span class="line">use msf_prod;</span><br><span class="line">SET timestamp=1563670444;</span><br><span class="line">SELECT `id`,`type`,`honey`,`remark`,`created_at` FROM `t_log_user_honey` WHERE `user_id` = &apos;1000014423&apos; ORDER BY `created_at` DESC LIMIT 20 OFFSET 0;</span><br><span class="line"># Time: 2019-07-21T10:51:06.184010+08:00</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/ELK收集mysql5.7慢日志/#more" rel="contents">
+            <a class="btn" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -440,7 +605,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -459,7 +624,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="url">使用goreplay收集线上真实http流量</a></h1>
+                <a class="post-title-link" href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" itemprop="url">使用ElastAlert+ELK实现日志监控钉钉告警</a></h1>
         
 
         <div class="post-meta">
@@ -512,8 +677,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="commentCount"></span>
+                <a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -542,17 +707,16 @@
 
       
         
-          <h2 id="使用goreplay收集线上真实http流量"><a href="#使用goreplay收集线上真实http流量" class="headerlink" title="使用goreplay收集线上真实http流量"></a>使用goreplay收集线上真实http流量</h2><h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>在很多场景中,我们需要将线上服务器的真实Http请求复制转发到某台服务器中(或者测试环境中),并且前提是不影响线上生产业务进行.</p>
-<p>例如:</p>
-<ol>
-<li>通常可能会通过ab等压测工具来对单一http接口进行压测。但如果是需要http服务整体压测，使用ab来压测工作量大且不方便，通过线上流量复制引流，通过将真实请求流量放大N倍来进行压测，能对服务有一个较为全面的检验.</li>
-<li>将线上流量引入到测试环境中,测试某个中间件或者数据库的压力</li>
-<li>上线前在预发布环境，使用线上真实的请求，检查是否准备发布的版本，是否具备发布标准</li>
-<li>用线上的流量转发到预发，检查相同流量下一些指标的反馈情况，检查核心数据是否有改善、优化.</li>
-</ol>
+          <h2 id="使用ElastAlert-ELK实现日志监控钉钉告警"><a href="#使用ElastAlert-ELK实现日志监控钉钉告警" class="headerlink" title="使用ElastAlert+ELK实现日志监控钉钉告警"></a>使用ElastAlert+ELK实现日志监控钉钉告警</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警</p>
+<hr>
+<h3 id="ElastAlert介绍"><a href="#ElastAlert介绍" class="headerlink" title="ElastAlert介绍"></a>ElastAlert介绍</h3><p>ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告警.github项目地址如下:<a href="https://github.com/Yelp/elastalert" target="_blank" rel="noopener">https://github.com/Yelp/elastalert</a></p>
+<p>官方文档如下:<a href="https://elastalert.readthedocs.io/en/latest/elastalert.html" target="_blank" rel="noopener">https://elastalert.readthedocs.io/en/latest/elastalert.html</a></p>
+<p>它支持多种监控模式和告警方式,具体可以查阅Github项目介绍.但是自带的ElastAlert并不支持钉钉告警,在github上有第三方的钉钉python项目.地址如下:<a href="https://github.com/xuyaoqiang/elastalert-dingtalk-plugin" target="_blank" rel="noopener">https://github.com/xuyaoqiang/elastalert-dingtalk-plugin</a></p>
+<p>第三方的钉钉告警插件并没有艾特相关人员的功能,所以我再此基础上进行了二次开发,增加了这个功能</p>
+<hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/#more" rel="contents">
+            <a class="btn" href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -607,7 +771,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/kibana查询语法/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/ELK使用x-pack插件实现权限控制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -626,7 +790,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/25/elk/kibana查询语法/" itemprop="url">kibana查询语法</a></h1>
+                <a class="post-title-link" href="/2020/08/25/elk/ELK使用x-pack插件实现权限控制/" itemprop="url">ELK使用x-pack插件实现权限控制</a></h1>
         
 
         <div class="post-meta">
@@ -679,8 +843,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/25/elk/kibana查询语法/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/kibana查询语法/" itemprop="commentCount"></span>
+                <a href="/2020/08/25/elk/ELK使用x-pack插件实现权限控制/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/ELK使用x-pack插件实现权限控制/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -709,19 +873,23 @@
 
       
         
-          <h2 id="kibana查询语法"><a href="#kibana查询语法" class="headerlink" title="kibana查询语法"></a>kibana查询语法</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在kibana6.3版本开始,kibana引入了Kibana Query Language(KQL)查询语法.并且从7.0版本开始已经是Kibana的默认查询语言.KQL包含脚本化字段查询和简易化的查询.</p>
-<p><img src="https://img2.jesse.top/image-20200724104504825.png" alt="image-20200724104504825"></p>
-<p>kibana支持以下两种查询语法:</p>
+          <h2 id="ELK使用x-pack插件实现权限控制"><a href="#ELK使用x-pack插件实现权限控制" class="headerlink" title="ELK使用x-pack插件实现权限控制"></a>ELK使用x-pack插件实现权限控制</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>Elsticsearch集群搭建完成,使用Kibana可以直接访问WEB界面,或者使用curl命令行工具也可以直接访问ES的索引,并且可以直接对索引进行增删改查的操作.这在生产中可能就会有严重的安全隐患.</p>
+<p>为了防止Kibana的重要管理功能配置,或者ES的重要索引数据被认为的误删,误配置.就有必要对ES和Kibana进行权限管控.</p>
+<p>而Xpack插件就非常方便,完美的实现了这个功能</p>
+<hr>
+<h3 id="Xpack介绍"><a href="#Xpack介绍" class="headerlink" title="Xpack介绍"></a>Xpack介绍</h3><p>Xpack能够对网络流量进行加密、创建和管理用户、定义能够保护索引和集群级别访问权限的角色，并且使用 Spaces 为 Kibana提供全面保护.在Elastic Stack7.x中已经免费开放基础版本功能.但是更高版本的X-PACK仍然需要付费购买.</p>
+<p>而且在7.x版本中Xpack默认就已经安装了,无需另行安装插件.</p>
+<p>x-pack详细介绍请点击<a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.7/setup-xpack.html" target="_blank" rel="noopener">官方文档</a></p>
+<p>x-pack免费版提供一下功能</p>
 <ul>
-<li><p>Kibana query language (KQL)</p>
-</li>
-<li><p>Lucene query syntax (Lucene)</p>
-</li>
+<li>TLS 功能。 可对通信进行加密；</li>
+<li>文件和原生 Realm。 可用于创建和管理用户；</li>
+<li>基于角色的访问控制。 可用于控制用户对集群 API 和索引的访问权限；</li>
+<li>通过针对 Kibana Spaces 的安全功能，还可允许在Kibana 中实现多租户</li>
 </ul>
-<hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/kibana查询语法/#more" rel="contents">
+            <a class="btn" href="/2020/08/25/elk/ELK使用x-pack插件实现权限控制/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1641,173 +1809,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/30/Linux-Basic/shell&shell脚本/mysql数据库使用xtrabackup全量,增量备份/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/30/Linux-Basic/shell&shell脚本/mysql数据库使用xtrabackup全量,增量备份/" itemprop="url">mysql数据库使用xtrabackup全量,增量备份</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-30T00:44:48+08:00">
-                2020-06-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
-                    <span itemprop="name">shell&shell脚本</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/30/Linux-Basic/shell&shell脚本/mysql数据库使用xtrabackup全量,增量备份/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/30/Linux-Basic/shell&shell脚本/mysql数据库使用xtrabackup全量,增量备份/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="mysql数据库使用xtrabackup全量-增量备份"><a href="#mysql数据库使用xtrabackup全量-增量备份" class="headerlink" title="mysql数据库使用xtrabackup全量,增量备份"></a>mysql数据库使用xtrabackup全量,增量备份</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">##############################################################</span><br><span class="line"># File Name: backup.sh</span><br><span class="line"># Version: V1.0</span><br><span class="line"># Author: huangyong</span><br><span class="line"># Created Time : 2018-3-1 18:42:00</span><br><span class="line"># Description: 数据库全量,增量备份脚本</span><br><span class="line"></span><br><span class="line">#备份策略:每周一进行全备,其他日期备份当周的增量备份.每次全备前删除2周前的备份</span><br><span class="line">#可扩展功能:打包备份文件.备份文件传输到远程服务器</span><br><span class="line"></span><br><span class="line">#date:2018-04-15</span><br><span class="line">#update:由于数据库/data磁盘已快满.所以备份只保留一周.</span><br><span class="line"></span><br><span class="line">#date:2018-04-23</span><br><span class="line">#update:增加如果备份失败则发邮件通知功能</span><br><span class="line">#       增加自动删除备份日志功能</span><br><span class="line"></span><br><span class="line">#data:2018-04-24</span><br><span class="line">#update:1.增加xtrabackup自带的的备份压缩功能,且压缩线程数4.</span><br><span class="line">#       2.全备完成后,打包整个全备的备份文件(暂时先不打包)</span><br><span class="line">#       3.全备完成后,同步备份文件到BETA服务器</span><br><span class="line">#       4.保留2份备份文件,也就是保留2周</span><br><span class="line">#       5.将脚本的执行用户从root改到work.</span><br><span class="line"></span><br><span class="line">#date:2018-05-03</span><br><span class="line">#update:修改N_变量的抓取inc增量备份目录的命令.之前用的是sort命令,经常会抓取到错误的inc增量备份目录</span><br><span class="line">#        脚本执行用户改成root,因为work用户没有权限访问mysql的数据文件目录</span><br><span class="line">##############################################################</span><br><span class="line"></span><br><span class="line">#获取脚本所存放目录</span><br><span class="line">cd `dirname $0`</span><br><span class="line">bash_path=`pwd`</span><br><span class="line">#脚本名</span><br><span class="line">me=$(basename $0)</span><br><span class="line"></span><br><span class="line">#设置要备份的innodb数据库，用空格格开，空为备份所有库</span><br><span class="line">databases=&apos;&apos;</span><br><span class="line"></span><br><span class="line">#定义变量</span><br><span class="line">DATE=$(date +%W) #全年的第几周,一个星期为一个备份周期.备份根目录，其子目录：base为全量，inc1、inc2...为增量</span><br><span class="line">TWO_WEEKS_AGO=$(echo $&#123;DATE&#125;-2|bc) #前两周前的备份</span><br><span class="line">FULL_DATE=$(date +%F) #存储日志日期</span><br><span class="line">DAY_DATE=$(date +%w) #判断一周的第几天</span><br><span class="line">#MYSQL=&quot;mysql&quot;  # mysql命令绝对路径或在PATH中</span><br><span class="line">MYSQL_DATA_DIR=&quot;/data/mysql/data&quot;  # 数据库目录</span><br><span class="line">BACKUP_USER=&quot;tongji&quot;  # 备份用户</span><br><span class="line">PASSWD=$(cat /data/xtrabackup/password)  # 备份密码保存文件</span><br><span class="line">BACK_FILE_DIR=&quot;/data/backups/$&#123;DATE&#125;&quot;  # 备份频率目录，此目录变化频率为备份一周期</span><br><span class="line">LOG_P_DIR=&quot;/data/backup_logs&quot; #备份日志根目录</span><br><span class="line">LOG_DIR=&quot;/data/backup_logs/$&#123;FULL_DATE&#125;&quot;  # 备份过程日志目录</span><br><span class="line">#LOG_ERR=&quot;$&#123;LOG_DIR&#125;/mysql_backup_fail.log&quot; #备份错误日志文件</span><br><span class="line">LOG_FILE=&quot;$&#123;LOG_DIR&#125;/mysql_backup.log&quot;  #备份过程日志文件</span><br><span class="line">email_user=&quot;huangyong@doweidu.com&quot;</span><br><span class="line">ssh_server=&quot;10.25.2.85&quot;  # 远程备份服务器IP</span><br><span class="line">ssh_server_dir=&quot;/data/tongjidb-mysqlbackup&quot;  # 远程备份服务器目录</span><br><span class="line">ssh_port=&quot;5822&quot;  # ssh端口</span><br><span class="line">ssh_parameters=&quot;-o StrictHostKeyChecking=no -o ConnectTimeout=60&quot;</span><br><span class="line">ssh_user=&quot;work&quot;</span><br><span class="line">ssh_command=&quot;ssh $&#123;ssh_parameters&#125; -p $&#123;ssh_port&#125;&quot;</span><br><span class="line">#scp_command=&quot;scp $&#123;ssh_parameters&#125; -P $&#123;ssh_port&#125;&quot;</span><br><span class="line"></span><br><span class="line">#定义保存日志函数</span><br><span class="line">function save_log () &#123;</span><br><span class="line">        </span><br><span class="line">	echo -e &quot;#################[`date +%F\ %T`]	$* ####################&quot; &gt;&gt; $LOG_FILE</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#定义发送邮件函数</span><br><span class="line">function send_mail () &#123;</span><br><span class="line">        echo $1 | mail -s $1  $email_user</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#创建目录</span><br><span class="line">[ ! -d &quot;$&#123;BACK_FILE_DIR&#125;&quot; ] &amp;&amp; mkdir -p $&#123;BACK_FILE_DIR&#125;</span><br><span class="line">[ ! -d &quot;$&#123;LOG_DIR&#125;&quot; ] &amp;&amp; mkdir -p $&#123;LOG_DIR&#125;</span><br><span class="line"></span><br><span class="line">function full_backup () &#123;</span><br><span class="line">	# 全量备份函数</span><br><span class="line">	[ ! -z &quot;$databases&quot; ] &amp;&amp; option=&quot;--databases=$&#123;databases&#125;&quot; || option=&quot;&quot; </span><br><span class="line"></span><br><span class="line">	##############################MYSQL全库备份#########################</span><br><span class="line">	/usr/bin/xtrabackup  --user=$BACKUP_USER --password=$PASSWD --compress --compress-threads=4 --backup --target-dir=$&#123;BACK_FILE_DIR&#125;/base --datadir=$&#123;MYSQL_DATA_DIR&#125; $option &gt; $LOG_FILE 2&gt;&amp;1</span><br><span class="line">	</span><br><span class="line">        if [ $? -eq 0 ];then</span><br><span class="line">             save_log &quot;mysql full_backup succeed&quot;</span><br><span class="line">             chown -R mysql:mysql $&#123;BACK_FILE_DIR&#125;/base</span><br><span class="line">        </span><br><span class="line">        else</span><br><span class="line">             save_log &quot;mysql full_backup failed&quot;</span><br><span class="line">             #send_mail &quot;mysql full_backup failed&quot;</span><br><span class="line">             exit 1   </span><br><span class="line">        </span><br><span class="line">        fi                </span><br><span class="line">	###################################################################</span><br><span class="line"></span><br><span class="line">          </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function incremental_backup () &#123;</span><br><span class="line">    [ ! -z &quot;$databases&quot; ] &amp;&amp; option=&quot;--databases=$&#123;databases&#125;&quot; || option=&quot;&quot;</span><br><span class="line"></span><br><span class="line">    cd  $BACK_FILE_DIR</span><br><span class="line">    # 判断是否存在第一次增量备份目录inc1</span><br><span class="line">    # 存在则获取最后一次增量备份目录incN，然后基于最后一次增量备份，做增量备份</span><br><span class="line">    # 不存在则基于全量备份目录base做增量备份</span><br><span class="line">    if [ -d &quot;inc1&quot; ];then</span><br><span class="line">        N_=$(ls -l | awk -F &apos;inc&apos; &apos;/^d+.+inc[0-9]+$/&#123;a[NR]=$NF;len=asort(a,sa)&#125;END&#123;print sa[len]&#125;&apos;)</span><br><span class="line">        N=$(echo $N_+1|bc)</span><br><span class="line">        #增量备份 </span><br><span class="line">        /usr/bin/xtrabackup --user=$BACKUP_USER --password=$PASSWD --backup --compress --target-dir=$BACK_FILE_DIR/inc$N \</span><br><span class="line">        --incremental-basedir=$BACK_FILE_DIR/inc$N_ --datadir=$MYSQL_DATA_DIR $option &gt; $LOG_FILE 2&gt;&amp;1</span><br><span class="line">    else</span><br><span class="line">        N=&quot;1&quot;</span><br><span class="line">        #增量备份 </span><br><span class="line">        [ ! -d $BACK_FILE_DIR/base ] &amp;&amp; save_log &quot;incremental backup failed,no full_backup&quot; &amp;&amp; exit 1</span><br><span class="line">        /usr/bin/xtrabackup --user=$BACKUP_USER --password=$PASSWD --backup --compress --target-dir=$BACK_FILE_DIR/inc$N \</span><br><span class="line">        --incremental-basedir=$BACK_FILE_DIR/base --datadir=$MYSQL_DATA_DIR $option &gt; $LOG_FILE 2&gt;&amp;1</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    if [ $? -eq 0 ];then</span><br><span class="line">             save_log &quot;mysql inc$&#123;N&#125;-backup successed&quot;</span><br><span class="line">             chown -R mysql:mysql $&#123;BACK_FILE_DIR&#125;/inc$N</span><br><span class="line">        </span><br><span class="line">        else</span><br><span class="line">             save_log &quot;mysql inc$&#123;N&#125;-backup failed&quot; </span><br><span class="line">            #send_mail &quot;mysql inc$&#123;N&#125;-backup failed&quot;</span><br><span class="line">             exit 1   </span><br><span class="line">                        </span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    return 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function rsync_backup_files () &#123;</span><br><span class="line">	#传输到远程服务器备份, 需要配置免密ssh认证</span><br><span class="line">        </span><br><span class="line">        #使用rsync将本地的/data/backups目录同步到BETA服务器.同时删除BETA服务器上2周前的备份目录</span><br><span class="line">	rsync -az --delete /data/backups -e &quot;$&#123;ssh_command&#125;&quot; $ssh_user@$&#123;ssh_server&#125;:$ssh_server_dir</span><br><span class="line">	[ $? -eq 0 ] &amp;&amp; save_log &quot;full-backuped rsync successed&quot; || \</span><br><span class="line">	&#123; save_log &quot;backup rsync failed&quot; ; send_mail &quot;mysql backup rsync failed&quot; ; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#每周1进行全备.其他日期对本周一的全备做增量备份</span><br><span class="line">if [ $DAY_DATE -eq 1 ];then</span><br><span class="line">    </span><br><span class="line">   </span><br><span class="line">   #删除2周前的备份文件</span><br><span class="line">   if [ 1 -le $TWO_WEEKS_AGO -a $TWO_WEEKS_AGO -lt 10 ];then #如果本周和2周前的数相减小于10,并且大于等于1,则相差的结果前加个0.比如07</span><br><span class="line">        FILE_NAME=$(dirname $BACK_FILE_DIR)/0$TWO_WEEKS_AGO</span><br><span class="line">        [ -d $FILE_NAME ] &amp;&amp; rm -rf $FILE_NAME</span><br><span class="line"></span><br><span class="line">   elif [ $TWO_WEEKS_AGO -ge 10 ];then  #如果两数相减等于两位数,直接删除文件</span><br><span class="line">           FILE_NAME=$(dirname $BACK_FILE_DIR)/$TWO_WEEKS_AGO</span><br><span class="line">           [ -d $FILE_NAME ] &amp;&amp; rm -rf $FILE_NAME</span><br><span class="line"></span><br><span class="line">   fi</span><br><span class="line"></span><br><span class="line">   full_backup #调用全备</span><br><span class="line">  </span><br><span class="line">else</span><br><span class="line">     incremental_backup #调用增备</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">#删除7天前日志文件</span><br><span class="line">find $LOG_P_DIR -type d -mtime +7 -exec rm -rf &#123;&#125; \;</span><br><span class="line"></span><br><span class="line">rsync_backup_files</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/30/Linux-Basic/shell&shell脚本/将服务器日志归档到阿里云OSS的脚本/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2015,7 +2016,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">186</span>
+                  <span class="site-state-item-count">187</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
