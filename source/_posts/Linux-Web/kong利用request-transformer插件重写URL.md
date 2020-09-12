@@ -77,7 +77,7 @@ github项目地址: [request-transformer github](https://github.com/Kong/kong-pl
 
     或者也可以使用konga的UI管理平台添加和编辑插件
 
-    ![](https://img2.jesse.top/image-20200910160826719.png)
+![](https://img2.jesse.top/image-20200910160826719.png)
 
   
 
