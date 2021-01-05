@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="kafka," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="4.2.1 优选副本的选举4.2.1.1 什么是优先副本分区使用多副本机制来提升可靠性,但是只有leader副本对外提供读写服务.而follower副本只负责在内部进行消息的同步.如果一个分区的leader副本不可用,那么就意味着整个分区变得不可用.此时就需要从剩余的follower副本中挑选一个新的leader副本继续对外提供服务.  broker节点中的Leader副本个数决定了这个节点负载的">
+<meta name="keywords" content="kafka">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kafka-4.2分区管理">
+<meta property="og:url" content="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="4.2.1 优选副本的选举4.2.1.1 什么是优先副本分区使用多副本机制来提升可靠性,但是只有leader副本对外提供读写服务.而follower副本只负责在内部进行消息的同步.如果一个分区的leader副本不可用,那么就意味着整个分区变得不可用.此时就需要从剩余的follower副本中挑选一个新的leader副本继续对外提供服务.  broker节点中的Leader副本个数决定了这个节点负载的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-01-05T14:54:58.225Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kafka-4.2分区管理">
+<meta name="twitter:description" content="4.2.1 优选副本的选举4.2.1.1 什么是优先副本分区使用多副本机制来提升可靠性,但是只有leader副本对外提供读写服务.而follower副本只负责在内部进行消息的同步.如果一个分区的leader副本不可用,那么就意味着整个分区变得不可用.此时就需要从剩余的follower副本中挑选一个新的leader副本继续对外提供服务.  broker节点中的Leader副本个数决定了这个节点负载的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/"/>
+
+
+
+
+
+  <title>kafka-4.2分区管理 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kafka-4.2分区管理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/4-主题和分区/" itemprop="url" rel="index">
+                    <span itemprop="name">4-主题和分区</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="4-2-1-优选副本的选举"><a href="#4-2-1-优选副本的选举" class="headerlink" title="4.2.1 优选副本的选举"></a>4.2.1 优选副本的选举</h3><h4 id="4-2-1-1-什么是优先副本"><a href="#4-2-1-1-什么是优先副本" class="headerlink" title="4.2.1.1 什么是优先副本"></a>4.2.1.1 什么是优先副本</h4><p>分区使用多副本机制来提升可靠性,但是只有leader副本对外提供读写服务.而follower副本只负责在内部进行消息的同步.如果一个分区的leader副本不可用,那么就意味着整个分区变得不可用.此时就需要从剩余的follower副本中挑选一个新的leader副本继续对外提供服务.</p>
+<blockquote>
+<p>broker节点中的Leader副本个数决定了这个节点负载的高低</p>
+</blockquote>
+<p>在创建主题的时候,主题的分区和副本会尽可能的均匀分布在kafka集群的各个broker节点.对应的Leader副本的分配也比较均匀.例如下面的 <code>topic-demo</code> 主题:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-demo</span><br><span class="line">Topic:topic-demo    PartitionCount:4    ReplicationFactor:3 Configs:</span><br><span class="line">    Topic: topic-demo   Partition: 0    Leader: 152 Replicas: 152,153,154   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 1    Leader: 153 Replicas: 153,154,152   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 2    Leader: 154 Replicas: 154,152,153   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 3    Leader: 152 Replicas: 152,154,153   Isr: 152,153,154</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+<a id="more"></a> 
+<p>可以看到,leader副本均匀分布在所有的broker节点.另外,同一个分区,在同一台broker节点只能存在一个副本.所以leader副本所在的broker节点叫做分区的leader节点.而follower副本所在的broker节点叫做分区的follower节点.</p>
+<p>可以想象的是,随着时间的推移,kafka集群中不可避免的出现节点宕机或者崩溃的情况.当分区的Leader节点发生故障时,其中一个follower节点就会成为新的Leader节点.这样导致集群中的节点之间负载不均衡,从而影响kafka整个集群的稳定性和健壮性.</p>
+<p>即使原来的Leader节点恢复后,加入到集群时,也只能成为一个新的follower节点,而不会自动”抢班夺权”变成leader.</p>
+<p>例如刚才的 <code>topic-demo</code> 分区重启152节点后,leader分布如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-demo</span><br><span class="line">Topic:topic-demo    PartitionCount:4    ReplicationFactor:3 Configs:</span><br><span class="line">    Topic: topic-demo   Partition: 0    Leader: 153 Replicas: 152,153,154   Isr: 153,154,152</span><br><span class="line">    Topic: topic-demo   Partition: 1    Leader: 153 Replicas: 153,154,152   Isr: 153,154,152</span><br><span class="line">    Topic: topic-demo   Partition: 2    Leader: 154 Replicas: 154,152,153   Isr: 153,154,152</span><br><span class="line">    Topic: topic-demo   Partition: 3    Leader: 154 Replicas: 152,154,153   Isr: 153,154,152</span><br></pre></td></tr></table></figure>
+<p>尽管kafka非常均匀的将leader副本分布在其他另外2个几点.但是此时152节点的负载几乎为零.</p>
+<p>为了有效的治理负载失衡的情况,kafka引入了<strong>优先副本(preferred replica)</strong>的概念.所谓的优先副本就是在AR集合列表中的第一个副本为优先副本,理想情况下优先副本就是该分区的leader副本.所以也可以称之为 <code>preferred leader</code> .</p>
+<p>比如上面的例子中,分区0的AR集合(Replicas)是[152,153,154].那么分区0的优先副本就是152.<strong>Kafka会确保所有主题的优先副本均匀分布.这样就保证了所有分区的leader均衡分布.</strong></p>
+<p><strong>
+</strong></p>
+<h4 id="4-2-1-2-优先副本选举"><a href="#4-2-1-2-优先副本选举" class="headerlink" title="4.2.1.2 优先副本选举"></a>4.2.1.2 优先副本选举</h4><p>所谓的优先副本选举是指通过一定的方式促使优先副本选举为Leader副本,促进集群的负载均衡.这一行为也称之为”分区平衡”.</p>
+<p>kafka broker端(server.properties配置文件)有个 <code>auto.leader.rebalance.enble</code> 参数.默认为true.也就是分区自动平衡功能.Kafka会启动一个定时任务,轮询所有的broker节点,自动执行优先副本选举动作.</p>
+<p>不过在生产环境中建议将该配置设置为 <code>false</code> .因为kafka自动平衡分区可能在某些关键高分期时刻引起负面性能问题.也有可能引起客户端的阻塞.为了防止出现此类情况,建议针对副本不均衡的问题进行相应监控和告警,然后在合适的时间通过手动来执行分区平衡.</p>
+<p>Kafka中的 <code>kafka-preferred-replica-election.sh</code> 脚本提供了对分区leader副本进行重新平衡的功能.优先副本选举过程是一个安全的过程,kafka客户端会自动感知leader副本的变更.</p>
+<p>命令用法如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-preferred-replica-election.sh --zookeeper localhost:2181</span><br></pre></td></tr></table></figure>
+<p>但是这样一来会对kafka集群的所有主题和分区都执行一遍优先副本的选举操作.如果集群中包含大量的分区,那么可能选举会失败,并且会对性能造成一定的应用.比较建议的是使用 <code>path-to-json-file</code> 参数来小批量的对部分指定的主题分区进行优先副本的选举操作.该参数指定一个JSON文件,这个JSON文件保存需要执行优先副本选举的分区清单.</p>
+<p>举个例子,对上面的 <code>topic-demo</code> 分区进行优先副本选举操作.先创建一个JSON文件,文件名可以任意:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123; </span><br><span class="line">  &quot;partitions&quot;: [</span><br><span class="line">    &#123; </span><br><span class="line">        &quot;partition&quot;:0,</span><br><span class="line">        &quot;topic&quot;:&quot;topic-demo&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;partition&quot;:1,</span><br><span class="line">        &quot;topic&quot;:&quot;topic-demo&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;   &quot;partition&quot;:2,</span><br><span class="line">            &quot;topic&quot;:&quot;topic-demo&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;   &quot;partition&quot;:3,</span><br><span class="line">            &quot;topic&quot;:&quot;topic-demo&quot;</span><br><span class="line">    &#125;</span><br><span class="line">   ]</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>将上述内容保存为 <code>election.json</code> 文件.然后执行下列命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-preferred-replica-election.sh --zookeeper localhost:2181 --path-to-json-file ~/election.json</span><br><span class="line"> </span><br><span class="line">Created preferred replica election path with &#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;topic-demo&quot;,&quot;partition&quot;:0&#125;,&#123;&quot;topic&quot;:&quot;topic-demo&quot;,&quot;partition&quot;:1&#125;,&#123;&quot;topic&quot;:&quot;topic-demo&quot;,&quot;partition&quot;:2&#125;,&#123;&quot;topic&quot;:&quot;topic-demo&quot;,&quot;partition&quot;:3&#125;]&#125;</span><br><span class="line">Successfully started preferred replica election for partitions Set([topic-demo,0], [topic-demo,1], [topic-demo,2], [topic-demo,3])</span><br></pre></td></tr></table></figure>
+<p>提示优先副本选举成功.下列结果显示leader副本已经均衡分配到所有Broker节点了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-demo</span><br><span class="line">Topic:topic-demo    PartitionCount:4    ReplicationFactor:3 Configs:</span><br><span class="line">    Topic: topic-demo   Partition: 0    Leader: 152 Replicas: 152,153,154   Isr: 153,154,152</span><br><span class="line">    Topic: topic-demo   Partition: 1    Leader: 153 Replicas: 153,154,152   Isr: 153,154,152</span><br><span class="line">    Topic: topic-demo   Partition: 2    Leader: 154 Replicas: 154,152,153   Isr: 153,154,152</span><br><span class="line">    Topic: topic-demo   Partition: 3    Leader: 152 Replicas: 152,154,153   Isr: 153,154,152</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+<p>在实际生产环境中,建议使用这种方式来分批的执行优先副本选举操作.杜绝直接粗暴的进行所有分区的优先副本选举.另外,这类操作也应该需要避开业务高峰期,以免对性能造成负面影响,或者出现意外故障.</p>
+<h3 id="4-2-2-分区重分配"><a href="#4-2-2-分区重分配" class="headerlink" title="4.2.2 分区重分配"></a>4.2.2 分区重分配</h3><p>当集群中一个Broker节点宕机,该节点的所有副本都处于丢失状态.kafka并不会自动将这些失效的分区副本自动迁移到集群其他broker节点.另外当集群中新增一台Broker节点时,只有新创建的主题分区才能被分配到这个节点上,而之前的主题分区并不会自动的加入到新节点(因为在创建时,并没有这个节点).这就导致新节点负载和原有节点负载之间严重不均衡.</p>
+<p>为了解决这些问题,需要让分区副本再次进行合理的分配.也就是所谓的分区重分配.kafka提供了 <code>kafka-reassign-paritions.sh</code> 脚本执行分区重分配的工作.可以在集群节点失效或者扩容时使用.使用需要3个步骤:</p>
+<ul>
+<li>创建一个包含主题清单的JSON文件</li>
+<li>根据主题清单和Broker节点清单生成一份重分配方案</li>
+<li>执行具体重分配工作</li>
+</ul>
+<blockquote>
+<p>要执行分区重分配,前提是broker节点清单数量要大于或者等于副本因子数量,否则会报错</p>
+<p>Partitions reassignment failed due to replication factor: 3 larger than available brokers: 2</p>
+</blockquote>
+<p>下面创建一个4分区,2个副本因子的主题 <code>topic-reassign</code> 举例.假定要将152这个broker节点下线.下线之前需要将该节点上的分区副本迁移出去.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics.sh --zookeeper localhost:2181 --create --topic topic-reassign --replication-factor 2 --partitions 4</span><br><span class="line">Created topic &quot;topic-reassign&quot;.</span><br><span class="line"></span><br><span class="line">[hadoop@bi-dev152 ~]$  kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-reassign</span><br><span class="line">Topic:topic-reassign    PartitionCount:4    ReplicationFactor:2 Configs:</span><br><span class="line">    Topic: topic-reassign   Partition: 0    Leader: 153 Replicas: 153,154   Isr: 153,154</span><br><span class="line">    Topic: topic-reassign   Partition: 1    Leader: 154 Replicas: 154,152   Isr: 154,152</span><br><span class="line">    Topic: topic-reassign   Partition: 2    Leader: 152 Replicas: 152,153   Isr: 152,153</span><br><span class="line">    Topic: topic-reassign   Partition: 3    Leader: 153 Replicas: 153,152   Isr: 153,152</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+<p>第一步,创建一个JSON文件(文件名假定为reassign.json).文件内容是主题清单:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123; </span><br><span class="line">    &quot;topics&quot;:[</span><br><span class="line">      &#123; </span><br><span class="line">                &quot;topic&quot;:&quot;topic-reassign&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;version&quot;:1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第二步,根据这个JSON文件和指定要分配的broker节点列表生成一份候选重分配方案:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-reassign-partitions.sh --zookeeper localhost:2181 --generate --topics-to-move-json-file ~/reassign.json --broker-list 153,154</span><br><span class="line"> </span><br><span class="line">Current partition replica assignment</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:1,&quot;replicas&quot;:[154,152]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:0,&quot;replicas&quot;:[153,154]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:3,&quot;replicas&quot;:[153,152]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:2,&quot;replicas&quot;:[152,153]&#125;]&#125;</span><br><span class="line"></span><br><span class="line">Proposed partition reassignment configuration</span><br><span class="line">[hadoop@bi-dev152 ~]$ kafka-reassign-partitions.sh --zookeeper localhost:2181 --execute --reassignment-json-file project.json</span><br><span class="line">Current partition replica assignment</span><br><span class="line"></span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:1,&quot;replicas&quot;:[154,152]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:0,&quot;replicas&quot;:[153,154]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:3,&quot;replicas&quot;:[153,152]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:2,&quot;replicas&quot;:[152,153]&#125;]&#125;</span><br><span class="line"></span><br><span class="line">Save this to use as the --reassignment-json-file option during rollback</span><br><span class="line">Successfully started reassignment of partitions.</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+<p>在上面的例子中有以下几个参数:</p>
+<p><code>--zookeeper</code> 这个参数已经非常熟悉了</p>
+<p><code>--generate</code> 指令类型参数,类似于kafka-topics.sh脚本中的 <code>--create</code> , <code>--list</code> . <code>--describe</code> 等</p>
+<p><code>--topics-to-move-json-file</code> 指定主题清单文件路径</p>
+<p><code>--broker-list</code> 指定要分配的broker节点列表</p>
+<p>上面的例子中打印了2个JSON格式内容:</p>
+<p><code>Current partition replica assignment</code> 表示目前的分区副本分配情况,在执行分区重分配前最好备份这个内容,以便后续回滚操作</p>
+<p><code>Proposed partition reassignment configuration</code> 表示候选重分配方案.这里只是一个方案,并没有真正执行.</p>
+<p>将第二个Json内容格式化输出后,我们发现这个方案正如我们计划的那样,将该主题的所有分区下的AR副本集合分配到153和154节点,所有副本已经从即将要下线的152节点迁移走.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;version&quot;:1,</span><br><span class="line">    &quot;partitions&quot;:[</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;topic&quot;:&quot;topic-reassign&quot;,</span><br><span class="line">            &quot;partition&quot;:1,</span><br><span class="line">            &quot;replicas&quot;:[</span><br><span class="line">                154,</span><br><span class="line">                153</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;topic&quot;:&quot;topic-reassign&quot;,</span><br><span class="line">            &quot;partition&quot;:0,</span><br><span class="line">            &quot;replicas&quot;:[</span><br><span class="line">                153,</span><br><span class="line">                154</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;topic&quot;:&quot;topic-reassign&quot;,</span><br><span class="line">            &quot;partition&quot;:3,</span><br><span class="line">            &quot;replicas&quot;:[</span><br><span class="line">                154,</span><br><span class="line">                153</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;topic&quot;:&quot;topic-reassign&quot;,</span><br><span class="line">            &quot;partition&quot;:2,</span><br><span class="line">            &quot;replicas&quot;:[</span><br><span class="line">                153,</span><br><span class="line">                154</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第三步,将 <code>Proposed partition reassignment configuration</code> JSON文件内容保存在一个文件中(假定为project.json).然后执行具体的重分配的动作,命令如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-reassign-partitions.sh --zookeeper localhost:2181 --execute --reassignment-json-file project.json</span><br><span class="line">Current partition replica assignment</span><br><span class="line"></span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:1,&quot;replicas&quot;:[154,152]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:0,&quot;replicas&quot;:[153,154]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:3,&quot;replicas&quot;:[153,152]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:2,&quot;replicas&quot;:[152,153]&#125;]&#125;</span><br><span class="line"></span><br><span class="line">Save this to use as the --reassignment-json-file option during rollback</span><br><span class="line">Successfully started reassignment of partitions.</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里仍然打印了之前的副本分配方案,并且提示保存到JSON文件,以便回滚</p>
+</blockquote>
+<p>这里使用了2个不同的命令参数:</p>
+<ul>
+<li><code>--execute</code> 指令类型参数,执行重分配动作</li>
+<li><code>--reassignment-json-file</code> 指定重分配方案文件路径</li>
+</ul>
+<p>再次查看 <code>topic-reassign</code> 主题分区副本分配情况,所有的副本都从152迁移出去,此时该节点可以顺利下线</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-reassign</span><br><span class="line">Topic:topic-reassign    PartitionCount:4    ReplicationFactor:2 Configs:</span><br><span class="line">    Topic: topic-reassign   Partition: 0    Leader: 153 Replicas: 153,154   Isr: 153,154</span><br><span class="line">    Topic: topic-reassign   Partition: 1    Leader: 154 Replicas: 154,153   Isr: 154,153</span><br><span class="line">    Topic: topic-reassign   Partition: 2    Leader: 153 Replicas: 153,154   Isr: 153,154</span><br><span class="line">    Topic: topic-reassign   Partition: 3    Leader: 153 Replicas: 154,153   Isr: 153,154</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+<p>当然,我们也可以直接编写第二个JSON文件来自定义重分配方案,这样就不需要执行上面的第一步和第二步操作了.</p>
+<p>分区重分配的基本原理是为每个分区添加新副本(增加副本数量),新副本会从leader副本复制所有的数据.复制完成后,控制器将旧副本从副本清单里移除.(恢复成原来的副本数量).</p>
+<blockquote>
+<p>所以,分区重分配需要确保有足够的空间,并且避免在业务高峰期操作</p>
+</blockquote>
+<p>从刚才的主题分区结果可以看到,大部分的分区leader副本都集中在153这个broker节点.这样负载非常不均衡,我们可以继续借助 <code>kafka-preferred-replica-election.sh</code> 脚本执行一次优先副本选举.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-preferred-replica-election.sh --zookeeper localhost:2181 --path-to-json-file election.json</span><br><span class="line"></span><br><span class="line">Created preferred replica election path with &#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:0&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:1&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:2&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:3&#125;]&#125;</span><br><span class="line">Successfully started preferred replica election for partitions Set([topic-reassign,0], [topic-reassign,1], [topic-reassign,2], [topic-reassign,3])</span><br><span class="line"></span><br><span class="line">#选举完成后,副本分配均衡</span><br><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-reassign</span><br><span class="line">Topic:topic-reassign    PartitionCount:4    ReplicationFactor:2 Configs:</span><br><span class="line">    Topic: topic-reassign   Partition: 0    Leader: 153 Replicas: 153,154   Isr: 153,154</span><br><span class="line">    Topic: topic-reassign   Partition: 1    Leader: 154 Replicas: 154,153   Isr: 154,153</span><br><span class="line">    Topic: topic-reassign   Partition: 2    Leader: 153 Replicas: 153,154   Isr: 153,154</span><br><span class="line">    Topic: topic-reassign   Partition: 3    Leader: 154 Replicas: 154,153   Isr: 153,154</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>和优先副本选举一样,分区重分配对集群的性能有很大的影响.需要占用额外的磁盘,网络IO等资源.在生产环境执行操作时应该分批次执行.</p>
+</blockquote>
+<h3 id="4-2-3-复制限流"><a href="#4-2-3-复制限流" class="headerlink" title="4.2.3 复制限流"></a>4.2.3 复制限流</h3><p>我们了解分区重分配的本质在于数据复制,先增加新副本,进行数据同步,然后删除旧副本.如果副本数据量太大必然会占用很多额外的资源,从而影响集群整体性能.kafka有限流机制,可以对副本之间的复制流量进行限制.</p>
+<p>副本复制限流有2种实现方式:</p>
+<ul>
+<li><code>kafka-config.sh</code> </li>
+<li><code>kafka-reassign-partitions.sh</code> </li>
+</ul>
+<p>前者的实现方式有点繁琐,这里介绍后者的使用方式.</p>
+<p><code>kafka-reassign-partitions.sh</code> 的实现方式非常简单,只需要一个throttle参数即可.例如上面的例子中副本都在153和154节点,现在继续使用分区重分配,让副本从153节点迁移到152节点.但是这次使用限流工具</p>
+<p>首先,修改 <code>project.json</code> 文件,将153替换成152</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i &apos;s/153/152/g&apos; project.json</span><br></pre></td></tr></table></figure>
+<p>然后,执行分区重分配,这里使用 <code>--throttle</code> 参数,指定一个限流速度(单位是B/s)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-reassign-partitions.sh --zookeeper localhost:2181 --execute --reassignment-json-file project.json --throttle 10</span><br><span class="line">Current partition replica assignment</span><br><span class="line"></span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:1,&quot;replicas&quot;:[154,153]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:0,&quot;replicas&quot;:[153,154]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:3,&quot;replicas&quot;:[154,153]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:2,&quot;replicas&quot;:[153,154]&#125;]&#125;</span><br><span class="line"></span><br><span class="line">Save this to use as the --reassignment-json-file option during rollback</span><br><span class="line">Warning: You must run Verify periodically, until the reassignment completes, to ensure the throttle is removed. You can also alter the throttle by rerunning the Execute command passing a new value.</span><br><span class="line">The throttle limit was set to 10 B/s</span><br><span class="line">Successfully started reassignment of partitions.</span><br></pre></td></tr></table></figure>
+<p>上面的示例输出中提示以下3点信息:</p>
+<ol>
+<li>需要周期性的使用 <code>--verify</code> 参数来周期性的查看副本复制进度,直到分区重分配完成,也就是说需要显示的使用这种方式确保分区重分配完成后解除限流的设置</li>
+<li>限流的速度为10B/s</li>
+<li>如果想要修改限流速度,重复此条执行命令,修改throttle的值即可</li>
+</ol>
+<p>接下来使用 <code>--verify</code> 参数查看复制进度.下面的示例显示复制已经完成,并且限流已被解除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-reassign-partitions.sh --zookeeper localhost:2181 --verify --reassignment-json-file project.json</span><br><span class="line">Status of partition reassignment:</span><br><span class="line">Reassignment of partition [topic-reassign,1] completed successfully</span><br><span class="line">Reassignment of partition [topic-reassign,0] completed successfully</span><br><span class="line">Reassignment of partition [topic-reassign,3] completed successfully</span><br><span class="line">Reassignment of partition [topic-reassign,2] completed successfully</span><br><span class="line">Throttle was removed.</span><br></pre></td></tr></table></figure>
+<p>此时153的副本已经被移除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics --describe --topic topic-reassign</span><br><span class="line">Topic:topic-reassign    PartitionCount:4    ReplicationFactor:2 Configs:</span><br><span class="line">    Topic: topic-reassign   Partition: 0    Leader: 152 Replicas: 152,154   Isr: 154,152</span><br><span class="line">    Topic: topic-reassign   Partition: 1    Leader: 154 Replicas: 154,152   Isr: 154,152</span><br><span class="line">    Topic: topic-reassign   Partition: 2    Leader: 152 Replicas: 152,154   Isr: 154,152</span><br><span class="line">    Topic: topic-reassign   Partition: 3    Leader: 154 Replicas: 154,152   Isr: 154,152</span><br></pre></td></tr></table></figure>
+<h3 id="4-2-4-修改副本因子"><a href="#4-2-4-修改副本因子" class="headerlink" title="4.2.4 修改副本因子"></a>4.2.4 修改副本因子</h3><p>上面的例子中分区重分配,将副本从一个broker节点中移除,此时kafka集群的broker节点数量只剩下2个.副本因子也只有2个.这里有个问题,此时153节点重启,或者新增broker节点后,如何将新增的broker节点加入进群,扩展副本数量呢?或者还有一种情况,当创建主题和分区后,想要修改副本因子呢?</p>
+<p><code>kafka-reassign-parition.sh</code> 脚本同样实现了修改副本因子的功能..仔细观察一下分区重分配案例中的 <code>project.json</code> 文件内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ cat project.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;version&quot;:1,</span><br><span class="line">    &quot;partitions&quot;:[</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;topic&quot;:&quot;topic-reassign&quot;,</span><br><span class="line">            &quot;partition&quot;:1,</span><br><span class="line">            &quot;replicas&quot;:[</span><br><span class="line">                154,</span><br><span class="line">                152</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;topic&quot;:&quot;topic-reassign&quot;,</span><br><span class="line">            &quot;partition&quot;:0,</span><br><span class="line">            &quot;replicas&quot;:[</span><br><span class="line">                152,</span><br><span class="line">                154</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;topic&quot;:&quot;topic-reassign&quot;,</span><br><span class="line">            &quot;partition&quot;:3,</span><br><span class="line">            &quot;replicas&quot;:[</span><br><span class="line">                154,</span><br><span class="line">                152</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;topic&quot;:&quot;topic-reassign&quot;,</span><br><span class="line">            &quot;partition&quot;:2,</span><br><span class="line">            &quot;replicas&quot;:[</span><br><span class="line">                152,</span><br><span class="line">                154</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>json文件中的副本集合(replicas)都是2个副本,我们可以很简单的添加一个副本.比如对于分区0而言,可以将153节点添加进去.(其他分区也是如此)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">            &quot;topic&quot;:&quot;topic-reassign&quot;,</span><br><span class="line">            &quot;partition&quot;:1,</span><br><span class="line">            &quot;replicas&quot;:[</span><br><span class="line">                154,</span><br><span class="line">                152,</span><br><span class="line">                153</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br></pre></td></tr></table></figure>
+<p>执行 <code>kafka-reassign-partition.sh</code> 脚本,执行命令的方法和参数和分区重分片几乎一致:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-reassign-partitions.sh --zookeeper localhost:2181 --execute --reassignment-json-file add.json</span><br><span class="line">Current partition replica assignment</span><br><span class="line"></span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:1,&quot;replicas&quot;:[154,152]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:0,&quot;replicas&quot;:[152,154]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:3,&quot;replicas&quot;:[154,152]&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:2,&quot;replicas&quot;:[152,154]&#125;]&#125;</span><br><span class="line"></span><br><span class="line">Save this to use as the --reassignment-json-file option during rollback</span><br><span class="line">Successfully started reassignment of partitions.</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+<p>查看副本分配情况.副本数量已经增加到了3个</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Topic:topic-reassign    PartitionCount:4    ReplicationFactor:3 Configs:</span><br><span class="line">    Topic: topic-reassign   Partition: 0    Leader: 152 Replicas: 152,153,154   Isr: 154,152,153</span><br><span class="line">    Topic: topic-reassign   Partition: 1    Leader: 154 Replicas: 154,152,153   Isr: 154,152,153</span><br><span class="line">    Topic: topic-reassign   Partition: 2    Leader: 152 Replicas: 152,154,153   Isr: 154,152,153</span><br><span class="line">    Topic: topic-reassign   Partition: 3    Leader: 154 Replicas: 153,154,152   Isr: 154,152,153</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>虽然副本因子增加到3个,但是Leader还是没有分配到新的153这个broker节点.此时可以通过优先副本选举重新分配</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-preferred-replica-election.sh --zookeeper localhost:2181 --path-to-json-file election.json</span><br><span class="line">Created preferred replica election path with &#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:0&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:1&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:2&#125;,&#123;&quot;topic&quot;:&quot;topic-reassign&quot;,&quot;partition&quot;:3&#125;]&#125;</span><br><span class="line">Successfully started preferred replica election for partitions Set([topic-reassign,0], [topic-reassign,1], [topic-reassign,2], [topic-reassign,3])</span><br><span class="line"></span><br><span class="line">#再次查看topic-reassign主题,分区副本分配均衡</span><br><span class="line">Topic:topic-reassign    PartitionCount:4    ReplicationFactor:3 Configs:</span><br><span class="line">    Topic: topic-reassign   Partition: 0    Leader: 152 Replicas: 152,153,154   Isr: 154,152,153</span><br><span class="line">    Topic: topic-reassign   Partition: 1    Leader: 154 Replicas: 154,152,153   Isr: 154,152,153</span><br><span class="line">    Topic: topic-reassign   Partition: 2    Leader: 152 Replicas: 152,154,153   Isr: 154,152,153</span><br><span class="line">    Topic: topic-reassign   Partition: 3    Leader: 153 Replicas: 153,154,152   Isr: 154,152,153</span><br></pre></td></tr></table></figure>
+<p>重点: <strong>与修改分区数量不同,副本数还可以减少</strong>,修改方法和命令几乎一样,只需要编辑JSON配置文件即可.这里就不再演示</p>
+<h3 id="4-2-5-如何选择合适的分区数量"><a href="#4-2-5-如何选择合适的分区数量" class="headerlink" title="4.2.5 如何选择合适的分区数量"></a>4.2.5 如何选择合适的分区数量</h3><p>如何选择合适的分区数量是需要经常面对的问题,但是这个问题似乎并没有权威的标准答案,需要根据实际的业务场景,硬件资源,应用软件,负载等情况做具体考量.这一章节主要介绍与本问题相关的一些决策因素,以供参考</p>
+<h4 id="4-2-5-1-性能测试工具"><a href="#4-2-5-1-性能测试工具" class="headerlink" title="4.2.5.1 性能测试工具"></a>4.2.5.1 性能测试工具</h4><p>在生产环境中设定分区数量需要考虑性能因素.所以性能测试工具必不可少,kafka本身提供了用于生产者性能测试的 <code>kafka-producer-pref-test.sh</code> 脚本和用于消费者性能测试的 <code>kafka-consumer-perf-test.sh</code>脚本</p>
+<p>首先创建一个用于测试的分区为1,副本为1的 <code>topic-1</code> 的主题:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Topic:topic-1   PartitionCount:1    ReplicationFactor:1 Configs:</span><br><span class="line">    Topic: topic-1  Partition: 0    Leader: 153 Replicas: 153   Isr: 153</span><br></pre></td></tr></table></figure>
+<p>其次.我们往这个主题发送100万条消息,并且每条消息大小为1024B,生产者对应的acks参数为1:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-producer-perf-test.sh --topic topic-1 --num-records 1000000 --record-size 1024 --throughput -1 --producer-props bootstrap.servers=localhost:9092 acks=1</span><br><span class="line">76666 records sent, 15333.2 records/sec (14.97 MB/sec), 1517.5 ms avg latency, 2061.0 max latency.</span><br><span class="line">119400 records sent, 23880.0 records/sec (23.32 MB/sec), 1353.6 ms avg latency, 1631.0 max latency.</span><br><span class="line">124560 records sent, 24912.0 records/sec (24.33 MB/sec), 1231.2 ms avg latency, 1375.0 max latency.</span><br><span class="line">146520 records sent, 29304.0 records/sec (28.62 MB/sec), 1066.6 ms avg latency, 1146.0 max latency.</span><br><span class="line">156795 records sent, 31359.0 records/sec (30.62 MB/sec), 972.3 ms avg latency, 1051.0 max latency.</span><br><span class="line">133365 records sent, 26673.0 records/sec (26.05 MB/sec), 1141.1 ms avg latency, 1322.0 max latency.</span><br><span class="line">159945 records sent, 31989.0 records/sec (31.24 MB/sec), 964.3 ms avg latency, 1178.0 max latency.</span><br><span class="line">1000000 records sent, 26148.576210 records/sec (25.54 MB/sec), 1143.54 ms avg latency, 2061.00 ms max latency, 1114 ms 50th, 1654 ms 95th, 1869 ms 99th, 2036 ms 99.9th.</span><br></pre></td></tr></table></figure>
+<p>示例中使用了多个参数:</p>
+<p><code>num-records</code>:  指定发送消息的总条数</p>
+<p><code>record-size</code>: 设置每条消息的字节数</p>
+<p><code>throughtput</code> : 限流控制,-1表示不限流,大于0表示限流值</p>
+<p><code>producer-props</code> : 指定生产者的配置,可以同时指定多组配置</p>
+<p>除此之外还有其他参数,比如 <code>print-metrics</code> 在测试完成之后,打印很多指标信息.有兴趣可以执行 <code>--help</code> 查看更多参数信息.</p>
+<p>回过头再看看上面示例中的压测结果信息,以第一条和最后一条为例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">76666 records sent, 15333.2 records/sec (14.97 MB/sec), 1517.5 ms avg latency, 2061.0 max latency.</span><br><span class="line">1114 ms 50th, 1654 ms 95th, 1869 ms 99th, 2036 ms 99.9th</span><br></pre></td></tr></table></figure>
+<p><strong>records sent: 表示发送的消息综述</strong></p>
+<p><strong>records/sec: 吞吐量,表示每秒发送的消息数量</strong></p>
+<p><strong>MB/sec: 吞吐量,表示每秒发送的消息大小</strong></p>
+<p><strong>avg latency: 表示消息处理的平均耗时</strong></p>
+<p><strong>max latency: 表示消息处理的最大耗时</strong></p>
+<p><strong>50th,95th,99th,99.th</strong> 表示50%,95%,99%,99.9%时消息处理耗时</p>
+<p><strong>
+</strong></p>
+<p>消费者压测工具的脚本使用也比较简单,下面的简单实例演示了消费主题 <code>topic-1</code> 中的100万条消息.命令使用方法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-consumer-perf-test.sh --topic topic-1 --messages 1000000 --broker-list localhost:9092</span><br><span class="line">start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.sec</span><br><span class="line">2020-12-26 14:07:29:612, 2020-12-26 14:07:35:272, 977.0264, 172.6195, 1000475, 176762.3675</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+<p><strong>data.consumed.in.MB: 消费的消息总量,单位为MB</strong></p>
+<p><strong>MB.sec</strong>: 按字节大小计算的消费吞吐量(单位:MB/s)</p>
+<p><strong>data.consumed.in.nMsg</strong>: 消费的消息消息总数</p>
+<p><strong>nMsg.sec</strong>: 按消息个数计算的吞独量(单位n/s)</p>
+<blockquote>
+<p>可以创建多个分区,比如10,100,200,500等(副本数量都为1)来测试生产和消费的性能表现,</p>
+</blockquote>
+<h4 id="4-2-5-2-分区数量越多不代表吞独量越高"><a href="#4-2-5-2-分区数量越多不代表吞独量越高" class="headerlink" title="4.2.5.2 分区数量越多不代表吞独量越高"></a>4.2.5.2 分区数量越多不代表吞独量越高</h4><p>消息中间件的性能一般是指吞吐量(还包括延迟),吞吐量会受到硬件资源,消息大小,消息压缩,消息发送方式(同步,异步),副本因子等参数影响.分区数量越多不一定吞吐量越高,超过一定的临界值后,kafka的吞吐量会不升反降.</p>
+<h4 id="4-2-5-3-分区数量的上限"><a href="#4-2-5-3-分区数量的上限" class="headerlink" title="4.2.5.3 分区数量的上限"></a>4.2.5.3 分区数量的上限</h4><p>一味的增加分区数量并不能使吞吐量得到提升,并且分区的数量也不能一直增加,如果超过一定的临界值还会引起kafka进程的崩溃.</p>
+<p><strong>每次创建一个分区,都会消耗一个Linux系统的文件描述符.</strong></p>
+<p>通过kafka的pid编号,可以查看当前kafka进程占用的文件描述符数量:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ ls /proc/22858/fd/ | wc -l</span><br><span class="line">173</span><br></pre></td></tr></table></figure>
+<p>此时创建一个分区数量为400个的topic-demo4的主题.由于分区会平均创建在集群内的3个broker节点,所以需要统计一下152这个本地节点的分区数量.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics --describe --topic topic-demo4 | grep -Eo &quot;Leader:\s[0-9]+&quot; | sort | uniq -c</span><br><span class="line">    134 Leader: 152</span><br><span class="line">    133 Leader: 153</span><br><span class="line">    133 Leader: 154</span><br></pre></td></tr></table></figure>
+<p>可以看到152这个节点创建了134个分区.接下来看看系统文件描述符的数量.正好增加了134个文件描述符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ ls /proc/22858/fd/ | wc -l</span><br><span class="line">307</span><br></pre></td></tr></table></figure>
+<p>可以想见的是,一旦分区数量超过了操作系统规定的文件描述符上限,kafka进程就会崩溃</p>
+<h4 id="4-2-5-4-分区数量的考量"><a href="#4-2-5-4-分区数量的考量" class="headerlink" title="4.2.5.4 分区数量的考量"></a>4.2.5.4 分区数量的考量</h4><p>如何选择合适的分区数量,一个恰当的答案就是视具体情况而定.</p>
+<p>从吞吐量方面考虑,增加合适的分区数量可以在一定程度上提升整体吞吐量,但是超过临界值之后吞吐量不升反降.在投入生产环境之前,应该对吞吐量进行相关的测试,以找到合适的分区数量</p>
+<p>分区数量太多会影响系统可用性,当broker发生故障时,broker节点上的所有分区的leader副本不可用,此时如果有大量的分区要进行leader角色切换,这个切换的过程会耗费相当的时间,并且这个时间段内分区会变的不可用.并且分区数量太多不仅为增加日志清理的耗时,而且在被删除时也会消费更多时间.</p>
+<p>一个好的建议是,创建主题之前对分区数量性能进行充分压测,在创建主题之后,还需要对其进行追踪,监控,调优.如果分区数量较少,还能通过增加分区数量,或者增加broker进行分区重分配等改进.</p>
+<p>最后,一个通用的准则是,建议分区数量设定为集群中broker的倍数,例如集群中有3个broker节点,可以设定分区数为3,6,9等.</p>
+<h3 id="4-2-6-总结"><a href="#4-2-6-总结" class="headerlink" title="4.2.6 总结"></a>4.2.6 总结</h3><p><code>kafka-topics.sh</code> 查看,创建主题分区,副本</p>
+<p><code>kafka-configs.sh</code> 修改主题配置文件</p>
+<p><code>kafka_perferred-replica-elections.sh</code> 优先副本选举</p>
+<p><code>kafka-reassign-partitions.sh</code> 分区重分配,副本复制限流,修改副本因子数量</p>
+<p><code>kafka-producer-perf-test.sh</code> 生产者分区数和吞吐量性能压测</p>
+<p><code>kafka-consumer-perf-test.sh</code> 消费者性能压测</p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/">kafka-4.2分区管理</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2021年01月05日 - 17:01</p>
+  <p><span>最后更新:</span>2021年01月05日 - 22:01</p>
+  <p><span>原始链接:</span><a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/" title="kafka-4.2分区管理">https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kafka/" rel="tag"># kafka</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/" rel="next" title="kafka-4.1主题管理">
+                <i class="fa fa-chevron-left"></i> kafka-4.1主题管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/"
+           data-title="kafka-4.2分区管理" data-url="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">195</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-1-优选副本的选举"><span class="nav-number">1.</span> <span class="nav-text">4.2.1 优选副本的选举</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-1-1-什么是优先副本"><span class="nav-number">1.1.</span> <span class="nav-text">4.2.1.1 什么是优先副本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-1-2-优先副本选举"><span class="nav-number">1.2.</span> <span class="nav-text">4.2.1.2 优先副本选举</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-2-分区重分配"><span class="nav-number">2.</span> <span class="nav-text">4.2.2 分区重分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-3-复制限流"><span class="nav-number">3.</span> <span class="nav-text">4.2.3 复制限流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-4-修改副本因子"><span class="nav-number">4.</span> <span class="nav-text">4.2.4 修改副本因子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-5-如何选择合适的分区数量"><span class="nav-number">5.</span> <span class="nav-text">4.2.5 如何选择合适的分区数量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-5-1-性能测试工具"><span class="nav-number">5.1.</span> <span class="nav-text">4.2.5.1 性能测试工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-5-2-分区数量越多不代表吞独量越高"><span class="nav-number">5.2.</span> <span class="nav-text">4.2.5.2 分区数量越多不代表吞独量越高</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-5-3-分区数量的上限"><span class="nav-number">5.3.</span> <span class="nav-text">4.2.5.3 分区数量的上限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-5-4-分区数量的考量"><span class="nav-number">5.4.</span> <span class="nav-text">4.2.5.4 分区数量的考量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-6-总结"><span class="nav-number">6.</span> <span class="nav-text">4.2.6 总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -275,6 +275,1484 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/" itemprop="url">kafka-4.2分区管理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/4-主题和分区/" itemprop="url" rel="index">
+                    <span itemprop="name">4-主题和分区</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="4-2-1-优选副本的选举"><a href="#4-2-1-优选副本的选举" class="headerlink" title="4.2.1 优选副本的选举"></a>4.2.1 优选副本的选举</h3><h4 id="4-2-1-1-什么是优先副本"><a href="#4-2-1-1-什么是优先副本" class="headerlink" title="4.2.1.1 什么是优先副本"></a>4.2.1.1 什么是优先副本</h4><p>分区使用多副本机制来提升可靠性,但是只有leader副本对外提供读写服务.而follower副本只负责在内部进行消息的同步.如果一个分区的leader副本不可用,那么就意味着整个分区变得不可用.此时就需要从剩余的follower副本中挑选一个新的leader副本继续对外提供服务.</p>
+<blockquote>
+<p>broker节点中的Leader副本个数决定了这个节点负载的高低</p>
+</blockquote>
+<p>在创建主题的时候,主题的分区和副本会尽可能的均匀分布在kafka集群的各个broker节点.对应的Leader副本的分配也比较均匀.例如下面的 <code>topic-demo</code> 主题:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-demo</span><br><span class="line">Topic:topic-demo    PartitionCount:4    ReplicationFactor:3 Configs:</span><br><span class="line">    Topic: topic-demo   Partition: 0    Leader: 152 Replicas: 152,153,154   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 1    Leader: 153 Replicas: 153,154,152   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 2    Leader: 154 Replicas: 154,152,153   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 3    Leader: 152 Replicas: 152,154,153   Isr: 152,153,154</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/" itemprop="url">kafka-4.1主题管理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/4-主题和分区/" itemprop="url" rel="index">
+                    <span itemprop="name">4-主题和分区</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="4-1-1-创建主题"><a href="#4-1-1-创建主题" class="headerlink" title="4.1.1 创建主题"></a>4.1.1 创建主题</h3><h4 id="4-1-1-1-自动创建主题以及分区副本"><a href="#4-1-1-1-自动创建主题以及分区副本" class="headerlink" title="4.1.1.1 自动创建主题以及分区副本"></a>4.1.1.1 自动创建主题以及分区副本</h4><p>在之前的笔记中提到了创建主题的一个简单示例.kafka提供 <code>kafka-topics.sh</code> 脚本来创建主题.下面这个示例创建了一个 <code>topic-test</code> 的主题,包含4个分区和2个副本.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/opt/kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic topic-test --replication-factor 2 --partitions 4</span><br><span class="line"></span><br><span class="line">Created topic &quot;topic-test&quot;.</span><br></pre></td></tr></table></figure>
+<p>分区创建完成后,会在kafka的 <code>log.dirs</code> 或者 <code>log.dir</code> 的目录下创建相应的主题分区.下面是在其中一台Broker节点的信息展示:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-0</span><br><span class="line">topic-test-2</span><br></pre></td></tr></table></figure>
+<p>可以看到152节点中创建了2个文件夹 topic-test-0 和 topic-test-2,对应主题 topic-test的2个分区编号为0和2的分区，命名方式可以概括为 <code>&lt;topic&gt;-&lt;partition&gt;</code> .严谨地说,其实这类文件夹对应的不是分区,分区同主题一样是一个逻辑的概念而没有物理上的存在.并且这里我们也只是看到了2个分区,而我们创建的是4个分区,其余2个分区被分配到了153和154节点中，参考如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#153节点</span><br><span class="line">[hadoop@bi-dev153 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-0</span><br><span class="line">topic-test-1</span><br><span class="line">topic-test-3</span><br><span class="line"></span><br><span class="line">#154节点</span><br><span class="line">[hadoop@bi-dev154 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-1</span><br><span class="line">topic-test-2</span><br><span class="line">topic-test-3</span><br></pre></td></tr></table></figure>
+<p>三个broker节点一共创建了8个文件夹,这个数字8实质上是分区数4与副本因子2的乘积.每个副本(或者更确切地说应该是日志,副本与日志一一对应)才真正对应 了一个命名形式.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/" itemprop="url">kafka-3.1消费者与消费组</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/3-消费者/" itemprop="url" rel="index">
+                    <span itemprop="name">3-消费者</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="3-1-消费者与消费组"><a href="#3-1-消费者与消费组" class="headerlink" title="3.1 消费者与消费组"></a>3.1 消费者与消费组</h2><h3 id="1-消费者和消费组介绍"><a href="#1-消费者和消费组介绍" class="headerlink" title="1.消费者和消费组介绍"></a>1.消费者和消费组介绍</h3><p>消费者( Consumer)负责订阅Kafka中的主题( Topic)，并且从订阅的主题上拉取消息.与其他一些消息中间件不同的是:在 Kafka的消费理念中还有一层消费组( Consumer Group)的概念，每个消费者都有一个对应的消费组。当消息发布到主题后，只会被投递给订阅它的每个消费组中的一个消费者 。</p>
+<p>以下图为例,某个主题中共有 4 个分区( Partition) : PO、 Pl、 P2、 P3。 有两个消费组 A和 B 都订阅了这个主题，消费组 A 中有 4 个消费者 (CO、 Cl、 C2 和 C3)，消费组 B 中有 2个消费者 CC4 和 CS) 。按照 Kafka默认的规则，最后的分配结果是消费组 A 中的每一个消费 者分配到1个分区，消费组 B 中的每一个消费者分配到 2个分区，两个消费组之间互不影响。每个消费者只能消费所分配到的分区中的消息。换言之 每一个分区只能被一个消费组中的一个消费者所消费.</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2992889/1608547700645-c525d96a-ac02-471f-9276-ee885e471c86.png" alt="image.png"></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/" itemprop="url">kafka-1.1基本概念介绍</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/1-概念介绍/" itemprop="url" rel="index">
+                    <span itemprop="name">1-概念介绍</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="1-1-基本概念介绍"><a href="#1-1-基本概念介绍" class="headerlink" title="1.1 基本概念介绍"></a>1.1 基本概念介绍</h1><h3 id="kafka特性"><a href="#kafka特性" class="headerlink" title="kafka特性"></a>kafka特性</h3><ul>
+<li><strong>消息系统</strong>: Kafka和传统的消息中间件都具备流量削峰,缓冲,异步通信,扩展性等.另外,Kafka还提供了大多数消息中间件难以实现的消息顺序保障及回溯消费的功能</li>
+<li><strong>存储系统</strong>: 消息持久化到存盘,可以实现永久存储</li>
+<li><strong>流式处理平台</strong>: Kafka提供了流式处理类库</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.2 生产与消费简单实例/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.2 生产与消费简单实例/" itemprop="url">kafka-1.2 生产与消费简单实例</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/1-概念介绍/" itemprop="url" rel="index">
+                    <span itemprop="name">1-概念介绍</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.2 生产与消费简单实例/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.2 生产与消费简单实例/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="1-2-生产与消费简单实例"><a href="#1-2-生产与消费简单实例" class="headerlink" title="1.2 生产与消费简单实例"></a>1.2 生产与消费简单实例</h1><h3 id="创建topic"><a href="#创建topic" class="headerlink" title="创建topic"></a>创建topic</h3><p>kafka提供了许多实用的脚本工具,存放在$KAFKA_HOME的bin目录下.其中与主题相关的就是kafka-topic.sh脚本.例如.下面创建一个分区数为4,副本为3的主题topic-demon<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --zookeeper localhost:2181 --create --topic topic-demo --replication-factor 3 --partitions 4</span><br><span class="line"></span><br><span class="line">Created topic <span class="string">"topic-demo"</span>.</span><br></pre></td></tr></table></figure></p>
+<p><code>--zoopkeer</code> 指定kafka连接的zookeeper服务地址<br><code>--topic</code> 指定一个topic主题<br><code>--replication-factor</code>  指定副本因子数量<br><code>--partition</code> 指定分区数量<br><code>--create</code> 表示创建</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.2 生产与消费简单实例/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/" itemprop="url">kafka-2.1Kafka副本</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/2-副本介绍/" itemprop="url" rel="index">
+                    <span itemprop="name">2-副本介绍</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="2-1-Kafka副本"><a href="#2-1-Kafka副本" class="headerlink" title="2.1  Kafka副本"></a>2.1  Kafka副本</h1><h3 id="副本介绍"><a href="#副本介绍" class="headerlink" title="副本介绍"></a>副本介绍</h3><p>Kafka为分区引入了副本(Replica)机制.通过增加副本数量提升容灾能力.一个Topic主题可以有多个分区,一个分区又可以有多个副本.这多个副本中，只有一个是leader，而其他的都是follower副本。仅有leader副本可以对外提供服务。所以副本之间是一主多从的关系,而且每个副本中保存的相同的消息.(严格来说,同一时刻副本之间的消息并非能一定完全同步)</p>
+<p>多个follower副本通常存放在和leader副本不同的broker中。通过这样的机制实现了高可用，当某台机器挂掉后，其他follower副本也能迅速”转正“，开始对外提供服务。</p>
+<p>在kafka中，实现副本的目的就是冗余备份，且仅仅是冗余备份，所有的读写请求都是由leader副本进行处理的。follower副本仅有一个功能，那就是从leader副本拉取消息，尽量让自己跟leader副本的内容一致。</p>
+<blockquote>
+<p>follower副本之所以不能对外提供服务,主要是为了保障数据一致性</p>
+</blockquote>
+<p>下图是一个多副本架构图.</p>
+<p>Kafka集群中有4个broker，某个主题中有3个分区，且副本因子（即副本个数）也为3，如此每个分区便有1个leader副本和2个follower副本。生产者和消费者只与leader副本进行交互，而follower副本只负责消息的同步，很多时候follower副本中的消息相对leader副本而言会有一定的滞后。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2992889/1608450120303-2d66cd2e-611a-4e3e-a507-53b4f81adfa0.png" alt="image.png"></p>
+<h3 id="副本同步"><a href="#副本同步" class="headerlink" title="副本同步"></a>副本同步</h3><p><strong>AR</strong>: 分区内的所有副本统称.</p>
+<p><strong>ISR</strong>: In-Sync Replicas.所有与Leader副本保持一定程度同步的副本(包括Leader副本).一起组成ISR</p>
+<p><strong>OSR</strong>: Out-of-Sync Replicas: 与leader副本同步滞后过多的副本(不包括leader副本),一起注册呢个OSR</p>
+<p><strong>AR = ISR + OSR.</strong></p>
+<blockquote>
+<p>正常情况下,所有的follower副本都应该与leader副本保持一定程度的同步,即AR = ISR,OSR集合为空</p>
+</blockquote>
+<p>Leader副本负责维护和跟踪ISR集合中所有follower副本的滞后状态,当follower副本落后太多或者失效时,leader副本会把它从ISR集合中剔除,如果OSR的follower副本追上了leader副本,那会从OSR转移到ISR.</p>
+<blockquote>
+<p>默认情况下,只有ISR集合中的follower副本才有资格被选举为新的Leader</p>
+</blockquote>
+<h3 id="HW和LEO"><a href="#HW和LEO" class="headerlink" title="HW和LEO"></a>HW和LEO</h3><p><strong>HW(High Watermark)</strong>: 俗称高水位.它标识了一个特点的消息偏移量(offset).消费者只能拉取这个offset之前的信息.</p>
+<p><strong>LEO(Log End Offset)</strong>: 标识当前日志文件中下一条代写入消息的offset. </p>
+<p><strong>
+</strong></p>
+<p>下面一张图能说明这两个概念</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2992889/1608450932841-d4f33228-91b2-484f-b28e-24d0762ef670.png" alt="image.png"></p>
+<p>上面的图代表一个日志文件.这个日志文件中有 9 条消息，第一条消息的 offset（LogStartOffset）为0，最后一条消息的offset为8，offset为9的消息用虚线框表示，代表下一条待写入的消息。日志文件的HW为6，表示消费者只能拉取到offset在0至5之间的消息，而offset为6的消息对消费者而言是不可见的。</p>
+<p>offset为9的位置即为当前日志文件的LEO，LEO的大小相当于当前日志分区中最后一条消息的offset值加1。分区ISR集合中的每个副本都会维护自身的LEO，<strong>而ISR集合中最小的LEO即为分区的HW，对消费者而言只能消费HW之前的消息。</strong></p>
+<h3 id="ISR和HW-LEO的关系"><a href="#ISR和HW-LEO的关系" class="headerlink" title="ISR和HW,LEO的关系"></a>ISR和HW,LEO的关系</h3><p>为了让读者更好地理解ISR集合，以及HW和LEO之间的关系，下面通过一个简单的示例来进行相关的说明。如图1-5所示，假设某个分区的ISR集合中有3个副本，即一个leader副本和2个follower副本，此时分区的LEO和HW都为3。消息3和消息4从生产者发出之后会被先存入leader副本</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2992889/1608451481234-2309dd97-7662-49d0-a43a-42b822f7a7d4.png" alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2992889/1608451501313-69357f66-f23b-4d07-940f-ef9f0afb9260.png" alt="image.png"></p>
+<p>在同步过程中，不同的 follower 副本的同步效率也不尽相同。如图 所示，在某一时刻follower1完全跟上了leader副本而follower2只同步了消息3，如此leader副本的LEO为5，follower1的LEO为5，follower2的LEO为4，那么当前分区的HW取最小值4，此时消费者可以消费到offset为0至3之间的消息。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2992889/1608451550216-2bc62531-a164-40a1-b039-e9e911401d02.png" alt="image.png"></p>
+<p>如果所有的副本都成功写入了消息3和消息4，整个分区的HW和LEO都变为5，因此消费者可以消费到offset为4的消息了。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2992889/1608451625357-266f1693-1d4b-4524-9f64-89256893555e.png" alt="image.png"></p>
+<p>Kafka 的复制机制既不是完全的同步复制，也不是单纯的异步复制。事实上，同步复制要求所有能工作的 follower 副本都复制完，这条消息才会被确认为已成功提交，这种复制方式极大地影响了性能。而在异步复制方式下，follower副本异步地从leader副本中复制数据，数据只要被leader副本写入就被认为已经成功提交。在这种情况下，如果follower副本都还没有复制完而落后于leader副本，突然leader副本宕机，则会造成数据丢失。Kafka使用的这种ISR的方式则有效地权衡了数据可靠性和性能之间的关系。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/09/16/SRE运维/SRE运维笔记-chapter Three-拥抱风险/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/09/16/SRE运维/SRE运维笔记-chapter Three-拥抱风险/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-16T22:30:54+08:00">
+                2020-09-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/16/SRE运维/SRE运维笔记-chapter Three-拥抱风险/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/09/16/SRE运维/SRE运维笔记-chapter Three-拥抱风险/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="SRE运维笔记-chapter-Three-拥抱风险"><a href="#SRE运维笔记-chapter-Three-拥抱风险" class="headerlink" title="SRE运维笔记-chapter Three-拥抱风险"></a>SRE运维笔记-chapter Three-拥抱风险</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/09/16/SRE运维/SRE运维笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/09/16/SRE运维/SRE运维笔记/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-16T22:30:54+08:00">
+                2020-09-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/16/SRE运维/SRE运维笔记/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/09/16/SRE运维/SRE运维笔记/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="SRE运维笔记-chapter-One-概念介绍"><a href="#SRE运维笔记-chapter-One-概念介绍" class="headerlink" title="SRE运维笔记-chapter One-概念介绍"></a>SRE运维笔记-chapter One-概念介绍</h2><h3 id="SRE概念"><a href="#SRE概念" class="headerlink" title="SRE概念"></a>SRE概念</h3><p>SRE(sitereliabilityengineering).中文翻译为站点可靠性工程师.SRE概念中比较重要的特性在于:</p>
+<p>1.engineer表示SRE是工程师,使用软件工程手段设计,研发和维护业务软件系统.</p>
+<p>2.SRE的关注焦点在于<strong>可靠性</strong>,专注于软件系统架构设计,运维流程优化,让业务软件系统运行更可靠.</p>
+<p>3.SRE主要工作是运维业务服务,</p>
+<h4 id="SRE团队职责"><a href="#SRE团队职责" class="headerlink" title="SRE团队职责:"></a>SRE团队职责:</h4><ul>
+<li>可用性改进</li>
+<li>延迟优化</li>
+<li>性能优化</li>
+<li>效率优化</li>
+<li>变更管理</li>
+<li>监控</li>
+<li>紧急事务处理</li>
+<li>容量规划与管理</li>
+</ul>
+<h3 id="SRE方法论"><a href="#SRE方法论" class="headerlink" title="SRE方法论"></a>SRE方法论</h3><ul>
+<li><p><strong>确保长期关注研发工作</strong></p>
+<p>运维工作限制在50%以内,剩余的时间花在研发项目上.</p>
+</li>
+<li><p><strong>在保障服务SLO的前提下最大化迭代速度</strong></p>
+<ul>
+<li>错误预算: 1-可靠性目标.<ul>
+<li>如果一个服务的可靠性目标是99.99%,那么错误预算就是0.01%.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>监控系统</strong></p>
+<p>监控系统不应该依赖人来分析警报信息.而是应该由系统自动分析.仅当需要用户执行某种操作时,才需要通知用户</p>
+<p>监控系统需要具备三类输出:</p>
+<ul>
+<li>紧急警报(alert)</li>
+<li>工单:接受工单的用户应该执行某种操作,但是并非立即执行</li>
+<li>日志</li>
+</ul>
+</li>
+<li><p><strong>应急事件处理</strong></p>
+<ul>
+<li>可靠性:MTTF(平均失败时间),MTTR(平均恢复时间),MTBF(平均故障间隔时间).</li>
+<li>任何需要人工操作的事情都只会延长恢复时间,一个可以自动恢复的系统即使有更多故障发生,也比事事都要人工干预的系统可用性更高.当不可避免需要人工介入时,最佳方法是事先预案,并且记录在<strong>运维手册(playbook)</strong>中,这能降低<strong>MTTR(平均恢复)</strong>时间.</li>
+</ul>
+</li>
+<li><p><strong>变更管理</strong></p>
+<p> 大概70%的生产事故是由某种变更触发,变更管理的最佳实践是使用自动化完成以下几个项目:</p>
+<ul>
+<li>采用渐进式发布机制</li>
+<li>迅速而准确的检测到问题的发生</li>
+<li>安全迅速的回滚</li>
+</ul>
+</li>
+<li><p><strong>需求预测和容量规划</strong></p>
+<ul>
+<li>必须有一个准确的自然增城需求预测模型,需求预测的时间应该超过资源获取时间</li>
+<li>规划中必须有准确的非自然增长的需求来源统计</li>
+<li>必须有周期性压力测试,以便准确的将系统原始资源与业务容量对应起来</li>
+</ul>
+</li>
+<li><p><strong>资源部署</strong></p>
+</li>
+<li><p><strong>效率与性能</strong></p>
+<p>一个业务总体资源使用情况是由以下几个因素驱动的:</p>
+<ul>
+<li>用户需求(流量)</li>
+<li>可用容量</li>
+<li>软件资源使用效率</li>
+</ul>
+<p>SRE需要通过模型预测用户需求,合理部署和配置可用容量,改进软件以提高资源使用效率,这3个因素能够推动一个服务器的效率提升.</p>
+<blockquote>
+<p>软件系统在负载上升的时候,会导致延迟升高.SRE的目标是根据一个预设的延迟目标部署和维护足够的容量,SRE和研发团队应该共同监控和优化整个系统的性能.</p>
+</blockquote>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/09/10/Linux-Web/kong利用request-transformer插件重写URL/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -603,1352 +2081,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/记一次生产ELK性能优化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/记一次生产ELK性能优化/" itemprop="url">记一次生产ELK性能优化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/记一次生产ELK性能优化/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/记一次生产ELK性能优化/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="记一次生产ELK性能优化"><a href="#记一次生产ELK性能优化" class="headerlink" title="记一次生产ELK性能优化"></a>记一次生产ELK性能优化</h3><p>ES上线后遇到一些问题:</p>
-<h5 id="一-内存压力过高"><a href="#一-内存压力过高" class="headerlink" title="一.内存压力过高"></a>一.内存压力过高</h5><p>目前ES节点的有两种规格内存.</p>
-<p>80GB内存(节点同时运行了Logstash,分配了16G给logstash).</p>
-<p>54GB内存(只运行ES,并且只作为data节点)</p>
-<p>ES的JVM内存从32G下降到28G.建议JVM内存是总物理内存的一半左右,</p>
-<p>节点内存使用情况如下:</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/记一次生产ELK性能优化/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" itemprop="url">使用ElastAlert+ELK实现日志监控钉钉告警</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="使用ElastAlert-ELK实现日志监控钉钉告警"><a href="#使用ElastAlert-ELK实现日志监控钉钉告警" class="headerlink" title="使用ElastAlert+ELK实现日志监控钉钉告警"></a>使用ElastAlert+ELK实现日志监控钉钉告警</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警</p>
-<hr>
-<h3 id="ElastAlert介绍"><a href="#ElastAlert介绍" class="headerlink" title="ElastAlert介绍"></a>ElastAlert介绍</h3><p>ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告警.github项目地址如下:<a href="https://github.com/Yelp/elastalert" target="_blank" rel="noopener">https://github.com/Yelp/elastalert</a></p>
-<p>官方文档如下:<a href="https://elastalert.readthedocs.io/en/latest/elastalert.html" target="_blank" rel="noopener">https://elastalert.readthedocs.io/en/latest/elastalert.html</a></p>
-<p>它支持多种监控模式和告警方式,具体可以查阅Github项目介绍.但是自带的ElastAlert并不支持钉钉告警,在github上有第三方的钉钉python项目.地址如下:<a href="https://github.com/xuyaoqiang/elastalert-dingtalk-plugin" target="_blank" rel="noopener">https://github.com/xuyaoqiang/elastalert-dingtalk-plugin</a></p>
-<p>第三方的钉钉告警插件并没有艾特相关人员的功能,所以我再此基础上进行了二次开发,增加了这个功能</p>
-<hr>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/" itemprop="url">生产环境部署ELK7+ES冷热数据分离</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="生产环境部署ELK7-ES冷热数据分离"><a href="#生产环境部署ELK7-ES冷热数据分离" class="headerlink" title="生产环境部署ELK7+ES冷热数据分离"></a>生产环境部署ELK7+ES冷热数据分离</h2><h3 id="需求整理"><a href="#需求整理" class="headerlink" title="需求整理"></a>需求整理</h3><p>当前公司还没有日志收集系统,.线上故障排错需要开发和运维人员通过跳板机登陆到业务服务器去查看日志,如果集群下服务器节点较多,可能需要登陆到每一台服务器才能找到准确的故障信息.这种方式会带来许多问题:</p>
-<ul>
-<li>效率低下</li>
-<li>需要给研发人员分配生产服务器账号,有安全隐患</li>
-<li>查看日志的方式极为麻烦,复杂</li>
-<li>每台业务服务器需要大容量磁盘保存日志文件</li>
-</ul>
-<hr>
-<h3 id="Elasticsearch冷热数据分离"><a href="#Elasticsearch冷热数据分离" class="headerlink" title="Elasticsearch冷热数据分离"></a>Elasticsearch冷热数据分离</h3><p>公司目前共有4个APP产品,每天的nginx日志+业务日志+php日志总共预计在1.5T左右.一周的日志数据量在10T左右.Elasticsearch规划了20T的SSD磁盘用来一周的日志数据(7天日志+1个副本).这些数据保存在Elasticsearch的热节点.</p>
-<p>考虑到1周以后的日志数据查询频率非常低,所以可以将这部分的日志迁移和归档到Elasticsearch的冷节点.并且冷节点日志无需索引.所以预留了10T的SAS磁盘保留1周的冷数据.</p>
-<p>总共是20TSSD磁盘的热节点和10TSAS机械磁盘的冷节点</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/kibana索引及索引冷热分离管理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/kibana索引及索引冷热分离管理/" itemprop="url">kibana索引及索引冷热分离管理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/kibana索引及索引冷热分离管理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/kibana索引及索引冷热分离管理/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="kibana索引及索引冷热分离管理"><a href="#kibana索引及索引冷热分离管理" class="headerlink" title="kibana索引及索引冷热分离管理"></a>kibana索引及索引冷热分离管理</h3><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本篇文档简单介绍一下kibana的索引管理.主要包括:</p>
-<ul>
-<li>索引模板</li>
-<li>索引模式</li>
-<li>索引生命周期</li>
-<li>索引冷热分离管理</li>
-<li>索引模板配置</li>
-</ul>
-<hr>
-<h3 id="索引模板"><a href="#索引模板" class="headerlink" title="索引模板"></a>索引模板</h3><p>ES自带一个默认的logstash-*的索引模板,es内部维护了template，template定义好了mapping，只要index的名称被template匹配到，那么该index的mapping就按照template中定义的mapping自动创建。而且template中定义了index的shard分片数量、replica副本数量等等属性。</p>
-<p>所以我们每次新建一个索引的时候,不需要手动创建mapping映射,也不需要手动设置副本和分片数量.</p>
-<p>在Kibana的图形化界面中可以看到ES默认的索引模板</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/kibana索引及索引冷热分离管理/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Kibana图表制作/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/Kibana图表制作/" itemprop="url">Kibana图表制作</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/Kibana图表制作/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Kibana图表制作/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Kibana图表制作"><a href="#Kibana图表制作" class="headerlink" title="Kibana图表制作"></a>Kibana图表制作</h2><p>kibana的可视化可以制作各种统计分析图表,然后合并展示到dashbord中.下面介绍一些常用的nginx的访问图表.</p>
-<blockquote>
-<p>在kibana7.7版本中可以配置kibana web界面的中文语言.</p>
-</blockquote>
-<p>编辑kibana配置文件,<code>/etc/kibana/kibana.yml</code>,加入以下配置: </p>
-<p><code>i18n.locale: &quot;zh-CN&quot;</code></p>
-<h4 id="一-统计过去XXX时间的访问量"><a href="#一-统计过去XXX时间的访问量" class="headerlink" title="一.统计过去XXX时间的访问量"></a>一.统计过去XXX时间的访问量</h4><p>在可视化界面,添加仪表盘图表.指定nginx的openapi access访问日志索引.</p>
-<p>无需进行任何配置,选择右上角的时间范围,会显示计数,也就是日志量的计数</p>
-<p><img src="https://img2.jesse.top/image-20200723154706247.png" alt="image-20200723154706247"></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/Kibana图表制作/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="url">Filebeat+logstash收集Nginx错误日志</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Filebeat-logstash收集Nginx错误日志"><a href="#Filebeat-logstash收集Nginx错误日志" class="headerlink" title="Filebeat+logstash收集Nginx错误日志"></a>Filebeat+logstash收集Nginx错误日志</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在上一个笔记&lt;Filebeat+logstash收集Nginx访问日志&gt;中分享了如何收集logstash的访问日志,这篇笔记主要是记录如何收集nginx的错误日志</p>
-<p>Nginx 错误日志是运维人员最常见但又极其容易忽略的日志类型之一。Nginx 错误日志即没有统一明确的分隔符，也没有特别方便的正则模式，但通过 logstash 不同插件的组合，还是可以轻松做到数据处理。</p>
-<hr>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="url">使用goreplay收集线上真实http流量</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="使用goreplay收集线上真实http流量"><a href="#使用goreplay收集线上真实http流量" class="headerlink" title="使用goreplay收集线上真实http流量"></a>使用goreplay收集线上真实http流量</h2><h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>在很多场景中,我们需要将线上服务器的真实Http请求复制转发到某台服务器中(或者测试环境中),并且前提是不影响线上生产业务进行.</p>
-<p>例如:</p>
-<ol>
-<li>通常可能会通过ab等压测工具来对单一http接口进行压测。但如果是需要http服务整体压测，使用ab来压测工作量大且不方便，通过线上流量复制引流，通过将真实请求流量放大N倍来进行压测，能对服务有一个较为全面的检验.</li>
-<li>将线上流量引入到测试环境中,测试某个中间件或者数据库的压力</li>
-<li>上线前在预发布环境，使用线上真实的请求，检查是否准备发布的版本，是否具备发布标准</li>
-<li>用线上的流量转发到预发，检查相同流量下一些指标的反馈情况，检查核心数据是否有改善、优化.</li>
-</ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/" itemprop="url">Filebeat+logstash收集Nginx访问日志</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Filebeat-logstash收集Nginx访问日志"><a href="#Filebeat-logstash收集Nginx访问日志" class="headerlink" title="Filebeat+logstash收集Nginx访问日志"></a>Filebeat+logstash收集Nginx访问日志</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境:"></a>环境:</h3><p><strong>Filebeat</strong>: 7.0</p>
-<p><strong>Logstash</strong>:7.0</p>
-<p><strong>elasticsearch</strong>:7.0</p>
-<hr>
-<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>logstash默认自带了apache标准日志格式的grok正则表达式:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">COMMONAPACHELOG %&#123;IPORHOST:clientip&#125; %&#123;USER:ident&#125; %&#123;NOTSPACE:auth&#125; \[%&#123;HTTPDATE:timestamp&#125;\] &quot;(?:%&#123;WORD:verb&#125; %&#123;NOTSPACE:request&#125;(?: HTTP/%&#123;NUMBER:httpversion&#125;)?|%&#123;DATA:rawrequest&#125;)&quot; %&#123;NUMBER:response&#125; (?:%&#123;NUMBER:bytes&#125;|-)</span><br><span class="line">COMBINEDAPACHELOG %&#123;COMMONAPACHELOG&#125; %&#123;QS:referrer&#125; %&#123;QS:agent&#125;</span><br></pre></td></tr></table></figure>
-<p>对于 nginx 标准日志格式，可以发现只是最后多了一个 <code>$http_x_forwarded_for</code> 变量。所以 nginx 标准日志的 grok 正则定义是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MAINNGINXLOG %&#123;COMBINEDAPACHELOG&#125; %&#123;QS:x_forwarded_for&#125;</span><br></pre></td></tr></table></figure>
-<p>如果Nginx日志格式不是标准的日志格式,则需要自行编写grok正则,匹配日志内容.</p>
-<p>但是grok正则表达式不容易上手,非常难写.复杂不说,而且logstash使用正则表达式来处理日志格式,其性能也会受到很大的影响.</p>
-<p>所以这里推荐另外一种收集方式.</p>
-<p>本文档参考博客:<a href="https://www.popyone.com/post/13.html" target="_blank" rel="noopener">https://www.popyone.com/post/13.html</a></p>
-<p>本文档参考书籍:<strong>ELK权威指南中文版第二版</strong></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1998,7 +2135,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">187</span>
+                  <span class="site-state-item-count">195</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2009,7 +2146,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2020,7 +2157,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2064,7 +2201,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

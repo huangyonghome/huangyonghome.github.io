@@ -92,18 +92,22 @@
 
 
 
-<meta name="description" content="记一次生产ELK性能优化ES上线后遇到一些问题: 一.内存压力过高目前ES节点的有两种规格内存. 80GB内存(节点同时运行了Logstash,分配了16G给logstash). 54GB内存(只运行ES,并且只作为data节点) ES的JVM内存从32G下降到28G.建议JVM内存是总物理内存的一半左右, 节点内存使用情况如下:">
+<meta name="description" content="记一次生产ELK性能优化ES上线后遇到一些问题: 一.内存压力过高目前ES节点的有两种规格内存. 80GB内存(节点同时运行了Logstash,分配了16G给logstash). 54GB内存(只运行ES,并且只作为data节点) ES的JVM内存从32G下降到28G.建议JVM内存是总物理内存的一半左右, 节点内存使用情况如下: 123456789&amp;quot;mem&amp;quot;: &amp;#123;">
 <meta name="keywords" content="elk">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次生产ELK性能优化">
 <meta property="og:url" content="https://jesse.top/2020/08/25/elk/记一次生产ELK性能优化/index.html">
 <meta property="og:site_name" content="Jesse&#39;s home">
-<meta property="og:description" content="记一次生产ELK性能优化ES上线后遇到一些问题: 一.内存压力过高目前ES节点的有两种规格内存. 80GB内存(节点同时运行了Logstash,分配了16G给logstash). 54GB内存(只运行ES,并且只作为data节点) ES的JVM内存从32G下降到28G.建议JVM内存是总物理内存的一半左右, 节点内存使用情况如下:">
+<meta property="og:description" content="记一次生产ELK性能优化ES上线后遇到一些问题: 一.内存压力过高目前ES节点的有两种规格内存. 80GB内存(节点同时运行了Logstash,分配了16G给logstash). 54GB内存(只运行ES,并且只作为data节点) ES的JVM内存从32G下降到28G.建议JVM内存是总物理内存的一半左右, 节点内存使用情况如下: 123456789&amp;quot;mem&amp;quot;: &amp;#123;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-08-26T23:55:20.314Z">
+<meta property="og:image" content="https://img2.jesse.top/image-20200904103820376.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200904103802250.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20200904103746474.png">
+<meta property="og:updated_time" content="2020-09-16T14:30:54.836Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记一次生产ELK性能优化">
-<meta name="twitter:description" content="记一次生产ELK性能优化ES上线后遇到一些问题: 一.内存压力过高目前ES节点的有两种规格内存. 80GB内存(节点同时运行了Logstash,分配了16G给logstash). 54GB内存(只运行ES,并且只作为data节点) ES的JVM内存从32G下降到28G.建议JVM内存是总物理内存的一半左右, 节点内存使用情况如下:">
+<meta name="twitter:description" content="记一次生产ELK性能优化ES上线后遇到一些问题: 一.内存压力过高目前ES节点的有两种规格内存. 80GB内存(节点同时运行了Logstash,分配了16G给logstash). 54GB内存(只运行ES,并且只作为data节点) ES的JVM内存从32G下降到28G.建议JVM内存是总物理内存的一半左右, 节点内存使用情况如下: 123456789&amp;quot;mem&amp;quot;: &amp;#123;">
+<meta name="twitter:image" content="https://img2.jesse.top/image-20200904103820376.png">
 
 
 
@@ -376,21 +380,21 @@
 
       
         <h3 id="记一次生产ELK性能优化"><a href="#记一次生产ELK性能优化" class="headerlink" title="记一次生产ELK性能优化"></a>记一次生产ELK性能优化</h3><p>ES上线后遇到一些问题:</p>
-<h5 id="一-内存压力过高"><a href="#一-内存压力过高" class="headerlink" title="一.内存压力过高"></a>一.内存压力过高</h5><p>目前ES节点的有两种规格内存.</p>
+<h3 id="一-内存压力过高"><a href="#一-内存压力过高" class="headerlink" title="一.内存压力过高"></a>一.内存压力过高</h3><p>目前ES节点的有两种规格内存.</p>
 <p>80GB内存(节点同时运行了Logstash,分配了16G给logstash).</p>
 <p>54GB内存(只运行ES,并且只作为data节点)</p>
 <p>ES的JVM内存从32G下降到28G.建议JVM内存是总物理内存的一半左右,</p>
 <p>节点内存使用情况如下:</p>
-<a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&quot;mem&quot;: &#123; - </span><br><span class="line">          &quot;total&quot;: &quot;78.5gb&quot;,</span><br><span class="line">          &quot;total_in_bytes&quot;: 84296601600,</span><br><span class="line">          &quot;free&quot;: &quot;4.3gb&quot;,</span><br><span class="line">          &quot;free_in_bytes&quot;: 4688633856,</span><br><span class="line">          &quot;used&quot;: &quot;74.1gb&quot;,</span><br><span class="line">          &quot;used_in_bytes&quot;: 79607967744,</span><br><span class="line">          &quot;free_percent&quot;: 6,</span><br><span class="line">          &quot;used_percent&quot;: 94</span><br></pre></td></tr></table></figure>
 <p>建议: ES节点内存建议配置高一点,虽然ES的JVM内存最大不超过32G.但是在其他方面仍然很吃内存</p>
+<a id="more"></a>
 <hr>
-<h5 id="二-索引字段数"><a href="#二-索引字段数" class="headerlink" title="二.索引字段数"></a>二.索引字段数</h5><p>ES的单个索引默认最大字段数量是1000个.当超过这个字段数量时,会拒绝字段映射.</p>
+<h3 id="二-索引字段数"><a href="#二-索引字段数" class="headerlink" title="二.索引字段数"></a>二.索引字段数</h3><p>ES的单个索引默认最大字段数量是1000个.当超过这个字段数量时,会拒绝字段映射.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[2020-08-14T10:44:10,605][INFO ][o.e.a.b.TransportShardBulkAction] [idc-function-elk01] [logstash-mg-tc-netrcd-gateway-2020.08.14][0] mapping update rejected by primary</span><br><span class="line">java.lang.IllegalArgumentException: Limit of total fields [10000] in index [logstash-mg-tc-netrcd-gateway-2020.08.14] has been exceeded</span><br></pre></td></tr></table></figure>
 <p>此时可以在索引模板中,修改默认字段数量.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT _template/logstash</span><br><span class="line">&#123;</span><br><span class="line">    &quot;index_patterns&quot;: &quot;logstash-*&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;mapping.total_fields.limit&quot;:5000</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <hr>
-<h5 id="三-ES线程和队列优化"><a href="#三-ES线程和队列优化" class="headerlink" title="三.ES线程和队列优化"></a>三.ES线程和队列优化</h5><p>ES日志有部分警告信息:</p>
+<h3 id="三-ES线程和队列优化"><a href="#三-ES线程和队列优化" class="headerlink" title="三.ES线程和队列优化"></a>三.ES线程和队列优化</h3><p>ES日志有部分警告信息:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[2020-08-14T10:15:06,151][WARN ][o.e.c.r.a.AllocationService] [idc-function-elk01] failing shard [failed shard, shard [logstash-msf-internal-access-2020.08.14][0], node[3uwnN_KEQGiywi</span><br><span class="line">u9xR5Jng], [R], s[STARTED], a[id=ACE7jGGoS6yhS9T_Sn53UA], message [failed to perform indices:data/write/bulk[s] on replica [logstash-msf-internal-access-2020.08.14][0], node[3uwnN_KEQ</span><br><span class="line">Giywiu9xR5Jng], [R], s[STARTED], a[id=ACE7jGGoS6yhS9T_Sn53UA]], failure [RemoteTransportException[[idc-function-elk08][172.16.20.108:9300][indices:data/write/bulk[s][r]]]; nested: Cir</span><br><span class="line">cuitBreakingException[[parent] Data too large, data for [&lt;transport_request&gt;] would be [20720204958/19.2gb], which is larger than the limit of [20401094656/19gb], real usage: [2068074</span><br><span class="line">9096/19.2gb], new bytes reserved: [39455862/37.6mb], usages [request=197056/192.4kb, fielddata=1310/1.2kb, in_flight_requests=11463397212/10.6gb, accounting=54576960/52mb]]; ], markAs</span><br><span class="line">Stale [true]]</span><br><span class="line">org.elasticsearch.transport.RemoteTransportException: [idc-function-elk08][172.16.20.108:9300][indices:data/write/bulk[s][r]]</span><br><span class="line">Caused by: org.elasticsearch.common.breaker.CircuitBreakingException: [parent] Data too large, data for [&lt;transport_request&gt;] would be [20720204958/19.2gb], which is larger than the l</span><br><span class="line">imit of [20401094656/19gb], real usage: [20680749096/19.2gb], new bytes reserved: [39455862/37.6mb], usages [request=197056/192.4kb, fielddata=1310/1.2kb, in_flight_requests=114633972</span><br><span class="line">12/10.6gb, accounting=54576960/52mb]</span><br><span class="line">        at org.elasticsearch.indices.breaker.HierarchyCircuitBreakerService.checkParentLimit(HierarchyCircuitBreakerService.java:347) ~[elasticsearch-7.7.0.jar:7.7.0]</span><br><span class="line">        at org.elasticsearch.common.breaker.ChildMemoryCircuitBreaker.addEstimateBytesAndMaybeBreak(ChildMemoryCircuitBreaker.java:128) ~[elasticsearch-7.7.0.jar:7.7.0]</span><br></pre></td></tr></table></figure>
 <p>编辑<code>/etc/elasticsearch/elasticsearch.yml</code>配置文件.新增如下配置:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">thread_pool:</span><br><span class="line">    write:</span><br><span class="line">        size: 32</span><br><span class="line">        queue_size: 10000</span><br><span class="line">processors: 32</span><br></pre></td></tr></table></figure>
@@ -400,7 +404,7 @@
 <p>以上这些配置都需要不断的调试,修改,观察,找到最适合的一个范围和效果</p>
 </blockquote>
 <hr>
-<h5 id="四-集群最大分片-shard-数"><a href="#四-集群最大分片-shard-数" class="headerlink" title="四.集群最大分片(shard)数"></a>四.集群最大分片(shard)数</h5><p>今天收集新的日志报错,logstash日志内容如下</p>
+<h3 id="四-集群最大分片-shard-数"><a href="#四-集群最大分片-shard-数" class="headerlink" title="四.集群最大分片(shard)数"></a>四.集群最大分片(shard)数</h3><p>今天收集新的日志报错,logstash日志内容如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[2020-08-24T10:32:41,009][WARN ][logstash.outputs.elasticsearch][main][7ca4981ae091d6b8f604e5695405b2c74a9cb7fc4a72b338be4e2ede66a04d7d] Could not index event to Elasticsearch. &#123;:status=&gt;400, :action=&gt;[&quot;index&quot;, &#123;:_id=&gt;nil, :_index=&gt;&quot;logstash-hsq-search-netrcd-2020.08.24&quot;, :routing=&gt;nil, :_type=&gt;&quot;_doc&quot;&#125;, #&lt;LogStash::Event:0x4a0b491&gt;], :response=&gt;&#123;&quot;index&quot;=&gt;&#123;&quot;_index&quot;=&gt;&quot;logstash-hsq-search-netrcd-2020.08.24&quot;, &quot;_type&quot;=&gt;&quot;_doc&quot;, &quot;_id&quot;=&gt;nil, &quot;status&quot;=&gt;400, &quot;error&quot;=&gt;&#123;&quot;type&quot;=&gt;&quot;illegal_argument_exception&quot;, &quot;reason&quot;=&gt;&quot;Validation Failed: 1: this action would add [14] total shards, but this cluster currently has [8998]/[9000] maximum shards open;&quot;&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
 <p>看日志关键字发现当前集群总共分片数是8998个,如果再加上14个分片,那么就超过了最大的9000个.</p>
 <p><strong>14和9000个分片是怎么来的?</strong></p>
@@ -445,6 +449,31 @@
 <p>设置立即生效,在ELK集群面板中,总的shard分片数超过了9000的最大值,已经达到9,376 shards,</p>
 <p>博客参考:<a href="https://studygolang.com/articles/25396" target="_blank" rel="noopener">https://studygolang.com/articles/25396</a></p>
 <hr>
+<h3 id="五-分片严重不均衡"><a href="#五-分片严重不均衡" class="headerlink" title="五.分片严重不均衡"></a>五.分片严重不均衡</h3><p>ES集群运行了将近一个月后,出现了分片验证不均衡的现象.当前7个Hot节点中,每个索引一共有7个分片,但是我们发现大部分索引的7个分片全部写入到ELK09这个节点,其他节点没有分配任何分片.如下图所示:</p>
+<p><img src="https://img2.jesse.top/image-20200904103820376.png" alt="image-20200904103820376"></p>
+<p>即使将elk09这个节点的磁盘警戒线和最高水位线下调到50%和80%,但是仍然不起作用,磁盘使用率依然上升到90%以上.</p>
+<p>也尝试过,严格限定每个索引每节点最大分片数4个,但是ES会将所有4个分片全部写入到ELK09节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT _template/logstash</span><br><span class="line">&#123;</span><br><span class="line">    &quot;index_patterns&quot;: &quot;logstash-*&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;index.routing.allocation.total_shards_per_node&quot;: 4 #每节点单索引最大分片数4个</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>之所以设置为4个,是因为每个索引7个分片在14天后会自动迁移到ES冷节点,而一共2个冷节点,所以每个节点4分片.(冷数据没有副本)</p>
+</blockquote>
+<p>观察nodes节点,elk09这个节点的内存,CPU,负载等各指标相比其他节点都高出一大截</p>
+<p><img src="https://img2.jesse.top/image-20200904103802250.png" alt="image-20200904103802250"></p>
+<p><strong>故障原因:</strong></p>
+<p>故障原因在于其他热节点(elk01-elk06)有2块1.92T的SSD磁盘,总容量3.4T,这台elk09节点只有一块磁盘1.92T的SSD磁盘..这台elk09节点的磁盘容量只有其他节点的一半.</p>
+<p>ELK默认是平均分配分片在节点中.当ES中数据较少时,分片会平均分配到各节点中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1245 759.7gb     1tb   3.9tb 4.9tb 20 172.16.20.108 172.16.20.108 idc-function-elk08</span><br><span class="line">1426 771.3gb 798.9gb   2.6tb 3.4tb 22 172.16.20.101 172.16.20.101 idc-function-elk01</span><br><span class="line">1426   770gb 795.6gb   2.7tb 3.4tb 22 172.16.20.102 172.16.20.102 idc-function-elk02</span><br><span class="line">1426 770.6gb 796.1gb   2.7tb 3.4tb 22 172.16.20.104 172.16.20.104 idc-function-elk04</span><br><span class="line">1426 770.7gb   811gb   2.6tb 3.4tb 22 172.16.20.105 172.16.20.105 idc-function-elk05</span><br><span class="line">1426 771.1gb 843.9gb   2.6tb 3.4tb 23 172.16.20.103 172.16.20.103 idc-function-elk03</span><br><span class="line">1426 770.9gb 797.1gb   2.6tb 3.4tb 22 172.16.20.106 172.16.20.106 idc-function-elk06</span><br><span class="line">1426 771.4gb 798.6gb 982.2gb 1.7tb 44 172.16.20.109 172.16.20.109 idc-function-elk09</span><br><span class="line">1244 792.5gb   869gb   4.1tb 4.9tb 16 172.16.20.107 172.16.20.107 idc-function-elk07</span><br></pre></td></tr></table></figure>
+<p>但是当索引数据越来越大,elk09磁盘由于警戒线和水位线设置,所以索引分片更多写入到elk01-06这些节点,这就造成elk09节点上的分片数量和其他节点相比差距越来越大.</p>
+<p>下图是故障发生时,可以看到每个节点的分片数在2787左右.但是ELK09这个节点的分片在2155个.</p>
+<p><img src="https://img2.jesse.top/image-20200904103746474.png" alt="image-20200904103746474"></p>
+<p>这就导致ES为了平衡各节点分配数量,将新索引的分片集中全部写入到elk09这个节点,以求集群各节点分片数量平衡,从而忽略了节点的磁盘使用率和硬件资源状态.</p>
+<p><strong>解决办法</strong></p>
+<p>有以下3种解决办法可以参考</p>
+<p>1.给elk09添加一块同容量SSD磁盘,这样所有节点的磁盘容量一样,这也是最根本的解决办法</p>
+<p>2.适当减少ES的索引保留天数,减少数据量,使得elk09单节点总数据量不超过单块磁盘容量(1.92T)中的50%左右区间.</p>
+<p>3.调整集群参数<code>cluster.routing.allocation.balance.shard</code>和<code>cluster.routing.allocation.balance.index</code>.这2个值越大,集群更倾向于在集群中平均负载分片,所以这2个需要调小,具体什么值合适,需要不断的观察和测试.</p>
+<p>关于这2个参数的介绍可以参考官网或者博客:</p>
+<p><a href="https://www.bookstack.cn/read/ELKstack-guide-cn/elasticsearch-principle-shard-allocate.md" target="_blank" rel="noopener">https://www.bookstack.cn/read/ELKstack-guide-cn/elasticsearch-principle-shard-allocate.md</a></p>
 
       
     </div>
@@ -464,7 +493,7 @@
   <p><span>本文标题:</span><a href="/2020/08/25/elk/记一次生产ELK性能优化/">记一次生产ELK性能优化</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
   <p><span>发布时间:</span>2020年08月25日 - 22:08</p>
-  <p><span>最后更新:</span>2020年08月27日 - 07:08</p>
+  <p><span>最后更新:</span>2020年09月16日 - 22:09</p>
   <p><span>原始链接:</span><a href="/2020/08/25/elk/记一次生产ELK性能优化/" title="记一次生产ELK性能优化">https://jesse.top/2020/08/25/elk/记一次生产ELK性能优化/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/08/25/elk/记一次生产ELK性能优化/"  aria-label="复制成功！"></i></span>
   </p>
@@ -539,8 +568,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" rel="next" title="使用ElastAlert+ELK实现日志监控钉钉告警">
-                <i class="fa fa-chevron-left"></i> 使用ElastAlert+ELK实现日志监控钉钉告警
+              <a href="/2020/08/25/elk/Kibana图表制作/" rel="next" title="Kibana图表制作">
+                <i class="fa fa-chevron-left"></i> Kibana图表制作
               </a>
             
           </div>
@@ -549,8 +578,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/08/26/监控/zabbix监控vmware主机以及GuestOS/" rel="prev" title="zabbix监控vmware主机以及GuestOS">
-                zabbix监控vmware主机以及GuestOS <i class="fa fa-chevron-right"></i>
+              <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" rel="prev" title="Filebeat+logstash收集Nginx错误日志">
+                Filebeat+logstash收集Nginx错误日志 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -639,7 +668,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">187</span>
+                  <span class="site-state-item-count">195</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -650,7 +679,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -661,7 +690,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -701,7 +730,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#记一次生产ELK性能优化"><span class="nav-number">1.</span> <span class="nav-text">记一次生产ELK性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#一-内存压力过高"><span class="nav-number">1.0.1.</span> <span class="nav-text">一.内存压力过高</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#二-索引字段数"><span class="nav-number">1.0.2.</span> <span class="nav-text">二.索引字段数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#三-ES线程和队列优化"><span class="nav-number">1.0.3.</span> <span class="nav-text">三.ES线程和队列优化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#四-集群最大分片-shard-数"><span class="nav-number">1.0.4.</span> <span class="nav-text">四.集群最大分片(shard)数</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#记一次生产ELK性能优化"><span class="nav-number">1.</span> <span class="nav-text">记一次生产ELK性能优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一-内存压力过高"><span class="nav-number">2.</span> <span class="nav-text">一.内存压力过高</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-索引字段数"><span class="nav-number">3.</span> <span class="nav-text">二.索引字段数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-ES线程和队列优化"><span class="nav-number">4.</span> <span class="nav-text">三.ES线程和队列优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-集群最大分片-shard-数"><span class="nav-number">5.</span> <span class="nav-text">四.集群最大分片(shard)数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五-分片严重不均衡"><span class="nav-number">6.</span> <span class="nav-text">五.分片严重不均衡</span></a></li></ol></div>
             
 
           </div>
@@ -721,7 +750,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
