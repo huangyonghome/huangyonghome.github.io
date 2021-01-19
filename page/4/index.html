@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,184 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/" itemprop="url">docker学习笔记---docker使用阿里云私有仓库</a></h1>
+                <a class="post-title-link" href="/2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/" itemprop="url">分析统计Nginx日志的响应时间</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-30T00:44:48+08:00">
+                2020-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
+                    <span itemprop="name">shell&shell脚本</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="分析统计Nginx日志的响应时间"><a href="#分析统计Nginx日志的响应时间" class="headerlink" title="分析统计Nginx日志的响应时间"></a>分析统计Nginx日志的响应时间</h2><p>Nginx日志格式如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">log_format main &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos;</span><br><span class="line">                &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;</span><br><span class="line">                &apos;&quot;$http_user_agent&quot; $http_x_forwarded_for &quot;$request_time&quot;&apos;;</span><br></pre></td></tr></table></figure>
+<p>实际日志如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[work@iqg-yyq2 ~]$ head  /data/logs/nginx/iqg_api_v5.access.log</span><br><span class="line">100.97.74.45 - - [11/Mar/2019:03:46:01 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.154 - - [11/Mar/2019:03:46:01 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.97.74.22 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.002&quot;</span><br><span class="line">100.117.85.96 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.133 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.172 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.002&quot;</span><br><span class="line">100.97.74.0 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.97.73.184 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.85 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.97.74.62 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br></pre></td></tr></table></figure>
+<p>最后一行为响应时间.但是是个字符串,还不能直接用awk来统计</p>
+<p>下面这个脚本用来统计响应时间:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">[ $# -ne 2 ] &amp;&amp; echo &quot;Usage: ./loganalysis.sh two parameters: logfile path  and cost time&quot; &amp;&amp; exit 0</span><br><span class="line"></span><br><span class="line">[ ! -f &quot;$1&quot; ] &amp;&amp; echo &quot;the file doesn&apos;t exsit,please check again&quot; &amp;&amp; exit 0</span><br><span class="line">logfile=$(basename $1)</span><br><span class="line"></span><br><span class="line">[ &quot;$2&quot; -lt 0 ] &amp;&amp; echo &quot; the second parameter is not a digit&quot; &amp;&amp; exit 0</span><br><span class="line">cost_time=$2</span><br><span class="line"></span><br><span class="line">cat $1 | awk &apos;&#123;print $NF&#125;&apos;  | awk -F &quot;\&quot;&quot; &apos;&#123;print $2&#125;&apos;  &gt;  time.txt</span><br><span class="line">echo &quot;split request_time over!!!&quot;</span><br><span class="line"></span><br><span class="line">paste  -d &quot; &quot; $1 time.txt &gt; new.log</span><br><span class="line">echo &quot;build new logfile over!!!&quot;</span><br><span class="line"></span><br><span class="line">awk &apos;($NF&gt;&apos;$cost_time&apos;)&#123;print $0&#125;&apos; new.log &gt; slow-$&#123;logfile&#125;</span><br><span class="line">echo &quot;please see slowtime in slow-$&#123;logfile&#125;&quot;</span><br><span class="line"></span><br><span class="line">rm -f time.txt</span><br><span class="line">rm -f new.log</span><br><span class="line"></span><br><span class="line"># analyze the access frequence of API</span><br><span class="line"></span><br><span class="line">echo &quot;#############the access frequence of API ##################&quot;</span><br><span class="line">awk &apos;&#123;++S[$4]&#125; END &#123; for (i in S) print &quot;URL:&quot;i &quot;\t&quot; &quot;access times:&quot;S[i]&#125;&apos; slow-$&#123;logfile&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是统计iqg_api_v5.access.log这个日志响应时间超过1秒的记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[work@iqg-yyq2 ~]$ ./loganalysis.sh /data/logs/nginx/iqg_api_v5.access.log 1</span><br><span class="line">split request_time over!!!</span><br><span class="line">build new logfile over!!!</span><br><span class="line">please see slowtime in slowtime.txt!!!</span><br><span class="line">[work@iqg-yyq2 ~]$</span><br></pre></td></tr></table></figure>
+<p>查看最终结果:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">work@iqg-yyq2 ~]$ head slowtime.txt</span><br><span class="line">100.117.85.64 [11/Mar/2019:14:14:15 &quot;HEAD / 1.223</span><br><span class="line">100.97.74.41 [11/Mar/2019:14:14:16 &quot;HEAD / 1.984</span><br><span class="line">100.97.74.104 [11/Mar/2019:14:14:16 &quot;HEAD / 1.880</span><br><span class="line">100.97.74.5 [11/Mar/2019:14:14:16 &quot;HEAD / 1.758</span><br><span class="line">100.117.85.100 [11/Mar/2019:14:14:16 &quot;HEAD / 1.757</span><br><span class="line">100.97.73.213 [11/Mar/2019:14:14:16 &quot;HEAD / 1.767</span><br><span class="line">100.117.85.160 [11/Mar/2019:14:14:16 &quot;HEAD / 1.662</span><br><span class="line">100.97.74.118 [11/Mar/2019:14:14:16 &quot;HEAD / 1.566</span><br><span class="line">100.97.73.141 [11/Mar/2019:14:14:16 &quot;HEAD / 1.215</span><br><span class="line">100.117.56.238 [11/Mar/2019:14:14:16 &quot;HEAD / 1.132</span><br><span class="line">[work@iqg-yyq2 ~]$</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker学习笔记—docker-compose/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/29/docker/docker学习笔记—docker-compose/" itemprop="url">docker学习笔记---docker-compose</a></h1>
         
 
         <div class="post-meta">
@@ -347,8 +524,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker学习笔记—docker-compose/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker学习笔记—docker-compose/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,17 +554,18 @@
 
       
         
-          <h3 id="docker使用阿里云私有仓库"><a href="#docker使用阿里云私有仓库" class="headerlink" title="docker使用阿里云私有仓库"></a>docker使用阿里云私有仓库</h3><p>注册阿里云镜像服务:</p>
-<p>以下是我的阿里云镜像仓库链接:<br><a href="https://cr.console.aliyun.com/cn-hangzhou/repositories" target="_blank" rel="noopener">https://cr.console.aliyun.com/cn-hangzhou/repositories</a></p>
-<p>一.使用阿里云镜像加速器<br><a href="https://cr.console.aliyun.com/cn-hangzhou/mirrors" target="_blank" rel="noopener">https://cr.console.aliyun.com/cn-hangzhou/mirrors</a></p>
-<p>镜像加速地址:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://0w5ygvsg.mirror.aliyuncs.com</span><br></pre></td></tr></table></figure>
-<p>如果是Centos系统,可以通过修改daemon配置文件/etc/docker/daemon.json来使用加速器:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&apos;EOF&apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://0w5ygvsg.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
-<hr>
+          <h2 id="docker学习笔记——docker-compose"><a href="#docker学习笔记——docker-compose" class="headerlink" title="docker学习笔记——docker-compose"></a>docker学习笔记——docker-compose</h2><p>docker compose 定义并且运行多个docker容器.使用YAML风格文件定义一个compose文件.利用compose文件创建和启动所有服务.</p>
+<p>使用docker compose基本只需要3个步骤</p>
+<ul>
+<li>在Dockerfile文件定义app环境</li>
+<li>在docker-compose.yml文件中定义组成app的各个服务</li>
+<li>run docker-compose up 和compose 启动和运行app</li>
+</ul>
+<p>下面文档均可以在docker-compose官方找到详细资料:<a href="https://docs.docker.com/compose/" target="_blank" rel="noopener">docker-compose</a></p>
+<h3 id="docker-compose安装"><a href="#docker-compose安装" class="headerlink" title="docker-compose安装"></a>docker-compose安装</h3>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/#more" rel="contents">
+            <a class="btn" href="/2020/06/29/docker/docker学习笔记—docker-compose/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -724,174 +902,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/06/29/docker/docker笔记—存储驱动篇/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker学习笔记—docker-compose/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/29/docker/docker学习笔记—docker-compose/" itemprop="url">docker学习笔记---docker-compose</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
-                2020-06-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
-                    <span itemprop="name">docker</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/29/docker/docker学习笔记—docker-compose/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker学习笔记—docker-compose/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="docker学习笔记——docker-compose"><a href="#docker学习笔记——docker-compose" class="headerlink" title="docker学习笔记——docker-compose"></a>docker学习笔记——docker-compose</h2><p>docker compose 定义并且运行多个docker容器.使用YAML风格文件定义一个compose文件.利用compose文件创建和启动所有服务.</p>
-<p>使用docker compose基本只需要3个步骤</p>
-<ul>
-<li>在Dockerfile文件定义app环境</li>
-<li>在docker-compose.yml文件中定义组成app的各个服务</li>
-<li>run docker-compose up 和compose 启动和运行app</li>
-</ul>
-<p>下面文档均可以在docker-compose官方找到详细资料:<a href="https://docs.docker.com/compose/" target="_blank" rel="noopener">docker-compose</a></p>
-<h3 id="docker-compose安装"><a href="#docker-compose安装" class="headerlink" title="docker-compose安装"></a>docker-compose安装</h3>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/29/docker/docker学习笔记—docker-compose/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1294,174 +1304,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-5.学习swarm集群/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/" itemprop="url">docker学习笔记---理解swarm集群</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
-                2020-06-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
-                    <span itemprop="name">docker</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-5.学习swarm集群/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="理解swarm集群"><a href="#理解swarm集群" class="headerlink" title="理解swarm集群"></a>理解swarm集群</h3><p>一个swarm是一组运行docker服务器的的集群,docker服务器可以是物理机也可以是虚拟机.</p>
-<p>swarm manager可以使用多种策略来运行容器.比如”emptiest node”—部署容器到压力最小的服务器上,或者”global”—确保每台服务器都只允许一个容器实例.你可以在Compose文件中指示swarm manager去选择何种策略</p>
-<p>swarm managers是swarm进群中唯一可以执行命令,或者授权其他服务器以”workers”身份加入swarm集群的服务器.</p>
-<hr>
-<h4 id="初始化swarm-加入节点"><a href="#初始化swarm-加入节点" class="headerlink" title="初始化swarm,加入节点"></a>初始化swarm,加入节点</h4><p>试验环境:</p>
-<p>1.10.0.0.50 —swarm manager<br>2.10.0.0.12 —worker 节点</p>
-<ul>
-<li>初始化swarm,并且指定通告的IP</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/29/docker/docker官网学习-5.学习swarm集群/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-6.学习stack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1797,7 +1639,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习—2.dockerfile/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1816,7 +1658,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习—2.dockerfile/" itemprop="url">docker学习笔记---Dockerfile</a></h1>
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/" itemprop="url">docker学习笔记---docker网络之host,Container,None网络</a></h1>
         
 
         <div class="post-meta">
@@ -1869,8 +1711,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/29/docker/docker官网学习—2.dockerfile/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习—2.dockerfile/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1899,70 +1741,183 @@
 
       
         
-          <h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><hr>
-<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>到目前位置我们接触的镜像都是从docker官方hub.docker.com所下载的官方镜像.官方镜像一般分为两类:</p>
-<ul>
-<li>OS镜像</li>
-<li>应用镜像.(例如nginx.php-fpm,mysql)</li>
-</ul>
-<p>但是无论是哪种镜像,官方的标准镜像(或者是通用镜像)都只包含最基础的系统或者应用环境,如果需要使用适合个人或者企业场景的自定义镜像,那么就只能自己制作镜像.</p>
-<p><strong>制作镜像的方法:</strong></p>
-<ul>
-<li>以容器为基础,制作镜像</li>
-</ul>
-<p>这有点类似于快照,用一个基础镜像运行容器,然后在容器的交互式界面,安装或者配置之定义环境,然后将该容器制作成一个镜像.但是这种方法有很大的缺陷.</p>
-<p>例如,如果有多个环境的容器,那么可能容器的应用配置文件不一样,此时可能需要将多个容器制作成多个镜像.例如dev环境容器,beta环境容器,生产环境容器等.而且容器一旦修改以后,可能又需要重新commit制作成镜像,这样一来,镜像的体积将无限大.</p>
-<ul>
-<li>Dockerfile制作镜像</li>
-</ul>
-<p>Dockerfile可以用来编译一个docker镜像.Dockerfile是一个包含一系列指令的文本文档,非常类似于一个shell脚本,.docker调用dockerfile中每行的命令,聚集成最终的镜像.使用<code>docker build</code>命令,用户可以依据dockerfile和上下文编译一个镜像.</p>
+          <h2 id="docker官网学习-7-docker网络之host-Container-None网络"><a href="#docker官网学习-7-docker网络之host-Container-None网络" class="headerlink" title="docker官网学习-7.docker网络之host,Container,None网络"></a>docker官网学习-7.docker网络之host,Container,None网络</h2><h3 id="host网络介绍"><a href="#host网络介绍" class="headerlink" title="host网络介绍"></a>host网络介绍</h3><p>如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</p>
 <hr>
-<h3 id="Dockerfile语法格式"><a href="#Dockerfile语法格式" class="headerlink" title="Dockerfile语法格式"></a>Dockerfile语法格式</h3><p>dockerfile的格式非常简单.只有2种:</p>
-<ul>
-<li><code>#</code>开头的语句表示注释</li>
-<li><code>INSTRUCTIONS arguments</code> 指令 参数</li>
-</ul>
-<p><code>instructions</code>指令大小写非敏感,但是约定俗成的写法是指令全部用大写字母,dockerfile按自上而下的顺序,一次执行每一个指令.</p>
+<h3 id="创建host网络"><a href="#创建host网络" class="headerlink" title="创建host网络"></a>创建host网络</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run -tid --net=host --name busybox busybox1</span><br><span class="line"></span><br><span class="line">#host网络下的容器没有虚拟网卡,而是和宿主机共享网络</span><br><span class="line">[root@localhost ~]$docker exec  -it busybox1 ifconfig</span><br><span class="line">docker0   Link encap:Ethernet  HWaddr 02:42:89:26:D1:C9</span><br><span class="line">          inet addr:192.168.1.5  Bcast:192.168.1.255  Mask:255.255.255.0</span><br><span class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</span><br><span class="line">          RX packets:1072032 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:1997027 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:0</span><br><span class="line">          RX bytes:61915874 (59.0 MiB)  TX bytes:1934238839 (1.8 GiB)</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>Dockerfile文件中第一个指令必须是<code>FROM</code>指令,用来表示当前的docker镜像是哪个基础镜像.在dockerfile中,必须要一个基础镜像.(有点类似编程中,所有的类必须要有一个基类)</p>
+<p>注:host网络只能工作在Linux主机上.</p>
+<p>如果容器没有暴露任何端口,那host网络没有任何效果</p>
 </blockquote>
-<hr>
-<h3 id="Dockerfile上下文"><a href="#Dockerfile上下文" class="headerlink" title="Dockerfile上下文"></a>Dockerfile上下文</h3><p>docker build编译镜像时,默认在当前目录下寻找文件名为<code>Dockerfile</code>的文件.如果找不到,则会报错,所以Dockerfile(第一个字母必须大写)的文件名一般是固定的.</p>
-<p>docker会将当前目录下的Dockerfile和所有文件打包添加发送到docker daemon服务端.所以一般情况下创建一个空目录编辑Dockerfile文件.然后将需要放到镜像中的文件放进和dockerfile同一目录下,或者子目录下.当然,也可以像Git那样,在当前目录下编辑一个名为<code>.dockeringnore</code>的隐藏文件,列出排除文件或者目录.这样dockerfile在制作镜像时,不会将该文件或者目录提交到docker服务端</p>
-<blockquote>
-<p>为什么需要一个空目录防止Dockerfile文件呢?</p>
-<p>因为docker在编译镜像之前,就会将该目录下的所有文件打包发送到docker daemon服务端中,并且加载到镜像.所以最终产生的镜像体积会非常庞大.(无论你是否使用了目录下的文件或者文件夹).试想一下如果在<code>/</code>目录下打包Dockerfile镜像,会是什么后果</p>
-</blockquote>
-<p>由于上下文的关系,在Dockerfile中添加文件到docker镜像时.不要使用绝对路径.例如/home/work/a.txt.这是因为docker deamon只能识别到当前上下文环境,无法识别到其他目录.但是可以使用当前上下文的相对路径.</p>
-<hr>
-<h3 id="Dockerfile构建过程"><a href="#Dockerfile构建过程" class="headerlink" title="Dockerfile构建过程"></a>Dockerfile构建过程</h3><p>使用<code>docker build</code>命令可以将当前目录下的Dockerfile文件编译成一个镜像,docker daemon会隐含式的用Dockerfile中<code>FROM</code>指令指定的镜像启动一个容器,并且从上到下依次在该容器中执行Dockerfile文件中的指令.最终将改容器打包成一个新的镜像.</p>
-<p>其本质上和我们启动一个容器,执行命令,然后保存成一个镜像没有多大区别,只不过是docker的<code>build</code>命令帮助我们完成以上一系列动作.所以需要注意的是,我们在Dockerfile中编辑的指令和参数,其作用对象和执行环境并非是宿主机,而是基础镜像..如果基础镜像不支持Dockerfile文件中的指令,那么<code>build</code>执行过程中很可能会报错</p>
-<hr>
-<h3 id="Dockerfile变量"><a href="#Dockerfile变量" class="headerlink" title="Dockerfile变量"></a>Dockerfile变量</h3><p>Dockerfile支持变量替换,其变量赋值和调用方法和shell脚本中非常类似.</p>
-<ul>
-<li><p>变量赋值: ENV version 3.0 #设一个名为version的变量,其值为3.0</p>
-</li>
-<li><p>变量调用: \$version 或者 \${version}</p>
-</li>
-</ul>
-<blockquote>
-<p>当然,还支持<code>${variable: -word}</code>和<code>${variable: +word}</code>等更多的变量字符串截取.这里不做说明</p>
-</blockquote>
-<p>变量可以方便我们构建不同版本的应用.在编译多个版本的同一应用镜像时,我们不需要去修改Dockerfile的指令内容,只需要修改变量名即可</p>
-<hr>
-<h3 id="dockerfile打包镜像命令"><a href="#dockerfile打包镜像命令" class="headerlink" title="dockerfile打包镜像命令"></a>dockerfile打包镜像命令</h3><p>命令<code>docker build</code>用来编译制作镜像.其支持许多参数,但是常用的格式如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t image:tag .</span><br></pre></td></tr></table></figure>
-<p>使用<code>-t</code>参数指定新的镜像和标签, <code>.</code>小数点表示当前目录.docker会在当前目录下搜索Dockerfile文件,且将当前目录的所有文件和子目录打包到docker daemon</p>
-<hr>
-<p>使用dockerfile需要注意一些事项</p>
-<p><strong>1.上下文</strong></p>
-<p>docker build编译镜像时,会将当前目录下的Dockerfile和所有文件打包添加发送到docker daemon服务端.所以一般情况下创建一个空目录编辑dockerfile文件.然后将需要copy和add的文件放进和dockerfile同一目录下.</p>
-<p>dockerfile中的<code>copy</code>以及<code>add</code>命令,添加文件到docker镜像中时.不要使用绝对路径.例如/home/work/a.txt..docker deamon只能识别到当前上下文环境,无法识别到其他目录.但是可以使用当前上下文的相对路径.</p>
-<p><strong>2.分层</strong></p>
-<p>dockerfile编译镜像时,每条指令都是一个镜像层.除了From指令外,每一行指令都是基于上一行生成的临时镜像运行一个容器.执行一条指令就类似于docker commit命令生成一个新的镜像.所以两条指令之间互不关联.</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/29/docker/docker官网学习—2.dockerfile/#more" rel="contents">
+            <a class="btn" href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/" itemprop="url">docker学习笔记---docker使用阿里云私有仓库</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
+                2020-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="docker使用阿里云私有仓库"><a href="#docker使用阿里云私有仓库" class="headerlink" title="docker使用阿里云私有仓库"></a>docker使用阿里云私有仓库</h3><p>注册阿里云镜像服务:</p>
+<p>以下是我的阿里云镜像仓库链接:<br><a href="https://cr.console.aliyun.com/cn-hangzhou/repositories" target="_blank" rel="noopener">https://cr.console.aliyun.com/cn-hangzhou/repositories</a></p>
+<p>一.使用阿里云镜像加速器<br><a href="https://cr.console.aliyun.com/cn-hangzhou/mirrors" target="_blank" rel="noopener">https://cr.console.aliyun.com/cn-hangzhou/mirrors</a></p>
+<p>镜像加速地址:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://0w5ygvsg.mirror.aliyuncs.com</span><br></pre></td></tr></table></figure>
+<p>如果是Centos系统,可以通过修改daemon配置文件/etc/docker/daemon.json来使用加速器:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&apos;EOF&apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://0w5ygvsg.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<hr>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/29/docker/docker官网学习—3.使用阿里云国内镜像和仓库/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2058,7 +2013,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">195</span>
+                  <span class="site-state-item-count">197</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

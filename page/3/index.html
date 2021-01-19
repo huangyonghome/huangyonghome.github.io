@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/ELK收集mysql5.7慢日志/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/ELK使用x-pack插件实现权限控制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/25/elk/ELK收集mysql5.7慢日志/" itemprop="url">ELK收集mysql5.7慢日志</a></h1>
+                <a class="post-title-link" href="/2020/08/25/elk/ELK使用x-pack插件实现权限控制/" itemprop="url">ELK使用x-pack插件实现权限控制</a></h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/25/elk/ELK收集mysql5.7慢日志/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/ELK收集mysql5.7慢日志/" itemprop="commentCount"></span>
+                <a href="/2020/08/25/elk/ELK使用x-pack插件实现权限控制/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/ELK使用x-pack插件实现权限控制/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,15 +377,23 @@
 
       
         
-          <h2 id="ELK收集mysql5-7慢日志"><a href="#ELK收集mysql5-7慢日志" class="headerlink" title="ELK收集mysql5.7慢日志"></a>ELK收集mysql5.7慢日志</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>公司ELK平台计划收集生产业务的所有mysql慢日志.由于所有环境中均使用mysql5.7版本,所以其他mysql版本的慢日志格式不在讨论范围之内.</p>
-<p>慢日志的grok正则匹配我折腾了很久,网上的大多文档中给出的logstash的grok正则其实并不能正确的解析到mysql慢日志的字段.</p>
-<p>这个博客的grok正则经过实践可行.而且filebeat,logstash的filter配置也是参考这个博客配置的:<a href="https://www.cnblogs.com/minseo/p/10441913.html" target="_blank" rel="noopener">博客地址</a></p>
+          <h2 id="ELK使用x-pack插件实现权限控制"><a href="#ELK使用x-pack插件实现权限控制" class="headerlink" title="ELK使用x-pack插件实现权限控制"></a>ELK使用x-pack插件实现权限控制</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>Elsticsearch集群搭建完成,使用Kibana可以直接访问WEB界面,或者使用curl命令行工具也可以直接访问ES的索引,并且可以直接对索引进行增删改查的操作.这在生产中可能就会有严重的安全隐患.</p>
+<p>为了防止Kibana的重要管理功能配置,或者ES的重要索引数据被认为的误删,误配置.就有必要对ES和Kibana进行权限管控.</p>
+<p>而Xpack插件就非常方便,完美的实现了这个功能</p>
 <hr>
-<h3 id="MySQL慢日志"><a href="#MySQL慢日志" class="headerlink" title="MySQL慢日志"></a>MySQL慢日志</h3><p>慢日志格式如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[work@msf-mysql-master log]$ sudo head slow_2019072103.log</span><br><span class="line">/usr/local/mysql5.7/bin/mysqld, Version: 5.7.24-log (MySQL Community Server (GPL)). started with:</span><br><span class="line">Tcp port: 3306  Unix socket: /mysql_log/msf/tmp/mysql.sock</span><br><span class="line">Time                 Id Command    Argument</span><br><span class="line"># Time: 2019-07-21T08:54:04.145255+08:00</span><br><span class="line"># User@Host: u_msf[u_msf] @  [10.111.10.40]  Id: 131421254</span><br><span class="line"># Query_time: 1.595300  Lock_time: 0.000031 Rows_sent: 20  Rows_examined: 809259</span><br><span class="line">use msf_prod;</span><br><span class="line">SET timestamp=1563670444;</span><br><span class="line">SELECT `id`,`type`,`honey`,`remark`,`created_at` FROM `t_log_user_honey` WHERE `user_id` = &apos;1000014423&apos; ORDER BY `created_at` DESC LIMIT 20 OFFSET 0;</span><br><span class="line"># Time: 2019-07-21T10:51:06.184010+08:00</span><br></pre></td></tr></table></figure>
+<h3 id="Xpack介绍"><a href="#Xpack介绍" class="headerlink" title="Xpack介绍"></a>Xpack介绍</h3><p>Xpack能够对网络流量进行加密、创建和管理用户、定义能够保护索引和集群级别访问权限的角色，并且使用 Spaces 为 Kibana提供全面保护.在Elastic Stack7.x中已经免费开放基础版本功能.但是更高版本的X-PACK仍然需要付费购买.</p>
+<p>而且在7.x版本中Xpack默认就已经安装了,无需另行安装插件.</p>
+<p>x-pack详细介绍请点击<a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.7/setup-xpack.html" target="_blank" rel="noopener">官方文档</a></p>
+<p>x-pack免费版提供一下功能</p>
+<ul>
+<li>TLS 功能。 可对通信进行加密；</li>
+<li>文件和原生 Realm。 可用于创建和管理用户；</li>
+<li>基于角色的访问控制。 可用于控制用户对集群 API 和索引的访问权限；</li>
+<li>通过针对 Kibana Spaces 的安全功能，还可允许在Kibana 中实现多租户</li>
+</ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/ELK收集mysql5.7慢日志/#more" rel="contents">
+            <a class="btn" href="/2020/08/25/elk/ELK使用x-pack插件实现权限控制/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -440,7 +448,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -459,7 +467,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" itemprop="url">使用ElastAlert+ELK实现日志监控钉钉告警</a></h1>
+                <a class="post-title-link" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="url">Filebeat+logstash收集Nginx错误日志</a></h1>
         
 
         <div class="post-meta">
@@ -512,8 +520,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" itemprop="commentCount"></span>
+                <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -542,16 +550,350 @@
 
       
         
-          <h2 id="使用ElastAlert-ELK实现日志监控钉钉告警"><a href="#使用ElastAlert-ELK实现日志监控钉钉告警" class="headerlink" title="使用ElastAlert+ELK实现日志监控钉钉告警"></a>使用ElastAlert+ELK实现日志监控钉钉告警</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警</p>
-<hr>
-<h3 id="ElastAlert介绍"><a href="#ElastAlert介绍" class="headerlink" title="ElastAlert介绍"></a>ElastAlert介绍</h3><p>ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告警.github项目地址如下:<a href="https://github.com/Yelp/elastalert" target="_blank" rel="noopener">https://github.com/Yelp/elastalert</a></p>
-<p>官方文档如下:<a href="https://elastalert.readthedocs.io/en/latest/elastalert.html" target="_blank" rel="noopener">https://elastalert.readthedocs.io/en/latest/elastalert.html</a></p>
-<p>它支持多种监控模式和告警方式,具体可以查阅Github项目介绍.但是自带的ElastAlert并不支持钉钉告警,在github上有第三方的钉钉python项目.地址如下:<a href="https://github.com/xuyaoqiang/elastalert-dingtalk-plugin" target="_blank" rel="noopener">https://github.com/xuyaoqiang/elastalert-dingtalk-plugin</a></p>
-<p>第三方的钉钉告警插件并没有艾特相关人员的功能,所以我再此基础上进行了二次开发,增加了这个功能</p>
+          <h2 id="Filebeat-logstash收集Nginx错误日志"><a href="#Filebeat-logstash收集Nginx错误日志" class="headerlink" title="Filebeat+logstash收集Nginx错误日志"></a>Filebeat+logstash收集Nginx错误日志</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在上一个笔记&lt;Filebeat+logstash收集Nginx访问日志&gt;中分享了如何收集logstash的访问日志,这篇笔记主要是记录如何收集nginx的错误日志</p>
+<p>Nginx 错误日志是运维人员最常见但又极其容易忽略的日志类型之一。Nginx 错误日志即没有统一明确的分隔符，也没有特别方便的正则模式，但通过 logstash 不同插件的组合，还是可以轻松做到数据处理。</p>
 <hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/#more" rel="contents">
+            <a class="btn" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="url">使用goreplay收集线上真实http流量</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="使用goreplay收集线上真实http流量"><a href="#使用goreplay收集线上真实http流量" class="headerlink" title="使用goreplay收集线上真实http流量"></a>使用goreplay收集线上真实http流量</h2><h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>在很多场景中,我们需要将线上服务器的真实Http请求复制转发到某台服务器中(或者测试环境中),并且前提是不影响线上生产业务进行.</p>
+<p>例如:</p>
+<ol>
+<li>通常可能会通过ab等压测工具来对单一http接口进行压测。但如果是需要http服务整体压测，使用ab来压测工作量大且不方便，通过线上流量复制引流，通过将真实请求流量放大N倍来进行压测，能对服务有一个较为全面的检验.</li>
+<li>将线上流量引入到测试环境中,测试某个中间件或者数据库的压力</li>
+<li>上线前在预发布环境，使用线上真实的请求，检查是否准备发布的版本，是否具备发布标准</li>
+<li>用线上的流量转发到预发，检查相同流量下一些指标的反馈情况，检查核心数据是否有改善、优化.</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/kibana索引及索引冷热分离管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/25/elk/kibana索引及索引冷热分离管理/" itemprop="url">kibana索引及索引冷热分离管理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/elk/kibana索引及索引冷热分离管理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/kibana索引及索引冷热分离管理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="kibana索引及索引冷热分离管理"><a href="#kibana索引及索引冷热分离管理" class="headerlink" title="kibana索引及索引冷热分离管理"></a>kibana索引及索引冷热分离管理</h3><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本篇文档简单介绍一下kibana的索引管理.主要包括:</p>
+<ul>
+<li>索引模板</li>
+<li>索引模式</li>
+<li>索引生命周期</li>
+<li>索引冷热分离管理</li>
+<li>索引模板配置</li>
+</ul>
+<hr>
+<h3 id="索引模板"><a href="#索引模板" class="headerlink" title="索引模板"></a>索引模板</h3><p>ES自带一个默认的logstash-*的索引模板,es内部维护了template，template定义好了mapping，只要index的名称被template匹配到，那么该index的mapping就按照template中定义的mapping自动创建。而且template中定义了index的shard分片数量、replica副本数量等等属性。</p>
+<p>所以我们每次新建一个索引的时候,不需要手动创建mapping映射,也不需要手动设置副本和分片数量.</p>
+<p>在Kibana的图形化界面中可以看到ES默认的索引模板</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/25/elk/kibana索引及索引冷热分离管理/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1125,7 +1467,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/30/Linux-Basic/shell&shell脚本/acme.sh自动申请SSL证书脚本/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/30/Linux-Basic/shell&shell脚本/kvm通过模板自动创建虚拟机,配置IP网络/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1144,7 +1486,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/30/Linux-Basic/shell&shell脚本/acme.sh自动申请SSL证书脚本/" itemprop="url">acme.sh自动申请SSL证书脚本</a></h1>
+                <a class="post-title-link" href="/2020/06/30/Linux-Basic/shell&shell脚本/kvm通过模板自动创建虚拟机,配置IP网络/" itemprop="url">kvm自动创建虚拟机,自定义IP地址</a></h1>
         
 
         <div class="post-meta">
@@ -1208,8 +1550,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/30/Linux-Basic/shell&shell脚本/acme.sh自动申请SSL证书脚本/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/30/Linux-Basic/shell&shell脚本/acme.sh自动申请SSL证书脚本/" itemprop="commentCount"></span>
+                <a href="/2020/06/30/Linux-Basic/shell&shell脚本/kvm通过模板自动创建虚拟机,配置IP网络/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/30/Linux-Basic/shell&shell脚本/kvm通过模板自动创建虚拟机,配置IP网络/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1239,8 +1581,9 @@
       
         
           
-            <h2 id="acme-sh自动申请SSL证书脚本"><a href="#acme-sh自动申请SSL证书脚本" class="headerlink" title="acme.sh自动申请SSL证书脚本"></a>acme.sh自动申请SSL证书脚本</h2><p>acme.sh是GitHub上的一个项目.有关这个工具的介绍可以参考github,或者查看Linux-证书目录下的相关笔记</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#description: 使用acme.sh工具通过自动DNS验证方式申请SSL证书.</span><br><span class="line">#date: 20190620</span><br><span class="line"></span><br><span class="line">#判断是否有指定域名,以及域名</span><br><span class="line">if [ $# != 2 ];then</span><br><span class="line">   echo &quot;usage: $0 domain_name ssl_install_dir&quot;</span><br><span class="line">   exit 1</span><br><span class="line">fi</span><br><span class="line">#接收要申请SSL证书的域名参数</span><br><span class="line">ssl_domain=$1</span><br><span class="line">#接收证书安装目标路径的参数</span><br><span class="line">ssl_install_dir=$2</span><br><span class="line"></span><br><span class="line">#判断申请的是否是通配符证书</span><br><span class="line">if `echo $ssl_domain | grep &quot;^\*&quot; &gt; /dev/null 2&gt;&amp;1`;then</span><br><span class="line"></span><br><span class="line">    #如果是通配符证书,那么替换到域名前面的&quot;*.&quot;</span><br><span class="line">    ssl_name=$(echo $ssl_domain | sed &apos;s@\*\.@@&apos;)</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line"></span><br><span class="line">    ssl_name=$ssl_domain</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">#检查证书安装目录,判断该域名是否已经申请过证书.如果已经申请过,则直接退出</span><br><span class="line"></span><br><span class="line">#新建ssl_dir证书路径变量</span><br><span class="line">ssl_dir=$&#123;ssl_install_dir&#125;/$&#123;ssl_name&#125;</span><br><span class="line"></span><br><span class="line">if [ -d $ssl_dir ];then</span><br><span class="line"></span><br><span class="line">    echo &quot;$ssl_domain certificate has already installed&quot; &amp;&amp; exit 0</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">#导入环境变量</span><br><span class="line">export DP_Id=DNS服务器的AccessKeyID</span><br><span class="line">export DP_Key=DNS服务器的Secret</span><br><span class="line"></span><br><span class="line">#申请证书</span><br><span class="line">cd /home/work/.acme.sh/</span><br><span class="line"></span><br><span class="line"># 判断申请的是通配符证书,还是单域名证书</span><br><span class="line">if [ $ssl_domain == $ssl_name ];then</span><br><span class="line"></span><br><span class="line">	./acme.sh --issue --dns dns_dp  -d $ssl_name</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">	./acme.sh --issue --dns dns_dp  -d $ssl_name -d $ssl_domain</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">#判断证书申请是否成功</span><br><span class="line">if [ $? != 0 ];then</span><br><span class="line">     echo &quot;$ssl_domain certificate applied failed&quot; &amp;&amp; exit 1</span><br><span class="line">else</span><br><span class="line">    echo &quot;$ssl_domain certificate applied successfully&quot;</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#新建证书目标路径</span><br><span class="line">mkdir -p $ssl_dir</span><br><span class="line"></span><br><span class="line">#安装证书</span><br><span class="line">./acme.sh  --installcert  -d  $ssl_name  \</span><br><span class="line">       --key-file $&#123;ssl_dir&#125;/$&#123;ssl_name&#125;.key  \</span><br><span class="line">       --fullchain-file $&#123;ssl_dir&#125;/fullchain.cer     \</span><br><span class="line">       --reloadcmd  &quot;supervisorctl -c /etc/supervisord/supervisord.conf restart nginx&quot;</span><br></pre></td></tr></table></figure>
+            <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash">通过KVM模板自动化创建虚拟机（需要电脑中存在模板）.以及创建完虚拟机后,自动修改IP地址</span></span><br><span class="line"><span class="meta">#</span><span class="bash">该脚本需要以root身份执行</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta"> #</span><span class="bash">镜像和模板源文件</span></span><br><span class="line">src_img_path=/opt/vmx/linux/hadoop.dev.base.img</span><br><span class="line">src_xml_path=/etc/libvirt/qemu/hadoop.dev.base.xml</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">镜像和模板源文件父目录</span></span><br><span class="line">prefix_img_path=/opt/vmx/linux</span><br><span class="line">prefix_xml_path=/etc/libvirt/qemu</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">获取新虚拟机名称</span></span><br><span class="line">get_newname()&#123;</span><br><span class="line">	while true</span><br><span class="line">        do</span><br><span class="line">                read -p "请输入新虚拟机名称(主机名)：" newname</span><br><span class="line">                if [ $newname ];then</span><br><span class="line">                    if `virsh list --all | grep "\b$&#123;newname&#125;\b"`;then</span><br><span class="line">                        echo "该虚拟机已经存在.请检查系统当前虚拟机"</span><br><span class="line">                    else</span><br><span class="line"></span><br><span class="line">                        #设置新虚拟机镜像和模板路径</span><br><span class="line">                        new_img_path=$&#123;prefix_img_path&#125;/$&#123;newname&#125;.qcow2</span><br><span class="line">                        new_xml_path=$&#123;prefix_xml_path&#125;/$&#123;newname&#125;.xml</span><br><span class="line">                        break</span><br><span class="line">                    fi</span><br><span class="line">                else</span><br><span class="line">                        echo "************"</span><br><span class="line">                        echo "请输入虚拟机主机名！"</span><br><span class="line">                        echo "************"</span><br><span class="line">                fi</span><br><span class="line">        done</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash">设置新虚拟机内存</span></span><br><span class="line">get_newmemary()&#123;</span><br><span class="line">	while true</span><br><span class="line">        do</span><br><span class="line">                current_free_mem=`free -g|awk '/^Mem/&#123;print $4&#125;'`</span><br><span class="line">                mem_total=`free -g|awk '/^Mem/&#123;print $2&#125;'`</span><br><span class="line">                echo "目前本机内存总大小：$&#123;mem_total&#125;g"</span><br><span class="line">                echo "当前空闲内存大小为：$&#123;current_free_mem&#125;g"</span><br><span class="line">                read -p "请输入新虚拟机内存大小(单位G)：" newmemary</span><br><span class="line">                if [ $newmemary ];then</span><br><span class="line">                        if [[ $newmemary &lt; $mem_total ]];then</span><br><span class="line">                                break</span><br><span class="line">                        else</span><br><span class="line">                                echo "**********************************"</span><br><span class="line">                                echo "输入的数值必须小于当前内存总大小！"</span><br><span class="line">                                echo "**********************************"</span><br><span class="line">                        fi</span><br><span class="line">                else</span><br><span class="line">                        echo "********************"</span><br><span class="line">                        echo "请输入新虚拟机内存！"</span><br><span class="line">                        echo "********************"</span><br><span class="line">                fi</span><br><span class="line">        done</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash">设置新虚拟机CPU</span></span><br><span class="line">get_newcpu()&#123;</span><br><span class="line">	while true</span><br><span class="line">        do</span><br><span class="line">                core=`cat /proc/cpuinfo| grep "processor"| wc -l`</span><br><span class="line">                echo "可用core个数：$&#123;core&#125;"</span><br><span class="line">                read -p "请输入新虚拟机处理器核数：" newcpu</span><br><span class="line">                if [ $newcpu ];then</span><br><span class="line">                        if [ $newcpu -le $core ];then</span><br><span class="line">                                break</span><br><span class="line">                        else</span><br><span class="line">                                echo "******************************"</span><br><span class="line">                                echo "不能超过可用个数或者输入错误！"</span><br><span class="line">                                echo "******************************"</span><br><span class="line">                        fi</span><br><span class="line">                else</span><br><span class="line">                        echo "**************"</span><br><span class="line">                        echo "输入不能为空！"</span><br><span class="line">                        echo "**************"</span><br><span class="line">                fi</span><br><span class="line">        done</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">设置IP</span></span><br><span class="line">get_ip()&#123;</span><br><span class="line"></span><br><span class="line">    while true</span><br><span class="line">        do </span><br><span class="line">            read -p "请输入新虚拟机的IP地址(格式:172.16.10.[2-240]):" ip</span><br><span class="line">            if `echo $ip| grep -E "172.16.10.[0-9]&#123;1,3&#125;$" &gt; /dev/null 2&gt;&amp;1`;then</span><br><span class="line">                ipaddr=$(echo $ip | awk -F "." '&#123;print $4&#125;')</span><br><span class="line">                #valid_check=$(echo $ip | awk -F "." '2&lt;$4 &amp;&amp; $4&lt;241 &#123;print "yes"&#125;')</span><br><span class="line">                #if [ "$valid_check" == "yes" ];then</span><br><span class="line">                if [ $ipaddr -gt 2 -a $ipaddr -lt 241 ];then</span><br><span class="line">                    if ! `ping -W 3 -c 1 $ip &gt; /dev/null 2&gt;&amp;1`;then</span><br><span class="line">                       break</span><br><span class="line">                    </span><br><span class="line">                    else</span><br><span class="line">                       echo "当前IP已经被占用,请重新输入"</span><br><span class="line">                    </span><br><span class="line">                    fi</span><br><span class="line">                </span><br><span class="line">                else</span><br><span class="line">                    echo "IP地址必须要在2-240之间"</span><br><span class="line"></span><br><span class="line">                fi</span><br><span class="line">            </span><br><span class="line">            else</span><br><span class="line">                echo "IP地址格式不对,请重新输入"</span><br><span class="line">            </span><br><span class="line">            fi</span><br><span class="line">    done</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">复制模板、xml</span></span><br><span class="line">copy_model_xml()&#123;</span><br><span class="line">	cp $src_img_path $new_img_path</span><br><span class="line">        cp $src_xml_path $new_xml_path</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash">修改xml文件</span></span><br><span class="line">modification_xml()&#123;</span><br><span class="line">    uuid=`uuidgen`</span><br><span class="line">	sed -ri "s/(&lt;name&gt;).*(&lt;\/name&gt;)/\1$&#123;newname&#125;\2/" $new_xml_path  </span><br><span class="line">        sed -ri "s/(&lt;uuid&gt;).*(&lt;\/uuid&gt;)/\1$&#123;uuid&#125;\2/" $new_xml_path </span><br><span class="line">        mem_kb=$(($&#123;newmemary&#125;*1024*1024)) </span><br><span class="line"> </span><br><span class="line">        sed -ri "s/(&lt;memory.*&gt;).*(&lt;\/memory&gt;)/\1$&#123;mem_kb&#125;\2/" $new_xml_path </span><br><span class="line">        sed -ri "s/(&lt;currentMemory.*&gt;).*(&lt;\/currentMemory&gt;)/\1$&#123;mem_kb&#125;\2/" $new_xml_path</span><br><span class="line">        sed -ri "s/(&lt;vcpu.*&gt;).*(&lt;\/vcpu&gt;)/\1$&#123;newcpu&#125;\2/" $new_xml_path</span><br><span class="line">        sed -ri "s@(&lt;source file=').*('\/&gt;)@\1$&#123;new_img_path&#125;\2@" $new_xml_path  #定义新虚拟机的xml文件路径</span><br><span class="line"></span><br><span class="line">        sed -i "s@port='5930'@port='"59$&#123;ipaddr&#125;"'@" $new_xml_path #配置VNC端口号.格式59+ip地址最后一位</span><br><span class="line">        mac_addr=`openssl rand -hex 3 | sed -r 's/..\B/&amp;:/g'` #生成一个随机的MAC地址</span><br><span class="line"> </span><br><span class="line">        sed -ri "s/(&lt;mac address='..:..:..:).*('\/&gt;)/\1$&#123;mac_addr&#125;\2/" $new_xml_path #配置MAC地址</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash">define</span></span><br><span class="line">define_vm()&#123;</span><br><span class="line">	virsh define $new_xml_path #从xml文件中生成新虚拟机</span><br><span class="line">	echo "**********"</span><br><span class="line">	echo "$&#123;newname&#125;建完成！"</span><br><span class="line">	echo "**********"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">network_setting()&#123;</span><br><span class="line"></span><br><span class="line">    #该脚本使用guestmount工具，Centos7中安装libguestfs-tools-c可以获得guestmount工具</span><br><span class="line">    #脚本在不登陆虚拟机的情况下，修改虚拟机的IP地址信息</span><br><span class="line"></span><br><span class="line">    mountpath="/tmp/$&#123;newname&#125;"</span><br><span class="line">    [ ! -d $mountpath ] &amp;&amp; mkdir $mountpath</span><br><span class="line"></span><br><span class="line">    guestmount  -d $&#123;newname&#125; -i $mountpath</span><br><span class="line"></span><br><span class="line">    #修改IP地址: 注意这里要通过这种方式才能修改IP..不能使用sed命令直接修改原文件,否则虚拟机启动后无法识别ifcfg-eth0文件</span><br><span class="line">    cat &gt; $&#123;mountpath&#125;/etc/sysconfig/network-scripts/ifcfg-eth0 &lt;&lt; EOF</span><br><span class="line">TYPE=Ethernet</span><br><span class="line">PROXY_METHOD=none</span><br><span class="line">BROWSER_ONLY=no</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">DEFROUTE=yes</span><br><span class="line">IPV4_FAILURE_FATAL=no</span><br><span class="line">IPV6INIT=yes</span><br><span class="line">IPV6_AUTOCONF=yes</span><br><span class="line">IPV6_DEFROUTE=yes</span><br><span class="line">IPV6_FAILURE_FATAL=no</span><br><span class="line">IPV6_ADDR_GEN_MODE=stable-privacy</span><br><span class="line">NAME=eth0</span><br><span class="line">DEVICE=eth0</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=$ip</span><br><span class="line">NETMASK=255.255.255.0</span><br><span class="line">GATEWAY=172.16.10.254</span><br><span class="line">DNS1=114.114.114.114</span><br><span class="line">EOF</span><br><span class="line">    #sed -i "/IPADDR/s@.*@IPADDR=$&#123;ip&#125;@" $&#123;mountpath&#125;/etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line">    #修改主机名</span><br><span class="line">    echo "$&#123;newname&#125;" &gt; $&#123;mountpath&#125;/etc/hostname</span><br><span class="line"></span><br><span class="line">    echo "虚拟主机IP地址和主机名配置完成"</span><br><span class="line"></span><br><span class="line">    #卸载临时挂载目录</span><br><span class="line">    umount /tmp/$&#123;newname&#125;</span><br><span class="line">    </span><br><span class="line">    #删除临时挂载目录</span><br><span class="line">    rm -rf /tmp/$&#123;newname&#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash">------------运行分界线------------------------------------</span></span><br><span class="line"></span><br><span class="line">get_newname</span><br><span class="line">get_newmemary</span><br><span class="line">get_newcpu</span><br><span class="line">get_ip</span><br><span class="line">copy_model_xml</span><br><span class="line">modification_xml</span><br><span class="line">define_vm</span><br><span class="line">network_setting</span><br></pre></td></tr></table></figure>
+<p>参考 <a href="https://blog.csdn.net/qq_41814635/article/details/82256970" target="_blank" rel="noopener">https://blog.csdn.net/qq_41814635/article/details/82256970</a></p>
+
           
         
       
@@ -1459,7 +1802,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/30/Linux-Basic/shell&shell脚本/acme.sh自动申请SSL证书脚本/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1478,7 +1821,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/" itemprop="url">分析统计Nginx日志的响应时间</a></h1>
+                <a class="post-title-link" href="/2020/06/30/Linux-Basic/shell&shell脚本/acme.sh自动申请SSL证书脚本/" itemprop="url">acme.sh自动申请SSL证书脚本</a></h1>
         
 
         <div class="post-meta">
@@ -1542,8 +1885,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/" itemprop="commentCount"></span>
+                <a href="/2020/06/30/Linux-Basic/shell&shell脚本/acme.sh自动申请SSL证书脚本/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/30/Linux-Basic/shell&shell脚本/acme.sh自动申请SSL证书脚本/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1573,353 +1916,9 @@
       
         
           
-            <h2 id="分析统计Nginx日志的响应时间"><a href="#分析统计Nginx日志的响应时间" class="headerlink" title="分析统计Nginx日志的响应时间"></a>分析统计Nginx日志的响应时间</h2><p>Nginx日志格式如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">log_format main &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos;</span><br><span class="line">                &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;</span><br><span class="line">                &apos;&quot;$http_user_agent&quot; $http_x_forwarded_for &quot;$request_time&quot;&apos;;</span><br></pre></td></tr></table></figure>
-<p>实际日志如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[work@iqg-yyq2 ~]$ head  /data/logs/nginx/iqg_api_v5.access.log</span><br><span class="line">100.97.74.45 - - [11/Mar/2019:03:46:01 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.154 - - [11/Mar/2019:03:46:01 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.97.74.22 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.002&quot;</span><br><span class="line">100.117.85.96 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.133 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.172 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.002&quot;</span><br><span class="line">100.97.74.0 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.97.73.184 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.85 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.97.74.62 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br></pre></td></tr></table></figure>
-<p>最后一行为响应时间.但是是个字符串,还不能直接用awk来统计</p>
-<p>下面这个脚本用来统计响应时间:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">[ $# -ne 2 ] &amp;&amp; echo &quot;Usage: ./loganalysis.sh two parameters: logfile path  and cost time&quot; &amp;&amp; exit 0</span><br><span class="line"></span><br><span class="line">[ ! -f &quot;$1&quot; ] &amp;&amp; echo &quot;the file doesn&apos;t exsit,please check again&quot; &amp;&amp; exit 0</span><br><span class="line">logfile=$(basename $1)</span><br><span class="line"></span><br><span class="line">[ &quot;$2&quot; -lt 0 ] &amp;&amp; echo &quot; the second parameter is not a digit&quot; &amp;&amp; exit 0</span><br><span class="line">cost_time=$2</span><br><span class="line"></span><br><span class="line">cat $1 | awk &apos;&#123;print $NF&#125;&apos;  | awk -F &quot;\&quot;&quot; &apos;&#123;print $2&#125;&apos;  &gt;  time.txt</span><br><span class="line">echo &quot;split request_time over!!!&quot;</span><br><span class="line"></span><br><span class="line">paste  -d &quot; &quot; $1 time.txt &gt; new.log</span><br><span class="line">echo &quot;build new logfile over!!!&quot;</span><br><span class="line"></span><br><span class="line">awk &apos;($NF&gt;&apos;$cost_time&apos;)&#123;print $0&#125;&apos; new.log &gt; slow-$&#123;logfile&#125;</span><br><span class="line">echo &quot;please see slowtime in slow-$&#123;logfile&#125;&quot;</span><br><span class="line"></span><br><span class="line">rm -f time.txt</span><br><span class="line">rm -f new.log</span><br><span class="line"></span><br><span class="line"># analyze the access frequence of API</span><br><span class="line"></span><br><span class="line">echo &quot;#############the access frequence of API ##################&quot;</span><br><span class="line">awk &apos;&#123;++S[$4]&#125; END &#123; for (i in S) print &quot;URL:&quot;i &quot;\t&quot; &quot;access times:&quot;S[i]&#125;&apos; slow-$&#123;logfile&#125;</span><br></pre></td></tr></table></figure>
-<p>下面是统计iqg_api_v5.access.log这个日志响应时间超过1秒的记录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[work@iqg-yyq2 ~]$ ./loganalysis.sh /data/logs/nginx/iqg_api_v5.access.log 1</span><br><span class="line">split request_time over!!!</span><br><span class="line">build new logfile over!!!</span><br><span class="line">please see slowtime in slowtime.txt!!!</span><br><span class="line">[work@iqg-yyq2 ~]$</span><br></pre></td></tr></table></figure>
-<p>查看最终结果:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">work@iqg-yyq2 ~]$ head slowtime.txt</span><br><span class="line">100.117.85.64 [11/Mar/2019:14:14:15 &quot;HEAD / 1.223</span><br><span class="line">100.97.74.41 [11/Mar/2019:14:14:16 &quot;HEAD / 1.984</span><br><span class="line">100.97.74.104 [11/Mar/2019:14:14:16 &quot;HEAD / 1.880</span><br><span class="line">100.97.74.5 [11/Mar/2019:14:14:16 &quot;HEAD / 1.758</span><br><span class="line">100.117.85.100 [11/Mar/2019:14:14:16 &quot;HEAD / 1.757</span><br><span class="line">100.97.73.213 [11/Mar/2019:14:14:16 &quot;HEAD / 1.767</span><br><span class="line">100.117.85.160 [11/Mar/2019:14:14:16 &quot;HEAD / 1.662</span><br><span class="line">100.97.74.118 [11/Mar/2019:14:14:16 &quot;HEAD / 1.566</span><br><span class="line">100.97.73.141 [11/Mar/2019:14:14:16 &quot;HEAD / 1.215</span><br><span class="line">100.117.56.238 [11/Mar/2019:14:14:16 &quot;HEAD / 1.132</span><br><span class="line">[work@iqg-yyq2 ~]$</span><br></pre></td></tr></table></figure>
-
+            <h2 id="acme-sh自动申请SSL证书脚本"><a href="#acme-sh自动申请SSL证书脚本" class="headerlink" title="acme.sh自动申请SSL证书脚本"></a>acme.sh自动申请SSL证书脚本</h2><p>acme.sh是GitHub上的一个项目.有关这个工具的介绍可以参考github,或者查看Linux-证书目录下的相关笔记</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#description: 使用acme.sh工具通过自动DNS验证方式申请SSL证书.</span><br><span class="line">#date: 20190620</span><br><span class="line"></span><br><span class="line">#判断是否有指定域名,以及域名</span><br><span class="line">if [ $# != 2 ];then</span><br><span class="line">   echo &quot;usage: $0 domain_name ssl_install_dir&quot;</span><br><span class="line">   exit 1</span><br><span class="line">fi</span><br><span class="line">#接收要申请SSL证书的域名参数</span><br><span class="line">ssl_domain=$1</span><br><span class="line">#接收证书安装目标路径的参数</span><br><span class="line">ssl_install_dir=$2</span><br><span class="line"></span><br><span class="line">#判断申请的是否是通配符证书</span><br><span class="line">if `echo $ssl_domain | grep &quot;^\*&quot; &gt; /dev/null 2&gt;&amp;1`;then</span><br><span class="line"></span><br><span class="line">    #如果是通配符证书,那么替换到域名前面的&quot;*.&quot;</span><br><span class="line">    ssl_name=$(echo $ssl_domain | sed &apos;s@\*\.@@&apos;)</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line"></span><br><span class="line">    ssl_name=$ssl_domain</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">#检查证书安装目录,判断该域名是否已经申请过证书.如果已经申请过,则直接退出</span><br><span class="line"></span><br><span class="line">#新建ssl_dir证书路径变量</span><br><span class="line">ssl_dir=$&#123;ssl_install_dir&#125;/$&#123;ssl_name&#125;</span><br><span class="line"></span><br><span class="line">if [ -d $ssl_dir ];then</span><br><span class="line"></span><br><span class="line">    echo &quot;$ssl_domain certificate has already installed&quot; &amp;&amp; exit 0</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">#导入环境变量</span><br><span class="line">export DP_Id=DNS服务器的AccessKeyID</span><br><span class="line">export DP_Key=DNS服务器的Secret</span><br><span class="line"></span><br><span class="line">#申请证书</span><br><span class="line">cd /home/work/.acme.sh/</span><br><span class="line"></span><br><span class="line"># 判断申请的是通配符证书,还是单域名证书</span><br><span class="line">if [ $ssl_domain == $ssl_name ];then</span><br><span class="line"></span><br><span class="line">	./acme.sh --issue --dns dns_dp  -d $ssl_name</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">	./acme.sh --issue --dns dns_dp  -d $ssl_name -d $ssl_domain</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">#判断证书申请是否成功</span><br><span class="line">if [ $? != 0 ];then</span><br><span class="line">     echo &quot;$ssl_domain certificate applied failed&quot; &amp;&amp; exit 1</span><br><span class="line">else</span><br><span class="line">    echo &quot;$ssl_domain certificate applied successfully&quot;</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#新建证书目标路径</span><br><span class="line">mkdir -p $ssl_dir</span><br><span class="line"></span><br><span class="line">#安装证书</span><br><span class="line">./acme.sh  --installcert  -d  $ssl_name  \</span><br><span class="line">       --key-file $&#123;ssl_dir&#125;/$&#123;ssl_name&#125;.key  \</span><br><span class="line">       --fullchain-file $&#123;ssl_dir&#125;/fullchain.cer     \</span><br><span class="line">       --reloadcmd  &quot;supervisorctl -c /etc/supervisord/supervisord.conf restart nginx&quot;</span><br></pre></td></tr></table></figure>
           
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/30/Linux-Basic/shell&shell脚本/kvm通过模板自动创建虚拟机,配置IP网络/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/30/Linux-Basic/shell&shell脚本/kvm通过模板自动创建虚拟机,配置IP网络/" itemprop="url">kvm自动创建虚拟机,自定义IP地址</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-30T00:44:48+08:00">
-                2020-06-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
-                    <span itemprop="name">shell&shell脚本</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/30/Linux-Basic/shell&shell脚本/kvm通过模板自动创建虚拟机,配置IP网络/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/30/Linux-Basic/shell&shell脚本/kvm通过模板自动创建虚拟机,配置IP网络/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash">通过KVM模板自动化创建虚拟机（需要电脑中存在模板）.以及创建完虚拟机后,自动修改IP地址</span></span><br><span class="line"><span class="meta">#</span><span class="bash">该脚本需要以root身份执行</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta"> #</span><span class="bash">镜像和模板源文件</span></span><br><span class="line">src_img_path=/opt/vmx/linux/hadoop.dev.base.img</span><br><span class="line">src_xml_path=/etc/libvirt/qemu/hadoop.dev.base.xml</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">镜像和模板源文件父目录</span></span><br><span class="line">prefix_img_path=/opt/vmx/linux</span><br><span class="line">prefix_xml_path=/etc/libvirt/qemu</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">获取新虚拟机名称</span></span><br><span class="line">get_newname()&#123;</span><br><span class="line">	while true</span><br><span class="line">        do</span><br><span class="line">                read -p "请输入新虚拟机名称(主机名)：" newname</span><br><span class="line">                if [ $newname ];then</span><br><span class="line">                    if `virsh list --all | grep "\b$&#123;newname&#125;\b"`;then</span><br><span class="line">                        echo "该虚拟机已经存在.请检查系统当前虚拟机"</span><br><span class="line">                    else</span><br><span class="line"></span><br><span class="line">                        #设置新虚拟机镜像和模板路径</span><br><span class="line">                        new_img_path=$&#123;prefix_img_path&#125;/$&#123;newname&#125;.qcow2</span><br><span class="line">                        new_xml_path=$&#123;prefix_xml_path&#125;/$&#123;newname&#125;.xml</span><br><span class="line">                        break</span><br><span class="line">                    fi</span><br><span class="line">                else</span><br><span class="line">                        echo "************"</span><br><span class="line">                        echo "请输入虚拟机主机名！"</span><br><span class="line">                        echo "************"</span><br><span class="line">                fi</span><br><span class="line">        done</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash">设置新虚拟机内存</span></span><br><span class="line">get_newmemary()&#123;</span><br><span class="line">	while true</span><br><span class="line">        do</span><br><span class="line">                current_free_mem=`free -g|awk '/^Mem/&#123;print $4&#125;'`</span><br><span class="line">                mem_total=`free -g|awk '/^Mem/&#123;print $2&#125;'`</span><br><span class="line">                echo "目前本机内存总大小：$&#123;mem_total&#125;g"</span><br><span class="line">                echo "当前空闲内存大小为：$&#123;current_free_mem&#125;g"</span><br><span class="line">                read -p "请输入新虚拟机内存大小(单位G)：" newmemary</span><br><span class="line">                if [ $newmemary ];then</span><br><span class="line">                        if [[ $newmemary &lt; $mem_total ]];then</span><br><span class="line">                                break</span><br><span class="line">                        else</span><br><span class="line">                                echo "**********************************"</span><br><span class="line">                                echo "输入的数值必须小于当前内存总大小！"</span><br><span class="line">                                echo "**********************************"</span><br><span class="line">                        fi</span><br><span class="line">                else</span><br><span class="line">                        echo "********************"</span><br><span class="line">                        echo "请输入新虚拟机内存！"</span><br><span class="line">                        echo "********************"</span><br><span class="line">                fi</span><br><span class="line">        done</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash">设置新虚拟机CPU</span></span><br><span class="line">get_newcpu()&#123;</span><br><span class="line">	while true</span><br><span class="line">        do</span><br><span class="line">                core=`cat /proc/cpuinfo| grep "processor"| wc -l`</span><br><span class="line">                echo "可用core个数：$&#123;core&#125;"</span><br><span class="line">                read -p "请输入新虚拟机处理器核数：" newcpu</span><br><span class="line">                if [ $newcpu ];then</span><br><span class="line">                        if [ $newcpu -le $core ];then</span><br><span class="line">                                break</span><br><span class="line">                        else</span><br><span class="line">                                echo "******************************"</span><br><span class="line">                                echo "不能超过可用个数或者输入错误！"</span><br><span class="line">                                echo "******************************"</span><br><span class="line">                        fi</span><br><span class="line">                else</span><br><span class="line">                        echo "**************"</span><br><span class="line">                        echo "输入不能为空！"</span><br><span class="line">                        echo "**************"</span><br><span class="line">                fi</span><br><span class="line">        done</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">设置IP</span></span><br><span class="line">get_ip()&#123;</span><br><span class="line"></span><br><span class="line">    while true</span><br><span class="line">        do </span><br><span class="line">            read -p "请输入新虚拟机的IP地址(格式:172.16.10.[2-240]):" ip</span><br><span class="line">            if `echo $ip| grep -E "172.16.10.[0-9]&#123;1,3&#125;$" &gt; /dev/null 2&gt;&amp;1`;then</span><br><span class="line">                ipaddr=$(echo $ip | awk -F "." '&#123;print $4&#125;')</span><br><span class="line">                #valid_check=$(echo $ip | awk -F "." '2&lt;$4 &amp;&amp; $4&lt;241 &#123;print "yes"&#125;')</span><br><span class="line">                #if [ "$valid_check" == "yes" ];then</span><br><span class="line">                if [ $ipaddr -gt 2 -a $ipaddr -lt 241 ];then</span><br><span class="line">                    if ! `ping -W 3 -c 1 $ip &gt; /dev/null 2&gt;&amp;1`;then</span><br><span class="line">                       break</span><br><span class="line">                    </span><br><span class="line">                    else</span><br><span class="line">                       echo "当前IP已经被占用,请重新输入"</span><br><span class="line">                    </span><br><span class="line">                    fi</span><br><span class="line">                </span><br><span class="line">                else</span><br><span class="line">                    echo "IP地址必须要在2-240之间"</span><br><span class="line"></span><br><span class="line">                fi</span><br><span class="line">            </span><br><span class="line">            else</span><br><span class="line">                echo "IP地址格式不对,请重新输入"</span><br><span class="line">            </span><br><span class="line">            fi</span><br><span class="line">    done</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">复制模板、xml</span></span><br><span class="line">copy_model_xml()&#123;</span><br><span class="line">	cp $src_img_path $new_img_path</span><br><span class="line">        cp $src_xml_path $new_xml_path</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash">修改xml文件</span></span><br><span class="line">modification_xml()&#123;</span><br><span class="line">    uuid=`uuidgen`</span><br><span class="line">	sed -ri "s/(&lt;name&gt;).*(&lt;\/name&gt;)/\1$&#123;newname&#125;\2/" $new_xml_path  </span><br><span class="line">        sed -ri "s/(&lt;uuid&gt;).*(&lt;\/uuid&gt;)/\1$&#123;uuid&#125;\2/" $new_xml_path </span><br><span class="line">        mem_kb=$(($&#123;newmemary&#125;*1024*1024)) </span><br><span class="line"> </span><br><span class="line">        sed -ri "s/(&lt;memory.*&gt;).*(&lt;\/memory&gt;)/\1$&#123;mem_kb&#125;\2/" $new_xml_path </span><br><span class="line">        sed -ri "s/(&lt;currentMemory.*&gt;).*(&lt;\/currentMemory&gt;)/\1$&#123;mem_kb&#125;\2/" $new_xml_path</span><br><span class="line">        sed -ri "s/(&lt;vcpu.*&gt;).*(&lt;\/vcpu&gt;)/\1$&#123;newcpu&#125;\2/" $new_xml_path</span><br><span class="line">        sed -ri "s@(&lt;source file=').*('\/&gt;)@\1$&#123;new_img_path&#125;\2@" $new_xml_path  #定义新虚拟机的xml文件路径</span><br><span class="line"></span><br><span class="line">        sed -i "s@port='5930'@port='"59$&#123;ipaddr&#125;"'@" $new_xml_path #配置VNC端口号.格式59+ip地址最后一位</span><br><span class="line">        mac_addr=`openssl rand -hex 3 | sed -r 's/..\B/&amp;:/g'` #生成一个随机的MAC地址</span><br><span class="line"> </span><br><span class="line">        sed -ri "s/(&lt;mac address='..:..:..:).*('\/&gt;)/\1$&#123;mac_addr&#125;\2/" $new_xml_path #配置MAC地址</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash">define</span></span><br><span class="line">define_vm()&#123;</span><br><span class="line">	virsh define $new_xml_path #从xml文件中生成新虚拟机</span><br><span class="line">	echo "**********"</span><br><span class="line">	echo "$&#123;newname&#125;建完成！"</span><br><span class="line">	echo "**********"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">network_setting()&#123;</span><br><span class="line"></span><br><span class="line">    #该脚本使用guestmount工具，Centos7中安装libguestfs-tools-c可以获得guestmount工具</span><br><span class="line">    #脚本在不登陆虚拟机的情况下，修改虚拟机的IP地址信息</span><br><span class="line"></span><br><span class="line">    mountpath="/tmp/$&#123;newname&#125;"</span><br><span class="line">    [ ! -d $mountpath ] &amp;&amp; mkdir $mountpath</span><br><span class="line"></span><br><span class="line">    guestmount  -d $&#123;newname&#125; -i $mountpath</span><br><span class="line"></span><br><span class="line">    #修改IP地址: 注意这里要通过这种方式才能修改IP..不能使用sed命令直接修改原文件,否则虚拟机启动后无法识别ifcfg-eth0文件</span><br><span class="line">    cat &gt; $&#123;mountpath&#125;/etc/sysconfig/network-scripts/ifcfg-eth0 &lt;&lt; EOF</span><br><span class="line">TYPE=Ethernet</span><br><span class="line">PROXY_METHOD=none</span><br><span class="line">BROWSER_ONLY=no</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">DEFROUTE=yes</span><br><span class="line">IPV4_FAILURE_FATAL=no</span><br><span class="line">IPV6INIT=yes</span><br><span class="line">IPV6_AUTOCONF=yes</span><br><span class="line">IPV6_DEFROUTE=yes</span><br><span class="line">IPV6_FAILURE_FATAL=no</span><br><span class="line">IPV6_ADDR_GEN_MODE=stable-privacy</span><br><span class="line">NAME=eth0</span><br><span class="line">DEVICE=eth0</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=$ip</span><br><span class="line">NETMASK=255.255.255.0</span><br><span class="line">GATEWAY=172.16.10.254</span><br><span class="line">DNS1=114.114.114.114</span><br><span class="line">EOF</span><br><span class="line">    #sed -i "/IPADDR/s@.*@IPADDR=$&#123;ip&#125;@" $&#123;mountpath&#125;/etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line">    #修改主机名</span><br><span class="line">    echo "$&#123;newname&#125;" &gt; $&#123;mountpath&#125;/etc/hostname</span><br><span class="line"></span><br><span class="line">    echo "虚拟主机IP地址和主机名配置完成"</span><br><span class="line"></span><br><span class="line">    #卸载临时挂载目录</span><br><span class="line">    umount /tmp/$&#123;newname&#125;</span><br><span class="line">    </span><br><span class="line">    #删除临时挂载目录</span><br><span class="line">    rm -rf /tmp/$&#123;newname&#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash">------------运行分界线------------------------------------</span></span><br><span class="line"></span><br><span class="line">get_newname</span><br><span class="line">get_newmemary</span><br><span class="line">get_newcpu</span><br><span class="line">get_ip</span><br><span class="line">copy_model_xml</span><br><span class="line">modification_xml</span><br><span class="line">define_vm</span><br><span class="line">network_setting</span><br></pre></td></tr></table></figure>
-<p>参考 <a href="https://blog.csdn.net/qq_41814635/article/details/82256970" target="_blank" rel="noopener">https://blog.csdn.net/qq_41814635/article/details/82256970</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/" itemprop="url">docker学习笔记---docker网络之host,Container,None网络</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-29T11:59:58+08:00">
-                2020-06-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
-                    <span itemprop="name">docker</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="docker官网学习-7-docker网络之host-Container-None网络"><a href="#docker官网学习-7-docker网络之host-Container-None网络" class="headerlink" title="docker官网学习-7.docker网络之host,Container,None网络"></a>docker官网学习-7.docker网络之host,Container,None网络</h2><h3 id="host网络介绍"><a href="#host网络介绍" class="headerlink" title="host网络介绍"></a>host网络介绍</h3><p>如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</p>
-<hr>
-<h3 id="创建host网络"><a href="#创建host网络" class="headerlink" title="创建host网络"></a>创建host网络</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run -tid --net=host --name busybox busybox1</span><br><span class="line"></span><br><span class="line">#host网络下的容器没有虚拟网卡,而是和宿主机共享网络</span><br><span class="line">[root@localhost ~]$docker exec  -it busybox1 ifconfig</span><br><span class="line">docker0   Link encap:Ethernet  HWaddr 02:42:89:26:D1:C9</span><br><span class="line">          inet addr:192.168.1.5  Bcast:192.168.1.255  Mask:255.255.255.0</span><br><span class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</span><br><span class="line">          RX packets:1072032 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:1997027 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:0</span><br><span class="line">          RX bytes:61915874 (59.0 MiB)  TX bytes:1934238839 (1.8 GiB)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注:host网络只能工作在Linux主机上.</p>
-<p>如果容器没有暴露任何端口,那host网络没有任何效果</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -2011,7 +2010,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">195</span>
+                  <span class="site-state-item-count">197</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
