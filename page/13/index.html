@@ -628,7 +628,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -647,7 +647,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/" itemprop="url">gitlab自带nginx更新SSL证书</a></h1>
+                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="url">letsencrypt配置通配符域名证书</a></h1>
         
 
         <div class="post-meta">
@@ -711,8 +711,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/" itemprop="commentCount"></span>
+                <a href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -741,19 +741,12 @@
 
       
         
-          <h2 id="gitlab自带nginx更新SSL证书"><a href="#gitlab自带nginx更新SSL证书" class="headerlink" title="gitlab自带nginx更新SSL证书"></a>gitlab自带nginx更新SSL证书</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>由于letsencrypt证书有效期太短.gitlab不是很方便自动续约.所以在阿里云上购买证书,然后下载到到服务器.(由于gitlab底层是基于nginx,所以下载证书也是选择Nginx格式)</p>
-<hr>
-<p>找出gitlab证书存放位置:</p>
-<p>1.在gitlab配置文件下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:~# cd /etc/gitlab</span><br><span class="line">root@gitlab:/etc/gitlab# ls</span><br><span class="line">gitlab.rb  gitlab.rb.bak  gitlab.rb.bak2  gitlab-secrets.json  trusted-certs</span><br></pre></td></tr></table></figure>
-<p>2.打开gitlab.rb配置文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:/etc/gitlab# vim gitlab.rb</span><br><span class="line"></span><br><span class="line">#可以找到下列两行配置.这个就是gitlab的ssl证书存放路径</span><br><span class="line">nginx[&apos;ssl_certificate&apos;] = &quot;/etc/ssl/private/gitlab.pem&quot;</span><br><span class="line">nginx[&apos;ssl_certificate_key&apos;] = &quot;/etc/ssl/private/gitlab.key&quot;</span><br></pre></td></tr></table></figure>
-<p>在gitlab的nginx配置文件下也可以找到相关配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:/etc/gitlab# cd /var/opt/gitlab/nginx/conf/</span><br><span class="line">root@gitlab:/var/opt/gitlab/nginx/conf# ls</span><br><span class="line">gitlab-http.conf  gitlab-http.conf.bak  nginx.conf  nginx-status.conf</span><br><span class="line"></span><br><span class="line">#在gitlab-http.conf的nginx配置文件中也定义了ssl路径:</span><br><span class="line"></span><br><span class="line">root@gitlab:/var/opt/gitlab/nginx/conf# cat gitlab-http.conf | grep ssl_certificate</span><br><span class="line">  ssl_certificate /etc/ssl/private/gitlab.pem;</span><br><span class="line">  ssl_certificate_key /etc/ssl/private/gitlab.key;</span><br></pre></td></tr></table></figure>
-<p>3.将阿里云下载下来的证书上传到gitlab的/etc/ssl/private目录中</p>
+          <h2 id="letsencrypt配置通配符域名证书"><a href="#letsencrypt配置通配符域名证书" class="headerlink" title="letsencrypt配置通配符域名证书"></a>letsencrypt配置通配符域名证书</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在今年稍早些的时候,letsencrypt终于开始免费支持通配符域名证书了.但是只支持一个层级的通配主机域名.</p>
+<p>比如我曾经踩过的坑:*.dev.xxx.com通配符域名证书并不能支持api.v3.dev.xxx.com这种三层子域名.</p>
+<p>如果需要为api.v3.dev.xxx.com申请通配符证书,则还需要申请*.v3.dev.xxx.com通配符证书</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/#more" rel="contents">
+            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -981,7 +974,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1000,7 +993,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="url">letsencrypt配置通配符域名证书</a></h1>
+                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/" itemprop="url">gitlab自带nginx更新SSL证书</a></h1>
         
 
         <div class="post-meta">
@@ -1064,8 +1057,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="commentCount"></span>
+                <a href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1094,12 +1087,19 @@
 
       
         
-          <h2 id="letsencrypt配置通配符域名证书"><a href="#letsencrypt配置通配符域名证书" class="headerlink" title="letsencrypt配置通配符域名证书"></a>letsencrypt配置通配符域名证书</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在今年稍早些的时候,letsencrypt终于开始免费支持通配符域名证书了.但是只支持一个层级的通配主机域名.</p>
-<p>比如我曾经踩过的坑:*.dev.xxx.com通配符域名证书并不能支持api.v3.dev.xxx.com这种三层子域名.</p>
-<p>如果需要为api.v3.dev.xxx.com申请通配符证书,则还需要申请*.v3.dev.xxx.com通配符证书</p>
+          <h2 id="gitlab自带nginx更新SSL证书"><a href="#gitlab自带nginx更新SSL证书" class="headerlink" title="gitlab自带nginx更新SSL证书"></a>gitlab自带nginx更新SSL证书</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>由于letsencrypt证书有效期太短.gitlab不是很方便自动续约.所以在阿里云上购买证书,然后下载到到服务器.(由于gitlab底层是基于nginx,所以下载证书也是选择Nginx格式)</p>
+<hr>
+<p>找出gitlab证书存放位置:</p>
+<p>1.在gitlab配置文件下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:~# cd /etc/gitlab</span><br><span class="line">root@gitlab:/etc/gitlab# ls</span><br><span class="line">gitlab.rb  gitlab.rb.bak  gitlab.rb.bak2  gitlab-secrets.json  trusted-certs</span><br></pre></td></tr></table></figure>
+<p>2.打开gitlab.rb配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:/etc/gitlab# vim gitlab.rb</span><br><span class="line"></span><br><span class="line">#可以找到下列两行配置.这个就是gitlab的ssl证书存放路径</span><br><span class="line">nginx[&apos;ssl_certificate&apos;] = &quot;/etc/ssl/private/gitlab.pem&quot;</span><br><span class="line">nginx[&apos;ssl_certificate_key&apos;] = &quot;/etc/ssl/private/gitlab.key&quot;</span><br></pre></td></tr></table></figure>
+<p>在gitlab的nginx配置文件下也可以找到相关配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root@gitlab:/etc/gitlab# cd /var/opt/gitlab/nginx/conf/</span><br><span class="line">root@gitlab:/var/opt/gitlab/nginx/conf# ls</span><br><span class="line">gitlab-http.conf  gitlab-http.conf.bak  nginx.conf  nginx-status.conf</span><br><span class="line"></span><br><span class="line">#在gitlab-http.conf的nginx配置文件中也定义了ssl路径:</span><br><span class="line"></span><br><span class="line">root@gitlab:/var/opt/gitlab/nginx/conf# cat gitlab-http.conf | grep ssl_certificate</span><br><span class="line">  ssl_certificate /etc/ssl/private/gitlab.pem;</span><br><span class="line">  ssl_certificate_key /etc/ssl/private/gitlab.key;</span><br></pre></td></tr></table></figure>
+<p>3.将阿里云下载下来的证书上传到gitlab的/etc/ssl/private目录中</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#more" rel="contents">
+            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/gitlab更新SSL证书/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1800,7 +1800,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/26/Ansible/Ansible变量/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/26/Ansible/playbook高级特性/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1819,7 +1819,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/26/Ansible/Ansible变量/" itemprop="url">Ansible变量</a></h1>
+                <a class="post-title-link" href="/2018/08/26/Ansible/playbook高级特性/" itemprop="url">Ansible playbook高级特性</a></h1>
         
 
         <div class="post-meta">
@@ -1872,8 +1872,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/08/26/Ansible/Ansible变量/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/26/Ansible/Ansible变量/" itemprop="commentCount"></span>
+                <a href="/2018/08/26/Ansible/playbook高级特性/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/26/Ansible/playbook高级特性/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1902,11 +1902,10 @@
 
       
         
-          <h2 id="Ansible变量"><a href="#Ansible变量" class="headerlink" title="Ansible变量"></a>Ansible变量</h2><p>ansible有多重方式定义变量,还可以通过fact来获取变量.接下来学习一下ansibled 变量知识</p>
-<hr>
+          <h2 id="playbook高级特性"><a href="#playbook高级特性" class="headerlink" title="playbook高级特性"></a>playbook高级特性</h2><h3 id="tags-标签"><a href="#tags-标签" class="headerlink" title="tags 标签"></a>tags 标签</h3><p>给task打上标签可以允许playbook执行的时候使用–tags选项只执行某个task或者–skip-tags选项不执行某个task.例如:</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/08/26/Ansible/Ansible变量/#more" rel="contents">
+            <a class="btn" href="/2018/08/26/Ansible/playbook高级特性/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
