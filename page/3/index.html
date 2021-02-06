@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="url">使用goreplay收集线上真实http流量</a></h1>
+                <a class="post-title-link" href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/" itemprop="url">Filebeat+logstash收集Nginx访问日志</a></h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="commentCount"></span>
+                <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,17 +377,184 @@
 
       
         
-          <h2 id="使用goreplay收集线上真实http流量"><a href="#使用goreplay收集线上真实http流量" class="headerlink" title="使用goreplay收集线上真实http流量"></a>使用goreplay收集线上真实http流量</h2><h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>在很多场景中,我们需要将线上服务器的真实Http请求复制转发到某台服务器中(或者测试环境中),并且前提是不影响线上生产业务进行.</p>
-<p>例如:</p>
-<ol>
-<li>通常可能会通过ab等压测工具来对单一http接口进行压测。但如果是需要http服务整体压测，使用ab来压测工作量大且不方便，通过线上流量复制引流，通过将真实请求流量放大N倍来进行压测，能对服务有一个较为全面的检验.</li>
-<li>将线上流量引入到测试环境中,测试某个中间件或者数据库的压力</li>
-<li>上线前在预发布环境，使用线上真实的请求，检查是否准备发布的版本，是否具备发布标准</li>
-<li>用线上的流量转发到预发，检查相同流量下一些指标的反馈情况，检查核心数据是否有改善、优化.</li>
-</ol>
+          <h2 id="Filebeat-logstash收集Nginx访问日志"><a href="#Filebeat-logstash收集Nginx访问日志" class="headerlink" title="Filebeat+logstash收集Nginx访问日志"></a>Filebeat+logstash收集Nginx访问日志</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境:"></a>环境:</h3><p><strong>Filebeat</strong>: 7.0</p>
+<p><strong>Logstash</strong>:7.0</p>
+<p><strong>elasticsearch</strong>:7.0</p>
+<hr>
+<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>logstash默认自带了apache标准日志格式的grok正则表达式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">COMMONAPACHELOG %&#123;IPORHOST:clientip&#125; %&#123;USER:ident&#125; %&#123;NOTSPACE:auth&#125; \[%&#123;HTTPDATE:timestamp&#125;\] &quot;(?:%&#123;WORD:verb&#125; %&#123;NOTSPACE:request&#125;(?: HTTP/%&#123;NUMBER:httpversion&#125;)?|%&#123;DATA:rawrequest&#125;)&quot; %&#123;NUMBER:response&#125; (?:%&#123;NUMBER:bytes&#125;|-)</span><br><span class="line">COMBINEDAPACHELOG %&#123;COMMONAPACHELOG&#125; %&#123;QS:referrer&#125; %&#123;QS:agent&#125;</span><br></pre></td></tr></table></figure>
+<p>对于 nginx 标准日志格式，可以发现只是最后多了一个 <code>$http_x_forwarded_for</code> 变量。所以 nginx 标准日志的 grok 正则定义是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MAINNGINXLOG %&#123;COMBINEDAPACHELOG&#125; %&#123;QS:x_forwarded_for&#125;</span><br></pre></td></tr></table></figure>
+<p>如果Nginx日志格式不是标准的日志格式,则需要自行编写grok正则,匹配日志内容.</p>
+<p>但是grok正则表达式不容易上手,非常难写.复杂不说,而且logstash使用正则表达式来处理日志格式,其性能也会受到很大的影响.</p>
+<p>所以这里推荐另外一种收集方式.</p>
+<p>本文档参考博客:<a href="https://www.popyone.com/post/13.html" target="_blank" rel="noopener">https://www.popyone.com/post/13.html</a></p>
+<p>本文档参考书籍:<strong>ELK权威指南中文版第二版</strong></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/#more" rel="contents">
+            <a class="btn" href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="url">Filebeat+logstash收集Nginx错误日志</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Filebeat-logstash收集Nginx错误日志"><a href="#Filebeat-logstash收集Nginx错误日志" class="headerlink" title="Filebeat+logstash收集Nginx错误日志"></a>Filebeat+logstash收集Nginx错误日志</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在上一个笔记&lt;Filebeat+logstash收集Nginx访问日志&gt;中分享了如何收集logstash的访问日志,这篇笔记主要是记录如何收集nginx的错误日志</p>
+<p>Nginx 错误日志是运维人员最常见但又极其容易忽略的日志类型之一。Nginx 错误日志即没有统一明确的分隔符，也没有特别方便的正则模式，但通过 logstash 不同插件的组合，还是可以轻松做到数据处理。</p>
+<hr>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -615,7 +782,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/kibana索引及索引冷热分离管理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -634,7 +801,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/" itemprop="url">Filebeat+logstash收集Nginx访问日志</a></h1>
+                <a class="post-title-link" href="/2020/08/25/elk/kibana索引及索引冷热分离管理/" itemprop="url">kibana索引及索引冷热分离管理</a></h1>
         
 
         <div class="post-meta">
@@ -687,8 +854,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/" itemprop="commentCount"></span>
+                <a href="/2020/08/25/elk/kibana索引及索引冷热分离管理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/kibana索引及索引冷热分离管理/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -717,22 +884,191 @@
 
       
         
-          <h2 id="Filebeat-logstash收集Nginx访问日志"><a href="#Filebeat-logstash收集Nginx访问日志" class="headerlink" title="Filebeat+logstash收集Nginx访问日志"></a>Filebeat+logstash收集Nginx访问日志</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境:"></a>环境:</h3><p><strong>Filebeat</strong>: 7.0</p>
-<p><strong>Logstash</strong>:7.0</p>
-<p><strong>elasticsearch</strong>:7.0</p>
+          <h3 id="kibana索引及索引冷热分离管理"><a href="#kibana索引及索引冷热分离管理" class="headerlink" title="kibana索引及索引冷热分离管理"></a>kibana索引及索引冷热分离管理</h3><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本篇文档简单介绍一下kibana的索引管理.主要包括:</p>
+<ul>
+<li>索引模板</li>
+<li>索引模式</li>
+<li>索引生命周期</li>
+<li>索引冷热分离管理</li>
+<li>索引模板配置</li>
+</ul>
 <hr>
-<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>logstash默认自带了apache标准日志格式的grok正则表达式:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">COMMONAPACHELOG %&#123;IPORHOST:clientip&#125; %&#123;USER:ident&#125; %&#123;NOTSPACE:auth&#125; \[%&#123;HTTPDATE:timestamp&#125;\] &quot;(?:%&#123;WORD:verb&#125; %&#123;NOTSPACE:request&#125;(?: HTTP/%&#123;NUMBER:httpversion&#125;)?|%&#123;DATA:rawrequest&#125;)&quot; %&#123;NUMBER:response&#125; (?:%&#123;NUMBER:bytes&#125;|-)</span><br><span class="line">COMBINEDAPACHELOG %&#123;COMMONAPACHELOG&#125; %&#123;QS:referrer&#125; %&#123;QS:agent&#125;</span><br></pre></td></tr></table></figure>
-<p>对于 nginx 标准日志格式，可以发现只是最后多了一个 <code>$http_x_forwarded_for</code> 变量。所以 nginx 标准日志的 grok 正则定义是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MAINNGINXLOG %&#123;COMBINEDAPACHELOG&#125; %&#123;QS:x_forwarded_for&#125;</span><br></pre></td></tr></table></figure>
-<p>如果Nginx日志格式不是标准的日志格式,则需要自行编写grok正则,匹配日志内容.</p>
-<p>但是grok正则表达式不容易上手,非常难写.复杂不说,而且logstash使用正则表达式来处理日志格式,其性能也会受到很大的影响.</p>
-<p>所以这里推荐另外一种收集方式.</p>
-<p>本文档参考博客:<a href="https://www.popyone.com/post/13.html" target="_blank" rel="noopener">https://www.popyone.com/post/13.html</a></p>
-<p>本文档参考书籍:<strong>ELK权威指南中文版第二版</strong></p>
+<h3 id="索引模板"><a href="#索引模板" class="headerlink" title="索引模板"></a>索引模板</h3><p>ES自带一个默认的logstash-*的索引模板,es内部维护了template，template定义好了mapping，只要index的名称被template匹配到，那么该index的mapping就按照template中定义的mapping自动创建。而且template中定义了index的shard分片数量、replica副本数量等等属性。</p>
+<p>所以我们每次新建一个索引的时候,不需要手动创建mapping映射,也不需要手动设置副本和分片数量.</p>
+<p>在Kibana的图形化界面中可以看到ES默认的索引模板</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/#more" rel="contents">
+            <a class="btn" href="/2020/08/25/elk/kibana索引及索引冷热分离管理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/" itemprop="url">生产环境部署ELK7+ES冷热数据分离</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="生产环境部署ELK7-ES冷热数据分离"><a href="#生产环境部署ELK7-ES冷热数据分离" class="headerlink" title="生产环境部署ELK7+ES冷热数据分离"></a>生产环境部署ELK7+ES冷热数据分离</h2><h3 id="需求整理"><a href="#需求整理" class="headerlink" title="需求整理"></a>需求整理</h3><p>当前公司还没有日志收集系统,.线上故障排错需要开发和运维人员通过跳板机登陆到业务服务器去查看日志,如果集群下服务器节点较多,可能需要登陆到每一台服务器才能找到准确的故障信息.这种方式会带来许多问题:</p>
+<ul>
+<li>效率低下</li>
+<li>需要给研发人员分配生产服务器账号,有安全隐患</li>
+<li>查看日志的方式极为麻烦,复杂</li>
+<li>每台业务服务器需要大容量磁盘保存日志文件</li>
+</ul>
+<hr>
+<h3 id="Elasticsearch冷热数据分离"><a href="#Elasticsearch冷热数据分离" class="headerlink" title="Elasticsearch冷热数据分离"></a>Elasticsearch冷热数据分离</h3><p>公司目前共有4个APP产品,每天的nginx日志+业务日志+php日志总共预计在1.5T左右.一周的日志数据量在10T左右.Elasticsearch规划了20T的SSD磁盘用来一周的日志数据(7天日志+1个副本).这些数据保存在Elasticsearch的热节点.</p>
+<p>考虑到1周以后的日志数据查询频率非常低,所以可以将这部分的日志迁移和归档到Elasticsearch的冷节点.并且冷节点日志无需索引.所以预留了10T的SAS磁盘保留1周的冷数据.</p>
+<p>总共是20TSSD磁盘的热节点和10TSAS机械磁盘的冷节点</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/25/elk/生产环境部署ELK7+ES冷热数据分离/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -953,6 +1289,173 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/记一次生产ELK性能优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/25/elk/记一次生产ELK性能优化/" itemprop="url">记一次生产ELK性能优化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/elk/记一次生产ELK性能优化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/记一次生产ELK性能优化/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="记一次生产ELK性能优化"><a href="#记一次生产ELK性能优化" class="headerlink" title="记一次生产ELK性能优化"></a>记一次生产ELK性能优化</h3><p>ES上线后遇到一些问题:</p>
+<h3 id="一-内存压力过高"><a href="#一-内存压力过高" class="headerlink" title="一.内存压力过高"></a>一.内存压力过高</h3><p>目前ES节点的有两种规格内存.</p>
+<p>80GB内存(节点同时运行了Logstash,分配了16G给logstash).</p>
+<p>54GB内存(只运行ES,并且只作为data节点)</p>
+<p>ES的JVM内存从32G下降到28G.建议JVM内存是总物理内存的一半左右,</p>
+<p>节点内存使用情况如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&quot;mem&quot;: &#123; - </span><br><span class="line">          &quot;total&quot;: &quot;78.5gb&quot;,</span><br><span class="line">          &quot;total_in_bytes&quot;: 84296601600,</span><br><span class="line">          &quot;free&quot;: &quot;4.3gb&quot;,</span><br><span class="line">          &quot;free_in_bytes&quot;: 4688633856,</span><br><span class="line">          &quot;used&quot;: &quot;74.1gb&quot;,</span><br><span class="line">          &quot;used_in_bytes&quot;: 79607967744,</span><br><span class="line">          &quot;free_percent&quot;: 6,</span><br><span class="line">          &quot;used_percent&quot;: 94</span><br></pre></td></tr></table></figure>
+<p>建议: ES节点内存建议配置高一点,虽然ES的JVM内存最大不超过32G.但是在其他方面仍然很吃内存</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/25/elk/记一次生产ELK性能优化/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/kibana查询语法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1068,336 +1571,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/08/25/elk/kibana查询语法/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="url">Filebeat+logstash收集Nginx错误日志</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Filebeat-logstash收集Nginx错误日志"><a href="#Filebeat-logstash收集Nginx错误日志" class="headerlink" title="Filebeat+logstash收集Nginx错误日志"></a>Filebeat+logstash收集Nginx错误日志</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在上一个笔记&lt;Filebeat+logstash收集Nginx访问日志&gt;中分享了如何收集logstash的访问日志,这篇笔记主要是记录如何收集nginx的错误日志</p>
-<p>Nginx 错误日志是运维人员最常见但又极其容易忽略的日志类型之一。Nginx 错误日志即没有统一明确的分隔符，也没有特别方便的正则模式，但通过 logstash 不同插件的组合，还是可以轻松做到数据处理。</p>
-<hr>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Kibana图表制作/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/Kibana图表制作/" itemprop="url">Kibana图表制作</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/Kibana图表制作/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Kibana图表制作/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Kibana图表制作"><a href="#Kibana图表制作" class="headerlink" title="Kibana图表制作"></a>Kibana图表制作</h2><p>kibana的可视化可以制作各种统计分析图表,然后合并展示到dashbord中.下面介绍一些常用的nginx的访问图表.</p>
-<blockquote>
-<p>在kibana7.7版本中可以配置kibana web界面的中文语言.</p>
-</blockquote>
-<p>编辑kibana配置文件,<code>/etc/kibana/kibana.yml</code>,加入以下配置: </p>
-<p><code>i18n.locale: &quot;zh-CN&quot;</code></p>
-<h4 id="一-统计过去XXX时间的访问量"><a href="#一-统计过去XXX时间的访问量" class="headerlink" title="一.统计过去XXX时间的访问量"></a>一.统计过去XXX时间的访问量</h4><p>在可视化界面,添加仪表盘图表.指定nginx的openapi access访问日志索引.</p>
-<p>无需进行任何配置,选择右上角的时间范围,会显示计数,也就是日志量的计数</p>
-<p><img src="https://img2.jesse.top/image-20200723154706247.png" alt="image-20200723154706247"></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/Kibana图表制作/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1792,188 +1965,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/" itemprop="url">分析统计Nginx日志的响应时间</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-30T00:44:48+08:00">
-                2020-06-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Basic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Basic/shell-shell脚本/" itemprop="url" rel="index">
-                    <span itemprop="name">shell&shell脚本</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/30/Linux-Basic/shell&shell脚本/分析Nginx日志的响应时间/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="分析统计Nginx日志的响应时间"><a href="#分析统计Nginx日志的响应时间" class="headerlink" title="分析统计Nginx日志的响应时间"></a>分析统计Nginx日志的响应时间</h2><p>Nginx日志格式如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">log_format main &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos;</span><br><span class="line">                &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;</span><br><span class="line">                &apos;&quot;$http_user_agent&quot; $http_x_forwarded_for &quot;$request_time&quot;&apos;;</span><br></pre></td></tr></table></figure>
-<p>实际日志如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[work@iqg-yyq2 ~]$ head  /data/logs/nginx/iqg_api_v5.access.log</span><br><span class="line">100.97.74.45 - - [11/Mar/2019:03:46:01 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.154 - - [11/Mar/2019:03:46:01 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.97.74.22 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.002&quot;</span><br><span class="line">100.117.85.96 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.133 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.172 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.002&quot;</span><br><span class="line">100.97.74.0 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.97.73.184 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.117.85.85 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br><span class="line">100.97.74.62 - - [11/Mar/2019:03:46:02 +0800] &quot;HEAD / HTTP/1.0&quot; 200 0 &quot;-&quot; &quot;-&quot; - &quot;0.001&quot;</span><br></pre></td></tr></table></figure>
-<p>最后一行为响应时间.但是是个字符串,还不能直接用awk来统计</p>
-<p>下面这个脚本用来统计响应时间:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">[ $# -ne 2 ] &amp;&amp; echo &quot;Usage: ./loganalysis.sh two parameters: logfile path  and cost time&quot; &amp;&amp; exit 0</span><br><span class="line"></span><br><span class="line">[ ! -f &quot;$1&quot; ] &amp;&amp; echo &quot;the file doesn&apos;t exsit,please check again&quot; &amp;&amp; exit 0</span><br><span class="line">logfile=$(basename $1)</span><br><span class="line"></span><br><span class="line">[ &quot;$2&quot; -lt 0 ] &amp;&amp; echo &quot; the second parameter is not a digit&quot; &amp;&amp; exit 0</span><br><span class="line">cost_time=$2</span><br><span class="line"></span><br><span class="line">cat $1 | awk &apos;&#123;print $NF&#125;&apos;  | awk -F &quot;\&quot;&quot; &apos;&#123;print $2&#125;&apos;  &gt;  time.txt</span><br><span class="line">echo &quot;split request_time over!!!&quot;</span><br><span class="line"></span><br><span class="line">paste  -d &quot; &quot; $1 time.txt &gt; new.log</span><br><span class="line">echo &quot;build new logfile over!!!&quot;</span><br><span class="line"></span><br><span class="line">awk &apos;($NF&gt;&apos;$cost_time&apos;)&#123;print $0&#125;&apos; new.log &gt; slow-$&#123;logfile&#125;</span><br><span class="line">echo &quot;please see slowtime in slow-$&#123;logfile&#125;&quot;</span><br><span class="line"></span><br><span class="line">rm -f time.txt</span><br><span class="line">rm -f new.log</span><br><span class="line"></span><br><span class="line"># analyze the access frequence of API</span><br><span class="line"></span><br><span class="line">echo &quot;#############the access frequence of API ##################&quot;</span><br><span class="line">awk &apos;&#123;++S[$4]&#125; END &#123; for (i in S) print &quot;URL:&quot;i &quot;\t&quot; &quot;access times:&quot;S[i]&#125;&apos; slow-$&#123;logfile&#125;</span><br></pre></td></tr></table></figure>
-<p>下面是统计iqg_api_v5.access.log这个日志响应时间超过1秒的记录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[work@iqg-yyq2 ~]$ ./loganalysis.sh /data/logs/nginx/iqg_api_v5.access.log 1</span><br><span class="line">split request_time over!!!</span><br><span class="line">build new logfile over!!!</span><br><span class="line">please see slowtime in slowtime.txt!!!</span><br><span class="line">[work@iqg-yyq2 ~]$</span><br></pre></td></tr></table></figure>
-<p>查看最终结果:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">work@iqg-yyq2 ~]$ head slowtime.txt</span><br><span class="line">100.117.85.64 [11/Mar/2019:14:14:15 &quot;HEAD / 1.223</span><br><span class="line">100.97.74.41 [11/Mar/2019:14:14:16 &quot;HEAD / 1.984</span><br><span class="line">100.97.74.104 [11/Mar/2019:14:14:16 &quot;HEAD / 1.880</span><br><span class="line">100.97.74.5 [11/Mar/2019:14:14:16 &quot;HEAD / 1.758</span><br><span class="line">100.117.85.100 [11/Mar/2019:14:14:16 &quot;HEAD / 1.757</span><br><span class="line">100.97.73.213 [11/Mar/2019:14:14:16 &quot;HEAD / 1.767</span><br><span class="line">100.117.85.160 [11/Mar/2019:14:14:16 &quot;HEAD / 1.662</span><br><span class="line">100.97.74.118 [11/Mar/2019:14:14:16 &quot;HEAD / 1.566</span><br><span class="line">100.97.73.141 [11/Mar/2019:14:14:16 &quot;HEAD / 1.215</span><br><span class="line">100.117.56.238 [11/Mar/2019:14:14:16 &quot;HEAD / 1.132</span><br><span class="line">[work@iqg-yyq2 ~]$</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2023,7 +2019,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-count">201</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

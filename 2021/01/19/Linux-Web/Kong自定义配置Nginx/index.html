@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="kong," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Kong自定义配置Nginx介绍Kong是基于Nginx实现代理转发.官方的 nginx.conf 配置文件过于简单.如果需要优化nginx的性能,就需要修改默认的nginx配置文件,或者重新自定义一个nginx配置文件. 具体方法可以参考官方文档: https://docs.konghq.com/2.2.x/configuration/#environment-variables 下面介绍2种方">
+<meta name="keywords" content="kong">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kong自定义配置Nginx">
+<meta property="og:url" content="https://jesse.top/2021/01/19/Linux-Web/Kong自定义配置Nginx/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="Kong自定义配置Nginx介绍Kong是基于Nginx实现代理转发.官方的 nginx.conf 配置文件过于简单.如果需要优化nginx的性能,就需要修改默认的nginx配置文件,或者重新自定义一个nginx配置文件. 具体方法可以参考官方文档: https://docs.konghq.com/2.2.x/configuration/#environment-variables 下面介绍2种方">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-02-06T16:04:56.932Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kong自定义配置Nginx">
+<meta name="twitter:description" content="Kong自定义配置Nginx介绍Kong是基于Nginx实现代理转发.官方的 nginx.conf 配置文件过于简单.如果需要优化nginx的性能,就需要修改默认的nginx配置文件,或者重新自定义一个nginx配置文件. 具体方法可以参考官方文档: https://docs.konghq.com/2.2.x/configuration/#environment-variables 下面介绍2种方">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2021/01/19/Linux-Web/Kong自定义配置Nginx/"/>
+
+
+
+
+
+  <title>Kong自定义配置Nginx | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/19/Linux-Web/Kong自定义配置Nginx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Kong自定义配置Nginx</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-19T11:59:58+08:00">
+                2021-01-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Web</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
+                    <span itemprop="name">kong</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/19/Linux-Web/Kong自定义配置Nginx/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/19/Linux-Web/Kong自定义配置Nginx/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Kong自定义配置Nginx"><a href="#Kong自定义配置Nginx" class="headerlink" title="Kong自定义配置Nginx"></a>Kong自定义配置Nginx</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>Kong是基于Nginx实现代理转发.官方的 <code>nginx.conf</code> 配置文件过于简单.如果需要优化nginx的性能,就需要修改默认的nginx配置文件,或者重新自定义一个nginx配置文件.</p>
+<p>具体方法可以参考官方文档: <a href="https://docs.konghq.com/2.2.x/configuration/#environment-variables" target="_blank" rel="noopener">https://docs.konghq.com/2.2.x/configuration/#environment-variables</a></p>
+<p>下面介绍2种方式自定义nginx的配置</p>
+<h3 id="通过环境变量注入"><a href="#通过环境变量注入" class="headerlink" title="通过环境变量注入"></a>通过环境变量注入</h3><p>Kong服务启动时会每次都新建一个新的nginx配置文件.可以通过将nginx指令注入到 <code>kong.conf</code> 配置文件中从而配置到这个新的nginx配置文件</p>
+<a id="more"></a> 
+<h4 id="注入Nginx单个指令"><a href="#注入Nginx单个指令" class="headerlink" title="注入Nginx单个指令"></a>注入Nginx单个指令</h4><p>注入到Kong的环境变量一般包含下面2种前缀.前缀名不同代表注入的nginx指令作用在不同的作用域下.Kong会将环境变量的前缀去掉,然后将环境变量的后面部分注入到nginx.</p>
+<ul>
+<li><code>nginx_http_</code> 该前缀环境变量会被注入到Nginx的http代码块</li>
+<li><code>nginx_proxy_</code> 该前缀会被注入到nginx的server代码块</li>
+</ul>
+<p>例如.如果注入以下环境变量到 <code>kong.conf</code> 配置文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx_proxy_large_client_header_buffers=16 128k</span><br></pre></td></tr></table></figure>
+<p>Kong会将以下环境变量注入到Nginx配置文件的代理 <code>server</code> 块中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">large_client_header_buffers 16 128k;</span><br></pre></td></tr></table></figure>
+<p>下面的环境变量,会被注入到nginx的http块中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export KONG_NGINX_HTTP_OUTPUT_BUFFERS=&quot;4 64k&quot;</span><br><span class="line"></span><br><span class="line">#注入以下Nginx指令</span><br><span class="line">output_buffers 4 64k;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>还有一种前缀 <code>Nginx_admin_</code> 这个作用在kong的admin api,所以用的较少</p>
+</blockquote>
+<h4 id="注入Nginx代码块"><a href="#注入Nginx代码块" class="headerlink" title="注入Nginx代码块"></a>注入Nginx代码块</h4><p>对于一些复杂的配置场景,比如需要将整个server代码块添加到Nginx配置文件.可以使用上面的环境变量注入的方式,注入一个 <code>include</code> 指令到Nginx配置文件.</p>
+<p>例如下面这个nginx的server代码块文件.假如该文件名为 <code>my-server.conf</code> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># custom server</span><br><span class="line">server &#123;</span><br><span class="line">  listen 2112;</span><br><span class="line">  location / &#123;</span><br><span class="line">    # ...more settings...</span><br><span class="line">    return 200;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以通过下面的方式添加到 <code>kong.conf</code> 配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx_http_include = /path/to/your/my-server.conf</span><br></pre></td></tr></table></figure>
+<p>或者通过环境变量方式注入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export KONG_NGINX_HTTP_INCLUDE=&quot;/path/to/your/my-server.conf&quot;</span><br></pre></td></tr></table></figure>
+<p>这样当Kong启动后,server代码块会被添加到Nginx的配置文件.</p>
+<blockquote>
+<p>这里也可以使用相对路径来注入一个server代码块的配置文件,但是配置文件需要在 <code>kong.conf</code> 配置文件的prefix路径之下.或者kong启动时候通过 <code>-p</code> 参数自定义的prefix路径之下</p>
+</blockquote>
+<h3 id="自定义Nginx模板"><a href="#自定义Nginx模板" class="headerlink" title="自定义Nginx模板"></a>自定义Nginx模板</h3><p>kong在启动的时候会根据 <code>/usr/local/share/lua/5.1/kong/templates/nginx.lua</code>和 <code>/usr/local/share/lua/5.1/kong/templates/nginx_kong.lua</code> 这2个lua模板来自动生成nginx的配置文件.当Kong启动后会自动在prefix路径下生成 <code>nginx.conf</code> 和 <code>nginx-kong.conf</code> .前者是Nginx的主配置文件,然后通过include方式引入了 <code>nginx_kong.conf</code> </p>
+<p>当kong启动后,会产生下面2个文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/kong</span><br><span class="line">    - nginx.conf</span><br><span class="line">    - nginx-kong.conf</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在 <a href="https://github.com/kong/kong/tree/master/kong/templates下也存放了kong的默认模板文件" target="_blank" rel="noopener">https://github.com/kong/kong/tree/master/kong/templates下也存放了kong的默认模板文件</a>.</p>
+</blockquote>
+<p>所以在 <code>usr/local/kong</code> 目录下直接修改 <code>Nginx.conf</code> 配置文件无法永久生效.当kong重启时,配置文件会被默认的Lua目标所覆盖和替代</p>
+<p>如果一定要自定义nginx配置文件.可以自定义nginx的模板文件来替代 <code>Nginx.lua</code> .然后在该模板文件里引入 <code>nginx-kong.conf</code> </p>
+<h4 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h4><ol>
+<li>拷贝 <code>nginx.conf</code> 配置文件为  <code>nginx.conf.template</code> </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/local/kong/nginx.conf nginx.conf.template</span><br></pre></td></tr></table></figure>
+<ol>
+<li>自定义配置 <code>nginx.conf.template</code> .例如下面是我的配置文件内容</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">pid pids/nginx.pid;</span><br><span class="line">error_log logs/error.log $&#123;&#123;LOG_LEVEL&#125;&#125;; </span><br><span class="line"></span><br><span class="line"># injected nginx_main_* directives</span><br><span class="line">daemon off;</span><br><span class="line">worker_processes auto;</span><br><span class="line">worker_rlimit_nofile 204800;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    # injected nginx_events_* directives</span><br><span class="line">    multi_accept on;</span><br><span class="line">    use epoll;</span><br><span class="line">    worker_connections  204800;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    sendfile            on;</span><br><span class="line">    tcp_nopush          on;</span><br><span class="line">    tcp_nodelay         on;</span><br><span class="line">    include &apos;nginx-kong.conf&apos;;</span><br><span class="line"></span><br><span class="line">    keepalive_timeout  60;</span><br><span class="line">    keepalive_requests 1024;</span><br><span class="line">    client_header_buffer_size 4k;</span><br><span class="line">    large_client_header_buffers 4 32k;</span><br><span class="line"></span><br><span class="line">    types_hash_max_size 2048;</span><br><span class="line">    client_body_timeout 180;</span><br><span class="line">    client_header_timeout 10;</span><br><span class="line">    send_timeout 240;</span><br><span class="line"></span><br><span class="line">    proxy_connect_timeout   1000ms;</span><br><span class="line">    proxy_send_timeout      5000ms;</span><br><span class="line">    proxy_read_timeout      5000ms;</span><br><span class="line">    proxy_buffers           64 8k;</span><br><span class="line">    proxy_busy_buffers_size    128k;</span><br><span class="line">    proxy_temp_file_write_size 64k;</span><br><span class="line">    proxy_redirect off;</span><br><span class="line">    proxy_next_upstream off;</span><br><span class="line">    </span><br><span class="line">    gzip on;</span><br><span class="line">    gzip_min_length 1k;</span><br><span class="line">    gzip_buffers 4 16k;</span><br><span class="line">    gzip_http_version 1.0;</span><br><span class="line">    gzip_comp_level 2;</span><br><span class="line">    gzip_types text/plain application/x-javascript text/css application/xml;</span><br><span class="line">    gzip_vary on;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意该配置文件内的指令不能和 <code>nginx-kong.conf</code> 配置文件有同名或者冲突.否则kong无法启动</p>
+</blockquote>
+<ol>
+<li>重新启动Kong.使用下面的参数指定自定义的Nginx模板文件</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kong start -c /etc/kong/kong.conf --nginx-conf nginx.conf.template</span><br></pre></td></tr></table></figure>
+<h4 id=""><a href="#" class="headerlink" title=" "></a> </h4><h4 id="docker运行kong"><a href="#docker运行kong" class="headerlink" title="docker运行kong"></a>docker运行kong</h4><p>如果是docker方式运行.可以使用 <code>Dockerfile</code> 自定义kong镜像</p>
+<p>以下是Dockerfile文件内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM kong:2.2.0</span><br><span class="line">COPY nginx.conf.template /usr/local/kong/nginx.conf.template</span><br><span class="line">CMD kong start --nginx-conf /usr/local/kong/nginx.conf.template</span><br></pre></td></tr></table></figure>
+<p>编译docker镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t dwd-kong:2.2.0 .</span><br></pre></td></tr></table></figure>
+<p>重启运行docker.但是要先在kong容器运行 <code>kong migrations up</code> 和 <code>kong migrations finish</code> 命令.所以 <code>docker-compose.yml</code> 配置文件内容如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">kong:</span><br><span class="line">    image: hub.doweidu.com/beta/dwd-kong:2.2.0</span><br><span class="line">    container_name: kong</span><br><span class="line">    hostname: kong</span><br><span class="line">    environment:</span><br><span class="line">      - KONG_DATABASE=postgres</span><br><span class="line">      - KONG_PG_HOST=kong-database</span><br><span class="line">      - KONG_PROXY_ACCESS_LOG=/var/log/kong/access.log</span><br><span class="line">      - KONG_ADMIN_ACCESS_LOG=/var/log/kong/admin_access.log</span><br><span class="line">      - KONG_PROXY_ERROR_LOG=/var/log/kong/error.log</span><br><span class="line">      - KONG_ADMIN_ERROR_LOG=/var/log/kong/admin_error.log</span><br><span class="line">      - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl</span><br><span class="line">      - KONG_TRUSTED_IPS=0.0.0.0/0,::/0</span><br><span class="line">      - KONG_REAL_IP_HEADER=X-Forwarded-For</span><br><span class="line">    volumes:</span><br><span class="line">      - /data/logs/kong:/var/log/kong</span><br><span class="line">      - /etc/localtime:/etc/localtime</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8000:8000&quot;</span><br><span class="line">      - &quot;8443:8443&quot;</span><br><span class="line">      - &quot;8001:8001&quot;</span><br><span class="line">      - &quot;8444:8444&quot;</span><br><span class="line">    expose:</span><br><span class="line">      - &quot;8000&quot;</span><br><span class="line">      - &quot;8443&quot;</span><br><span class="line">      - &quot;8001&quot;</span><br><span class="line">      - &quot;8444&quot;</span><br><span class="line">    networks:</span><br><span class="line">      - dev-net</span><br><span class="line">    restart: always</span><br><span class="line">    depends_on:</span><br><span class="line">        - kong-database</span><br><span class="line">        - kong-migration</span><br><span class="line">        - kong-migration-finish</span><br><span class="line">        </span><br><span class="line">kong-migration:</span><br><span class="line">    image: hub.doweidu.com/beta/dwd-kong:2.2.0</span><br><span class="line">   # command: &quot;kong migrations bootstrap&quot;</span><br><span class="line">    command: &quot;kong migrations up&quot;</span><br><span class="line">    networks:</span><br><span class="line">      - dev-net</span><br><span class="line">    restart: on-failure</span><br><span class="line">    environment:</span><br><span class="line">      KONG_PG_HOST: kong-database</span><br><span class="line">    depends_on:</span><br><span class="line">      - kong-database</span><br><span class="line"></span><br><span class="line">  kong-migration-finish:</span><br><span class="line">    image: hub.doweidu.com/beta/dwd-kong:2.2.0</span><br><span class="line">   # command: &quot;kong migrations bootstrap&quot;</span><br><span class="line">    command: &quot;kong migrations finish&quot;</span><br><span class="line">    networks:</span><br><span class="line">      - dev-net</span><br><span class="line">    restart: on-failure</span><br><span class="line">    environment:</span><br><span class="line">      KONG_PG_HOST: kong-database</span><br><span class="line">    depends_on:</span><br><span class="line">      - kong-database</span><br><span class="line">      - kong-migration</span><br></pre></td></tr></table></figure>
+<p>启动容器后.可以查看配置文件是否生效:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[work@docker docker-compose]$docker exec kong cat /usr/local/kong/nginx.conf</span><br><span class="line">pid pids/nginx.pid;</span><br><span class="line">error_log logs/error.log notice;</span><br><span class="line"></span><br><span class="line"># injected nginx_main_* directives</span><br><span class="line">daemon off;</span><br><span class="line">worker_processes auto;</span><br><span class="line">worker_rlimit_nofile 204800;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    # injected nginx_events_* directives</span><br><span class="line">    multi_accept on;</span><br><span class="line">    use epoll;</span><br><span class="line">    worker_connections  204800;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    sendfile            on;</span><br><span class="line">    tcp_nopush          on;</span><br><span class="line">    tcp_nodelay         on;</span><br><span class="line">    include &apos;nginx-kong.conf&apos;;</span><br><span class="line"> .......略...........</span><br></pre></td></tr></table></figure>
+<p>如此,便实现了自定义kong的nginx配置文件,这在大并发场景中可能需要优化nginx的转发性能.如果是小规模场景中,可以使用Kong的默认的Nginx配置文件即可.</p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2021/01/19/Linux-Web/Kong自定义配置Nginx/">Kong自定义配置Nginx</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2021年01月19日 - 11:01</p>
+  <p><span>最后更新:</span>2021年02月07日 - 00:02</p>
+  <p><span>原始链接:</span><a href="/2021/01/19/Linux-Web/Kong自定义配置Nginx/" title="Kong自定义配置Nginx">https://jesse.top/2021/01/19/Linux-Web/Kong自定义配置Nginx/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2021/01/19/Linux-Web/Kong自定义配置Nginx/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kong/" rel="tag"># kong</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/19/Linux-Web/Kong Rate Limiting限流插件/" rel="next" title="Kong实现限流">
+                <i class="fa fa-chevron-left"></i> Kong实现限流
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/02/06/kubernetes/network/kubernetes Calico/" rel="prev" title="Kubernetes Calico">
+                Kubernetes Calico <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2021/01/19/Linux-Web/Kong自定义配置Nginx/"
+           data-title="Kong自定义配置Nginx" data-url="https://jesse.top/2021/01/19/Linux-Web/Kong自定义配置Nginx/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">201</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kong自定义配置Nginx"><span class="nav-number">1.</span> <span class="nav-text">Kong自定义配置Nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过环境变量注入"><span class="nav-number">1.2.</span> <span class="nav-text">通过环境变量注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注入Nginx单个指令"><span class="nav-number">1.2.1.</span> <span class="nav-text">注入Nginx单个指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注入Nginx代码块"><span class="nav-number">1.2.2.</span> <span class="nav-text">注入Nginx代码块</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义Nginx模板"><span class="nav-number">1.3.</span> <span class="nav-text">自定义Nginx模板</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实现步骤"><span class="nav-number">1.3.1.</span> <span class="nav-text">实现步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#"><span class="nav-number">1.3.2.</span> <span class="nav-text"> </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker运行kong"><span class="nav-number">1.3.3.</span> <span class="nav-text">docker运行kong</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (中国标准时间) &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
