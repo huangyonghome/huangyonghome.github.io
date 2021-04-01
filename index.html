@@ -275,6 +275,216 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/pod/kubernetes--pod原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/02/06/kubernetes/pod/kubernetes--pod原理/" itemprop="url">Kubernetes pod原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-06T23:39:58+08:00">
+                2021-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/pod/" itemprop="url" rel="index">
+                    <span itemprop="name">pod</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/02/06/kubernetes/pod/kubernetes--pod原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/pod/kubernetes--pod原理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Kubernetes—-pod原理"><a href="#Kubernetes—-pod原理" class="headerlink" title="Kubernetes—-pod原理"></a>Kubernetes—-pod原理</h2><h3 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h3><p>Pod是kubernetes项目中最小的API对象,是原子调度单位.我们之前学习过很多Linux容器,Docker方面的知识.那Kubernetes为什么不使用容器作为调度单位,而是要将容器封装成一个Pod?</p>
+<p>要探讨这个问题,我们需要深入研究一下Kubernetes的设计思想和工作原理.</p>
+<h3 id="容器本质"><a href="#容器本质" class="headerlink" title="容器本质"></a>容器本质</h3><p>通过之前Docker的原理学习,我们知道容器的本质到底是什么? <strong>容器的本质是进程</strong>.<strong>容器的镜像就像是这个进程的安装包.</strong>一键启动这个镜像,就相当于用这个安装包启动了一个进程(PID为1).那么Kubernetes呢?</p>
+<p>Kubernetes就是操作系统! 负责所有容器的编排和管理</p>
+<p>但是,在一个操作系统里,进程并不是孤苦伶仃的单独运行的,而是以进程组的方式,多个进程同时在一起运行.这些进程存在着”进程和进程组”的关系,他们之间有非常密切的写作关系,使得他们必须部署在同一台机器上.</p>
+<p>由于受限于容器的”单进程模型”.一个进程组下的不同进程可能需要制作成多个不同的容器,而这多个容器在传统的调度工作中(比如像Docker Swarm,Mesos)都没有被妥善处理好,在进程组的调度上要么无法保障一个进程组的多个容器无法调度到同一个节点,要么调度的效率和性能的问题.</p>
+<p>可在Kubernetes里,这个问题通过Pod完美解决了.Pod是kubernetes的原子调度单位,这就意味着Kubernetes是统一按照Pod而非单个容器的资源需求计算的.所以可以将多个容器部署在同一个Pod里,这些容器共享同一个Pod的网络名称,进程间通信,IP地址,共享卷等.而Kubernetes在调度时,会将他们作为一个整体,而非单个容器进程.</p>
+<p>像这样容器间的紧密协作，我们可以称为“超亲密关系”。这些具有“超亲密关系”容器的典型特征包括但不限于：互相之间会发生直接的文件交换、使用 localhost 或者 Socket 文件进行本地通信、会发生非常频繁的远程调用、需要共享某些 Linux Namespace（比如，一个容器要加入另一个容器的 Network Namespace）等等。</p>
+<p>这也就意味着，并不是所有有“关系”的容器都属于同一个 Pod。比如，PHP 应用容器和 MySQL 虽然会发生访问关系，但并没有必要、也不应该部署在同一台机器上，它们更适合做成两个 Pod。</p>
+<p>不过，相信此时你可能会有<strong>第二个疑问：</strong></p>
+<p>对于初学者来说，一般都是先学会了用 Docker 这种单容器的工具，才会开始接触 Pod。</p>
+<p>而如果 Pod 的设计只是出于调度上的考虑，那么 Kubernetes 项目似乎完全没有必要非得把 Pod 作为“一等公民”吧？这不是故意增加用户的学习门槛吗？</p>
+<p>为了理解这一层含义，我就必须先给你介绍一下Pod 的实现原理。</p>
+<h3 id="POD实现原理"><a href="#POD实现原理" class="headerlink" title="POD实现原理"></a>POD实现原理</h3><ul>
+<li><strong>Pod只是一个逻辑的概念</strong></li>
+</ul>
+<p>也就是说，Kubernetes 真正处理的，还是宿主机操作系统上 Linux 容器的 Namespace 和 Cgroups，而并不存在一个所谓的 Pod 的边界或者隔离环境。</p>
+<p>那么，Pod 又是怎么被“创建”出来的呢？</p>
+<p>答案是：Pod，其实是一组共享了某些资源的容器。</p>
+<p>具体的说：<strong>Pod 里的所有容器，共享的是同一个 Network Namespace，并且可以声明共享同一个 Volume。</strong></p>
+<p>那这么来看的话，一个有 A、B 两个容器的 Pod，不就是等同于一个容器（容器 A）共享另外一个容器（容器 B）的网络和 Volume 的玩儿法么？</p>
+<p>这好像通过 docker run –net –volumes-from 这样的命令就能实现嘛，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --net=B --volumes-from=B --name=A image-A ...</span><br></pre></td></tr></table></figure>
+<p>但是，你有没有考虑过，如果真这样做的话，容器 B 就必须比容器 A 先启动，这样一个 Pod 里的多个容器就不是对等关系，而是拓扑关系了。</p>
+<p>所以，在 Kubernetes 项目里，Pod 的实现需要使用一个中间容器，这个容器叫作 Infra 容器。在这个 Pod 中，Infra 容器永远都是第一个被创建的容器，而其他用户定义的容器，则通过 Join Network Namespace 的方式，与 Infra 容器关联在一起。这样的组织关系，可以用下面这样一个示意图来表达：</p>
+<p><img src="https://img2.jesse.top/image-20210328112238279.png" alt="image-20210328112238279"></p>
+<p>如上图所示，这个 Pod 里有两个用户容器 A 和 B，还有一个 Infra 容器。很容易理解，在 Kubernetes 项目里，Infra 容器一定要占用极少的资源，所以它使用的是一个非常特殊的镜像，叫作：<code>k8s.gcr.io/pause</code>。这个镜像是一个用汇编语言编写的、永远处于“暂停”状态的容器，解压后的大小也只有 100~200 KB 左右。</p>
+<p>而在 Infra 容器“Hold 住”Network Namespace 后，用户容器就可以加入到 Infra 容器的 Network Namespace 当中了。所以，如果你查看这些容器在宿主机上的 Namespace 文件（这个 Namespace 文件的路径，我已经在前面的内容中介绍过），它们指向的值一定是完全一样的。</p>
+<p>这也就意味着，对于 Pod 里的容器 A 和容器 B 来说：</p>
+<ul>
+<li>它们可以直接使用 localhost 进行通信；</li>
+<li>它们看到的网络设备跟 Infra 容器看到的完全一样；</li>
+<li>一个 Pod 只有一个 IP 地址，也就是这个 Pod 的 Network Namespace 对应的 IP 地址；</li>
+<li>当然，其他的所有网络资源，都是一个 Pod 一份，并且被该 Pod 中的所有容器共享；</li>
+<li>Pod 的生命周期只跟 Infra 容器一致，而与容器 A 和 B 无关。</li>
+</ul>
+<h3 id="容器设计模式"><a href="#容器设计模式" class="headerlink" title="容器设计模式"></a>容器设计模式</h3><p>Pod 这种“超亲密关系”容器的设计思想，实际上就是希望，当用户想在一个容器里跑多个功能并不相关的应用时，应该优先考虑它们是不是更应该被描述成一个 Pod 里的多个容器。</p>
+<p>为了能够掌握这种思考方式，你就应该尽量尝试使用它来描述一些用单个容器难以解决的问题。</p>
+<p>一个典型的例子就是容器的日志收集</p>
+<p>比如，我现在有一个应用，需要不断地把日志文件输出到容器的 /var/log 目录中。</p>
+<p>这时，我就可以把一个 Pod 里的 Volume 挂载到应用容器的 /var/log 目录上。</p>
+<p>然后，我在这个 Pod 里同时运行一个日志收集客户端 容器，它也声明挂载同一个 Volume 到自己的 /var/log 目录上。</p>
+<p>像这样，我们就用一种“组合”方式,解决了主容器和日志收集容器之间的耦合关系,而日志收集容器我们一般也称之为辅助容器.实际上，这个所谓的“组合”操作，正是容器设计模式里最常用的一种模式，它的名字叫：sidecar。顾名思义，sidecar 指的就是我们可以在一个 Pod 中，启动一个辅助容器，来完成一些独立于主进程（主容器）之外的工作。</p>
+<p>这样，接下来 sidecar 容器就只需要做一件事儿，那就是不断地从自己的 /var/log 目录里读取日志文件，转发到 MongoDB 或者 Elasticsearch 中存储起来。这样，一个最基本的日志收集工作就完成了。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/network/kubernetes network/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -392,6 +602,178 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/02/06/kubernetes/network/kubernetes network/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/network/kubernetes Calico/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/02/06/kubernetes/network/kubernetes Calico/" itemprop="url">Kubernetes Calico</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-06T23:39:58+08:00">
+                2021-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/network/" itemprop="url" rel="index">
+                    <span itemprop="name">network</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/02/06/kubernetes/network/kubernetes Calico/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/network/kubernetes Calico/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Kubernetes-Calico"><a href="#Kubernetes-Calico" class="headerlink" title="Kubernetes Calico"></a>Kubernetes Calico</h2><h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p>​    Calico是一个非常流行的Kubernetes网络插件和解决方案.Calico是一个开源虚拟化网络方案，用于为云原生应用实现互联及策略控制。与Flannel相比，Calico的一个显著优势是对网络策略（network policy）的支持，它允许用户动态定义ACL规则控制进出容器的数据报文，实现为Pod间的通信按需施加安全策略。事实上，Calico可以整合进大多数主流的编排系统，如Kubernetes、Apache Mesos、Docker和OpenStack等。</p>
+<p>​    Calico本身是一个三层的虚拟网络方案，它将每个节点都当作路由器（router），将每个节点的容器都当作是“节点路由器”的一个终端并为其分配一个IP地址，各节点路由器通过BGP（Border Gateway Protocol）学习生成路由规则，从而将不同节点上的容器连接起来。因此，Calico方案其实是一个纯三层的解决方案，通过每个节点协议栈的三层（网络层）确保容器之间的连通性，这摆脱了flannel host-gw类型的所有节点必须位于同一二层网络的限制，从而极大地扩展了网络规模和网络边界。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/02/06/kubernetes/network/kubernetes Calico/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -619,7 +1001,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/network/kubernetes Calico/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/controller/daemonset/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -638,7 +1020,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/02/06/kubernetes/network/kubernetes Calico/" itemprop="url">Kubernetes Calico</a></h1>
+                <a class="post-title-link" href="/2021/02/06/kubernetes/controller/daemonset/" itemprop="url">Kubernetes DaemonSet</a></h1>
         
 
         <div class="post-meta">
@@ -684,8 +1066,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/network/" itemprop="url" rel="index">
-                    <span itemprop="name">network</span>
+                  <a href="/categories/kubernetes/controller/" itemprop="url" rel="index">
+                    <span itemprop="name">controller</span>
                   </a>
                 </span>
 
@@ -702,8 +1084,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2021/02/06/kubernetes/network/kubernetes Calico/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/network/kubernetes Calico/" itemprop="commentCount"></span>
+                <a href="/2021/02/06/kubernetes/controller/daemonset/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/controller/daemonset/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -732,11 +1114,19 @@
 
       
         
-          <h2 id="Kubernetes-Calico"><a href="#Kubernetes-Calico" class="headerlink" title="Kubernetes Calico"></a>Kubernetes Calico</h2><h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p>​    Calico是一个非常流行的Kubernetes网络插件和解决方案.Calico是一个开源虚拟化网络方案，用于为云原生应用实现互联及策略控制。与Flannel相比，Calico的一个显著优势是对网络策略（network policy）的支持，它允许用户动态定义ACL规则控制进出容器的数据报文，实现为Pod间的通信按需施加安全策略。事实上，Calico可以整合进大多数主流的编排系统，如Kubernetes、Apache Mesos、Docker和OpenStack等。</p>
-<p>​    Calico本身是一个三层的虚拟网络方案，它将每个节点都当作路由器（router），将每个节点的容器都当作是“节点路由器”的一个终端并为其分配一个IP地址，各节点路由器通过BGP（Border Gateway Protocol）学习生成路由规则，从而将不同节点上的容器连接起来。因此，Calico方案其实是一个纯三层的解决方案，通过每个节点协议栈的三层（网络层）确保容器之间的连通性，这摆脱了flannel host-gw类型的所有节点必须位于同一二层网络的限制，从而极大地扩展了网络规模和网络边界。</p>
+          <h2 id="DaemonSet"><a href="#DaemonSet" class="headerlink" title="DaemonSet"></a>DaemonSet</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>顾名思义,DaemonSet的主要作用是让你在kubernetes集群里运行一个Daemon Pod.所以,这个Pod有如下三个特征:</p>
+<p>1.这个Pod运行在kubernetes集群的每一个节点(Node)上</p>
+<p>2.每个节点只有一个这样的Pod实例</p>
+<p>3.当有新的节点加入 Kubernetes 集群后，该 Pod 会自动地在新节点上被创建出来；而当旧节点被删除后，它上面的 Pod 也相应地会被回收掉.</p>
+<p>这个机制听起来很简单，但 Daemon Pod 的意义确实是非常重要的。我随便给你列举几个例子：</p>
+<ol>
+<li>各种网络插件的 Agent 组件，都必须运行在每一个节点上，用来处理这个节点上的容器网络；</li>
+<li>各种存储插件的 Agent 组件，也必须运行在每一个节点上，用来在这个节点上挂载远程存储目录，操作容器的 Volume 目录；</li>
+<li>各种监控组件和日志组件，也必须运行在每一个节点上，负责这个节点上的监控信息和日志搜集。</li>
+</ol>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/02/06/kubernetes/network/kubernetes Calico/#more" rel="contents">
+            <a class="btn" href="/2021/02/06/kubernetes/controller/daemonset/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1143,192 +1533,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/" itemprop="url">kafka-1.1基本概念介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
-                2021-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
-                    <span itemprop="name">kafka</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/1-概念介绍/" itemprop="url" rel="index">
-                    <span itemprop="name">1-概念介绍</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="1-1-基本概念介绍"><a href="#1-1-基本概念介绍" class="headerlink" title="1.1 基本概念介绍"></a>1.1 基本概念介绍</h1><h3 id="kafka特性"><a href="#kafka特性" class="headerlink" title="kafka特性"></a>kafka特性</h3><ul>
-<li><strong>消息系统</strong>: Kafka和传统的消息中间件都具备流量削峰,缓冲,异步通信,扩展性等.另外,Kafka还提供了大多数消息中间件难以实现的消息顺序保障及回溯消费的功能</li>
-<li><strong>存储系统</strong>: 消息持久化到存盘,可以实现永久存储</li>
-<li><strong>流式处理平台</strong>: Kafka提供了流式处理类库</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1513,7 +1717,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1532,7 +1736,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/" itemprop="url">kafka-4.2分区管理</a></h1>
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/" itemprop="url">kafka-4.1主题管理</a></h1>
         
 
         <div class="post-meta">
@@ -1607,8 +1811,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/" itemprop="commentCount"></span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1637,198 +1841,16 @@
 
       
         
-          <h3 id="4-2-1-优选副本的选举"><a href="#4-2-1-优选副本的选举" class="headerlink" title="4.2.1 优选副本的选举"></a>4.2.1 优选副本的选举</h3><h4 id="4-2-1-1-什么是优先副本"><a href="#4-2-1-1-什么是优先副本" class="headerlink" title="4.2.1.1 什么是优先副本"></a>4.2.1.1 什么是优先副本</h4><p>分区使用多副本机制来提升可靠性,但是只有leader副本对外提供读写服务.而follower副本只负责在内部进行消息的同步.如果一个分区的leader副本不可用,那么就意味着整个分区变得不可用.此时就需要从剩余的follower副本中挑选一个新的leader副本继续对外提供服务.</p>
-<blockquote>
-<p>broker节点中的Leader副本个数决定了这个节点负载的高低</p>
-</blockquote>
-<p>在创建主题的时候,主题的分区和副本会尽可能的均匀分布在kafka集群的各个broker节点.对应的Leader副本的分配也比较均匀.例如下面的 <code>topic-demo</code> 主题:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-demo</span><br><span class="line">Topic:topic-demo    PartitionCount:4    ReplicationFactor:3 Configs:</span><br><span class="line">    Topic: topic-demo   Partition: 0    Leader: 152 Replicas: 152,153,154   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 1    Leader: 153 Replicas: 153,154,152   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 2    Leader: 154 Replicas: 154,152,153   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 3    Leader: 152 Replicas: 152,154,153   Isr: 152,153,154</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+          <h3 id="4-1-1-创建主题"><a href="#4-1-1-创建主题" class="headerlink" title="4.1.1 创建主题"></a>4.1.1 创建主题</h3><h4 id="4-1-1-1-自动创建主题以及分区副本"><a href="#4-1-1-1-自动创建主题以及分区副本" class="headerlink" title="4.1.1.1 自动创建主题以及分区副本"></a>4.1.1.1 自动创建主题以及分区副本</h4><p>在之前的笔记中提到了创建主题的一个简单示例.kafka提供 <code>kafka-topics.sh</code> 脚本来创建主题.下面这个示例创建了一个 <code>topic-test</code> 的主题,包含4个分区和2个副本.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/opt/kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic topic-test --replication-factor 2 --partitions 4</span><br><span class="line"></span><br><span class="line">Created topic &quot;topic-test&quot;.</span><br></pre></td></tr></table></figure>
+<p>分区创建完成后,会在kafka的 <code>log.dirs</code> 或者 <code>log.dir</code> 的目录下创建相应的主题分区.下面是在其中一台Broker节点的信息展示:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-0</span><br><span class="line">topic-test-2</span><br></pre></td></tr></table></figure>
+<p>可以看到152节点中创建了2个文件夹 topic-test-0 和 topic-test-2,对应主题 topic-test的2个分区编号为0和2的分区，命名方式可以概括为 <code>&lt;topic&gt;-&lt;partition&gt;</code> .严谨地说,其实这类文件夹对应的不是分区,分区同主题一样是一个逻辑的概念而没有物理上的存在.并且这里我们也只是看到了2个分区,而我们创建的是4个分区,其余2个分区被分配到了153和154节点中，参考如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#153节点</span><br><span class="line">[hadoop@bi-dev153 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-0</span><br><span class="line">topic-test-1</span><br><span class="line">topic-test-3</span><br><span class="line"></span><br><span class="line">#154节点</span><br><span class="line">[hadoop@bi-dev154 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-1</span><br><span class="line">topic-test-2</span><br><span class="line">topic-test-3</span><br></pre></td></tr></table></figure>
+<p>三个broker节点一共创建了8个文件夹,这个数字8实质上是分区数4与副本因子2的乘积.每个副本(或者更确切地说应该是日志,副本与日志一一对应)才真正对应 了一个命名形式.</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.2 生产与消费简单实例/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.2 生产与消费简单实例/" itemprop="url">kafka-1.2 生产与消费简单实例</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
-                2021-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
-                    <span itemprop="name">kafka</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/1-概念介绍/" itemprop="url" rel="index">
-                    <span itemprop="name">1-概念介绍</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.2 生产与消费简单实例/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.2 生产与消费简单实例/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="1-2-生产与消费简单实例"><a href="#1-2-生产与消费简单实例" class="headerlink" title="1.2 生产与消费简单实例"></a>1.2 生产与消费简单实例</h1><h3 id="创建topic"><a href="#创建topic" class="headerlink" title="创建topic"></a>创建topic</h3><p>kafka提供了许多实用的脚本工具,存放在$KAFKA_HOME的bin目录下.其中与主题相关的就是kafka-topic.sh脚本.例如.下面创建一个分区数为4,副本为3的主题topic-demon<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --zookeeper localhost:2181 --create --topic topic-demo --replication-factor 3 --partitions 4</span><br><span class="line"></span><br><span class="line">Created topic <span class="string">"topic-demo"</span>.</span><br></pre></td></tr></table></figure></p>
-<p><code>--zoopkeer</code> 指定kafka连接的zookeeper服务地址<br><code>--topic</code> 指定一个topic主题<br><code>--replication-factor</code>  指定副本因子数量<br><code>--partition</code> 指定分区数量<br><code>--create</code> 表示创建</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.2 生产与消费简单实例/#more" rel="contents">
+            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2107,7 +2129,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">201</span>
+                  <span class="site-state-item-count">208</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2118,7 +2140,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2129,7 +2151,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-count">40</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
