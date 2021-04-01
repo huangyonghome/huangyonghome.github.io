@@ -275,6 +275,352 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/19/Linux-Web/Kong Rate Limiting限流插件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/19/Linux-Web/Kong Rate Limiting限流插件/" itemprop="url">Kong实现限流</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-19T11:59:58+08:00">
+                2021-01-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Web</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
+                    <span itemprop="name">kong</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/19/Linux-Web/Kong Rate Limiting限流插件/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/19/Linux-Web/Kong Rate Limiting限流插件/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Kong实现限流"><a href="#Kong实现限流" class="headerlink" title="Kong实现限流"></a>Kong实现限流</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>近期发现公司某个业务对外的openapi接口的/merchantapi路径异常调用非常频繁.公司的第三方商户需要通过这个路径来调用ERP接口,但是经常发生被恶意刷接口的情况,导致公司的业务服务器资源使用率飙升,面临很大的宕机风险和隐患.</p>
+<p>目前外部客户端访问公司业务仍然是阿里云SLB—–Nginx—php-fpm的架构.由于Nginx的限流能力并不出色,特别是针对具体path路径的限流.所以,引入了Kong api网关</p>
+<h3 id="Rate-Limiting限流插件介绍"><a href="#Rate-Limiting限流插件介绍" class="headerlink" title="Rate Limiting限流插件介绍"></a>Rate Limiting限流插件介绍</h3><p>Rate Limiting是Kong社区版就已经自带的官方流量控制插件.详细信息可以参考Kong官网介绍. <a href="https://docs.konghq.com/hub/kong-inc/rate-limiting/" target="_blank" rel="noopener">https://docs.konghq.com/hub/kong-inc/rate-limiting/</a></p>
+<p>它可以针对<code>consumer</code> ,<code>credential</code> ,<code>ip</code> ,<code>service</code>,<code>path</code>,<code>header</code> 等多种维度来进行限流.流量控制的精准度也有多种方式可以参考,比如可以做到秒级,分钟级,小时级等限流控制.</p>
+<h4 id="响应客户端头部信息"><a href="#响应客户端头部信息" class="headerlink" title="响应客户端头部信息"></a>响应客户端头部信息</h4><p>当启用这个插件后.Kong会响应客户端一些额外的头部信息,告诉客户端限流信息.例如下面是Kong响应给客户端的header信息,告诉客户端当前的限流策略是10r/s</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">RateLimit-Limit: 10</span><br><span class="line">RateLimit-Remaining: 0</span><br><span class="line">RateLimit-Reset: 1</span><br><span class="line"></span><br><span class="line">X-Kong-Response-Latency: 1</span><br><span class="line">X-RateLimit-Limit-Second: 10</span><br><span class="line">X-RateLimit-Remaining-Second: 0</span><br></pre></td></tr></table></figure>
+<p>如果客户端的访问请求超过限流的阈值,Kong会返回status<code>429</code>的状态码以及下面的错误信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &quot;message&quot;: &quot;API rate limit exceeded&quot; &#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/19/Linux-Web/Kong Rate Limiting限流插件/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/10/prometheus/Prometheus alertmanager 告警路由/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/10/prometheus/Prometheus alertmanager 告警路由/" itemprop="url">Prometheus Alertmanager 告警路由</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-10T07:59:58+08:00">
+                2021-01-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/prometheus/" itemprop="url" rel="index">
+                    <span itemprop="name">prometheus</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/10/prometheus/Prometheus alertmanager 告警路由/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/10/prometheus/Prometheus alertmanager 告警路由/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Prometheus-Alertmanager-告警路由"><a href="#Prometheus-Alertmanager-告警路由" class="headerlink" title="Prometheus Alertmanager 告警路由"></a>Prometheus Alertmanager 告警路由</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>公司目前Prometheus监控了IDC数据中心的主机,中间,站点等,同时也监控了阿里云线上的rabbitmq,mysql,kong(所有资源都是ECS自己搭建的,非阿里云的saas服务)</p>
+<p>prometheus使用了第三方的钉钉监控插件(prometheus-webhook-dingtalk),github地址: <a href="https://github.com/timonwong/prometheus-webhook-dingtalk" target="_blank" rel="noopener">https://github.com/timonwong/prometheus-webhook-dingtalk</a> </p>
+<p>Prometheus通过alertmanager将告警信息发送到钉钉机器人</p>
+<hr>
+<h3 id="告警路由"><a href="#告警路由" class="headerlink" title="告警路由"></a>告警路由</h3><p>我们需要将阿里云的线上中间件监控告警发送到阿里云的钉钉群.IDC资源的监控告警发送到IDC的钉钉群,不同的钉钉群面对的人群也不同.方便监控告警信息的分类和管理.</p>
+<p>幸好,alertmanager天生支持告警路由的功能,将不同的告警信息发送给不同的receiver接收人</p>
+<hr>
+<h3 id="alertmanager概念介绍"><a href="#alertmanager概念介绍" class="headerlink" title="alertmanager概念介绍"></a>alertmanager概念介绍</h3><p>Prometheus本身并不提供告警功能,所有告警信息都是发送给Alertmanager处理.Alertmanager接收到告警信息后负责将它们分组,抑制,静默,然后路由到相关接收者.</p>
+<h5 id="Grouping分组"><a href="#Grouping分组" class="headerlink" title="Grouping分组"></a>Grouping分组</h5><p>分组功能将多个同一类型的告警合并一起后发送,这在某个服务发生故障从而影响其他几十,上百个相关依赖性的服务时非常有用,可以有效避免告警信息轰炸.例如当网络出现问题时,可能该网络下的数百个服务都出现访问故障,结果数以百计的告警被发送给Alertmanager.此时Alertmanager将同类型的服务合并到一起仅仅使用单条告警通知发送给接收者</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/10/prometheus/Prometheus alertmanager 告警路由/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -831,7 +1177,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/11/10/prometheus/prometheus监控mysql/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -850,7 +1196,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/11/10/prometheus/prometheus监控mysql/" itemprop="url">prometheus监控mysql</a></h1>
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/" itemprop="url">kafka-3.1消费者与消费组</a></h1>
         
 
         <div class="post-meta">
@@ -862,8 +1208,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-10T07:59:58+08:00">
-                2020-11-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
               </time>
             
 
@@ -885,8 +1231,30 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/prometheus/" itemprop="url" rel="index">
-                    <span itemprop="name">prometheus</span>
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/3-消费者/" itemprop="url" rel="index">
+                    <span itemprop="name">3-消费者</span>
                   </a>
                 </span>
 
@@ -903,8 +1271,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/11/10/prometheus/prometheus监控mysql/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/11/10/prometheus/prometheus监控mysql/" itemprop="commentCount"></span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -933,22 +1301,12 @@
 
       
         
-          <h3 id="prometheus监控mysql"><a href="#prometheus监控mysql" class="headerlink" title="prometheus监控mysql"></a>prometheus监控mysql</h3><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>本文使用的是官方的mysqld_exporter.github地址:<a href="https://github.com/prometheus/mysqld_exporter" target="_blank" rel="noopener">mysqld_exporter</a></p>
-<blockquote>
-<p>mysql版本需要在5.6版本或以上</p>
-</blockquote>
-<p>mysqld_exporter提供很多监控项(具体参考github项目介绍).如果需要开启一个监控项,在启动mysqld_exporter时,携带以下命令:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--collect.key</span><br></pre></td></tr></table></figure>
-<p>如果需要关闭某个监控项.携带以下命令:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--no-collect.key</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>如果mysqld_exporter的版本小于0.10.0,命令有些变化,双横杠变成单横杠,使用-collect.key 或者-collect.key=True|false</p>
-</blockquote>
-<hr>
-<h3 id="mysqld-exporter安装"><a href="#mysqld-exporter安装" class="headerlink" title="mysqld_exporter安装"></a>mysqld_exporter安装</h3><p>安装方式很简单,.下面是一个Ansible脚本以供参考</p>
+          <h2 id="3-1-消费者与消费组"><a href="#3-1-消费者与消费组" class="headerlink" title="3.1 消费者与消费组"></a>3.1 消费者与消费组</h2><h3 id="1-消费者和消费组介绍"><a href="#1-消费者和消费组介绍" class="headerlink" title="1.消费者和消费组介绍"></a>1.消费者和消费组介绍</h3><p>消费者( Consumer)负责订阅Kafka中的主题( Topic)，并且从订阅的主题上拉取消息.与其他一些消息中间件不同的是:在 Kafka的消费理念中还有一层消费组( Consumer Group)的概念，每个消费者都有一个对应的消费组。当消息发布到主题后，只会被投递给订阅它的每个消费组中的一个消费者 。</p>
+<p>以下图为例,某个主题中共有 4 个分区( Partition) : PO、 Pl、 P2、 P3。 有两个消费组 A和 B 都订阅了这个主题，消费组 A 中有 4 个消费者 (CO、 Cl、 C2 和 C3)，消费组 B 中有 2个消费者 CC4 和 CS) 。按照 Kafka默认的规则，最后的分配结果是消费组 A 中的每一个消费 者分配到1个分区，消费组 B 中的每一个消费者分配到 2个分区，两个消费组之间互不影响。每个消费者只能消费所分配到的分区中的消息。换言之 每一个分区只能被一个消费组中的一个消费者所消费.</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2992889/1608547700645-c525d96a-ac02-471f-9276-ee885e471c86.png" alt="image.png"></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/11/10/prometheus/prometheus监控mysql/#more" rel="contents">
+            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1003,7 +1361,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/11/10/prometheus/Prometheus alertmanager 告警路由/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1022,7 +1380,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/11/10/prometheus/Prometheus alertmanager 告警路由/" itemprop="url">Prometheus Alertmanager 告警路由</a></h1>
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/" itemprop="url">kafka-2.1Kafka副本</a></h1>
         
 
         <div class="post-meta">
@@ -1034,8 +1392,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-10T07:59:58+08:00">
-                2020-11-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
               </time>
             
 
@@ -1057,8 +1415,30 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/prometheus/" itemprop="url" rel="index">
-                    <span itemprop="name">prometheus</span>
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/2-副本介绍/" itemprop="url" rel="index">
+                    <span itemprop="name">2-副本介绍</span>
                   </a>
                 </span>
 
@@ -1075,8 +1455,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/11/10/prometheus/Prometheus alertmanager 告警路由/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/11/10/prometheus/Prometheus alertmanager 告警路由/" itemprop="commentCount"></span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1105,18 +1485,199 @@
 
       
         
-          <h2 id="Prometheus-Alertmanager-告警路由"><a href="#Prometheus-Alertmanager-告警路由" class="headerlink" title="Prometheus Alertmanager 告警路由"></a>Prometheus Alertmanager 告警路由</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>公司目前Prometheus监控了IDC数据中心的主机,中间,站点等,同时也监控了阿里云线上的rabbitmq,mysql,kong(所有资源都是ECS自己搭建的,非阿里云的saas服务)</p>
-<p>prometheus使用了第三方的钉钉监控插件(prometheus-webhook-dingtalk),github地址: <a href="https://github.com/timonwong/prometheus-webhook-dingtalk" target="_blank" rel="noopener">https://github.com/timonwong/prometheus-webhook-dingtalk</a> </p>
-<p>Prometheus通过alertmanager将告警信息发送到钉钉机器人</p>
-<hr>
-<h3 id="告警路由"><a href="#告警路由" class="headerlink" title="告警路由"></a>告警路由</h3><p>我们需要将阿里云的线上中间件监控告警发送到阿里云的钉钉群.IDC资源的监控告警发送到IDC的钉钉群,不同的钉钉群面对的人群也不同.方便监控告警信息的分类和管理.</p>
-<p>幸好,alertmanager天生支持告警路由的功能,将不同的告警信息发送给不同的receiver接收人</p>
-<hr>
-<h3 id="alertmanager概念介绍"><a href="#alertmanager概念介绍" class="headerlink" title="alertmanager概念介绍"></a>alertmanager概念介绍</h3><p>Prometheus本身并不提供告警功能,所有告警信息都是发送给Alertmanager处理.Alertmanager接收到告警信息后负责将它们分组,抑制,静默,然后路由到相关接收者.</p>
-<h5 id="Grouping分组"><a href="#Grouping分组" class="headerlink" title="Grouping分组"></a>Grouping分组</h5><p>分组功能将多个同一类型的告警合并一起后发送,这在某个服务发生故障从而影响其他几十,上百个相关依赖性的服务时非常有用,可以有效避免告警信息轰炸.例如当网络出现问题时,可能该网络下的数百个服务都出现访问故障,结果数以百计的告警被发送给Alertmanager.此时Alertmanager将同类型的服务合并到一起仅仅使用单条告警通知发送给接收者</p>
+          <h1 id="2-1-Kafka副本"><a href="#2-1-Kafka副本" class="headerlink" title="2.1  Kafka副本"></a>2.1  Kafka副本</h1><h3 id="副本介绍"><a href="#副本介绍" class="headerlink" title="副本介绍"></a>副本介绍</h3><p>Kafka为分区引入了副本(Replica)机制.通过增加副本数量提升容灾能力.一个Topic主题可以有多个分区,一个分区又可以有多个副本.这多个副本中，只有一个是leader，而其他的都是follower副本。仅有leader副本可以对外提供服务。所以副本之间是一主多从的关系,而且每个副本中保存的相同的消息.(严格来说,同一时刻副本之间的消息并非能一定完全同步)</p>
+<p>多个follower副本通常存放在和leader副本不同的broker中。通过这样的机制实现了高可用，当某台机器挂掉后，其他follower副本也能迅速”转正“，开始对外提供服务。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/11/10/prometheus/Prometheus alertmanager 告警路由/#more" rel="contents">
+            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/" itemprop="url">kafka-4.1主题管理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/4-主题和分区/" itemprop="url" rel="index">
+                    <span itemprop="name">4-主题和分区</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="4-1-1-创建主题"><a href="#4-1-1-创建主题" class="headerlink" title="4.1.1 创建主题"></a>4.1.1 创建主题</h3><h4 id="4-1-1-1-自动创建主题以及分区副本"><a href="#4-1-1-1-自动创建主题以及分区副本" class="headerlink" title="4.1.1.1 自动创建主题以及分区副本"></a>4.1.1.1 自动创建主题以及分区副本</h4><p>在之前的笔记中提到了创建主题的一个简单示例.kafka提供 <code>kafka-topics.sh</code> 脚本来创建主题.下面这个示例创建了一个 <code>topic-test</code> 的主题,包含4个分区和2个副本.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/opt/kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic topic-test --replication-factor 2 --partitions 4</span><br><span class="line"></span><br><span class="line">Created topic &quot;topic-test&quot;.</span><br></pre></td></tr></table></figure>
+<p>分区创建完成后,会在kafka的 <code>log.dirs</code> 或者 <code>log.dir</code> 的目录下创建相应的主题分区.下面是在其中一台Broker节点的信息展示:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-0</span><br><span class="line">topic-test-2</span><br></pre></td></tr></table></figure>
+<p>可以看到152节点中创建了2个文件夹 topic-test-0 和 topic-test-2,对应主题 topic-test的2个分区编号为0和2的分区，命名方式可以概括为 <code>&lt;topic&gt;-&lt;partition&gt;</code> .严谨地说,其实这类文件夹对应的不是分区,分区同主题一样是一个逻辑的概念而没有物理上的存在.并且这里我们也只是看到了2个分区,而我们创建的是4个分区,其余2个分区被分配到了153和154节点中，参考如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#153节点</span><br><span class="line">[hadoop@bi-dev153 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-0</span><br><span class="line">topic-test-1</span><br><span class="line">topic-test-3</span><br><span class="line"></span><br><span class="line">#154节点</span><br><span class="line">[hadoop@bi-dev154 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-1</span><br><span class="line">topic-test-2</span><br><span class="line">topic-test-3</span><br></pre></td></tr></table></figure>
+<p>三个broker节点一共创建了8个文件夹,这个数字8实质上是分区数4与副本因子2的乘积.每个副本(或者更确切地说应该是日志,副本与日志一一对应)才真正对应 了一个命名形式.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1447,551 +2008,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/09/22/Linux-Service/Openvpn客户端无法连接 OpenSSL- error/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/09/16/SRE运维/SRE运维笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/09/16/SRE运维/SRE运维笔记/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-16T22:30:54+08:00">
-                2020-09-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/09/16/SRE运维/SRE运维笔记/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/09/16/SRE运维/SRE运维笔记/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="SRE运维笔记-chapter-One-概念介绍"><a href="#SRE运维笔记-chapter-One-概念介绍" class="headerlink" title="SRE运维笔记-chapter One-概念介绍"></a>SRE运维笔记-chapter One-概念介绍</h2><h3 id="SRE概念"><a href="#SRE概念" class="headerlink" title="SRE概念"></a>SRE概念</h3><p>SRE(sitereliabilityengineering).中文翻译为站点可靠性工程师.SRE概念中比较重要的特性在于:</p>
-<p>1.engineer表示SRE是工程师,使用软件工程手段设计,研发和维护业务软件系统.</p>
-<p>2.SRE的关注焦点在于<strong>可靠性</strong>,专注于软件系统架构设计,运维流程优化,让业务软件系统运行更可靠.</p>
-<p>3.SRE主要工作是运维业务服务,</p>
-<h4 id="SRE团队职责"><a href="#SRE团队职责" class="headerlink" title="SRE团队职责:"></a>SRE团队职责:</h4><ul>
-<li>可用性改进</li>
-<li>延迟优化</li>
-<li>性能优化</li>
-<li>效率优化</li>
-<li>变更管理</li>
-<li>监控</li>
-<li>紧急事务处理</li>
-<li>容量规划与管理</li>
-</ul>
-<h3 id="SRE方法论"><a href="#SRE方法论" class="headerlink" title="SRE方法论"></a>SRE方法论</h3><ul>
-<li><p><strong>确保长期关注研发工作</strong></p>
-<p>运维工作限制在50%以内,剩余的时间花在研发项目上.</p>
-</li>
-<li><p><strong>在保障服务SLO的前提下最大化迭代速度</strong></p>
-<ul>
-<li>错误预算: 1-可靠性目标.<ul>
-<li>如果一个服务的可靠性目标是99.99%,那么错误预算就是0.01%.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>监控系统</strong></p>
-<p>监控系统不应该依赖人来分析警报信息.而是应该由系统自动分析.仅当需要用户执行某种操作时,才需要通知用户</p>
-<p>监控系统需要具备三类输出:</p>
-<ul>
-<li>紧急警报(alert)</li>
-<li>工单:接受工单的用户应该执行某种操作,但是并非立即执行</li>
-<li>日志</li>
-</ul>
-</li>
-<li><p><strong>应急事件处理</strong></p>
-<ul>
-<li>可靠性:MTTF(平均失败时间),MTTR(平均恢复时间),MTBF(平均故障间隔时间).</li>
-<li>任何需要人工操作的事情都只会延长恢复时间,一个可以自动恢复的系统即使有更多故障发生,也比事事都要人工干预的系统可用性更高.当不可避免需要人工介入时,最佳方法是事先预案,并且记录在<strong>运维手册(playbook)</strong>中,这能降低<strong>MTTR(平均恢复)</strong>时间.</li>
-</ul>
-</li>
-<li><p><strong>变更管理</strong></p>
-<p> 大概70%的生产事故是由某种变更触发,变更管理的最佳实践是使用自动化完成以下几个项目:</p>
-<ul>
-<li>采用渐进式发布机制</li>
-<li>迅速而准确的检测到问题的发生</li>
-<li>安全迅速的回滚</li>
-</ul>
-</li>
-<li><p><strong>需求预测和容量规划</strong></p>
-<ul>
-<li>必须有一个准确的自然增城需求预测模型,需求预测的时间应该超过资源获取时间</li>
-<li>规划中必须有准确的非自然增长的需求来源统计</li>
-<li>必须有周期性压力测试,以便准确的将系统原始资源与业务容量对应起来</li>
-</ul>
-</li>
-<li><p><strong>资源部署</strong></p>
-</li>
-<li><p><strong>效率与性能</strong></p>
-<p>一个业务总体资源使用情况是由以下几个因素驱动的:</p>
-<ul>
-<li>用户需求(流量)</li>
-<li>可用容量</li>
-<li>软件资源使用效率</li>
-</ul>
-<p>SRE需要通过模型预测用户需求,合理部署和配置可用容量,改进软件以提高资源使用效率,这3个因素能够推动一个服务器的效率提升.</p>
-<blockquote>
-<p>软件系统在负载上升的时候,会导致延迟升高.SRE的目标是根据一个预设的延迟目标部署和维护足够的容量,SRE和研发团队应该共同监控和优化整个系统的性能.</p>
-</blockquote>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/09/10/Linux-Web/kong利用request-transformer插件重写URL/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/09/10/Linux-Web/kong利用request-transformer插件重写URL/" itemprop="url">kong利用request-transformer插件重写URL</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-10T12:59:58+08:00">
-                2020-09-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Web</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
-                    <span itemprop="name">kong</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/09/10/Linux-Web/kong利用request-transformer插件重写URL/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/09/10/Linux-Web/kong利用request-transformer插件重写URL/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="kong利用request-transformer插件重写URL"><a href="#kong利用request-transformer插件重写URL" class="headerlink" title="kong利用request-transformer插件重写URL"></a>kong利用request-transformer插件重写URL</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>最近业务整合后有一个需求,将URL:<a href="http://www.abc.com/api/item/111" target="_blank" rel="noopener">www.abc.com/api/item/111</a> 想重写成<a href="http://www.xyz.com/open/item/itemdetail?id=111,并且域名不变,不能发生302跳转" target="_blank" rel="noopener">www.xyz.com/open/item/itemdetail?id=111,并且域名不变,不能发生302跳转</a>.</p>
-<p>使用Nginx的rewrite redirect指令可以实现URL重写需求,但是redirect会跳转到新域名,不符合需求.</p>
-<p>刚好该业务的的前端是用Kong网关处理,所以研究kong的插件实现这个需求</p>
-<hr>
-<h3 id="request-transformer介绍"><a href="#request-transformer介绍" class="headerlink" title="request-transformer介绍"></a>request-transformer介绍</h3><p><strong>request-transformer</strong>是Kong官方的插件,允许修改重写用户的请求,还可以使用正则表达式匹配URL,并将匹配到的字符串保存在变量中,然后使用模板将变量转换成用户的请求</p>
-<p>简而言之:<strong>就是重写用户的请求</strong>,包括URL,args,headers,methods等等</p>
-<p>官方地址: <a href="https://docs.konghq.com/hub/kong-inc/request-transformer/" target="_blank" rel="noopener">reuqest-transformer官方地址</a></p>
-<p>github项目地址: <a href="https://github.com/Kong/kong-plugin-request-transformer" target="_blank" rel="noopener">request-transformer github</a></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/09/10/Linux-Web/kong利用request-transformer插件重写URL/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/26/监控/zabbix监控vmware主机以及GuestOS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/26/监控/zabbix监控vmware主机以及GuestOS/" itemprop="url">zabbix监控vmware主机以及GuestOS</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-26T09:20:58+08:00">
-                2020-08-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/监控/" itemprop="url" rel="index">
-                    <span itemprop="name">监控</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/26/监控/zabbix监控vmware主机以及GuestOS/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/26/监控/zabbix监控vmware主机以及GuestOS/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="zabbix监控vmware主机以及GuestOS"><a href="#zabbix监控vmware主机以及GuestOS" class="headerlink" title="zabbix监控vmware主机以及GuestOS"></a>zabbix监控vmware主机以及GuestOS</h3><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>ESXI主机无法安装zabbix agent,所以不能使用传统的agent客户端监控vmware主机,但是Zabbix有自导的vmware hypervisors监控模板.Zabbix 通过 vmware collector 进程来监控虚拟机,使用SOAP协议从vmware web服务器获取必要的监控信息.</p>
-<hr>
-<h4 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h4><p>1.在zabbix服务器修改<code>zabbix_server.conf</code>配置文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">StartVMwareCollectors=6</span><br><span class="line">VMwareCacheSize=50M</span><br><span class="line">VMwareFrequency=10</span><br><span class="line">VMwarePerfFrequency=60</span><br><span class="line">VMwareTimeout=300</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/26/监控/zabbix监控vmware主机以及GuestOS/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

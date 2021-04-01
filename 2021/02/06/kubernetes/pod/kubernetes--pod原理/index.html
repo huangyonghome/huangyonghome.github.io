@@ -101,7 +101,7 @@
 <meta property="og:description" content="Kubernetes—-pod原理开篇Pod是kubernetes项目中最小的API对象,是原子调度单位.我们之前学习过很多Linux容器,Docker方面的知识.那Kubernetes为什么不使用容器作为调度单位,而是要将容器封装成一个Pod? 要探讨这个问题,我们需要深入研究一下Kubernetes的设计思想和工作原理. 容器本质通过之前Docker的原理学习,我们知道容器的本质到底是什么?">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://img2.jesse.top/image-20210328112238279.png">
-<meta property="og:updated_time" content="2021-04-01T13:43:50.803Z">
+<meta property="og:updated_time" content="2021-04-01T13:58:37.072Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kubernetes pod原理">
 <meta name="twitter:description" content="Kubernetes—-pod原理开篇Pod是kubernetes项目中最小的API对象,是原子调度单位.我们之前学习过很多Linux容器,Docker方面的知识.那Kubernetes为什么不使用容器作为调度单位,而是要将容器封装成一个Pod? 要探讨这个问题,我们需要深入研究一下Kubernetes的设计思想和工作原理. 容器本质通过之前Docker的原理学习,我们知道容器的本质到底是什么?">
@@ -396,6 +396,7 @@
 <p>由于受限于容器的”单进程模型”.一个进程组下的不同进程可能需要制作成多个不同的容器,而这多个容器在传统的调度工作中(比如像Docker Swarm,Mesos)都没有被妥善处理好,在进程组的调度上要么无法保障一个进程组的多个容器无法调度到同一个节点,要么调度的效率和性能的问题.</p>
 <p>可在Kubernetes里,这个问题通过Pod完美解决了.Pod是kubernetes的原子调度单位,这就意味着Kubernetes是统一按照Pod而非单个容器的资源需求计算的.所以可以将多个容器部署在同一个Pod里,这些容器共享同一个Pod的网络名称,进程间通信,IP地址,共享卷等.而Kubernetes在调度时,会将他们作为一个整体,而非单个容器进程.</p>
 <p>像这样容器间的紧密协作，我们可以称为“超亲密关系”。这些具有“超亲密关系”容器的典型特征包括但不限于：互相之间会发生直接的文件交换、使用 localhost 或者 Socket 文件进行本地通信、会发生非常频繁的远程调用、需要共享某些 Linux Namespace（比如，一个容器要加入另一个容器的 Network Namespace）等等。</p>
+<a id="more"></a>
 <p>这也就意味着，并不是所有有“关系”的容器都属于同一个 Pod。比如，PHP 应用容器和 MySQL 虽然会发生访问关系，但并没有必要、也不应该部署在同一台机器上，它们更适合做成两个 Pod。</p>
 <p>不过，相信此时你可能会有<strong>第二个疑问：</strong></p>
 <p>对于初学者来说，一般都是先学会了用 Docker 这种单容器的工具，才会开始接触 Pod。</p>
@@ -526,8 +527,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/02/06/kubernetes/network/kubernetes network/" rel="next" title="Kubernetes 网络">
-                <i class="fa fa-chevron-left"></i> Kubernetes 网络
+              <a href="/2021/02/06/kubernetes/service/DNS/" rel="next" title="Kubernetes DNS">
+                <i class="fa fa-chevron-left"></i> Kubernetes DNS
               </a>
             
           </div>
@@ -535,6 +536,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/02/06/kubernetes/network/kubernetes network/" rel="prev" title="Kubernetes 网络">
+                Kubernetes 网络 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>

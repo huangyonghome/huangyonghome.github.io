@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/记一次生产ELK性能优化/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/09/16/SRE运维/SRE运维笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/25/elk/记一次生产ELK性能优化/" itemprop="url">记一次生产ELK性能优化</a></h1>
+                <a class="post-title-link" href="/2020/09/16/SRE运维/SRE运维笔记/" itemprop="url">未命名</a></h1>
         
 
         <div class="post-meta">
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-16T22:30:54+08:00">
+                2020-09-16
               </time>
             
 
@@ -317,28 +317,6 @@
           </span>
 
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
 
           
             
@@ -347,8 +325,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/25/elk/记一次生产ELK性能优化/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/记一次生产ELK性能优化/" itemprop="commentCount"></span>
+                <a href="/2020/09/16/SRE运维/SRE运维笔记/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/09/16/SRE运维/SRE运维笔记/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,17 +355,254 @@
 
       
         
-          <h3 id="记一次生产ELK性能优化"><a href="#记一次生产ELK性能优化" class="headerlink" title="记一次生产ELK性能优化"></a>记一次生产ELK性能优化</h3><p>ES上线后遇到一些问题:</p>
-<h3 id="一-内存压力过高"><a href="#一-内存压力过高" class="headerlink" title="一.内存压力过高"></a>一.内存压力过高</h3><p>目前ES节点的有两种规格内存.</p>
-<p>80GB内存(节点同时运行了Logstash,分配了16G给logstash).</p>
-<p>54GB内存(只运行ES,并且只作为data节点)</p>
-<p>ES的JVM内存从32G下降到28G.建议JVM内存是总物理内存的一半左右,</p>
-<p>节点内存使用情况如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&quot;mem&quot;: &#123; - </span><br><span class="line">          &quot;total&quot;: &quot;78.5gb&quot;,</span><br><span class="line">          &quot;total_in_bytes&quot;: 84296601600,</span><br><span class="line">          &quot;free&quot;: &quot;4.3gb&quot;,</span><br><span class="line">          &quot;free_in_bytes&quot;: 4688633856,</span><br><span class="line">          &quot;used&quot;: &quot;74.1gb&quot;,</span><br><span class="line">          &quot;used_in_bytes&quot;: 79607967744,</span><br><span class="line">          &quot;free_percent&quot;: 6,</span><br><span class="line">          &quot;used_percent&quot;: 94</span><br></pre></td></tr></table></figure>
-<p>建议: ES节点内存建议配置高一点,虽然ES的JVM内存最大不超过32G.但是在其他方面仍然很吃内存</p>
+          
+            <h2 id="SRE运维笔记-chapter-One-概念介绍"><a href="#SRE运维笔记-chapter-One-概念介绍" class="headerlink" title="SRE运维笔记-chapter One-概念介绍"></a>SRE运维笔记-chapter One-概念介绍</h2><h3 id="SRE概念"><a href="#SRE概念" class="headerlink" title="SRE概念"></a>SRE概念</h3><p>SRE(sitereliabilityengineering).中文翻译为站点可靠性工程师.SRE概念中比较重要的特性在于:</p>
+<p>1.engineer表示SRE是工程师,使用软件工程手段设计,研发和维护业务软件系统.</p>
+<p>2.SRE的关注焦点在于<strong>可靠性</strong>,专注于软件系统架构设计,运维流程优化,让业务软件系统运行更可靠.</p>
+<p>3.SRE主要工作是运维业务服务,</p>
+<h4 id="SRE团队职责"><a href="#SRE团队职责" class="headerlink" title="SRE团队职责:"></a>SRE团队职责:</h4><ul>
+<li>可用性改进</li>
+<li>延迟优化</li>
+<li>性能优化</li>
+<li>效率优化</li>
+<li>变更管理</li>
+<li>监控</li>
+<li>紧急事务处理</li>
+<li>容量规划与管理</li>
+</ul>
+<h3 id="SRE方法论"><a href="#SRE方法论" class="headerlink" title="SRE方法论"></a>SRE方法论</h3><ul>
+<li><p><strong>确保长期关注研发工作</strong></p>
+<p>运维工作限制在50%以内,剩余的时间花在研发项目上.</p>
+</li>
+<li><p><strong>在保障服务SLO的前提下最大化迭代速度</strong></p>
+<ul>
+<li>错误预算: 1-可靠性目标.<ul>
+<li>如果一个服务的可靠性目标是99.99%,那么错误预算就是0.01%.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>监控系统</strong></p>
+<p>监控系统不应该依赖人来分析警报信息.而是应该由系统自动分析.仅当需要用户执行某种操作时,才需要通知用户</p>
+<p>监控系统需要具备三类输出:</p>
+<ul>
+<li>紧急警报(alert)</li>
+<li>工单:接受工单的用户应该执行某种操作,但是并非立即执行</li>
+<li>日志</li>
+</ul>
+</li>
+<li><p><strong>应急事件处理</strong></p>
+<ul>
+<li>可靠性:MTTF(平均失败时间),MTTR(平均恢复时间),MTBF(平均故障间隔时间).</li>
+<li>任何需要人工操作的事情都只会延长恢复时间,一个可以自动恢复的系统即使有更多故障发生,也比事事都要人工干预的系统可用性更高.当不可避免需要人工介入时,最佳方法是事先预案,并且记录在<strong>运维手册(playbook)</strong>中,这能降低<strong>MTTR(平均恢复)</strong>时间.</li>
+</ul>
+</li>
+<li><p><strong>变更管理</strong></p>
+<p> 大概70%的生产事故是由某种变更触发,变更管理的最佳实践是使用自动化完成以下几个项目:</p>
+<ul>
+<li>采用渐进式发布机制</li>
+<li>迅速而准确的检测到问题的发生</li>
+<li>安全迅速的回滚</li>
+</ul>
+</li>
+<li><p><strong>需求预测和容量规划</strong></p>
+<ul>
+<li>必须有一个准确的自然增城需求预测模型,需求预测的时间应该超过资源获取时间</li>
+<li>规划中必须有准确的非自然增长的需求来源统计</li>
+<li>必须有周期性压力测试,以便准确的将系统原始资源与业务容量对应起来</li>
+</ul>
+</li>
+<li><p><strong>资源部署</strong></p>
+</li>
+<li><p><strong>效率与性能</strong></p>
+<p>一个业务总体资源使用情况是由以下几个因素驱动的:</p>
+<ul>
+<li>用户需求(流量)</li>
+<li>可用容量</li>
+<li>软件资源使用效率</li>
+</ul>
+<p>SRE需要通过模型预测用户需求,合理部署和配置可用容量,改进软件以提高资源使用效率,这3个因素能够推动一个服务器的效率提升.</p>
+<blockquote>
+<p>软件系统在负载上升的时候,会导致延迟升高.SRE的目标是根据一个预设的延迟目标部署和维护足够的容量,SRE和研发团队应该共同监控和优化整个系统的性能.</p>
+</blockquote>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/09/10/Linux-Web/kong利用request-transformer插件重写URL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/09/10/Linux-Web/kong利用request-transformer插件重写URL/" itemprop="url">kong利用request-transformer插件重写URL</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-10T12:59:58+08:00">
+                2020-09-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Web</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
+                    <span itemprop="name">kong</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/10/Linux-Web/kong利用request-transformer插件重写URL/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/09/10/Linux-Web/kong利用request-transformer插件重写URL/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="kong利用request-transformer插件重写URL"><a href="#kong利用request-transformer插件重写URL" class="headerlink" title="kong利用request-transformer插件重写URL"></a>kong利用request-transformer插件重写URL</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>最近业务整合后有一个需求,将URL:<a href="http://www.abc.com/api/item/111" target="_blank" rel="noopener">www.abc.com/api/item/111</a> 想重写成<a href="http://www.xyz.com/open/item/itemdetail?id=111,并且域名不变,不能发生302跳转" target="_blank" rel="noopener">www.xyz.com/open/item/itemdetail?id=111,并且域名不变,不能发生302跳转</a>.</p>
+<p>使用Nginx的rewrite redirect指令可以实现URL重写需求,但是redirect会跳转到新域名,不符合需求.</p>
+<p>刚好该业务的的前端是用Kong网关处理,所以研究kong的插件实现这个需求</p>
+<hr>
+<h3 id="request-transformer介绍"><a href="#request-transformer介绍" class="headerlink" title="request-transformer介绍"></a>request-transformer介绍</h3><p><strong>request-transformer</strong>是Kong官方的插件,允许修改重写用户的请求,还可以使用正则表达式匹配URL,并将匹配到的字符串保存在变量中,然后使用模板将变量转换成用户的请求</p>
+<p>简而言之:<strong>就是重写用户的请求</strong>,包括URL,args,headers,methods等等</p>
+<p>官方地址: <a href="https://docs.konghq.com/hub/kong-inc/request-transformer/" target="_blank" rel="noopener">reuqest-transformer官方地址</a></p>
+<p>github项目地址: <a href="https://github.com/Kong/kong-plugin-request-transformer" target="_blank" rel="noopener">request-transformer github</a></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/记一次生产ELK性能优化/#more" rel="contents">
+            <a class="btn" href="/2020/09/10/Linux-Web/kong利用request-transformer插件重写URL/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -442,7 +657,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/26/监控/zabbix监控vmware主机以及GuestOS/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -461,7 +676,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="url">Filebeat+logstash收集Nginx错误日志</a></h1>
+                <a class="post-title-link" href="/2020/08/26/监控/zabbix监控vmware主机以及GuestOS/" itemprop="url">zabbix监控vmware主机以及GuestOS</a></h1>
         
 
         <div class="post-meta">
@@ -473,8 +688,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-26T09:20:58+08:00">
+                2020-08-26
               </time>
             
 
@@ -496,8 +711,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
+                  <a href="/categories/监控/" itemprop="url" rel="index">
+                    <span itemprop="name">监控</span>
                   </a>
                 </span>
 
@@ -514,8 +729,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/" itemprop="commentCount"></span>
+                <a href="/2020/08/26/监控/zabbix监控vmware主机以及GuestOS/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/26/监控/zabbix监控vmware主机以及GuestOS/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -544,178 +759,13 @@
 
       
         
-          <h2 id="Filebeat-logstash收集Nginx错误日志"><a href="#Filebeat-logstash收集Nginx错误日志" class="headerlink" title="Filebeat+logstash收集Nginx错误日志"></a>Filebeat+logstash收集Nginx错误日志</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在上一个笔记&lt;Filebeat+logstash收集Nginx访问日志&gt;中分享了如何收集logstash的访问日志,这篇笔记主要是记录如何收集nginx的错误日志</p>
-<p>Nginx 错误日志是运维人员最常见但又极其容易忽略的日志类型之一。Nginx 错误日志即没有统一明确的分隔符，也没有特别方便的正则模式，但通过 logstash 不同插件的组合，还是可以轻松做到数据处理。</p>
+          <h3 id="zabbix监控vmware主机以及GuestOS"><a href="#zabbix监控vmware主机以及GuestOS" class="headerlink" title="zabbix监控vmware主机以及GuestOS"></a>zabbix监控vmware主机以及GuestOS</h3><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>ESXI主机无法安装zabbix agent,所以不能使用传统的agent客户端监控vmware主机,但是Zabbix有自导的vmware hypervisors监控模板.Zabbix 通过 vmware collector 进程来监控虚拟机,使用SOAP协议从vmware web服务器获取必要的监控信息.</p>
 <hr>
+<h4 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h4><p>1.在zabbix服务器修改<code>zabbix_server.conf</code>配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">StartVMwareCollectors=6</span><br><span class="line">VMwareCacheSize=50M</span><br><span class="line">VMwareFrequency=10</span><br><span class="line">VMwarePerfFrequency=60</span><br><span class="line">VMwareTimeout=300</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/Filebeat+logstash收集Nginx错误日志/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" itemprop="url">使用ElastAlert+ELK实现日志监控钉钉告警</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="使用ElastAlert-ELK实现日志监控钉钉告警"><a href="#使用ElastAlert-ELK实现日志监控钉钉告警" class="headerlink" title="使用ElastAlert+ELK实现日志监控钉钉告警"></a>使用ElastAlert+ELK实现日志监控钉钉告警</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警</p>
-<hr>
-<h3 id="ElastAlert介绍"><a href="#ElastAlert介绍" class="headerlink" title="ElastAlert介绍"></a>ElastAlert介绍</h3><p>ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告警.github项目地址如下:<a href="https://github.com/Yelp/elastalert" target="_blank" rel="noopener">https://github.com/Yelp/elastalert</a></p>
-<p>官方文档如下:<a href="https://elastalert.readthedocs.io/en/latest/elastalert.html" target="_blank" rel="noopener">https://elastalert.readthedocs.io/en/latest/elastalert.html</a></p>
-<p>它支持多种监控模式和告警方式,具体可以查阅Github项目介绍.但是自带的ElastAlert并不支持钉钉告警,在github上有第三方的钉钉python项目.地址如下:<a href="https://github.com/xuyaoqiang/elastalert-dingtalk-plugin" target="_blank" rel="noopener">https://github.com/xuyaoqiang/elastalert-dingtalk-plugin</a></p>
-<p>第三方的钉钉告警插件并没有艾特相关人员的功能,所以我再此基础上进行了二次开发,增加了这个功能</p>
-<hr>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/#more" rel="contents">
+            <a class="btn" href="/2020/08/26/监控/zabbix监控vmware主机以及GuestOS/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -940,6 +990,171 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/ELK收集mysql5.7慢日志/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/25/elk/ELK收集mysql5.7慢日志/" itemprop="url">ELK收集mysql5.7慢日志</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/elk/ELK收集mysql5.7慢日志/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/ELK收集mysql5.7慢日志/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="ELK收集mysql5-7慢日志"><a href="#ELK收集mysql5-7慢日志" class="headerlink" title="ELK收集mysql5.7慢日志"></a>ELK收集mysql5.7慢日志</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>公司ELK平台计划收集生产业务的所有mysql慢日志.由于所有环境中均使用mysql5.7版本,所以其他mysql版本的慢日志格式不在讨论范围之内.</p>
+<p>慢日志的grok正则匹配我折腾了很久,网上的大多文档中给出的logstash的grok正则其实并不能正确的解析到mysql慢日志的字段.</p>
+<p>这个博客的grok正则经过实践可行.而且filebeat,logstash的filter配置也是参考这个博客配置的:<a href="https://www.cnblogs.com/minseo/p/10441913.html" target="_blank" rel="noopener">博客地址</a></p>
+<hr>
+<h3 id="MySQL慢日志"><a href="#MySQL慢日志" class="headerlink" title="MySQL慢日志"></a>MySQL慢日志</h3><p>慢日志格式如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[work@msf-mysql-master log]$ sudo head slow_2019072103.log</span><br><span class="line">/usr/local/mysql5.7/bin/mysqld, Version: 5.7.24-log (MySQL Community Server (GPL)). started with:</span><br><span class="line">Tcp port: 3306  Unix socket: /mysql_log/msf/tmp/mysql.sock</span><br><span class="line">Time                 Id Command    Argument</span><br><span class="line"># Time: 2019-07-21T08:54:04.145255+08:00</span><br><span class="line"># User@Host: u_msf[u_msf] @  [10.111.10.40]  Id: 131421254</span><br><span class="line"># Query_time: 1.595300  Lock_time: 0.000031 Rows_sent: 20  Rows_examined: 809259</span><br><span class="line">use msf_prod;</span><br><span class="line">SET timestamp=1563670444;</span><br><span class="line">SELECT `id`,`type`,`honey`,`remark`,`created_at` FROM `t_log_user_honey` WHERE `user_id` = &apos;1000014423&apos; ORDER BY `created_at` DESC LIMIT 20 OFFSET 0;</span><br><span class="line"># Time: 2019-07-21T10:51:06.184010+08:00</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/25/elk/ELK收集mysql5.7慢日志/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/kibana查询语法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1055,6 +1270,345 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/08/25/elk/kibana查询语法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" itemprop="url">使用ElastAlert+ELK实现日志监控钉钉告警</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="使用ElastAlert-ELK实现日志监控钉钉告警"><a href="#使用ElastAlert-ELK实现日志监控钉钉告警" class="headerlink" title="使用ElastAlert+ELK实现日志监控钉钉告警"></a>使用ElastAlert+ELK实现日志监控钉钉告警</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>目前公司使用ELK做日志收集和展示分析.所以想对一些关键日志进行监控告警.比如Nginx的5xx日志,比如php-fpm的Fatal严重错误日志等.通过监控ES的日志数据,然后使用Python调用钉钉接口来实现日志的告警</p>
+<hr>
+<h3 id="ElastAlert介绍"><a href="#ElastAlert介绍" class="headerlink" title="ElastAlert介绍"></a>ElastAlert介绍</h3><p>ElastAlert是一个开源的工具,用于从Elastisearch中检索数据,并根据匹配模式发出告警.github项目地址如下:<a href="https://github.com/Yelp/elastalert" target="_blank" rel="noopener">https://github.com/Yelp/elastalert</a></p>
+<p>官方文档如下:<a href="https://elastalert.readthedocs.io/en/latest/elastalert.html" target="_blank" rel="noopener">https://elastalert.readthedocs.io/en/latest/elastalert.html</a></p>
+<p>它支持多种监控模式和告警方式,具体可以查阅Github项目介绍.但是自带的ElastAlert并不支持钉钉告警,在github上有第三方的钉钉python项目.地址如下:<a href="https://github.com/xuyaoqiang/elastalert-dingtalk-plugin" target="_blank" rel="noopener">https://github.com/xuyaoqiang/elastalert-dingtalk-plugin</a></p>
+<p>第三方的钉钉告警插件并没有艾特相关人员的功能,所以我再此基础上进行了二次开发,增加了这个功能</p>
+<hr>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/25/elk/使用ElastAlert+ELK实现日志监控告警/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/ELK使用x-pack插件实现权限控制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/25/elk/ELK使用x-pack插件实现权限控制/" itemprop="url">ELK使用x-pack插件实现权限控制</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/25/elk/ELK使用x-pack插件实现权限控制/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/ELK使用x-pack插件实现权限控制/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="ELK使用x-pack插件实现权限控制"><a href="#ELK使用x-pack插件实现权限控制" class="headerlink" title="ELK使用x-pack插件实现权限控制"></a>ELK使用x-pack插件实现权限控制</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>Elsticsearch集群搭建完成,使用Kibana可以直接访问WEB界面,或者使用curl命令行工具也可以直接访问ES的索引,并且可以直接对索引进行增删改查的操作.这在生产中可能就会有严重的安全隐患.</p>
+<p>为了防止Kibana的重要管理功能配置,或者ES的重要索引数据被认为的误删,误配置.就有必要对ES和Kibana进行权限管控.</p>
+<p>而Xpack插件就非常方便,完美的实现了这个功能</p>
+<hr>
+<h3 id="Xpack介绍"><a href="#Xpack介绍" class="headerlink" title="Xpack介绍"></a>Xpack介绍</h3><p>Xpack能够对网络流量进行加密、创建和管理用户、定义能够保护索引和集群级别访问权限的角色，并且使用 Spaces 为 Kibana提供全面保护.在Elastic Stack7.x中已经免费开放基础版本功能.但是更高版本的X-PACK仍然需要付费购买.</p>
+<p>而且在7.x版本中Xpack默认就已经安装了,无需另行安装插件.</p>
+<p>x-pack详细介绍请点击<a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.7/setup-xpack.html" target="_blank" rel="noopener">官方文档</a></p>
+<p>x-pack免费版提供一下功能</p>
+<ul>
+<li>TLS 功能。 可对通信进行加密；</li>
+<li>文件和原生 Realm。 可用于创建和管理用户；</li>
+<li>基于角色的访问控制。 可用于控制用户对集群 API 和索引的访问权限；</li>
+<li>通过针对 Kibana Spaces 的安全功能，还可允许在Kibana 中实现多租户</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/25/elk/ELK使用x-pack插件实现权限控制/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1280,173 +1834,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="url">使用goreplay收集线上真实http流量</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="使用goreplay收集线上真实http流量"><a href="#使用goreplay收集线上真实http流量" class="headerlink" title="使用goreplay收集线上真实http流量"></a>使用goreplay收集线上真实http流量</h2><h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>在很多场景中,我们需要将线上服务器的真实Http请求复制转发到某台服务器中(或者测试环境中),并且前提是不影响线上生产业务进行.</p>
-<p>例如:</p>
-<ol>
-<li>通常可能会通过ab等压测工具来对单一http接口进行压测。但如果是需要http服务整体压测，使用ab来压测工作量大且不方便，通过线上流量复制引流，通过将真实请求流量放大N倍来进行压测，能对服务有一个较为全面的检验.</li>
-<li>将线上流量引入到测试环境中,测试某个中间件或者数据库的压力</li>
-<li>上线前在预发布环境，使用线上真实的请求，检查是否准备发布的版本，是否具备发布标准</li>
-<li>用线上的流量转发到预发，检查相同流量下一些指标的反馈情况，检查核心数据是否有改善、优化.</li>
-</ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/Linux-Web/使用goreplay收集线上真实http流量/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Kibana图表制作/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1561,343 +1948,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/08/25/elk/Kibana图表制作/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/" itemprop="url">Filebeat+logstash收集Nginx访问日志</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Filebeat-logstash收集Nginx访问日志"><a href="#Filebeat-logstash收集Nginx访问日志" class="headerlink" title="Filebeat+logstash收集Nginx访问日志"></a>Filebeat+logstash收集Nginx访问日志</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境:"></a>环境:</h3><p><strong>Filebeat</strong>: 7.0</p>
-<p><strong>Logstash</strong>:7.0</p>
-<p><strong>elasticsearch</strong>:7.0</p>
-<hr>
-<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>logstash默认自带了apache标准日志格式的grok正则表达式:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">COMMONAPACHELOG %&#123;IPORHOST:clientip&#125; %&#123;USER:ident&#125; %&#123;NOTSPACE:auth&#125; \[%&#123;HTTPDATE:timestamp&#125;\] &quot;(?:%&#123;WORD:verb&#125; %&#123;NOTSPACE:request&#125;(?: HTTP/%&#123;NUMBER:httpversion&#125;)?|%&#123;DATA:rawrequest&#125;)&quot; %&#123;NUMBER:response&#125; (?:%&#123;NUMBER:bytes&#125;|-)</span><br><span class="line">COMBINEDAPACHELOG %&#123;COMMONAPACHELOG&#125; %&#123;QS:referrer&#125; %&#123;QS:agent&#125;</span><br></pre></td></tr></table></figure>
-<p>对于 nginx 标准日志格式，可以发现只是最后多了一个 <code>$http_x_forwarded_for</code> 变量。所以 nginx 标准日志的 grok 正则定义是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MAINNGINXLOG %&#123;COMBINEDAPACHELOG&#125; %&#123;QS:x_forwarded_for&#125;</span><br></pre></td></tr></table></figure>
-<p>如果Nginx日志格式不是标准的日志格式,则需要自行编写grok正则,匹配日志内容.</p>
-<p>但是grok正则表达式不容易上手,非常难写.复杂不说,而且logstash使用正则表达式来处理日志格式,其性能也会受到很大的影响.</p>
-<p>所以这里推荐另外一种收集方式.</p>
-<p>本文档参考博客:<a href="https://www.popyone.com/post/13.html" target="_blank" rel="noopener">https://www.popyone.com/post/13.html</a></p>
-<p>本文档参考书籍:<strong>ELK权威指南中文版第二版</strong></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/Filebeat+logstash收集Nginx访问日志/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/08/25/elk/ELK收集mysql5.7慢日志/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/elk/ELK收集mysql5.7慢日志/" itemprop="url">ELK收集mysql5.7慢日志</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T22:59:58+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/25/elk/ELK收集mysql5.7慢日志/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/08/25/elk/ELK收集mysql5.7慢日志/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="ELK收集mysql5-7慢日志"><a href="#ELK收集mysql5-7慢日志" class="headerlink" title="ELK收集mysql5.7慢日志"></a>ELK收集mysql5.7慢日志</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>公司ELK平台计划收集生产业务的所有mysql慢日志.由于所有环境中均使用mysql5.7版本,所以其他mysql版本的慢日志格式不在讨论范围之内.</p>
-<p>慢日志的grok正则匹配我折腾了很久,网上的大多文档中给出的logstash的grok正则其实并不能正确的解析到mysql慢日志的字段.</p>
-<p>这个博客的grok正则经过实践可行.而且filebeat,logstash的filter配置也是参考这个博客配置的:<a href="https://www.cnblogs.com/minseo/p/10441913.html" target="_blank" rel="noopener">博客地址</a></p>
-<hr>
-<h3 id="MySQL慢日志"><a href="#MySQL慢日志" class="headerlink" title="MySQL慢日志"></a>MySQL慢日志</h3><p>慢日志格式如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[work@msf-mysql-master log]$ sudo head slow_2019072103.log</span><br><span class="line">/usr/local/mysql5.7/bin/mysqld, Version: 5.7.24-log (MySQL Community Server (GPL)). started with:</span><br><span class="line">Tcp port: 3306  Unix socket: /mysql_log/msf/tmp/mysql.sock</span><br><span class="line">Time                 Id Command    Argument</span><br><span class="line"># Time: 2019-07-21T08:54:04.145255+08:00</span><br><span class="line"># User@Host: u_msf[u_msf] @  [10.111.10.40]  Id: 131421254</span><br><span class="line"># Query_time: 1.595300  Lock_time: 0.000031 Rows_sent: 20  Rows_examined: 809259</span><br><span class="line">use msf_prod;</span><br><span class="line">SET timestamp=1563670444;</span><br><span class="line">SELECT `id`,`type`,`honey`,`remark`,`created_at` FROM `t_log_user_honey` WHERE `user_id` = &apos;1000014423&apos; ORDER BY `created_at` DESC LIMIT 20 OFFSET 0;</span><br><span class="line"># Time: 2019-07-21T10:51:06.184010+08:00</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/25/elk/ELK收集mysql5.7慢日志/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/pod/kubernetes--pod原理/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/03/20/docker/Docker原理----1.Namespace/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/02/06/kubernetes/pod/kubernetes--pod原理/" itemprop="url">Kubernetes pod原理</a></h1>
+                <a class="post-title-link" href="/2021/03/20/docker/Docker原理----1.Namespace/" itemprop="url">Docker原理----1.Namespace</a></h1>
         
 
         <div class="post-meta">
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-06T23:39:58+08:00">
-                2021-02-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-20T11:59:58+08:00">
+                2021-03-20
               </time>
             
 
@@ -329,19 +329,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">kubernetes</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/pod/" itemprop="url" rel="index">
-                    <span itemprop="name">pod</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
 
@@ -358,8 +347,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2021/02/06/kubernetes/pod/kubernetes--pod原理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/pod/kubernetes--pod原理/" itemprop="commentCount"></span>
+                <a href="/2021/03/20/docker/Docker原理----1.Namespace/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/03/20/docker/Docker原理----1.Namespace/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -388,220 +377,55 @@
 
       
         
-          
-            <h2 id="Kubernetes—-pod原理"><a href="#Kubernetes—-pod原理" class="headerlink" title="Kubernetes—-pod原理"></a>Kubernetes—-pod原理</h2><h3 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h3><p>Pod是kubernetes项目中最小的API对象,是原子调度单位.我们之前学习过很多Linux容器,Docker方面的知识.那Kubernetes为什么不使用容器作为调度单位,而是要将容器封装成一个Pod?</p>
-<p>要探讨这个问题,我们需要深入研究一下Kubernetes的设计思想和工作原理.</p>
-<h3 id="容器本质"><a href="#容器本质" class="headerlink" title="容器本质"></a>容器本质</h3><p>通过之前Docker的原理学习,我们知道容器的本质到底是什么? <strong>容器的本质是进程</strong>.<strong>容器的镜像就像是这个进程的安装包.</strong>一键启动这个镜像,就相当于用这个安装包启动了一个进程(PID为1).那么Kubernetes呢?</p>
-<p>Kubernetes就是操作系统! 负责所有容器的编排和管理</p>
-<p>但是,在一个操作系统里,进程并不是孤苦伶仃的单独运行的,而是以进程组的方式,多个进程同时在一起运行.这些进程存在着”进程和进程组”的关系,他们之间有非常密切的写作关系,使得他们必须部署在同一台机器上.</p>
-<p>由于受限于容器的”单进程模型”.一个进程组下的不同进程可能需要制作成多个不同的容器,而这多个容器在传统的调度工作中(比如像Docker Swarm,Mesos)都没有被妥善处理好,在进程组的调度上要么无法保障一个进程组的多个容器无法调度到同一个节点,要么调度的效率和性能的问题.</p>
-<p>可在Kubernetes里,这个问题通过Pod完美解决了.Pod是kubernetes的原子调度单位,这就意味着Kubernetes是统一按照Pod而非单个容器的资源需求计算的.所以可以将多个容器部署在同一个Pod里,这些容器共享同一个Pod的网络名称,进程间通信,IP地址,共享卷等.而Kubernetes在调度时,会将他们作为一个整体,而非单个容器进程.</p>
-<p>像这样容器间的紧密协作，我们可以称为“超亲密关系”。这些具有“超亲密关系”容器的典型特征包括但不限于：互相之间会发生直接的文件交换、使用 localhost 或者 Socket 文件进行本地通信、会发生非常频繁的远程调用、需要共享某些 Linux Namespace（比如，一个容器要加入另一个容器的 Network Namespace）等等。</p>
-<p>这也就意味着，并不是所有有“关系”的容器都属于同一个 Pod。比如，PHP 应用容器和 MySQL 虽然会发生访问关系，但并没有必要、也不应该部署在同一台机器上，它们更适合做成两个 Pod。</p>
-<p>不过，相信此时你可能会有<strong>第二个疑问：</strong></p>
-<p>对于初学者来说，一般都是先学会了用 Docker 这种单容器的工具，才会开始接触 Pod。</p>
-<p>而如果 Pod 的设计只是出于调度上的考虑，那么 Kubernetes 项目似乎完全没有必要非得把 Pod 作为“一等公民”吧？这不是故意增加用户的学习门槛吗？</p>
-<p>为了理解这一层含义，我就必须先给你介绍一下Pod 的实现原理。</p>
-<h3 id="POD实现原理"><a href="#POD实现原理" class="headerlink" title="POD实现原理"></a>POD实现原理</h3><ul>
-<li><strong>Pod只是一个逻辑的概念</strong></li>
-</ul>
-<p>也就是说，Kubernetes 真正处理的，还是宿主机操作系统上 Linux 容器的 Namespace 和 Cgroups，而并不存在一个所谓的 Pod 的边界或者隔离环境。</p>
-<p>那么，Pod 又是怎么被“创建”出来的呢？</p>
-<p>答案是：Pod，其实是一组共享了某些资源的容器。</p>
-<p>具体的说：<strong>Pod 里的所有容器，共享的是同一个 Network Namespace，并且可以声明共享同一个 Volume。</strong></p>
-<p>那这么来看的话，一个有 A、B 两个容器的 Pod，不就是等同于一个容器（容器 A）共享另外一个容器（容器 B）的网络和 Volume 的玩儿法么？</p>
-<p>这好像通过 docker run –net –volumes-from 这样的命令就能实现嘛，比如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --net=B --volumes-from=B --name=A image-A ...</span><br></pre></td></tr></table></figure>
-<p>但是，你有没有考虑过，如果真这样做的话，容器 B 就必须比容器 A 先启动，这样一个 Pod 里的多个容器就不是对等关系，而是拓扑关系了。</p>
-<p>所以，在 Kubernetes 项目里，Pod 的实现需要使用一个中间容器，这个容器叫作 Infra 容器。在这个 Pod 中，Infra 容器永远都是第一个被创建的容器，而其他用户定义的容器，则通过 Join Network Namespace 的方式，与 Infra 容器关联在一起。这样的组织关系，可以用下面这样一个示意图来表达：</p>
-<p><img src="https://img2.jesse.top/image-20210328112238279.png" alt="image-20210328112238279"></p>
-<p>如上图所示，这个 Pod 里有两个用户容器 A 和 B，还有一个 Infra 容器。很容易理解，在 Kubernetes 项目里，Infra 容器一定要占用极少的资源，所以它使用的是一个非常特殊的镜像，叫作：<code>k8s.gcr.io/pause</code>。这个镜像是一个用汇编语言编写的、永远处于“暂停”状态的容器，解压后的大小也只有 100~200 KB 左右。</p>
-<p>而在 Infra 容器“Hold 住”Network Namespace 后，用户容器就可以加入到 Infra 容器的 Network Namespace 当中了。所以，如果你查看这些容器在宿主机上的 Namespace 文件（这个 Namespace 文件的路径，我已经在前面的内容中介绍过），它们指向的值一定是完全一样的。</p>
-<p>这也就意味着，对于 Pod 里的容器 A 和容器 B 来说：</p>
-<ul>
-<li>它们可以直接使用 localhost 进行通信；</li>
-<li>它们看到的网络设备跟 Infra 容器看到的完全一样；</li>
-<li>一个 Pod 只有一个 IP 地址，也就是这个 Pod 的 Network Namespace 对应的 IP 地址；</li>
-<li>当然，其他的所有网络资源，都是一个 Pod 一份，并且被该 Pod 中的所有容器共享；</li>
-<li>Pod 的生命周期只跟 Infra 容器一致，而与容器 A 和 B 无关。</li>
-</ul>
-<h3 id="容器设计模式"><a href="#容器设计模式" class="headerlink" title="容器设计模式"></a>容器设计模式</h3><p>Pod 这种“超亲密关系”容器的设计思想，实际上就是希望，当用户想在一个容器里跑多个功能并不相关的应用时，应该优先考虑它们是不是更应该被描述成一个 Pod 里的多个容器。</p>
-<p>为了能够掌握这种思考方式，你就应该尽量尝试使用它来描述一些用单个容器难以解决的问题。</p>
-<p>一个典型的例子就是容器的日志收集</p>
-<p>比如，我现在有一个应用，需要不断地把日志文件输出到容器的 /var/log 目录中。</p>
-<p>这时，我就可以把一个 Pod 里的 Volume 挂载到应用容器的 /var/log 目录上。</p>
-<p>然后，我在这个 Pod 里同时运行一个日志收集客户端 容器，它也声明挂载同一个 Volume 到自己的 /var/log 目录上。</p>
-<p>像这样，我们就用一种“组合”方式,解决了主容器和日志收集容器之间的耦合关系,而日志收集容器我们一般也称之为辅助容器.实际上，这个所谓的“组合”操作，正是容器设计模式里最常用的一种模式，它的名字叫：sidecar。顾名思义，sidecar 指的就是我们可以在一个 Pod 中，启动一个辅助容器，来完成一些独立于主进程（主容器）之外的工作。</p>
-<p>这样，接下来 sidecar 容器就只需要做一件事儿，那就是不断地从自己的 /var/log 目录里读取日志文件，转发到 MongoDB 或者 Elasticsearch 中存储起来。这样，一个最基本的日志收集工作就完成了。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/network/kubernetes network/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/02/06/kubernetes/network/kubernetes network/" itemprop="url">Kubernetes 网络</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-06T23:39:58+08:00">
-                2021-02-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">kubernetes</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/network/" itemprop="url" rel="index">
-                    <span itemprop="name">network</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/02/06/kubernetes/network/kubernetes network/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/network/kubernetes network/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="kubernetes-网络"><a href="#kubernetes-网络" class="headerlink" title="kubernetes 网络"></a>kubernetes 网络</h2><h3 id="1-开篇"><a href="#1-开篇" class="headerlink" title="1.开篇"></a>1.开篇</h3><p>​    Docker容器诞生以来,,如何确定合适的网络方案是亟待解决的难题之一.在日趋复杂的业务场景下,网络的复杂性也呈几何级数上升.本篇首先回顾了Docker容器的网络通信,然后介绍Kubernertes的网络模型.在Kubernetes集群中,IP地址的分配对象是以Pod为单位,而非容器.同一个Pod内的所有容器共享同一个网络名称空间</p>
+          <h2 id="Docker原理—-1-Namespace"><a href="#Docker原理—-1-Namespace" class="headerlink" title="Docker原理—-1.Namespace"></a>Docker原理—-1.Namespace</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>容器其实是一种沙盒技术,顾名思义,沙盒就像是一个集装箱一样,把你的应用”装”起来.这样应用和应用之间就因为有了边界而不至于互相干扰.而被装进集装箱的应用,也可以被方便的搬来搬去.</p>
+<p>容器的核心功能就是通过约束和修改进程的动态表现,从而为其创造出一个”边界”.对于Docker以及大多数的Linux容器来说.<code>cgroup</code> 是用来约束的手段,而<code>Namespace</code>则是用来修改进程视图的主要方法</p>
+<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><p>linux内核提拱了6种namespace隔离的系统调用，如下图所示，但是真正的容器还需要处理许多其他工作。</p>
+<table>
+<thead>
+<tr>
+<th>namespace</th>
+<th>系统调用参数</th>
+<th><strong>隔离内容</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UTS</td>
+<td>CLONE_NEWUTS</td>
+<td>主机名或域名</td>
+</tr>
+<tr>
+<td>IPC</td>
+<td>CLONE_NEWIPC</td>
+<td>信号量、消息队列和共享内存</td>
+</tr>
+<tr>
+<td>PID</td>
+<td>CLONE_NEWPID</td>
+<td>进程编号</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>CLONE_NEWNET</td>
+<td>网络设备、网络战、端口等</td>
+</tr>
+<tr>
+<td>Mount</td>
+<td>CLONE_NEWNS</td>
+<td>挂载点（文件系统）</td>
+</tr>
+<tr>
+<td>User</td>
+<td>CLONE_NEWUSER</td>
+<td>用户组和用户组</td>
+</tr>
+</tbody>
+</table>
+<p>实际上，linux内核实现namespace的主要目的，就是为了实现轻量级虚拟化技术服务。在同一个namespace下的进程合一感知彼此的变化，而对外界的进程一无所知。这样就可以让容器中的进程产生错觉，仿佛自己置身一个独立的系统环境中，以达到隔离的目的。</p>
+<p>下面拿个简单例子来讲解部分Namespace技术</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/02/06/kubernetes/network/kubernetes network/#more" rel="contents">
+            <a class="btn" href="/2021/03/20/docker/Docker原理----1.Namespace/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -656,7 +480,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/network/kubernetes Calico/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/03/20/docker/Docker原理----2.Cgroup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -675,7 +499,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/02/06/kubernetes/network/kubernetes Calico/" itemprop="url">Kubernetes Calico</a></h1>
+                <a class="post-title-link" href="/2021/03/20/docker/Docker原理----2.Cgroup/" itemprop="url">Docker原理----2.Cgroup</a></h1>
         
 
         <div class="post-meta">
@@ -687,8 +511,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-06T23:39:58+08:00">
-                2021-02-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-20T11:59:58+08:00">
+                2021-03-20
               </time>
             
 
@@ -710,19 +534,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">kubernetes</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/network/" itemprop="url" rel="index">
-                    <span itemprop="name">network</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
 
@@ -739,8 +552,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2021/02/06/kubernetes/network/kubernetes Calico/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/network/kubernetes Calico/" itemprop="commentCount"></span>
+                <a href="/2021/03/20/docker/Docker原理----2.Cgroup/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/03/20/docker/Docker原理----2.Cgroup/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -769,11 +582,18 @@
 
       
         
-          <h2 id="Kubernetes-Calico"><a href="#Kubernetes-Calico" class="headerlink" title="Kubernetes Calico"></a>Kubernetes Calico</h2><h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p>​    Calico是一个非常流行的Kubernetes网络插件和解决方案.Calico是一个开源虚拟化网络方案，用于为云原生应用实现互联及策略控制。与Flannel相比，Calico的一个显著优势是对网络策略（network policy）的支持，它允许用户动态定义ACL规则控制进出容器的数据报文，实现为Pod间的通信按需施加安全策略。事实上，Calico可以整合进大多数主流的编排系统，如Kubernetes、Apache Mesos、Docker和OpenStack等。</p>
-<p>​    Calico本身是一个三层的虚拟网络方案，它将每个节点都当作路由器（router），将每个节点的容器都当作是“节点路由器”的一个终端并为其分配一个IP地址，各节点路由器通过BGP（Border Gateway Protocol）学习生成路由规则，从而将不同节点上的容器连接起来。因此，Calico方案其实是一个纯三层的解决方案，通过每个节点协议栈的三层（网络层）确保容器之间的连通性，这摆脱了flannel host-gw类型的所有节点必须位于同一二层网络的限制，从而极大地扩展了网络规模和网络边界。</p>
+          <h2 id="Docker原理—-2-Cgroup"><a href="#Docker原理—-2-Cgroup" class="headerlink" title="Docker原理—-2.Cgroup"></a>Docker原理—-2.Cgroup</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在上篇介绍完容器的”隔离”技术之后,我们再来研究一下容器的”限制”问题</p>
+<p>也许你会好奇，我们不是已经通过 Linux Namespace 创建了一个“容器”吗，为什么还需要对容器做“限制”呢？</p>
+<p>我还是以 PID Namespace 为例，来给你解释这个问题。</p>
+<p>虽然容器的第一号进程只能看到容器里的情况,但是由于是直接运行在宿主机上,所以它和宿主机上其他所有进程之间依然是平等的竞争关系.这就意味着虽然该进程在视图上被隔离起来了,但是他能够使用宿主机上的所有资源(比如CPU,内存).</p>
+<p>这显然不是一个”沙盒”应该表现出来的合理行为</p>
+<p>而Linux Cgroups就是Linux内核中用来为进程设置资源限制的一个重要功能</p>
+<h3 id="Cgroups"><a href="#Cgroups" class="headerlink" title="Cgroups"></a>Cgroups</h3><p><strong>Linux Cgroups 的全称是 Linux Control Group。它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。</strong></p>
+<p>此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂起和恢复等操作。在今天的分享中，我只和你重点探讨它与容器关系最紧密的“限制”能力，并通过一组实践来带你认识一下 Cgroups。</p>
+<p>从字面上理解，cgroups就是把任务放到一个组里面统一加以控制。本质上来说，cgroups是内核附加在程序上的一系列hook，通过程序运行时对资源的调度触发相应的钩子以达到资源跟踪和限制的目的。在cgroup里，任务(task)就是系统的一个进程或者线程。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/02/06/kubernetes/network/kubernetes Calico/#more" rel="contents">
+            <a class="btn" href="/2021/03/20/docker/Docker原理----2.Cgroup/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -828,7 +648,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/service/DNS/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/03/20/docker/Docker原理----3.mount挂载/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -847,7 +667,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/02/06/kubernetes/service/DNS/" itemprop="url">Kubernetes DNS</a></h1>
+                <a class="post-title-link" href="/2021/03/20/docker/Docker原理----3.mount挂载/" itemprop="url">Docker原理----3.mount挂载</a></h1>
         
 
         <div class="post-meta">
@@ -859,8 +679,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-06T23:39:58+08:00">
-                2021-02-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-20T11:59:58+08:00">
+                2021-03-20
               </time>
             
 
@@ -882,19 +702,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">kubernetes</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/Service/" itemprop="url" rel="index">
-                    <span itemprop="name">Service</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
 
@@ -911,8 +720,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2021/02/06/kubernetes/service/DNS/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/service/DNS/" itemprop="commentCount"></span>
+                <a href="/2021/03/20/docker/Docker原理----3.mount挂载/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/03/20/docker/Docker原理----3.mount挂载/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -941,12 +750,192 @@
 
       
         
-          <h2 id="DNS介绍"><a href="#DNS介绍" class="headerlink" title="DNS介绍"></a>DNS介绍</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>kubernets的所有资源.包括Service,Pod都有生命周期,会频繁的销毁和创建.这些资源的IP地址也会随之动态变化.所以Kubernetes使用DNS实现通过资源名解析IP地址.</p>
-<h3 id="DNS服务器"><a href="#DNS服务器" class="headerlink" title="DNS服务器"></a>DNS服务器</h3><p>Kubernetes集群安装了默认的Core-dns组件(通过Pod方式运行).以及kube-dns的service.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]$kubectl get pods -n kube-system | grep dns</span><br><span class="line">coredns-7f9c544f75-9sh28                   1/1     Running   2          324d</span><br><span class="line">coredns-7f9c544f75-jgmqq                   1/1     Running   2          324d</span><br><span class="line"></span><br><span class="line">#下方这个10.96.0.10就是kubernetes集群的内部DNS服务器</span><br><span class="line">[root@k8s-master ~]$kubectl get svc -n kube-system | grep dns</span><br><span class="line">kube-dns         ClusterIP   10.96.0.10     &lt;none&gt;        53/UDP,53/TCP,9153/TCP   324d</span><br></pre></td></tr></table></figure>
+          <h2 id="Docker原理—-3-mount挂载"><a href="#Docker原理—-3-mount挂载" class="headerlink" title="Docker原理—-3.mount挂载"></a>Docker原理—-3.mount挂载</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>而正如我前面所说的，Namespace 的作用是“隔离”，它让应用进程只能看到该 Namespace 内的“世界”；而 Cgroups 的作用是“限制”，它给这个“世界”围上了一圈看不见的墙。这么一折腾，进程就真的被“装”在了一个与世隔绝的房间里，而这些房间就是 PaaS 项目赖以生存的应用“沙盒”。</p>
+<p>可是，还有一个问题不知道你有没有仔细思考过：这个房间四周虽然有了墙，但是如果容器进程低头一看地面，又是怎样一副景象呢？</p>
+<p>换句话说，<strong>容器里的进程看到的文件系统又是什么样子的呢？</strong></p>
+<p>Docker容器借助<code>chroot</code>挂载一个虚拟根目录到容器.我们在Linux操作系统里可以很方便的演练<code>chroot</code>是如何工作的.chroot的作用就是帮助你<code>change root file system</code> ,即改变进程的根目录到你指定的位置.</p>
+<p>假设，我们现在有一个 $HOME/test 目录，想要把它作为一个 /bin/bash 进程的根目录。</p>
+<p>首先，创建一个 test 目录和几个 lib 文件夹:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p $HOME/test</span><br><span class="line">$ mkdir -p $HOME/test/&#123;bin,lib64,lib&#125;</span><br></pre></td></tr></table></figure>
+<p>然后，把 bash 命令拷贝到 test 目录对应的 bin 路径下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -v /bin/&#123;bash,ls&#125; $HOME/test/bin</span><br></pre></td></tr></table></figure>
+<p>接下来，把 bash 命令需要的所有 so 文件，也拷贝到 test 目录对应的 lib 路径下。找到 so 文件可以用 ldd 命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ T=$HOME/test</span><br><span class="line">$ list=&quot;$(ldd /bin/ls | egrep -o &apos;/lib.*\.[0-9]&apos;)&quot;</span><br><span class="line">$ for i in $list; do cp -v &quot;$i&quot; &quot;$&#123;T&#125;$&#123;i&#125;&quot;; done</span><br><span class="line"></span><br><span class="line">#还需要拷贝下面这个so文件</span><br><span class="line">cp -v /usr/lib64/libtinfo.so.5 $T/lib64/</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/02/06/kubernetes/service/DNS/#more" rel="contents">
+            <a class="btn" href="/2021/03/20/docker/Docker原理----3.mount挂载/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/03/10/prometheus/prometheus监控mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/03/10/prometheus/prometheus监控mysql/" itemprop="url">prometheus监控mysql</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-10T07:59:58+08:00">
+                2021-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/prometheus/" itemprop="url" rel="index">
+                    <span itemprop="name">prometheus</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/03/10/prometheus/prometheus监控mysql/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/03/10/prometheus/prometheus监控mysql/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="prometheus监控mysql"><a href="#prometheus监控mysql" class="headerlink" title="prometheus监控mysql"></a>prometheus监控mysql</h3><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>本文使用的是官方的mysqld_exporter.github地址:<a href="https://github.com/prometheus/mysqld_exporter" target="_blank" rel="noopener">mysqld_exporter</a></p>
+<blockquote>
+<p>mysql版本需要在5.6版本或以上</p>
+</blockquote>
+<p>mysqld_exporter提供很多监控项(具体参考github项目介绍).如果需要开启一个监控项,在启动mysqld_exporter时,携带以下命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--collect.key</span><br></pre></td></tr></table></figure>
+<p>如果需要关闭某个监控项.携带以下命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--no-collect.key</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果mysqld_exporter的版本小于0.10.0,命令有些变化,双横杠变成单横杠,使用-collect.key 或者-collect.key=True|false</p>
+</blockquote>
+<hr>
+<h3 id="mysqld-exporter安装"><a href="#mysqld-exporter安装" class="headerlink" title="mysqld_exporter安装"></a>mysqld_exporter安装</h3><p>安装方式很简单,.下面是一个Ansible脚本以供参考</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/03/10/prometheus/prometheus监控mysql/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1181,6 +1170,700 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/network/kubernetes Calico/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/02/06/kubernetes/network/kubernetes Calico/" itemprop="url">Kubernetes Calico</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-06T23:39:58+08:00">
+                2021-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/network/" itemprop="url" rel="index">
+                    <span itemprop="name">network</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/02/06/kubernetes/network/kubernetes Calico/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/network/kubernetes Calico/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Kubernetes-Calico"><a href="#Kubernetes-Calico" class="headerlink" title="Kubernetes Calico"></a>Kubernetes Calico</h2><h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p>​    Calico是一个非常流行的Kubernetes网络插件和解决方案.Calico是一个开源虚拟化网络方案，用于为云原生应用实现互联及策略控制。与Flannel相比，Calico的一个显著优势是对网络策略（network policy）的支持，它允许用户动态定义ACL规则控制进出容器的数据报文，实现为Pod间的通信按需施加安全策略。事实上，Calico可以整合进大多数主流的编排系统，如Kubernetes、Apache Mesos、Docker和OpenStack等。</p>
+<p>​    Calico本身是一个三层的虚拟网络方案，它将每个节点都当作路由器（router），将每个节点的容器都当作是“节点路由器”的一个终端并为其分配一个IP地址，各节点路由器通过BGP（Border Gateway Protocol）学习生成路由规则，从而将不同节点上的容器连接起来。因此，Calico方案其实是一个纯三层的解决方案，通过每个节点协议栈的三层（网络层）确保容器之间的连通性，这摆脱了flannel host-gw类型的所有节点必须位于同一二层网络的限制，从而极大地扩展了网络规模和网络边界。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/02/06/kubernetes/network/kubernetes Calico/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/network/kubernetes network/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/02/06/kubernetes/network/kubernetes network/" itemprop="url">Kubernetes 网络</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-06T23:39:58+08:00">
+                2021-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/network/" itemprop="url" rel="index">
+                    <span itemprop="name">network</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/02/06/kubernetes/network/kubernetes network/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/network/kubernetes network/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="kubernetes-网络"><a href="#kubernetes-网络" class="headerlink" title="kubernetes 网络"></a>kubernetes 网络</h2><h3 id="1-开篇"><a href="#1-开篇" class="headerlink" title="1.开篇"></a>1.开篇</h3><p>​    Docker容器诞生以来,,如何确定合适的网络方案是亟待解决的难题之一.在日趋复杂的业务场景下,网络的复杂性也呈几何级数上升.本篇首先回顾了Docker容器的网络通信,然后介绍Kubernertes的网络模型.在Kubernetes集群中,IP地址的分配对象是以Pod为单位,而非容器.同一个Pod内的所有容器共享同一个网络名称空间</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/02/06/kubernetes/network/kubernetes network/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/pod/kubernetes--pod原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/02/06/kubernetes/pod/kubernetes--pod原理/" itemprop="url">Kubernetes pod原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-06T23:39:58+08:00">
+                2021-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/pod/" itemprop="url" rel="index">
+                    <span itemprop="name">pod</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/02/06/kubernetes/pod/kubernetes--pod原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/pod/kubernetes--pod原理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Kubernetes—-pod原理"><a href="#Kubernetes—-pod原理" class="headerlink" title="Kubernetes—-pod原理"></a>Kubernetes—-pod原理</h2><h3 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h3><p>Pod是kubernetes项目中最小的API对象,是原子调度单位.我们之前学习过很多Linux容器,Docker方面的知识.那Kubernetes为什么不使用容器作为调度单位,而是要将容器封装成一个Pod?</p>
+<p>要探讨这个问题,我们需要深入研究一下Kubernetes的设计思想和工作原理.</p>
+<h3 id="容器本质"><a href="#容器本质" class="headerlink" title="容器本质"></a>容器本质</h3><p>通过之前Docker的原理学习,我们知道容器的本质到底是什么? <strong>容器的本质是进程</strong>.<strong>容器的镜像就像是这个进程的安装包.</strong>一键启动这个镜像,就相当于用这个安装包启动了一个进程(PID为1).那么Kubernetes呢?</p>
+<p>Kubernetes就是操作系统! 负责所有容器的编排和管理</p>
+<p>但是,在一个操作系统里,进程并不是孤苦伶仃的单独运行的,而是以进程组的方式,多个进程同时在一起运行.这些进程存在着”进程和进程组”的关系,他们之间有非常密切的写作关系,使得他们必须部署在同一台机器上.</p>
+<p>由于受限于容器的”单进程模型”.一个进程组下的不同进程可能需要制作成多个不同的容器,而这多个容器在传统的调度工作中(比如像Docker Swarm,Mesos)都没有被妥善处理好,在进程组的调度上要么无法保障一个进程组的多个容器无法调度到同一个节点,要么调度的效率和性能的问题.</p>
+<p>可在Kubernetes里,这个问题通过Pod完美解决了.Pod是kubernetes的原子调度单位,这就意味着Kubernetes是统一按照Pod而非单个容器的资源需求计算的.所以可以将多个容器部署在同一个Pod里,这些容器共享同一个Pod的网络名称,进程间通信,IP地址,共享卷等.而Kubernetes在调度时,会将他们作为一个整体,而非单个容器进程.</p>
+<p>像这样容器间的紧密协作，我们可以称为“超亲密关系”。这些具有“超亲密关系”容器的典型特征包括但不限于：互相之间会发生直接的文件交换、使用 localhost 或者 Socket 文件进行本地通信、会发生非常频繁的远程调用、需要共享某些 Linux Namespace（比如，一个容器要加入另一个容器的 Network Namespace）等等。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/02/06/kubernetes/pod/kubernetes--pod原理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/02/06/kubernetes/service/DNS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/02/06/kubernetes/service/DNS/" itemprop="url">Kubernetes DNS</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-06T23:39:58+08:00">
+                2021-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/Service/" itemprop="url" rel="index">
+                    <span itemprop="name">Service</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/02/06/kubernetes/service/DNS/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/02/06/kubernetes/service/DNS/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="DNS介绍"><a href="#DNS介绍" class="headerlink" title="DNS介绍"></a>DNS介绍</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>kubernets的所有资源.包括Service,Pod都有生命周期,会频繁的销毁和创建.这些资源的IP地址也会随之动态变化.所以Kubernetes使用DNS实现通过资源名解析IP地址.</p>
+<h3 id="DNS服务器"><a href="#DNS服务器" class="headerlink" title="DNS服务器"></a>DNS服务器</h3><p>Kubernetes集群安装了默认的Core-dns组件(通过Pod方式运行).以及kube-dns的service.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]$kubectl get pods -n kube-system | grep dns</span><br><span class="line">coredns-7f9c544f75-9sh28                   1/1     Running   2          324d</span><br><span class="line">coredns-7f9c544f75-jgmqq                   1/1     Running   2          324d</span><br><span class="line"></span><br><span class="line">#下方这个10.96.0.10就是kubernetes集群的内部DNS服务器</span><br><span class="line">[root@k8s-master ~]$kubectl get svc -n kube-system | grep dns</span><br><span class="line">kube-dns         ClusterIP   10.96.0.10     &lt;none&gt;        53/UDP,53/TCP,9153/TCP   324d</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/02/06/kubernetes/service/DNS/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/19/Linux-Web/Kong自定义配置Nginx/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1301,739 +1984,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/01/19/Linux-Web/Kong自定义配置Nginx/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/19/Linux-Web/Kong Rate Limiting限流插件/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/01/19/Linux-Web/Kong Rate Limiting限流插件/" itemprop="url">Kong实现限流</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-19T11:59:58+08:00">
-                2021-01-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Web</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
-                    <span itemprop="name">kong</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/01/19/Linux-Web/Kong Rate Limiting限流插件/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/19/Linux-Web/Kong Rate Limiting限流插件/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Kong实现限流"><a href="#Kong实现限流" class="headerlink" title="Kong实现限流"></a>Kong实现限流</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>近期发现公司某个业务对外的openapi接口的/merchantapi路径异常调用非常频繁.公司的第三方商户需要通过这个路径来调用ERP接口,但是经常发生被恶意刷接口的情况,导致公司的业务服务器资源使用率飙升,面临很大的宕机风险和隐患.</p>
-<p>目前外部客户端访问公司业务仍然是阿里云SLB—–Nginx—php-fpm的架构.由于Nginx的限流能力并不出色,特别是针对具体path路径的限流.所以,引入了Kong api网关</p>
-<h3 id="Rate-Limiting限流插件介绍"><a href="#Rate-Limiting限流插件介绍" class="headerlink" title="Rate Limiting限流插件介绍"></a>Rate Limiting限流插件介绍</h3><p>Rate Limiting是Kong社区版就已经自带的官方流量控制插件.详细信息可以参考Kong官网介绍. <a href="https://docs.konghq.com/hub/kong-inc/rate-limiting/" target="_blank" rel="noopener">https://docs.konghq.com/hub/kong-inc/rate-limiting/</a></p>
-<p>它可以针对<code>consumer</code> ,<code>credential</code> ,<code>ip</code> ,<code>service</code>,<code>path</code>,<code>header</code> 等多种维度来进行限流.流量控制的精准度也有多种方式可以参考,比如可以做到秒级,分钟级,小时级等限流控制.</p>
-<h4 id="响应客户端头部信息"><a href="#响应客户端头部信息" class="headerlink" title="响应客户端头部信息"></a>响应客户端头部信息</h4><p>当启用这个插件后.Kong会响应客户端一些额外的头部信息,告诉客户端限流信息.例如下面是Kong响应给客户端的header信息,告诉客户端当前的限流策略是10r/s</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">RateLimit-Limit: 10</span><br><span class="line">RateLimit-Remaining: 0</span><br><span class="line">RateLimit-Reset: 1</span><br><span class="line"></span><br><span class="line">X-Kong-Response-Latency: 1</span><br><span class="line">X-RateLimit-Limit-Second: 10</span><br><span class="line">X-RateLimit-Remaining-Second: 0</span><br></pre></td></tr></table></figure>
-<p>如果客户端的访问请求超过限流的阈值,Kong会返回status<code>429</code>的状态码以及下面的错误信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &quot;message&quot;: &quot;API rate limit exceeded&quot; &#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/01/19/Linux-Web/Kong Rate Limiting限流插件/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/" itemprop="url">kafka-3.1消费者与消费组</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
-                2021-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
-                    <span itemprop="name">kafka</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/3-消费者/" itemprop="url" rel="index">
-                    <span itemprop="name">3-消费者</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="3-1-消费者与消费组"><a href="#3-1-消费者与消费组" class="headerlink" title="3.1 消费者与消费组"></a>3.1 消费者与消费组</h2><h3 id="1-消费者和消费组介绍"><a href="#1-消费者和消费组介绍" class="headerlink" title="1.消费者和消费组介绍"></a>1.消费者和消费组介绍</h3><p>消费者( Consumer)负责订阅Kafka中的主题( Topic)，并且从订阅的主题上拉取消息.与其他一些消息中间件不同的是:在 Kafka的消费理念中还有一层消费组( Consumer Group)的概念，每个消费者都有一个对应的消费组。当消息发布到主题后，只会被投递给订阅它的每个消费组中的一个消费者 。</p>
-<p>以下图为例,某个主题中共有 4 个分区( Partition) : PO、 Pl、 P2、 P3。 有两个消费组 A和 B 都订阅了这个主题，消费组 A 中有 4 个消费者 (CO、 Cl、 C2 和 C3)，消费组 B 中有 2个消费者 CC4 和 CS) 。按照 Kafka默认的规则，最后的分配结果是消费组 A 中的每一个消费 者分配到1个分区，消费组 B 中的每一个消费者分配到 2个分区，两个消费组之间互不影响。每个消费者只能消费所分配到的分区中的消息。换言之 每一个分区只能被一个消费组中的一个消费者所消费.</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2992889/1608547700645-c525d96a-ac02-471f-9276-ee885e471c86.png" alt="image.png"></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/" itemprop="url">kafka-4.1主题管理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
-                2021-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
-                    <span itemprop="name">kafka</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/4-主题和分区/" itemprop="url" rel="index">
-                    <span itemprop="name">4-主题和分区</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="4-1-1-创建主题"><a href="#4-1-1-创建主题" class="headerlink" title="4.1.1 创建主题"></a>4.1.1 创建主题</h3><h4 id="4-1-1-1-自动创建主题以及分区副本"><a href="#4-1-1-1-自动创建主题以及分区副本" class="headerlink" title="4.1.1.1 自动创建主题以及分区副本"></a>4.1.1.1 自动创建主题以及分区副本</h4><p>在之前的笔记中提到了创建主题的一个简单示例.kafka提供 <code>kafka-topics.sh</code> 脚本来创建主题.下面这个示例创建了一个 <code>topic-test</code> 的主题,包含4个分区和2个副本.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/opt/kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic topic-test --replication-factor 2 --partitions 4</span><br><span class="line"></span><br><span class="line">Created topic &quot;topic-test&quot;.</span><br></pre></td></tr></table></figure>
-<p>分区创建完成后,会在kafka的 <code>log.dirs</code> 或者 <code>log.dir</code> 的目录下创建相应的主题分区.下面是在其中一台Broker节点的信息展示:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-0</span><br><span class="line">topic-test-2</span><br></pre></td></tr></table></figure>
-<p>可以看到152节点中创建了2个文件夹 topic-test-0 和 topic-test-2,对应主题 topic-test的2个分区编号为0和2的分区，命名方式可以概括为 <code>&lt;topic&gt;-&lt;partition&gt;</code> .严谨地说,其实这类文件夹对应的不是分区,分区同主题一样是一个逻辑的概念而没有物理上的存在.并且这里我们也只是看到了2个分区,而我们创建的是4个分区,其余2个分区被分配到了153和154节点中，参考如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#153节点</span><br><span class="line">[hadoop@bi-dev153 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-0</span><br><span class="line">topic-test-1</span><br><span class="line">topic-test-3</span><br><span class="line"></span><br><span class="line">#154节点</span><br><span class="line">[hadoop@bi-dev154 ~]$ ls /opt/logs/kafka/ | grep &quot;topic-test&quot;</span><br><span class="line">topic-test-1</span><br><span class="line">topic-test-2</span><br><span class="line">topic-test-3</span><br></pre></td></tr></table></figure>
-<p>三个broker节点一共创建了8个文件夹,这个数字8实质上是分区数4与副本因子2的乘积.每个副本(或者更确切地说应该是日志,副本与日志一一对应)才真正对应 了一个命名形式.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.1主题管理/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/" itemprop="url">kafka-2.1Kafka副本</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
-                2021-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
-                    <span itemprop="name">kafka</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/2-副本介绍/" itemprop="url" rel="index">
-                    <span itemprop="name">2-副本介绍</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="2-1-Kafka副本"><a href="#2-1-Kafka副本" class="headerlink" title="2.1  Kafka副本"></a>2.1  Kafka副本</h1><h3 id="副本介绍"><a href="#副本介绍" class="headerlink" title="副本介绍"></a>副本介绍</h3><p>Kafka为分区引入了副本(Replica)机制.通过增加副本数量提升容灾能力.一个Topic主题可以有多个分区,一个分区又可以有多个副本.这多个副本中，只有一个是leader，而其他的都是follower副本。仅有leader副本可以对外提供服务。所以副本之间是一主多从的关系,而且每个副本中保存的相同的消息.(严格来说,同一时刻副本之间的消息并非能一定完全同步)</p>
-<p>多个follower副本通常存放在和leader副本不同的broker中。通过这样的机制实现了高可用，当某台机器挂掉后，其他follower副本也能迅速”转正“，开始对外提供服务。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
