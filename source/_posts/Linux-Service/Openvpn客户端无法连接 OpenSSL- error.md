@@ -1,5 +1,5 @@
 ---
-title: Openvpn客户端无法连接 OpenSSL: error
+title: Openvpn客户端无法连接OpenSSL
 date: 2020-09-22 22:59:58
 tags:  [Linux,openvpn ]
 categories: Linux-Service
@@ -9,7 +9,7 @@ copyright: true
 
 
 
-## Openvpn客户端无法连接 OpenSSL: error
+## Openvpn客户端无法连接OpenSSL: error
 
 ### 背景
 

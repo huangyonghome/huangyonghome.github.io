@@ -2,7 +2,7 @@
 title: rabbitmq+haproxy 集群环境搭建
 date: 2018-06-24 12:59:58
 tags: MQ
-categories: [Linux-分布式&消息队列 ]
+categories: [Linux-分布式&消息队列,mq ]
 comments: true
 copyright: true
 ---

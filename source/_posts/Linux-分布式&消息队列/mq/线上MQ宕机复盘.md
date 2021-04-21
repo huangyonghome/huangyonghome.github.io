@@ -2,7 +2,7 @@
 title: 线上MQ宕机复盘
 date: 2018-11-21 17:59:58
 tags: MQ
-categories: [Linux-分布式&消息队列 ]
+categories: [Linux-分布式&消息队列,mq ]
 comments: true
 copyright: true
 ---
