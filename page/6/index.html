@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/29/docker/docker官网学习--docker网络之overlay/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/" itemprop="url">docker学习笔记---docker网络之host,Container,None网络</a></h1>
+                <a class="post-title-link" href="/2020/06/29/docker/docker官网学习--docker网络之overlay/" itemprop="url">docker学习笔记---docker网络之overlay</a></h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/" itemprop="commentCount"></span>
+                <a href="/2020/06/29/docker/docker官网学习--docker网络之overlay/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/29/docker/docker官网学习--docker网络之overlay/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,16 +377,18 @@
 
       
         
-          <h2 id="docker官网学习-7-docker网络之host-Container-None网络"><a href="#docker官网学习-7-docker网络之host-Container-None网络" class="headerlink" title="docker官网学习-7.docker网络之host,Container,None网络"></a>docker官网学习-7.docker网络之host,Container,None网络</h2><h3 id="host网络介绍"><a href="#host网络介绍" class="headerlink" title="host网络介绍"></a>host网络介绍</h3><p>如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</p>
+          <h2 id="docker官网学习-7-docker网络之overlay"><a href="#docker官网学习-7-docker网络之overlay" class="headerlink" title="docker官网学习-7.docker网络之overlay"></a>docker官网学习-7.docker网络之overlay</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>overlay网卡在多个docker宿主机之间创建一个分布式的网络,允许多个容器安全通信.</p>
+<p>当初始化一个swarm集群,或者加入docker宿主机到一个swarm集群中.Docker会在该宿主机上创建2个网络:</p>
+<ul>
+<li>ingress: 负责swarm集群的控制以及数据流量</li>
+<li>docker_gwbridge:一个Bridge网络,负责连接swarm集群中的每个docker节点</li>
+</ul>
+<p>overlay网络的创建方式和bridge一样.也是<code>docker network create</code>命令</p>
 <hr>
-<h3 id="创建host网络"><a href="#创建host网络" class="headerlink" title="创建host网络"></a>创建host网络</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run -tid --net=host --name busybox busybox1</span><br><span class="line"></span><br><span class="line">#host网络下的容器没有虚拟网卡,而是和宿主机共享网络</span><br><span class="line">[root@localhost ~]$docker exec  -it busybox1 ifconfig</span><br><span class="line">docker0   Link encap:Ethernet  HWaddr 02:42:89:26:D1:C9</span><br><span class="line">          inet addr:192.168.1.5  Bcast:192.168.1.255  Mask:255.255.255.0</span><br><span class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</span><br><span class="line">          RX packets:1072032 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:1997027 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:0</span><br><span class="line">          RX bytes:61915874 (59.0 MiB)  TX bytes:1934238839 (1.8 GiB)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注:host网络只能工作在Linux主机上.</p>
-<p>如果容器没有暴露任何端口,那host网络没有任何效果</p>
-</blockquote>
+<h3 id="创建overlay网络"><a href="#创建overlay网络" class="headerlink" title="创建overlay网络"></a>创建overlay网络</h3>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/29/docker/docker官网学习-7.docker网络之host,Container,None网络/#more" rel="contents">
+            <a class="btn" href="/2020/06/29/docker/docker官网学习--docker网络之overlay/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -789,369 +791,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/docker/harbor私有仓库部署/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/docker/harbor私有仓库部署/" itemprop="url">harbor私有仓库部署</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
-                    <span itemprop="name">docker</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/docker/harbor私有仓库部署/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/docker/harbor私有仓库部署/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="harbor私有仓库部署"><a href="#harbor私有仓库部署" class="headerlink" title="harbor私有仓库部署"></a>harbor私有仓库部署</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>harbor是docker的私有仓库,可以部署在局域网服务器上,用来管理docker镜像.虽然docker官方也提供公共镜像仓库,但是由于是境外网站,拉取镜像速度非常慢,而且有被墙的可能.部署私有仓库非常有必要</p>
-<p>harbor是vmware公司开源的企业级的docker registry管理项目.</p>
-<blockquote>
-<p>处于数据脱敏需要,以下内容中隐藏了真实域名.而使用hub.xxxxxx.com替代</p>
-</blockquote>
-<hr>
-<h3 id="社区"><a href="#社区" class="headerlink" title="社区"></a>社区</h3><p>harbor github: <a href="https://github.com/goharbor/harbor" target="_blank" rel="noopener">goharbor/harbor</a></p>
-<p>官网文档介绍: <a href="https://goharbor.io/docs/1.10/" target="_blank" rel="noopener">harbor doc</a></p>
-<p>在部署中遇到的各种坑,都可以通过查阅文档,或者搜索github的issue解决</p>
-<hr>
-<h3 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h3><p>harbor是docker-compose部署的.包括一系列组件:nginx.core,log,register等等.</p>
-<p>但是由于本机已经存在一个Nginx镜像.所以用Nginx代理到harbor的Nginx.<strong>如果是独立的服务器部署Harbor的话,则不会存在这个问题,可以直接跳过这一章节.</strong></p>
-<p>nginx代理框架大概是:</p>
-<p><strong>nginx—-&gt;harbor-nginx—–&gt;habor</strong></p>
-<p>由于docker提交镜像需要Https协议,所以:</p>
-<p><strong>nginx—301跳转到nginx https—–&gt;harbor-nginx http—-&gt; habor</strong></p>
-<p>但是这样的部署方式,有一个问题:</p>
-<p>私有仓库可以正常login但是push镜像的时候,又提示未验证.</p>
-<p>该问题尝试过很多解决方案,但是均无法解决</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/docker/harbor私有仓库部署/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" itemprop="url">docker安装最新版Kong(v1.0)+konga</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
-                2020-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-Web</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
-                    <span itemprop="name">kong</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="docker安装最新版Kong-v1-0-konga"><a href="#docker安装最新版Kong-v1-0-konga" class="headerlink" title="docker安装最新版Kong(v1.0)+konga"></a>docker安装最新版Kong(v1.0)+konga</h3><p>参考以下文档:</p>
-<p><a href="https://docs.konghq.com/install/docker/?_ga=2.167535422.1288669860.1553147426-917309945.1539077269" target="_blank" rel="noopener">Kong installation</a></p>
-<p><a href="https://github.com/pantsel/konga#installation" target="_blank" rel="noopener">konga github</a></p>
-<hr>
-<h4 id="docker安装kong-postgresql"><a href="#docker安装kong-postgresql" class="headerlink" title="docker安装kong+postgresql"></a>docker安装kong+postgresql</h4><p>1.创建一个docker网络用于docker,postgresql和konga容器间通信</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create kong-net</span><br></pre></td></tr></table></figure>
-<p>2.启动posgtresql容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name kong-database \</span><br><span class="line">               --network=kong-net \</span><br><span class="line">               -p 5432:5432 \</span><br><span class="line">               -e &quot;POSTGRES_USER=kong&quot; \</span><br><span class="line">               -e &quot;POSTGRES_DB=kong&quot; \</span><br><span class="line">               postgres:9.6</span><br></pre></td></tr></table></figure>
-<p>3.初始化postgresql数据库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm \</span><br><span class="line">    --network=kong-net \</span><br><span class="line">    -e &quot;KONG_DATABASE=postgres&quot; \</span><br><span class="line">    -e &quot;KONG_PG_HOST=kong-database&quot; \</span><br><span class="line">    -e &quot;KONG_CASSANDRA_CONTACT_POINTS=kong-database&quot; \</span><br><span class="line">    kong:latest kong migrations bootstrap</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意两点:</p>
-<p>1.最好是先删除本地的kong镜像.因为本地的Kong:lastest镜像不一定就是最新版</p>
-<p>2.如果本地的kong:latest镜像地域0.15版本,则不支持bootstrap命令.可以将bootstrap命令替换成up</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/Linux-Web/docker安装最新版Kong(v1.0) konga/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/kong postgresql konga/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1334,7 +973,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/Linux-Web/kong casssandra集群环境部署/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1353,7 +992,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/" itemprop="url">k8s挂载NFS网络磁盘</a></h1>
+                <a class="post-title-link" href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/" itemprop="url">kong+casssandra集群环境部署</a></h1>
         
 
         <div class="post-meta">
@@ -1388,8 +1027,19 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">kubernetes</span>
+                  <a href="/categories/Linux-Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Web</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Web/kong/" itemprop="url" rel="index">
+                    <span itemprop="name">kong</span>
                   </a>
                 </span>
 
@@ -1406,8 +1056,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/k8s挂载NFS网络磁盘/" itemprop="commentCount"></span>
+                <a href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/Linux-Web/kong casssandra集群环境部署/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1436,12 +1086,192 @@
 
       
         
-          <h2 id="k8s挂载NFS网络磁盘"><a href="#k8s挂载NFS网络磁盘" class="headerlink" title="k8s挂载NFS网络磁盘"></a>k8s挂载NFS网络磁盘</h2><p>按照<kubernetes in="" action="">这本书NFS做持久化存储的例子,发现了一个坑.,启动pod失败,报如下错误</kubernetes></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown: changing ownership of &apos;/data/db&apos;: Operation not permitted</span><br></pre></td></tr></table></figure>
-<p>网上也有人遇到这个问题.可以参考这篇文档: <a href="https://blog.csdn.net/herhun_chen/article/details/90247123" target="_blank" rel="noopener">Kubernetes 集群挂载NFS Volume</a></p>
+          <h2 id="kong-casssandra集群环境部署"><a href="#kong-casssandra集群环境部署" class="headerlink" title="kong+casssandra集群环境部署"></a>kong+casssandra集群环境部署</h2><h3 id="kong简介"><a href="#kong简介" class="headerlink" title="kong简介"></a>kong简介</h3><p>Kong是Mashape开源的一款API网关，起初是用来管理 Mashape 公司15000个微服务的，后来在2015年开源,现在已经在很多创业公司、大型企业和政府机构中广泛使用。基于nginx,Lua和Cassandra或PostgreSQL，支持分布式操作，有很强的可移植性和可扩展性。可以在任何一种基础设施上运行,作为应用和API之间的中间层，加上众多功能强大的插件，可以实现认证授权、访问控制等功能。并且提供易于使用的RESTful API来操作和配置系统。</p>
+<p>有关kong的详细介绍请参考官网.</p>
+<p>–</p>
+<h3 id="cassandra简介"><a href="#cassandra简介" class="headerlink" title="cassandra简介"></a>cassandra简介</h3><p>Cassandra 是一个来自 Apache 的分布式数据库，具有高度可扩展性，可用于管理大量的结构化数据。它提供了高可用性，没有单点故障。kong支持PostgreSQL或者Cassandra两种数据库.这里我们选择了cassandra.</p>
+<p>有关cassandra的详细介绍和使用方法.请参考官网</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/#more" rel="contents">
+            <a class="btn" href="/2020/06/26/Linux-Web/kong casssandra集群环境部署/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/docker/harbor私有仓库部署/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/docker/harbor私有仓库部署/" itemprop="url">harbor私有仓库部署</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/docker/harbor私有仓库部署/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/docker/harbor私有仓库部署/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="harbor私有仓库部署"><a href="#harbor私有仓库部署" class="headerlink" title="harbor私有仓库部署"></a>harbor私有仓库部署</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>harbor是docker的私有仓库,可以部署在局域网服务器上,用来管理docker镜像.虽然docker官方也提供公共镜像仓库,但是由于是境外网站,拉取镜像速度非常慢,而且有被墙的可能.部署私有仓库非常有必要</p>
+<p>harbor是vmware公司开源的企业级的docker registry管理项目.</p>
+<blockquote>
+<p>处于数据脱敏需要,以下内容中隐藏了真实域名.而使用hub.xxxxxx.com替代</p>
+</blockquote>
+<hr>
+<h3 id="社区"><a href="#社区" class="headerlink" title="社区"></a>社区</h3><p>harbor github: <a href="https://github.com/goharbor/harbor" target="_blank" rel="noopener">goharbor/harbor</a></p>
+<p>官网文档介绍: <a href="https://goharbor.io/docs/1.10/" target="_blank" rel="noopener">harbor doc</a></p>
+<p>在部署中遇到的各种坑,都可以通过查阅文档,或者搜索github的issue解决</p>
+<hr>
+<h3 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h3><p>harbor是docker-compose部署的.包括一系列组件:nginx.core,log,register等等.</p>
+<p>但是由于本机已经存在一个Nginx镜像.所以用Nginx代理到harbor的Nginx.<strong>如果是独立的服务器部署Harbor的话,则不会存在这个问题,可以直接跳过这一章节.</strong></p>
+<p>nginx代理框架大概是:</p>
+<p><strong>nginx—-&gt;harbor-nginx—–&gt;habor</strong></p>
+<p>由于docker提交镜像需要Https协议,所以:</p>
+<p><strong>nginx—301跳转到nginx https—–&gt;harbor-nginx http—-&gt; habor</strong></p>
+<p>但是这样的部署方式,有一个问题:</p>
+<p>私有仓库可以正常login但是push镜像的时候,又提示未验证.</p>
+<p>该问题尝试过很多解决方案,但是均无法解决</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/docker/harbor私有仓库部署/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1776,6 +1606,173 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/06/26/kubernetes/kubernetes Ingress/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes Deployment/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/26/kubernetes/kubernetes Deployment/" itemprop="url">kuberentes Deployment</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/kubernetes/kubernetes Deployment/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes Deployment/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="kuberentes-Deployment"><a href="#kuberentes-Deployment" class="headerlink" title="kuberentes Deployment"></a>kuberentes Deployment</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>之前学习过使用ReplicationController和ReplicaSet实现托管和更新pod容器.<br>客户端通过Service服务访问RC或者RS托管的一组pod.这也是Kubernetes典型的应用程序运行方式</p>
+<p>假设这个时候应用程序需要更新,从v1版本更新到v2,有以下两种方式更新pod镜像:</p>
+<ul>
+<li>直接删除所有现有的pod,然后创建新的pod</li>
+<li>可以先创建新的Pod,并等待他们运行成功后,再删除旧的.</li>
+</ul>
+<p>这2中方法各有优缺点.第一种方法将导致服务在端在时间内不可用.第二种方法要求应用程序同时支持2个版本对外提供服务.</p>
+<p>本文具体介绍kubernetes上述两种更新方式.然后介绍通过手动方式,replicatController的更新方式.最后再引入deployment机制的用法介绍</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/26/kubernetes/kubernetes Deployment/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

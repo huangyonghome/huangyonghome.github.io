@@ -1862,7 +1862,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/letsencrypt证书上传到阿里云SLB/">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jesse">
@@ -1881,7 +1881,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/letsencrypt证书上传到阿里云SLB/" itemprop="url">letsencrypt证书上传到阿里云SLB负载均衡</a></h1>
+                <a class="post-title-link" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="url">letsencrypt配置通配符域名证书</a></h1>
         
 
         <div class="post-meta">
@@ -1945,8 +1945,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/10/15/Linux-Basic/SSL/letsencrypt证书上传到阿里云SLB/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/letsencrypt证书上传到阿里云SLB/" itemprop="commentCount"></span>
+                <a href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1975,12 +1975,12 @@
 
       
         
-          <h2 id="letsencrypt证书上传到阿里云SLB负载均衡"><a href="#letsencrypt证书上传到阿里云SLB负载均衡" class="headerlink" title="letsencrypt证书上传到阿里云SLB负载均衡"></a>letsencrypt证书上传到阿里云SLB负载均衡</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>最近在阿里云开通了一个SLB负载均衡实例,然后把ECS上申请的免费的letsencrypt证书上传到SLB下.</p>
-<p>按照简书上的这个流程: <a href="https://www.jianshu.com/p/b1814f200fef" target="_blank" rel="noopener">letsencrypt证书上传到阿里云SLB</a></p>
-<p>但是出现了一个奇怪的现象.浏览器,PC,IOS等设备Https访问均正常,但是所有的安卓设备微信扫码小程序登陆却提示证书错误:<strong>err:request:fail ssl hand shake error</strong></p>
+          <h2 id="letsencrypt配置通配符域名证书"><a href="#letsencrypt配置通配符域名证书" class="headerlink" title="letsencrypt配置通配符域名证书"></a>letsencrypt配置通配符域名证书</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在今年稍早些的时候,letsencrypt终于开始免费支持通配符域名证书了.但是只支持一个层级的通配主机域名.</p>
+<p>比如我曾经踩过的坑:*.dev.xxx.com通配符域名证书并不能支持api.v3.dev.xxx.com这种三层子域名.</p>
+<p>如果需要为api.v3.dev.xxx.com申请通配符证书,则还需要申请*.v3.dev.xxx.com通配符证书</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/letsencrypt证书上传到阿里云SLB/#more" rel="contents">
+            <a class="btn" href="/2018/10/15/Linux-Basic/SSL/letsencrypt配置通配符域名证书/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

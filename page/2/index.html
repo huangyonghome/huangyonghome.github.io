@@ -621,6 +621,193 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/" itemprop="url">kafka-4.2分区管理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/4-主题和分区/" itemprop="url" rel="index">
+                    <span itemprop="name">4-主题和分区</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="4-2-1-优选副本的选举"><a href="#4-2-1-优选副本的选举" class="headerlink" title="4.2.1 优选副本的选举"></a>4.2.1 优选副本的选举</h3><h4 id="4-2-1-1-什么是优先副本"><a href="#4-2-1-1-什么是优先副本" class="headerlink" title="4.2.1.1 什么是优先副本"></a>4.2.1.1 什么是优先副本</h4><p>分区使用多副本机制来提升可靠性,但是只有leader副本对外提供读写服务.而follower副本只负责在内部进行消息的同步.如果一个分区的leader副本不可用,那么就意味着整个分区变得不可用.此时就需要从剩余的follower副本中挑选一个新的leader副本继续对外提供服务.</p>
+<blockquote>
+<p>broker节点中的Leader副本个数决定了这个节点负载的高低</p>
+</blockquote>
+<p>在创建主题的时候,主题的分区和副本会尽可能的均匀分布在kafka集群的各个broker节点.对应的Leader副本的分配也比较均匀.例如下面的 <code>topic-demo</code> 主题:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-demo</span><br><span class="line">Topic:topic-demo    PartitionCount:4    ReplicationFactor:3 Configs:</span><br><span class="line">    Topic: topic-demo   Partition: 0    Leader: 152 Replicas: 152,153,154   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 1    Leader: 153 Replicas: 153,154,152   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 2    Leader: 154 Replicas: 154,152,153   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 3    Leader: 152 Replicas: 152,154,153   Isr: 152,153,154</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -753,6 +940,189 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/1-概念介绍/1.1 基本概念介绍/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/" itemprop="url">kafka-2.1Kafka副本</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
+                2021-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/kafka/2-副本介绍/" itemprop="url" rel="index">
+                    <span itemprop="name">2-副本介绍</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="2-1-Kafka副本"><a href="#2-1-Kafka副本" class="headerlink" title="2.1  Kafka副本"></a>2.1  Kafka副本</h1><h3 id="副本介绍"><a href="#副本介绍" class="headerlink" title="副本介绍"></a>副本介绍</h3><p>Kafka为分区引入了副本(Replica)机制.通过增加副本数量提升容灾能力.一个Topic主题可以有多个分区,一个分区又可以有多个副本.这多个副本中，只有一个是leader，而其他的都是follower副本。仅有leader副本可以对外提供服务。所以副本之间是一主多从的关系,而且每个副本中保存的相同的消息.(严格来说,同一时刻副本之间的消息并非能一定完全同步)</p>
+<p>多个follower副本通常存放在和leader副本不同的broker中。通过这样的机制实现了高可用，当某台机器挂掉后，其他follower副本也能迅速”转正“，开始对外提供服务。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -990,193 +1360,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/" itemprop="url">kafka-4.2分区管理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
-                2021-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
-                    <span itemprop="name">kafka</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/4-主题和分区/" itemprop="url" rel="index">
-                    <span itemprop="name">4-主题和分区</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="4-2-1-优选副本的选举"><a href="#4-2-1-优选副本的选举" class="headerlink" title="4.2.1 优选副本的选举"></a>4.2.1 优选副本的选举</h3><h4 id="4-2-1-1-什么是优先副本"><a href="#4-2-1-1-什么是优先副本" class="headerlink" title="4.2.1.1 什么是优先副本"></a>4.2.1.1 什么是优先副本</h4><p>分区使用多副本机制来提升可靠性,但是只有leader副本对外提供读写服务.而follower副本只负责在内部进行消息的同步.如果一个分区的leader副本不可用,那么就意味着整个分区变得不可用.此时就需要从剩余的follower副本中挑选一个新的leader副本继续对外提供服务.</p>
-<blockquote>
-<p>broker节点中的Leader副本个数决定了这个节点负载的高低</p>
-</blockquote>
-<p>在创建主题的时候,主题的分区和副本会尽可能的均匀分布在kafka集群的各个broker节点.对应的Leader副本的分配也比较均匀.例如下面的 <code>topic-demo</code> 主题:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@bi-dev152 ~]$ kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-demo</span><br><span class="line">Topic:topic-demo    PartitionCount:4    ReplicationFactor:3 Configs:</span><br><span class="line">    Topic: topic-demo   Partition: 0    Leader: 152 Replicas: 152,153,154   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 1    Leader: 153 Replicas: 153,154,152   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 2    Leader: 154 Replicas: 154,152,153   Isr: 152,153,154</span><br><span class="line">    Topic: topic-demo   Partition: 3    Leader: 152 Replicas: 152,154,153   Isr: 152,153,154</span><br><span class="line">[hadoop@bi-dev152 ~]$</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/4-主题和分区/4.2分区管理/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1307,189 +1490,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/3-消费者/3.1 消费者与消费组/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-   
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jesse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jesse's home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/" itemprop="url">kafka-2.1Kafka副本</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-05T17:59:58+08:00">
-                2021-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux-分布式&消息队列</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/" itemprop="url" rel="index">
-                    <span itemprop="name">kafka</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-分布式-消息队列/kafka/2-副本介绍/" itemprop="url" rel="index">
-                    <span itemprop="name">2-副本介绍</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="2-1-Kafka副本"><a href="#2-1-Kafka副本" class="headerlink" title="2.1  Kafka副本"></a>2.1  Kafka副本</h1><h3 id="副本介绍"><a href="#副本介绍" class="headerlink" title="副本介绍"></a>副本介绍</h3><p>Kafka为分区引入了副本(Replica)机制.通过增加副本数量提升容灾能力.一个Topic主题可以有多个分区,一个分区又可以有多个副本.这多个副本中，只有一个是leader，而其他的都是follower副本。仅有leader副本可以对外提供服务。所以副本之间是一主多从的关系,而且每个副本中保存的相同的消息.(严格来说,同一时刻副本之间的消息并非能一定完全同步)</p>
-<p>多个follower副本通常存放在和leader副本不同的broker中。通过这样的机制实现了高可用，当某台机器挂掉后，其他follower副本也能迅速”转正“，开始对外提供服务。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/01/05/Linux-分布式&消息队列/kafka/2-副本介绍/2.1  Kafka副本/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
