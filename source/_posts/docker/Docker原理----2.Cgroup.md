@@ -9,7 +9,7 @@ copyright: true
 
 
 
-## Docker原理----2.Cgroup
+## Docker原理----Cgroup
 
 ### 介绍
 
@@ -25,7 +25,7 @@ copyright: true
 
 而Linux Cgroups就是Linux内核中用来为进程设置资源限制的一个重要功能
 
-
+<!--more-->
 
 ### Cgroups
 
@@ -35,7 +35,7 @@ copyright: true
 
 从字面上理解，cgroups就是把任务放到一个组里面统一加以控制。本质上来说，cgroups是内核附加在程序上的一系列hook，通过程序运行时对资源的调度触发相应的钩子以达到资源跟踪和限制的目的。在cgroup里，任务(task)就是系统的一个进程或者线程。
 
-<!--more-->
+
 
 ##### cgroups的四大作用：
 
@@ -69,7 +69,15 @@ cgroups以**操作文件的方式**作为API。它的操作目录是`/sys/fs/cgr
 blkio  cpu  cpuacct  cpu,cpuacct  cpuset  devices  freezer  hugetlb  memory  net_cls  net_cls,net_prio  net_prio  perf_event  pids  systemd
 ```
 
-可以看到，在 /sys/fs/cgroup 下面有很多诸如 cpuset、cpu、 memory 这样的子目录，也叫子系统(sub system)。子系统就是资源调度器。比如CPU子系统可以控制CPU的时间分配，memory子系统可以限制内存的使用量.这些都是我这台机器当前可以被 Cgroups 进行限制的资源种类。而在子系统对应的资源种类下，你就可以看到该类资源具体可以被限制的方法。比如，对 CPU 子系统来说，我们就可以看到如下几个配置文件，这个指令是：
+可以看到，在 /sys/fs/cgroup 下面有很多诸如 cpuset、cpu、 memory 这样的子目录，也叫子系统(sub system)。子系统就是资源调度器。比如CPU子系统可以控制CPU的时间分配，memory子系统可以限制内存的使用量.这些都是我这台机器当前可以被 Cgroups 进行限制的资源种类。而在子系统对应的资源种类下，你就可以看到该类资源具体可以被限制的方法。
+
+---
+
+### Cgroup对CPU资源限制
+
+
+
+对 CPU 子系统来说，我们就可以看到如下几个配置文件，这个指令是：
 
 ```
 ls /sys/fs/cgroup/cpu
@@ -184,6 +192,150 @@ c992cf3cc50c8f1e32780aed17058d4dcaf91048b2b5fbf0a5134078a983e95b
 ```
 
 这就意味着这个 Docker 容器，只能使用到 20% 的 CPU 带宽。
+
+---
+
+### Cgroup对内存限制
+
+内存资源和CPU不同,CPU属于可压缩资源.当进程触发CPU限制阈值时,进程仍然可以正常运行,只是进程能使用的CPU分片时间受到限制.然而内存属于不可压缩资源,当进程触发内存资源阈值时,进程会立刻被杀死,也就是触发OOM事件.
+
+下面用python的递归模拟一个内存占用的程序
+
+```
+import time
+import sys
+sys.setrecursionlimit(30000)
+
+class Recursion:
+
+    def __init__(self):
+        self.level = 0
+
+    def rec(self):
+        self.level += 1
+        if self.level > 1000:
+            time.sleep(1)
+        self.rec()
+
+
+Recursion().rec()
+```
+
+在` /sys/fs/cgroup/memory/` 目录下创建一个测试文件夹
+
+```
+[root@docker-dev ~]# cd /sys/fs/cgroup/memory/
+[root@docker-dev memory]# mkdir mem_test
+```
+
+在该目录下,限制内存阈值,这里设置为10K
+
+```
+[root@docker-dev ~]# cd /sys/fs/cgroup/memory/mem_test/
+[root@docker-dev mem_test]# echo 10k > memory.limit_in_bytes
+[root@docker-dev mem_test]# cat memory.limit_in_bytes
+8192
+```
+
+运行python程序,同时开启另一个shell终端,获取该进程的PID
+
+```
+[root@docker-dev ~]# python3 mem.py
+
+[root@docker-dev mem_test]# ps aux | grep python3
+root     22958  0.0  0.0 125908  6468 pts/1    S+   17:58   0:00 python3 mem.py
+```
+
+将22958这个PID写入到`mem_test`目录下的tasks文件内
+
+```
+[root@docker-dev mem_test]# echo 22958 > tasks
+```
+
+此时.python3的进程会被杀死,出现OOM现象
+
+```
+[root@docker-dev mem_test]# less /var/log/messages | grep oom
+May  9 18:00:28 docker-dev kernel: python3 invoked oom-killer: gfp_mask=0xd0, order=0, oom_score_adj=0
+May  9 18:00:28 docker-dev kernel: [<ffffffff9f5c24ce>] oom_kill_process+0x25e/0x3f0
+May  9 18:00:28 docker-dev kernel: [<ffffffff9f640c06>] mem_cgroup_oom_synchronize+0x546/0x570
+```
+
+---
+
+### docker cgroup
+
+通过上面2个小例子,我们演示了cgroup对本机进程的资源限制效果.docker在启动容器时也允许我们对该容器的CPU和内存进行一些资源限制.但是其资源限制的本质也同样是利用cgroup的功能.下面我们运行一个容器.该容器运行一个上文中的while死循环,但是这次我们对容器的CPU资源进行限制.
+
+```
+[root@docker-dev mem_test]# docker run -d --name c2 --cpu-period=100000 --cpu-quota=20000  hub.doweidu.com/base/centos-demo:7 bash -c "while : ; do : ; done"
+7b1cb8734d905dd25eb1cdcf4cb63ebf8c7e6182d90639db4ad15bc99ba19f63
+[root@docker-dev mem_test]#
+
+```
+
+通过top命令,我们可以看到容器的CPU限制已经生效了.cpu3被限制在20%的使用率之内
+
+```
+top - 20:53:50 up 31 days, 10:09,  2 users,  load average: 0.00, 0.01, 0.05
+Tasks: 161 total,   3 running, 158 sleeping,   0 stopped,   0 zombie
+%Cpu0  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+%Cpu1  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+%Cpu2  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+%Cpu3  : 19.3 us,  0.0 sy,  0.0 ni, 80.7 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+%Cpu4  :  1.7 us,  0.0 sy,  0.0 ni, 98.3 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+%Cpu5  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+%Cpu6  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+%Cpu7  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 16265540 total, 13309868 free,   783868 used,  2171804 buff/cache
+KiB Swap:  4194300 total,  4193012 free,     1288 used. 14757664 avail Mem
+
+```
+
+在`/sys/fs/cgroup/cpu/docker` 目录下.可以看到新生成了一个目录` 7b1cb8734d905dd25eb1cdcf4cb63ebf8c7e6182d90639db4ad15bc99ba19f63` .其实这就是我们上一步中刚启动的容器的ID.
+
+```
+[root@docker-dev docker]# ll
+total 0
+drwxr-xr-x 2 root root 0 May  9 20:53 7b1cb8734d905dd25eb1cdcf4cb63ebf8c7e6182d90639db4ad15bc99ba19f63
+-rw-r--r-- 1 root root 0 Apr  8 11:04 cgroup.clone_children
+--w--w--w- 1 root root 0 Apr  8 11:04 cgroup.event_control
+-rw-r--r-- 1 root root 0 Apr  8 11:04 cgroup.procs
+-r--r--r-- 1 root root 0 Apr  8 11:04 cpuacct.stat
+-rw-r--r-- 1 root root 0 Apr  8 11:04 cpuacct.usage
+-r--r--r-- 1 root root 0 Apr  8 11:04 cpuacct.usage_percpu
+-rw-r--r-- 1 root root 0 Apr  8 11:04 cpu.cfs_period_us
+-rw-r--r-- 1 root root 0 Apr  8 11:04 cpu.cfs_quota_us
+-rw-r--r-- 1 root root 0 Apr  8 11:04 cpu.rt_period_us
+-rw-r--r-- 1 root root 0 Apr  8 11:04 cpu.rt_runtime_us
+-rw-r--r-- 1 root root 0 Apr  8 11:04 cpu.shares
+-r--r--r-- 1 root root 0 Apr  8 11:04 cpu.stat
+-rw-r--r-- 1 root root 0 Apr  8 11:04 notify_on_release
+-rw-r--r-- 1 root root 0 Apr  8 11:04 tasks
+```
+
+进入该容器ID的目录内.可以看到`cpu.cfs_quota_us`文件已经设置了限额20000us.
+
+```
+[root@docker-dev docker]# cd 7b1cb8734d905dd25eb1cdcf4cb63ebf8c7e6182d90639db4ad15bc99ba19f63
+
+[root@docker-dev 7b1cb8734d905dd25eb1cdcf4cb63ebf8c7e6182d90639db4ad15bc99ba19f63]# cat cpu.cfs_quota_us
+20000
+```
+
+查看该容器的Pid以及tasks可以看到.docker自动将容器的进程Pid写入到了tasks文件中.
+
+```
+[root@docker-dev 7b1cb8734d905dd25eb1cdcf4cb63ebf8c7e6182d90639db4ad15bc99ba19f63]# docker inspect c2 -f {{.State.Pid}}
+23209
+
+[root@docker-dev 7b1cb8734d905dd25eb1cdcf4cb63ebf8c7e6182d90639db4ad15bc99ba19f63]# cat tasks
+23209
+[root@docker-dev 7b1cb8734d905dd25eb1cdcf4cb63ebf8c7e6182d90639db4ad15bc99ba19f63]#
+
+```
+
+通过上面的例子中可以看到,docker使用cgroup解决了多个容器之前的资源竞争和互相干扰的问题.
 
 
 

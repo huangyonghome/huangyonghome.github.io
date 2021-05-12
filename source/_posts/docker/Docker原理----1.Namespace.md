@@ -9,15 +9,13 @@ copyright: true
 
 
 
-## Docker原理----1.Namespace
+## Docker原理----Namespace
 
 ### 介绍
 
 容器其实是一种沙盒技术,顾名思义,沙盒就像是一个集装箱一样,把你的应用"装"起来.这样应用和应用之间就因为有了边界而不至于互相干扰.而被装进集装箱的应用,也可以被方便的搬来搬去.
 
 容器的核心功能就是通过约束和修改进程的动态表现,从而为其创造出一个"边界".对于Docker以及大多数的Linux容器来说.`cgroup` 是用来约束的手段,而`Namespace`则是用来修改进程视图的主要方法
-
-
 
 ### Namespace
 
@@ -74,6 +72,154 @@ root      1571  0.0  0.3 1632744 53924 ?       Ssl  Feb01  36:04 /usr/bin/contai
 从上面的例子中可以看到Docker容器内的主进程其实是直接运行在Docker宿主机上的.他在宿主机上是个普通的进程,Docker对这个进程实施了一个"障眼法",让他看不到其他的所有进程.让该进程误认为自己是第一个启动的PID为1的进程.
 
 这种技术就是Linux里面的`Namespace`机制.
+
+
+
+### docker exec
+
+我们知道通过`docker exec`命令可以进入一个容器的内部.在了解了 Linux Namespace 的隔离机制后，你应该会很自然地想到一个问题：docker exec 是怎么做到进入容器里的呢？
+
+实际上，Linux Namespace 创建的隔离空间虽然看不见摸不着，但一个进程的 Namespace 信息在宿主机上是确确实实存在的，并且是以一个文件的方式存在。
+
+该命令的原理其实就是获取当前容器进程的PID,以及namespace文件.然后加入该namespace.这样通过共享同一个namespace.从而获取容器内部的信息.
+
+下面通过一个示例演示如何进入一个容器内部
+
+* 启动一个临时容器
+
+```
+docker run -d --name c1 centos-demo sleep 999
+```
+
+* 查看容器进程的PID
+
+```
+[root@docker-dev ~]# docker inspect c1 -f {{.State.Pid}}
+22733
+```
+
+* 查看该进程的namespace
+
+```
+[root@docker-dev ~]# ll /proc/22733/ns
+total 0
+lrwxrwxrwx 1 root root 0 May  9 17:15 ipc -> ipc:[4026532170]
+lrwxrwxrwx 1 root root 0 May  9 17:15 mnt -> mnt:[4026532168]
+lrwxrwxrwx 1 root root 0 May  9 17:14 net -> net:[4026532173]
+lrwxrwxrwx 1 root root 0 May  9 17:15 pid -> pid:[4026532171]
+lrwxrwxrwx 1 root root 0 May  9 17:15 user -> user:[4026531837]
+lrwxrwxrwx 1 root root 0 May  9 17:15 uts -> uts:[4026532169]
+```
+
+可以看到，一个进程的每种 Linux Namespace，都在它对应的 /proc/[进程号]/ns 下有一个对应的虚拟文件，并且链接到一个真实的 Namespace 文件上。
+
+有了这样一个可以“hold 住”所有 Linux Namespace 的文件，我们就可以对 Namespace 做一些很有意义事情了，比如：加入到一个已经存在的 Namespace 当中。
+
+**这也就意味着：一个进程，可以选择加入到某个进程已有的 Namespace 当中，从而达到“进入”这个进程所在容器的目的，这正是 docker exec 的实现原理。**
+
+而这个操作所依赖的，乃是一个名叫 setns() 的 Linux 系统调用。它的调用方法，我可以用如下一段小程序为你说明：
+
+```
+#define _GNU_SOURCE
+#include <fcntl.h>
+#include <sched.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+ 
+#define errExit(msg) do { perror(msg); exit(EXIT_FAILURE);} while (0)
+ 
+int main(int argc, char *argv[]) {
+    int fd;
+    
+    fd = open(argv[1], O_RDONLY);
+    if (setns(fd, 0) == -1) {
+        errExit("setns");
+    }
+    execvp(argv[2], &argv[2]); 
+    errExit("execvp");
+}
+```
+
+这段代码功能非常简单：它一共接收两个参数，第一个参数是 argv[1]，即当前进程要加入的 Namespace 文件的路径，比如 /proc/22733/ns/net；而第二个参数，则是你要在这个 Namespace 里运行的进程，比如 /bin/bash。
+
+这段代码的的核心操作，则是通过 open() 系统调用打开了指定的 Namespace 文件，并把这个文件的描述符 fd 交给 setns() 使用。在 setns() 执行后，当前进程就加入了这个文件对应的 Linux Namespace 当中了。
+
+现在，你可以编译执行一下这个程序，加入到容器进程（PID=22733）的net也就是 Network Namespace 中：
+
+```
+[root@docker-dev ~]#gcc -o set_ns set_ns.c 
+[root@docker-dev ~]#./set_ns /proc/22733/ns/net /bin/bash 
+$ ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:02  
+          inet addr:172.17.0.2  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:acff:fe11:2/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:12 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:10 errors:0 dropped:0 overruns:0 carrier:0
+	   collisions:0 txqueuelen:0 
+          RX bytes:976 (976.0 B)  TX bytes:796 (796.0 B)
+ 
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+	  collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+```
+
+正如上所示，当我们执行 ifconfig 命令查看网络设备时，我会发现能看到的网卡“变少”了：只有两个。而我的宿主机则至少有四个网卡。这是怎么回事呢？
+
+实际上，在 setns() 之后我看到的这两个网卡，正是我在前面启动的 Docker 容器里的网卡。也就是说，我新创建的这个 /bin/bash 进程，由于加入了该容器进程（PID=22733）的 Network Namepace，它看到的网络设备与这个容器里是一样的，即：/bin/bash 进程的网络设备视图，也被修改了。
+
+而一旦一个进程加入到了另一个 Namespace 当中，在宿主机的 Namespace 文件上，也会有所体现。
+
+在宿主机上，你可以用 ps 指令找到这个 set_ns 程序执行的 /bin/bash 进程，其真实的 PID 是 22821：
+
+```
+[work@docker-dev ~]$ ps aux | grep "/bin/bash"
+root     22821  0.0  0.0 115676  2084 pts/0    S+   17:20   0:00 /bin/bash
+```
+
+这时，如果按照前面介绍过的方法，查看一下这个 PID=22733的进程的 Namespace，你就会发现这样一个事实：
+
+```
+root@docker-dev ~]# ll /proc/22733/ns/net
+lrwxrwxrwx 1 root root 0 May  9 17:14 /proc/22733/ns/net -> net:[4026532173]
+[root@docker-dev ~]# ll /proc/22821/ns/net
+lrwxrwxrwx 1 root root 0 May  9 17:25 /proc/22821/ns/net -> net:[4026532173]
+```
+
+在 /proc/[PID]/ns/net 目录下，这个 PID=22821进程，与我们前面的 Docker 容器进程（PID=22733）指向的 Network Namespace 文件完全一样。这说明这两个进程，共享了这个名叫 net:[4026532173] 的 Network Namespace。
+
+刚才我们演示了共享了net这个网络名称空间,同样的道理,还可以共享其他名称空间.比如:
+
+```
+[root@docker-dev ~]#  ./set_ns /proc/22733/ns/mnt /bin/bash
+[root@docker-dev /]# ls ~
+anaconda-ks.cfg
+[root@docker-dev /]# exit
+exit
+[root@docker-dev ~]# ls
+1.txt            centos          hsq-openapi-php              memory.limit_in_bytez~  ns.c            set_ns    tradecenter-nginx-php-fpm  zookeeper-3.4.13.tar.gz
+2.txt            cert            jdk-8u281-linux-i586.tar.gz  mem.py                  php             set_ns.c  virtual_root
+A                D               jenkins-fpm.txt              nginx                   php-fpm         tasks~    worker
+anaconda-ks.cfg  Dockerfile      jenkins-php-rpc.txt          nginx-php               php-rpc         tasky~    www.conf
+B                Dockerfile.bak  jenkins-slave                nginx-php-rpc           php-rpc:7.1.33  taskz~    yar-2.0.5.tgz
+C                fpm.txt         memory.limit_in_bytes~       ns                      php-rpc.txt     test      zookeeper-0.6.4.tgz
+
+
+```
+
+当进入容器进程的mnt名称空间后,进程视图切换到了`/`根目录下,并且`root`家目录的内容也发生了变化.
+
+以上就是`docker exec`命令背后的详细原理.
+
+---
+
+
 
 
 
