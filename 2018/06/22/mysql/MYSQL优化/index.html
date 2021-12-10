@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mysql," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="MYSQL优化以下的实验都是使用mysql的案例库:sakila.这是mysql官方提供的模拟电影出租厅信息管理系统数据库.类似oracle的scott库.可以去网上下载.   优化步骤step1:通过show status命令了解各种SQL的执行频率  语法: 1show [session|global] status .如果不指定,默认为session 例如下面的命令显示了当前session中">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MYSQL优化">
+<meta property="og:url" content="https://jesse.top/2018/06/22/mysql/MYSQL优化/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="MYSQL优化以下的实验都是使用mysql的案例库:sakila.这是mysql官方提供的模拟电影出租厅信息管理系统数据库.类似oracle的scott库.可以去网上下载.   优化步骤step1:通过show status命令了解各种SQL的执行频率  语法: 1show [session|global] status .如果不指定,默认为session 例如下面的命令显示了当前session中">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-01T14:27:37.296Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MYSQL优化">
+<meta name="twitter:description" content="MYSQL优化以下的实验都是使用mysql的案例库:sakila.这是mysql官方提供的模拟电影出租厅信息管理系统数据库.类似oracle的scott库.可以去网上下载.   优化步骤step1:通过show status命令了解各种SQL的执行频率  语法: 1show [session|global] status .如果不指定,默认为session 例如下面的命令显示了当前session中">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2018/06/22/mysql/MYSQL优化/"/>
+
+
+
+
+
+  <title>MYSQL优化 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/22/mysql/MYSQL优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MYSQL优化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-22T22:59:58+08:00">
+                2018-06-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/mysql-basic/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql-basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/22/mysql/MYSQL优化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/22/mysql/MYSQL优化/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="MYSQL优化"><a href="#MYSQL优化" class="headerlink" title="MYSQL优化"></a>MYSQL优化</h2><p>以下的实验都是使用mysql的案例库:sakila.这是mysql官方提供的模拟电影出租厅信息管理系统数据库.类似oracle的scott库.可以去网上下载. </p>
+<hr>
+<h3 id="优化步骤"><a href="#优化步骤" class="headerlink" title="优化步骤"></a>优化步骤</h3><p>step1:通过show status命令了解各种SQL的执行频率 </p>
+<p>语法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show [session|global] status .如果不指定,默认为session</span><br></pre></td></tr></table></figure>
+<p>例如下面的命令显示了当前session中所有统计参数的值: </p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show session status like &apos;Com_%&apos;;</span><br><span class="line">+---------------------------+-------+</span><br><span class="line">| Variable_name             | Value |</span><br><span class="line">+---------------------------+-------+</span><br><span class="line">| Com_admin_commands        | 0     |</span><br><span class="line">| Com_assign_to_keycache    | 0     |</span><br><span class="line">| Com_alter_db              | 0     |</span><br><span class="line">| Com_alter_db_upgrade      | 0     |</span><br><span class="line">| Com_alter_event           | 0     |</span><br><span class="line">| Com_alter_function        | 0     |</span><br><span class="line">| Com_alter_procedure       | 0     |</span><br><span class="line">| Com_alter_server          | 0     |</span><br><span class="line">| Com_alter_table           | 0     |</span><br><span class="line">| Com_alter_tablespace      | 0     |</span><br><span class="line">| Com_alter_user            | 0     |</span><br><span class="line">| Com_analyze               | 0     |</span><br><span class="line">| Com_begin                 | 0     |</span><br></pre></td></tr></table></figure>
+<p>统计信息很长,没截图完整. 以下是对部分命令的解释</p>
+<p>Com_xxx 表示每个xxx语句执行的次数.通常比较重要的参数有:</p>
+<p>Com_select: 执行select操作的次数,一次查询加1</p>
+<p>Com_insert:执行insert操作的次数,对于批量插入的Insert操作,只累计一次</p>
+<p>Com_update:</p>
+<p>Com_delete:</p>
+<blockquote>
+<p>通过上面这些不同类型的DML语句,可以看到数据库主要的操作类型是什么 </p>
+</blockquote>
+<p>此外,show status还有其他参数可以帮助了解数据库 例如: </p>
+<ul>
+<li>Connections:试图连接MYSQL服务器的次数 :</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show status like &apos;Connections&apos;;</span><br><span class="line">+---------------+-------+</span><br><span class="line">| Variable_name | Value |</span><br><span class="line">+---------------+-------+</span><br><span class="line">| Connections   | 9     |</span><br><span class="line">+---------------+-------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Slow_queries:慢查询次数 </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">mysql&gt; show status like &apos;slow_que%&apos;;</span><br><span class="line">+---------------+-------+</span><br><span class="line">| Variable_name | Value |</span><br><span class="line">+---------------+-------+</span><br><span class="line">| Slow_queries  | 0     |</span><br><span class="line">+---------------+-------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Uptime:服务器工作时间 </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show status like &apos;Uptime&apos;;</span><br><span class="line">+---------------+-------+</span><br><span class="line">| Variable_name | Value |</span><br><span class="line">+---------------+-------+</span><br><span class="line">| Uptime        | 57912 |</span><br><span class="line">+---------------+-------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>更多相关信息,请参考 show status命令.在数据库服务器操作系统上也可以使用mysqladmin extended-status 命令来获得这些信息 </p>
+</blockquote>
+<hr>
+<h4 id="step2-定位低效的SQL语句"><a href="#step2-定位低效的SQL语句" class="headerlink" title="step2:定位低效的SQL语句"></a>step2:定位低效的SQL语句</h4><p>有2种方式定位低效SQL语句.</p>
+<ul>
+<li>通过慢查询日志定位那些执行效率较低的SQL语句.在配置文件定义long_query_time.这个参数表示大于几秒的语句被认为是执行效率低. </li>
+<li>–log-slow-queries 这个参数的值为一个日志文件的路径,表示将低效SQL语句写入哪个慢日志文件.</li>
+</ul>
+<p>​     </p>
+<p>可以将以上2个配置文件,写入my.conf的配置文件中.例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line"></span><br><span class="line">log=&quot;/var/lib/mysql/slow.log&quot; </span><br><span class="line">slow_query_log = ON</span><br><span class="line">log_slow_queries=&quot;/var/lib/mysql/mysql_slow.log&quot; </span><br><span class="line">long_query_time=2</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>慢查询日志在查询结束后才记,默认的long_query_time时间为10S,</p>
+</blockquote>
+<p><strong>使用show processlist命令可以查看当前mysql在进行的线程,线程状态,锁表等</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show processlist;</span><br><span class="line">+----+------+-----------+--------+---------+------+-------+------------------+</span><br><span class="line">| Id | User | Host      | db     | Command | Time | State | Info             |</span><br><span class="line">+----+------+-----------+--------+---------+------+-------+------------------+</span><br><span class="line">|  4 | root | localhost | mytest | Sleep   | 1140 |       | NULL             |</span><br><span class="line">|  8 | root | localhost | NULL   | Query   |    0 | init  | show processlist |</span><br><span class="line">+----+------+-----------+--------+---------+------+-------+------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>SHOW PROCESSLIST显示哪些线程正在运行。您也可以使用mysqladmin processlist语句得到此信息。</p>
+<p><strong>各列的含义和用途：</strong></p>
+<p><strong>ID列</strong></p>
+<p>一个标识，你要kill一个语句的时候很有用，用命令杀掉此查询 /*/mysqladmin kill 进程号。</p>
+<p><strong>user列</strong></p>
+<p>显示单前用户，如果不是root，这个命令就只显示你权限范围内的sql语句。</p>
+<p><strong>host列</strong></p>
+<p>显示这个语句是从哪个ip的哪个端口上发出的。用于追踪出问题语句的用户。</p>
+<p><strong>db列</strong></p>
+<p>显示这个进程目前连接的是哪个数据库。</p>
+<p><strong>command列</strong></p>
+<p>显示当前连接的执行的命令，一般就是休眠（sleep），查询（query），连接（connect）。</p>
+<p><strong>time列</strong></p>
+<p>此这个状态持续的时间，单位是秒。</p>
+<p><strong>state列</strong></p>
+<p>显示使用当前连接的sql语句的状态，很重要的列，后续会有所有的状态的描述，请注意，state只是语句执行中的某一个状态，一个 sql语句，以查询为例，可能需要经过copying to tmp table，Sorting result，Sending data等状态才可以完成</p>
+<p><strong>info列</strong></p>
+<p>显示这个sql语句，因为长度有限，所以长的sql语句就显示不全，但是一个判断问题语句的重要依据。</p>
+<h5 id="这个命令中最关键的就是state列，mysql列出的状态主要有以下几种："><a href="#这个命令中最关键的就是state列，mysql列出的状态主要有以下几种：" class="headerlink" title="这个命令中最关键的就是state列，mysql列出的状态主要有以下几种："></a>这个命令中最关键的就是state列，mysql列出的状态主要有以下几种：</h5><ul>
+<li>Checking table</li>
+</ul>
+<p>　正在检查数据表（这是自动的）。</p>
+<ul>
+<li>Closing tables</li>
+</ul>
+<p>　正在将表中修改的数据刷新到磁盘中，同时正在关闭已经用完的表。这是一个很快的操作，如果不是这样的话，就应该确认磁盘空间是否已经满了或者磁盘是否正处于重负中。</p>
+<ul>
+<li>Connect Out</li>
+</ul>
+<p>　复制从服务器正在连接主服务器。</p>
+<ul>
+<li>Copying to tmp table on disk</li>
+</ul>
+<p>　由于临时结果集大于tmp_table_size，正在将临时表从内存存储转为磁盘存储以此节省内存。</p>
+<ul>
+<li>Creating tmp table</li>
+</ul>
+<p>　正在创建临时表以存放部分查询结果。</p>
+<ul>
+<li>deleting from main table</li>
+</ul>
+<p>　服务器正在执行多表删除中的第一部分，刚删除第一个表。</p>
+<ul>
+<li>deleting from reference tables</li>
+</ul>
+<p>　服务器正在执行多表删除中的第二部分，正在删除其他表的记录。</p>
+<ul>
+<li>Flushing tables</li>
+</ul>
+<p>　正在执行FLUSH TABLES，等待其他线程关闭数据表。</p>
+<ul>
+<li>Killed</li>
+</ul>
+<p>　发送了一个kill请求给某线程，那么这个线程将会检查kill标志位，同时会放弃下一个kill请求。MySQL会在每次的主循环中检查kill标志位，不过有些情况下该线程可能会过一小段才能死掉。如果该线程程被其他线程锁住了，那么kill请求会在锁释放时马上生效。</p>
+<ul>
+<li>Locked</li>
+</ul>
+<p>　被其他查询锁住了。</p>
+<ul>
+<li>Sending data</li>
+</ul>
+<p>　正在处理SELECT查询的记录，同时正在把结果发送给客户端。</p>
+<ul>
+<li>Sorting for group</li>
+</ul>
+<p>　正在为GROUP BY做排序。</p>
+<p>　-Sorting for order</p>
+<p>　正在为ORDER BY做排序。</p>
+<ul>
+<li>Opening tables</li>
+</ul>
+<p>　这个过程应该会很快，除非受到其他因素的干扰。例如，在执ALTER TABLE或LOCK TABLE语句行完以前，数据表无法被其他线程打开。正尝试打开一个表。</p>
+<ul>
+<li>Removing duplicates</li>
+</ul>
+<p>　正在执行一个SELECT DISTINCT方式的查询，但是MySQL无法在前一个阶段优化掉那些重复的记录。因此，MySQL需要再次去掉重复的记录，然后再把结果发送给客户端。</p>
+<ul>
+<li>Reopen table</li>
+</ul>
+<p>　获得了对一个表的锁，但是必须在表结构修改之后才能获得这个锁。已经释放锁，关闭数据表，正尝试重新打开数据表。</p>
+<ul>
+<li>Repair by sorting</li>
+</ul>
+<p>　修复指令正在排序以创建索引。</p>
+<ul>
+<li>Repair with keycache</li>
+</ul>
+<p>　修复指令正在利用索引缓存一个一个地创建新索引。它会比Repair by sorting慢些。</p>
+<ul>
+<li>Searching rows for update</li>
+</ul>
+<p>　正在讲符合条件的记录找出来以备更新。它必须在UPDATE要修改相关的记录之前就完成了。</p>
+<ul>
+<li>Sleeping</li>
+</ul>
+<p>　正在等待客户端发送新请求.</p>
+<ul>
+<li>System lock</li>
+</ul>
+<p>　正在等待取得一个外部的系统锁。如果当前没有运行多个mysqld服务器同时请求同一个表，那么可以通过增加–skip-external-locking参数来禁止外部系统锁。</p>
+<ul>
+<li>Upgrading lock</li>
+</ul>
+<p>　INSERT DELAYED正在尝试取得一个锁表以插入新记录。</p>
+<ul>
+<li>Updating</li>
+</ul>
+<p>　正在搜索匹配的记录，并且修改它们。</p>
+<ul>
+<li>User Lock</li>
+</ul>
+<p>　正在等待GET_LOCK()。</p>
+<ul>
+<li>Waiting for tables</li>
+</ul>
+<p>　该线程得到通知，数据表结构已经被修改了，需要重新打开数据表以取得新的结构。然后，为了能的重新打开数据表，必须等到所有其他线程关闭这个表。以下几种情况下会产生这个通知：</p>
+<ul>
+<li>FLUSH TABLES tbl_name,</li>
+<li>ALTER TABLE, RENAME TABLE, REPAIR TABLE, ANALYZE TABLE,</li>
+<li>OPTIMIZE TABLE。</li>
+<li>waiting for handler insert</li>
+</ul>
+<p>　INSERT DELAYED已经处理完了所有待处理的插入操作，正在等待新的请求。</p>
+<blockquote>
+<p> 大部分状态对应很快的操作，只要有一个线程保持同一个状态好几秒钟，那么可能是有问题发生了，需要检查一下。还有其他的状态没在上面中列出来，不过它们大部分只是在查看服务器是否有存在错误是才用得着。</p>
+</blockquote>
+<hr>
+<h4 id="step3-找到低效sql语句后-通过EXPLAIN命令分析SQL语句执行状态"><a href="#step3-找到低效sql语句后-通过EXPLAIN命令分析SQL语句执行状态" class="headerlink" title="step3 找到低效sql语句后.通过EXPLAIN命令分析SQL语句执行状态"></a>step3 找到低效sql语句后.通过EXPLAIN命令分析SQL语句执行状态</h4><p>用法:</p>
+<p>直接在select语句钱加explain命令即可. </p>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;explain select sum(amount) from customer a,payment b where 1=1 and a.customer_id=b.customer_id and email=&apos;Jane.BENNETT@sakilacustomer.org&apos;\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: a</span><br><span class="line">         type: ALL</span><br><span class="line">possible_keys: PRIMARY</span><br><span class="line">          key: NULL</span><br><span class="line">      key_len: NULL</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 599</span><br><span class="line">        Extra: Using where</span><br><span class="line">*************************** 2. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: b</span><br><span class="line">         type: ref</span><br><span class="line">possible_keys: idx_fk_customer_id</span><br><span class="line">          key: idx_fk_customer_id</span><br><span class="line">      key_len: 2</span><br><span class="line">          ref: sakila.a.customer_id</span><br><span class="line">         rows: 13</span><br><span class="line">        Extra: NULL</span><br><span class="line">2 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>语法解析:</p>
+<p><strong>1.select_type</strong>: 表示select的类型.常见的有</p>
+<ul>
+<li>SIMPLE(简单表,不使用表连接或者子查询).</li>
+<li>PRIMARY(主查询,即外层的查询)</li>
+<li>UNION</li>
+<li>SUBQUERY(子查询的第一个select)</li>
+</ul>
+<p><strong>2.table:</strong>输出结果集的表</p>
+<p>3.type:表示mysql在表中找到所需行的方式,或者叫访问类型,性能由最差到最好依次排列如下:</p>
+<ul>
+<li>ALL—-全表扫描</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from film where rating&gt;9\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: film</span><br><span class="line">         type: ALL</span><br><span class="line">possible_keys: NULL</span><br><span class="line">          key: NULL</span><br><span class="line">      key_len: NULL</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 1000</span><br><span class="line">        Extra: Using where</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>index—–索引全扫描.MYSQL遍历整个索引查询匹配的行</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select title from film\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: film</span><br><span class="line">         type: index</span><br><span class="line">possible_keys: NULL</span><br><span class="line">          key: idx_title</span><br><span class="line">      key_len: 767</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 1000</span><br><span class="line">        Extra: Using index</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>range——索引范围扫描..常见于&lt;,&lt;=,&gt;,&gt;=等运算符操作</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from payment where customer_id&gt;=300 and customer_id&lt;=350\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: payment</span><br><span class="line">         type: range</span><br><span class="line">possible_keys: idx_fk_customer_id</span><br><span class="line">          key: idx_fk_customer_id</span><br><span class="line">      key_len: 2</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 1349</span><br><span class="line">        Extra: Using index condition</span><br><span class="line">1 row in set (0.06 sec)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>ref—–使用非唯一索引扫描或者唯一索引的前缀扫描.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from payment where customer_id=350\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: payment</span><br><span class="line">         type: ref</span><br><span class="line">possible_keys: idx_fk_customer_id</span><br><span class="line">          key: idx_fk_customer_id</span><br><span class="line">      key_len: 2</span><br><span class="line">          ref: const</span><br><span class="line">         rows: 23</span><br><span class="line">        Extra: NULL</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>idx_fk_customer_id——-非唯一索引,见上面的例子</p>
+</li>
+<li><p>eq_ref—–类似于ref.区别在于使用的索引是唯一索引.对于每个索引键值,表中只有一条记录匹配.简单来说,就是多表连接中使用primary key或者unique index作为关联条件</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from film a,film_text b where a.film_id=b.film_id\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: a</span><br><span class="line">         type: ALL</span><br><span class="line">possible_keys: PRIMARY</span><br><span class="line">          key: NULL</span><br><span class="line">      key_len: NULL</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 1000</span><br><span class="line">        Extra: NULL</span><br><span class="line">*************************** 2. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: b</span><br><span class="line">         type: eq_ref</span><br><span class="line">possible_keys: PRIMARY</span><br><span class="line">          key: PRIMARY</span><br><span class="line">      key_len: 2</span><br><span class="line">          ref: sakila.a.film_id</span><br><span class="line">         rows: 1</span><br><span class="line">        Extra: Using index condition</span><br><span class="line">2 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>const/system——单表中最多只有一个匹配行,查询非常迅速.例如根据主键primary key 或者 唯一索引 unique index进行查询</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from (select * from customer where email=&apos;AARON.SELBY@sakilacustomer.org&apos;)a\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: PRIMARY</span><br><span class="line">        table: &lt;derived2&gt;</span><br><span class="line">         type: ALL</span><br><span class="line">possible_keys: NULL</span><br><span class="line">          key: NULL</span><br><span class="line">      key_len: NULL</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 599</span><br><span class="line">        Extra: NULL</span><br><span class="line">*************************** 2. row ***************************</span><br><span class="line">           id: 2</span><br><span class="line">  select_type: DERIVED</span><br><span class="line">        table: customer</span><br><span class="line">         type: ALL</span><br><span class="line">possible_keys: NULL</span><br><span class="line">          key: NULL</span><br><span class="line">      key_len: NULL</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 599</span><br><span class="line">        Extra: Using where</span><br><span class="line">2 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>NULL—-不用访问表或者索引,直接就能得到结果</li>
+</ul>
+<p><strong>4.possible_keys:</strong>表示查询时可能使用的索引</p>
+<p><strong>5.key:</strong>表示实际使用的索引</p>
+<p><strong>6.key_len</strong>:使用到索引字段的长度</p>
+<p><strong>7.rows:</strong>扫描行的数量</p>
+<p><strong>8.extra:</strong>执行情况的说明和描述</p>
+<p>通过explain extended 加上 show warnings可以看到SQL被执行前做了哪些SQL改写: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain extended  select sum(amount) from customer a,payment b where 1=1 and a.customer_id=b.customer_id and email=&apos;Jane.BENNETT@sakilacustomer.org&apos;\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: a</span><br><span class="line">         type: ALL</span><br><span class="line">possible_keys: PRIMARY</span><br><span class="line">          key: NULL</span><br><span class="line">      key_len: NULL</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 599</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: Using where</span><br><span class="line">*************************** 2. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: b</span><br><span class="line">         type: ref</span><br><span class="line">possible_keys: idx_fk_customer_id</span><br><span class="line">          key: idx_fk_customer_id</span><br><span class="line">      key_len: 2</span><br><span class="line">          ref: sakila.a.customer_id</span><br><span class="line">         rows: 13</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: NULL</span><br><span class="line">2 rows in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/06/22/mysql/MYSQL优化/">MYSQL优化</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2018年06月22日 - 22:06</p>
+  <p><span>最后更新:</span>2018年12月01日 - 22:12</p>
+  <p><span>原始链接:</span><a href="/2018/06/22/mysql/MYSQL优化/" title="MYSQL优化">https://jesse.top/2018/06/22/mysql/MYSQL优化/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/06/22/mysql/MYSQL优化/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/22/mysql/MYSQL表锁和事务控制/" rel="next" title="MYSQL表锁和事务控制">
+                <i class="fa fa-chevron-left"></i> MYSQL表锁和事务控制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/23/Linux-Basic/Skills/LVM磁盘扩容--个人实践/" rel="prev" title="Linux LVM磁盘扩容--个人实践">
+                Linux LVM磁盘扩容--个人实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/06/22/mysql/MYSQL优化/"
+           data-title="MYSQL优化" data-url="https://jesse.top/2018/06/22/mysql/MYSQL优化/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MYSQL优化"><span class="nav-number">1.</span> <span class="nav-text">MYSQL优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#优化步骤"><span class="nav-number">1.1.</span> <span class="nav-text">优化步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#step2-定位低效的SQL语句"><span class="nav-number">1.1.1.</span> <span class="nav-text">step2:定位低效的SQL语句</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#这个命令中最关键的就是state列，mysql列出的状态主要有以下几种："><span class="nav-number">1.1.1.1.</span> <span class="nav-text">这个命令中最关键的就是state列，mysql列出的状态主要有以下几种：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#step3-找到低效sql语句后-通过EXPLAIN命令分析SQL语句执行状态"><span class="nav-number">1.1.2.</span> <span class="nav-text">step3 找到低效sql语句后.通过EXPLAIN命令分析SQL语句执行状态</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (GMT+08:00) &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

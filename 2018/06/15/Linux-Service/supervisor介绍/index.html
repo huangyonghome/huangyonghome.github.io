@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="supervisor," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="supervisor介绍官网地址:supervisor ) 一.概述supervisor是一个client/server架构,允许用户监控和控制一系列的Linux操作系统进程. 二.安装supervisor是基于Python2开发的.所以安装很简单.只需要以下步骤">
+<meta name="keywords" content="supervisor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="supervisor介绍">
+<meta property="og:url" content="https://jesse.top/2018/06/15/Linux-Service/supervisor介绍/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="supervisor介绍官网地址:supervisor ) 一.概述supervisor是一个client/server架构,允许用户监控和控制一系列的Linux操作系统进程. 二.安装supervisor是基于Python2开发的.所以安装很简单.只需要以下步骤">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img1.jesse.top/static/images/Linux/supervisor.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/Linux/supervisor1.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/Linux/supervisor2.png">
+<meta property="og:image" content="https://img1.jesse.top/static/images/Linux/supervisor3.png">
+<meta property="og:updated_time" content="2020-06-25T02:48:57.141Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="supervisor介绍">
+<meta name="twitter:description" content="supervisor介绍官网地址:supervisor ) 一.概述supervisor是一个client/server架构,允许用户监控和控制一系列的Linux操作系统进程. 二.安装supervisor是基于Python2开发的.所以安装很简单.只需要以下步骤">
+<meta name="twitter:image" content="https://img1.jesse.top/static/images/Linux/supervisor.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2018/06/15/Linux-Service/supervisor介绍/"/>
+
+
+
+
+
+  <title>supervisor介绍 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/06/15/Linux-Service/supervisor介绍/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">supervisor介绍</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-15T15:59:58+08:00">
+                2018-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Service/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-Service</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/15/Linux-Service/supervisor介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/15/Linux-Service/supervisor介绍/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="supervisor介绍"><a href="#supervisor介绍" class="headerlink" title="supervisor介绍"></a>supervisor介绍</h2><p>官网地址:<a href="[http://supervisord.org](http://supervisord.org/">supervisor</a> )</p>
+<h4 id="一-概述"><a href="#一-概述" class="headerlink" title="一.概述"></a>一.概述</h4><p>supervisor是一个client/server架构,允许用户监控和控制一系列的Linux操作系统进程.</p>
+<h4 id="二-安装"><a href="#二-安装" class="headerlink" title="二.安装"></a>二.安装</h4><p>supervisor是基于Python2开发的.所以安装很简单.只需要以下步骤</p>
+<a id="more"></a>
+<p>1.安装python2的Pip2工具</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum search python2-pip</span><br></pre></td></tr></table></figure>
+<p>2.用pip工具安装supervisor</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install supervisor</span><br></pre></td></tr></table></figure>
+<p>3.生成一份配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo_supervisord_conf &gt;配置文件路径</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>note: supervior工具不支持python3</p>
+</blockquote>
+<hr>
+<p>三.配置文件</p>
+<p>supervisord.conf是supervisor的配置文件.该配置文件是Windows-INI类型定义的.</p>
+<p>分号;开头的为注释行.每个应用以中括号[]开头.在下面以KEY/VALUE键值对定义参数.</p>
+<p>以下列举了一些重要参数配置. </p>
+<blockquote>
+<p>详细配置请参考官方文档<a href="http://supervisord.org/configuration.html" target="_blank" rel="noopener">supervisor配置</a></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">[unix_http_server]</span><br><span class="line">侦听一个socket接口.</span><br><span class="line">[inet_http_server]</span><br><span class="line">侦听一个TCP接口</span><br><span class="line"></span><br><span class="line">[supervisord] ----这部分是supervisor的全局配置</span><br><span class="line"></span><br><span class="line">logfile : supervisor的日志文件</span><br><span class="line">logfile_maxbytes:单个日志文件的最大容量.单位支持KB,MB,GB.设置为0表示无限制 .默认50M</span><br><span class="line">logfile_backups: 轮替保留多久.0表示不限制 .默认10</span><br><span class="line">loglevel: 记录日志级别.默认info</span><br><span class="line">pidfile:supervisor本身的pid文件</span><br><span class="line">nodaemon: 如果为true则supervisord会在前台运行.默认false</span><br><span class="line">minfds: 最小文件描述符.默认1024</span><br><span class="line">user:指定supervisord切换到哪个用户下运行</span><br><span class="line"></span><br><span class="line">[supervisorctl] -----supervisorctl的shell交互接口的配置</span><br><span class="line"></span><br><span class="line">URL:访问supervisord服务的URL接口. e.g. http://localhost:9001. For UNIX domain sockets, use unix:///absolute/path/to/file.sock.</span><br><span class="line">prompt:定义一个supervisorctl的shell交互界面的提示符.默认是supervisor</span><br><span class="line">history_file : 如果定义了history_file的文件路径.那么你每次使用supervisorctl的命令会被保存在这个文件中.类似于linux系统的.bash_history文件.默认没有配置</span><br><span class="line"></span><br><span class="line">[program:X] -----定义一个具体的应用,指示supervisor如何对该控制该应用.x表示一个应用名</span><br><span class="line"> </span><br><span class="line">command: 定义应用程序启动文件的绝对路径.支持程序启动参数选项</span><br><span class="line">priority:应用程序启动或者关闭的优先级.当supervisorctl start/stop all时,将按照此优先级顺序启动或者关闭应用程序 </span><br><span class="line">autostart: 设置为true.supervisord启动时,会自动启动该应用</span><br><span class="line">startsecs:应用程序启动后需要停留在running状态的秒数,当启动后保持在running状态达到此值后,supervisor才会认为是成功启动.设置为0表示不需要停留在running状态.此值用来检测应用程序是否成功启动</span><br><span class="line">startretries:当应用程序启动失败时,supervisord允许尝试重新启动的次数.如果启动N次后还是失败,则会放弃启动,并且将此应用程序状态设置为FATAL状态</span><br><span class="line">autorestart:如果一个应用程序退出后(比如被手动Kill掉了),是否需要自动重启该应用程序.设置为false则不会重新启动,设置为true则无条件的重新启动.</span><br><span class="line">stopsignal: 使用supervisor stop 一个应用时,可以指定kill信号:有 TERM,HUP,KILL,QUIT,INT,USER1,USER2</span><br><span class="line">user: 运行应用程序的用户名</span><br><span class="line">stdout_logfile: 应用程序的输出日志文件路径.Note:需要手动创建日志文件目录,否则目录不存在时,无法启动supervisord</span><br><span class="line">stdout_logfile_maxbytes: stdout_logfile定义的日志文件最大字节数.单位支持KB,MB,GB.设置为0表示无限制 .默认50MB</span><br><span class="line">studout_logfile_backups:轮替保留多久.0表示不限制 .默认10</span><br><span class="line">redirect_stderr:如果设置为true.则把错误日志重定向到studout_logfile.默认为false</span><br><span class="line">stderr_logfile: 应用程序的错误日志文件路径.其他和stdout_logfile相同,</span><br><span class="line">stderr_logfile_maxbytes: </span><br><span class="line">stderr_logfile_backups:</span><br><span class="line">	</span><br><span class="line">[include] ----包含某个目录下的所有配置文件</span><br><span class="line"></span><br><span class="line">files:指定目录下的配置文件</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[group:X]---将多个不同的应用程序定义为一个组</span><br></pre></td></tr></table></figure>
+<p>以下列举了nginx的进程管理配置参考:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[program:nginx]</span><br><span class="line">command=/usr/sbin/nginx</span><br><span class="line">numprocs=1</span><br><span class="line">startsecs = 3</span><br><span class="line">startretries = 5</span><br><span class="line">user=root</span><br><span class="line">stdout_logfile = /var/logs/nginx/nginx.log</span><br><span class="line">stderr_logfile = /var/logs/nginx/nginx.log</span><br><span class="line">redirect_stderr = true</span><br><span class="line">autostart=true</span><br><span class="line">autorestart=true</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="四-使用supervisor"><a href="#四-使用supervisor" class="headerlink" title="四.使用supervisor"></a>四.使用supervisor</h4><p>使用supervisor管理一个应用,必须将程序写入supervisord.conf文件. </p>
+<p>格式如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[program:应用名]</span><br><span class="line">command=应用启动程序文件</span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
+<p>定义完supervisord.conf配置文件.就可以启动supervisor了.. </p>
+<p>启动方式: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$BINDIR/supervisord  </span><br><span class="line"></span><br><span class="line">启动参数: </span><br><span class="line"></span><br><span class="line">-c 指定一个配置文件路径</span><br><span class="line">-n 前台执行.有助于查看启动过程中输出信息拍错</span><br><span class="line">-u 以指定用户运行</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>note:启动时最好-c 指定一个配置文件的绝对路径.因为supervisor默认在当前工作目录寻找配置文件. </p>
+</blockquote>
+<hr>
+<h4 id="五-运行supervisorctl"><a href="#五-运行supervisorctl" class="headerlink" title="五.运行supervisorctl"></a>五.运行supervisorctl</h4><p>启动方式:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.$BINDIR/supervisorctl -c /etc/supervisord/supervisord.conf #这种方式也启动一个shell接口.进入supervisorctl交互界面</span><br><span class="line">2.$BINDIR/supervisorctl -c /etc/supervisord/supervisord.conf command  #这种方式只对supervisorctl进行一次调用.成功执行后retrun 0 .不会启动一个交互shell界面</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意:supervisorctl启动也需要指定参数.不然可能报错误 </p>
+</blockquote>
+<p><strong>supervisorctl 动作介绍:</strong> </p>
+<ul>
+<li><p>add <name> 添加一个刚刚添加到supervisord.conf配置文件中的应用.</name></p>
+</li>
+<li><p>remove <name>和add相反</name></p>
+</li>
+<li><p>update重新加载配置文件.并且会自动add/remove应用(如果配置文件有修改)</p>
+</li>
+<li><p>clear <name>清除一个程序的日志文件</name></p>
+</li>
+<li><p>clear all清除所有程序的日志文件</p>
+</li>
+<li><p>fg &lt;应用&gt;将某个应用调到前台运行.按CTRL+C退出</p>
+</li>
+<li><p>pid <name> 获得某个应用的PID</name></p>
+</li>
+<li><p>pid all获得所有应用的pid</p>
+</li>
+<li><p>reread 和Update相似,但是不会自动add/remove</p>
+</li>
+<li><p>restart <name> <name>重启一个或多个应用,</name></name></p>
+<blockquote>
+<p>注意:restart并不会重载supervisord.conf配置文件</p>
+</blockquote>
+</li>
+<li><p>restart all 和restart 类似start <name> <name> …启动一个或多个应用</name></name></p>
+</li>
+<li><p>start all 启动所有应用</p>
+</li>
+<li><p>status获得所有应用的状态</p>
+</li>
+<li><p>status <name> <name>获得一个或多个应用状态</name></name></p>
+</li>
+<li><p>stop <name> <name>停止一个或多个应用</name></name></p>
+</li>
+<li><p>stop all停止所有 </p>
+</li>
+</ul>
+<hr>
+<h5 id="最后-关于autorestart字段"><a href="#最后-关于autorestart字段" class="headerlink" title="最后 关于autorestart字段:"></a>最后 <strong>关于autorestart字段:</strong></h5><p>autorestart还有个值是unexpected.并且默认是unexpected</p>
+<p>如果设置为unexpected.那么要结合另外一个属性一起使用:exitcodes . exitcodes属性的值是以逗号为分割的多个数字.</p>
+<p>如果设置为unexpected.那么当程序关闭时.程序的退出码(exit code .程序异常关闭,或者被kill,exit code会不一样)如果不在exitcodes定义中内.那么supervisor会autorestart自动重启该应用程序.</p>
+<p>如果程序被关闭时的退出码没有被exitcodes指定,那么supervisor会自动重启这个程序.默认值为0,2</p>
+<p>如果程序的退出码在exitcodes指定中.那么不会自动重启该程序.</p>
+<p>白话解释就是:明确指定的退出状态码,supervisor不会自动启动该程序..如果程序的退出码没有手动指定(也就是意料之外的unexpected),那么supervisor会自动重启该程序 </p>
+<p>比如下面这个例子,supervisor反复的启动elasticsearch..注意观察elasticsearch的PID一直在变. : </p>
+<p><img src="https://img1.jesse.top/static/images/Linux/supervisor.png" alt="supervisor"></p>
+<p> 查看supervisor的日志: </p>
+<p>elasticsearch一直在不断的启动,异常退出,启动.并且看到elasticsearch的退出码为1 </p>
+<p><img src="https://img1.jesse.top/static/images/Linux/supervisor1.png" alt="supervisor"></p>
+<p>查看elasticsearch的日志: </p>
+<p>可以看到elasticsearch一直在退出.然后被supervisor自动重启 </p>
+<p><img src="https://img1.jesse.top/static/images/Linux/supervisor2.png" alt="supervisor"></p>
+<p>修改supervisord.conf配置文件中的elasticsearch配置文件</p>
+<p>将autostart=true改成unexpected,</p>
+<p>并且加入exitcodes属性.值设为1. </p>
+<p>重启supervisor进程</p>
+<blockquote>
+<p>note:重启supervisord进程前.需要kill掉所有supervisord管理的应用程序 </p>
+</blockquote>
+<p>重载supervisor配置文件,可以发现supervisor并没有自动重启该应用 </p>
+<p><img src="https://img1.jesse.top/static/images/Linux/supervisor3.png" alt="supervisor"></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/06/15/Linux-Service/supervisor介绍/">supervisor介绍</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2018年06月15日 - 15:06</p>
+  <p><span>最后更新:</span>2020年06月25日 - 10:06</p>
+  <p><span>原始链接:</span><a href="/2018/06/15/Linux-Service/supervisor介绍/" title="supervisor介绍">https://jesse.top/2018/06/15/Linux-Service/supervisor介绍/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/06/15/Linux-Service/supervisor介绍/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/supervisor/" rel="tag"># supervisor</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/15/Linux-Service/systemd详解/" rel="next" title="systemd介绍">
+                <i class="fa fa-chevron-left"></i> systemd介绍
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/16/network/switch/HSRP实验/" rel="prev" title="HSRP实验">
+                HSRP实验 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/06/15/Linux-Service/supervisor介绍/"
+           data-title="supervisor介绍" data-url="https://jesse.top/2018/06/15/Linux-Service/supervisor介绍/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#supervisor介绍"><span class="nav-number">1.</span> <span class="nav-text">supervisor介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-概述"><span class="nav-number">1.0.1.</span> <span class="nav-text">一.概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-安装"><span class="nav-number">1.0.2.</span> <span class="nav-text">二.安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四-使用supervisor"><span class="nav-number">1.0.3.</span> <span class="nav-text">四.使用supervisor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五-运行supervisorctl"><span class="nav-number">1.0.4.</span> <span class="nav-text">五.运行supervisorctl</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#最后-关于autorestart字段"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">最后 关于autorestart字段:</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (GMT+08:00) &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

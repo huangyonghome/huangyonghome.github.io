@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Python之路 - 时间和日期模块介绍  🍀python提供了 time , datetimme 和 calendar 模块可以用于格式化如期和时间 ; 时间间隔是以秒为单位的浮点数 , 每个时间戳都以自从1970年1月1日午夜（历元）经过了多长时间来表示 , 所以1970年之前的日期就不能用时间戳来表示了 , 时间戳是最适合用来做日期运算的 python中时间的三种类型 :   float">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20.Python之路 - 时间和日期模块">
+<meta property="og:url" content="https://jesse.top/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="Python之路 - 时间和日期模块介绍  🍀python提供了 time , datetimme 和 calendar 模块可以用于格式化如期和时间 ; 时间间隔是以秒为单位的浮点数 , 每个时间戳都以自从1970年1月1日午夜（历元）经过了多长时间来表示 , 所以1970年之前的日期就不能用时间戳来表示了 , 时间戳是最适合用来做日期运算的 python中时间的三种类型 :   float">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/827651/201707/827651-20170724144151992-1508626640.png">
+<meta property="og:updated_time" content="2020-06-30T12:32:51.221Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20.Python之路 - 时间和日期模块">
+<meta name="twitter:description" content="Python之路 - 时间和日期模块介绍  🍀python提供了 time , datetimme 和 calendar 模块可以用于格式化如期和时间 ; 时间间隔是以秒为单位的浮点数 , 每个时间戳都以自从1970年1月1日午夜（历元）经过了多长时间来表示 , 所以1970年之前的日期就不能用时间戳来表示了 , 时间戳是最适合用来做日期运算的 python中时间的三种类型 :   float">
+<meta name="twitter:image" content="https://images2015.cnblogs.com/blog/827651/201707/827651-20170724144151992-1508626640.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/"/>
+
+
+
+
+
+  <title>20.Python之路 - 时间和日期模块 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">20.Python之路 - 时间和日期模块</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/03-Modules/" itemprop="url" rel="index">
+                    <span itemprop="name">03-Modules</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Python之路-时间和日期模块"><a href="#Python之路-时间和日期模块" class="headerlink" title="Python之路 - 时间和日期模块"></a>Python之路 - 时间和日期模块</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>python提供了 time , datetimme 和 calendar 模块可以用于格式化如期和时间 ; 时间间隔是以秒为单位的浮点数 , 每个时间戳都以自从1970年1月1日午夜（历元）经过了多长时间来表示 , 所以1970年之前的日期就不能用时间戳来表示了 , 时间戳是最适合用来做日期运算的</p>
+<p>python中时间的三种类型 : </p>
+<ol>
+<li>float   浮点数 , 即时间戳</li>
+<li>struct tuple   时间元组</li>
+<li>str    字符串 , 规定格式表示</li>
+</ol>
+<a id="more"></a>
+<h2 id="time-🍀"><a href="#time-🍀" class="headerlink" title="time  🍀"></a>time  🍀</h2><h3 id="内置函数-🍀"><a href="#内置函数-🍀" class="headerlink" title="内置函数  🍀"></a>内置函数  🍀</h3><table>
+<thead>
+<tr>
+<th>函数名</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>time.time()</td>
+<td style="text-align:left">返回当前时间的时间戳(1970纪元后经过的浮点秒数)</td>
+</tr>
+<tr>
+<td>time.localtime([secs])</td>
+<td style="text-align:left">返回一个时间元组 , 默认返回当前时间戳的时间元组 , secs为秒数</td>
+</tr>
+<tr>
+<td>time.sleep(secs)</td>
+<td style="text-align:left">推迟调用线程的运行 , 即让程序’ 睡 ‘一会 , secs为秒数</td>
+</tr>
+<tr>
+<td>time.strftime(fmt[,tupletime])</td>
+<td style="text-align:left">将时间元组转换成字符串显示 , 默认为当前时间 , 格式由fmt决定</td>
+</tr>
+<tr>
+<td>time.strptime(str,fmt=’%a %b %d %H:%M:%S %Y)</td>
+<td style="text-align:left">将字符串转换成时间元组 , fmt为字符串格式</td>
+</tr>
+<tr>
+<td>time.gmtime([secs])</td>
+<td style="text-align:left">将时间戳转换成格林威治(本初子午线)天文时间下的时间元组</td>
+</tr>
+<tr>
+<td>time.asctime([tupletime])</td>
+<td style="text-align:left">将时间元组转换成字符串 , 格式如下 : Tue Aug  8 15:19:00 2016</td>
+</tr>
+<tr>
+<td>time.ctime([secs])</td>
+<td style="text-align:left">相当于asctime(localtime(secs)) , 不给参数相当于asctime()</td>
+</tr>
+<tr>
+<td>time.mktime(tupletime)</td>
+<td style="text-align:left">将时间元组转换成时间戳</td>
+</tr>
+<tr>
+<td>time.clock()</td>
+<td style="text-align:left">返回当前CPU时间戳 , 用来衡量不同程序的耗时 , 比time.time() 更有用</td>
+</tr>
+<tr>
+<td>time.tzset()</td>
+<td style="text-align:left">更改本地时区</td>
+</tr>
+<tr>
+<td>time.altzone</td>
+<td style="text-align:left">返回夏令时地区的偏移秒数 , 无需括号调用 ,   对需要夏令时地区才使用</td>
+</tr>
+</tbody>
+</table>
+<h3 id="格式化符号-🍀"><a href="#格式化符号-🍀" class="headerlink" title="格式化符号  🍀"></a>格式化符号  🍀</h3><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+<th>符号</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>%y</td>
+<td>两位数的年份表示 (00-99)</td>
+<td>%a</td>
+<td>本地简化星期名称</td>
+</tr>
+<tr>
+<td>%Y</td>
+<td>四位数的年份表示(000-9999)</td>
+<td>%A</td>
+<td>本地完整星期名称</td>
+</tr>
+<tr>
+<td>%m</td>
+<td>月份(01-12)</td>
+<td>%b</td>
+<td>本地简化的月份名称</td>
+</tr>
+<tr>
+<td>%d</td>
+<td>月内中的一天(0-31)</td>
+<td>%B</td>
+<td>本地完整的月份名称</td>
+</tr>
+<tr>
+<td>%H</td>
+<td>24小时制小时数(0-23)</td>
+<td>%c</td>
+<td>本地相应的日期表示和时间表示</td>
+</tr>
+<tr>
+<td>%I</td>
+<td>12小时制小时数(01-12)</td>
+<td>%j</td>
+<td>年内的一天(001-366)</td>
+</tr>
+<tr>
+<td>%M</td>
+<td>分钟数(00=59)</td>
+<td>%p</td>
+<td>本地A.M.或P.M.的等价符</td>
+</tr>
+<tr>
+<td>%S</td>
+<td>秒(00-59)</td>
+<td>%U</td>
+<td>一年中的星期数(00-53)星期天为星期的开始</td>
+</tr>
+<tr>
+<td>%w</td>
+<td>星期(0-6)，星期天为星期的开始</td>
+<td>%x</td>
+<td>本地相应的日期表示</td>
+</tr>
+<tr>
+<td>%W</td>
+<td>一年中的星期数(00-53)星期一为星期的开始</td>
+<td>%X</td>
+<td>本地相应的时间表示</td>
+</tr>
+<tr>
+<td>%%</td>
+<td>%号本身</td>
+<td>%Z</td>
+<td>当前时区的名称</td>
+</tr>
+</tbody>
+</table>
+<h3 id="时间元组说明-🍀"><a href="#时间元组说明-🍀" class="headerlink" title="时间元组说明  🍀"></a>时间元组说明  🍀</h3><table>
+<thead>
+<tr>
+<th>下标</th>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>tm_year</td>
+<td>2008</td>
+</tr>
+<tr>
+<td>1</td>
+<td>tm_mon</td>
+<td>1 到 12</td>
+</tr>
+<tr>
+<td>2</td>
+<td>tm_mday</td>
+<td>1 到 31</td>
+</tr>
+<tr>
+<td>3</td>
+<td>tm_hour</td>
+<td>0 到 23</td>
+</tr>
+<tr>
+<td>4</td>
+<td>tm_min</td>
+<td>0 到 59</td>
+</tr>
+<tr>
+<td>5</td>
+<td>tm_sec</td>
+<td>0 到 61 (60或61 是闰秒)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>tm_wday</td>
+<td>0到6 (0是周一)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>tm_yday</td>
+<td>1 到 366(儒略历)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>tm_isdst</td>
+<td>-1, 0, 1, -1是决定是否为夏令时的旗帜</td>
+</tr>
+</tbody>
+</table>
+<h3 id="实例-🍀"><a href="#实例-🍀" class="headerlink" title="实例  🍀"></a>实例  🍀</h3><p>获取本地时间</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入time模块</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="comment"># 获取当前时间字符串</span></span><br><span class="line">now_time = time.strftime(<span class="string">"%Y-%m-%d %H:%M:%S"</span>)</span><br><span class="line"><span class="comment"># 获取当前时间戳</span></span><br><span class="line">now_timestamp = time.time()</span><br><span class="line"><span class="comment"># 获取当前时间元组</span></span><br><span class="line">now_timetuples = time.localtime()</span><br><span class="line"><span class="comment"># 打印当前时间字符串</span></span><br><span class="line">print(now_time)</span><br><span class="line"><span class="comment"># 2016-08-08 16:04:35</span></span><br><span class="line"><span class="comment"># 打印当前时间戳</span></span><br><span class="line">print(now_timestamp)</span><br><span class="line"><span class="comment"># 1470643278.0</span></span><br><span class="line"><span class="comment"># 打印当前时间元组</span></span><br><span class="line">print(now_timetuples)</span><br><span class="line"><span class="comment"># time.struct_time(tm_year=2016, tm_mon=8, tm_mday=8, tm_hour=16, tm_min=1, tm_sec=18, tm_wday=0, tm_yday=221, tm_isdst=-1)</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>几种格式时间的转换</p>
+<p><img src="https://images2015.cnblogs.com/blog/827651/201707/827651-20170724144151992-1508626640.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 格式化时间 ----&gt;  结构化时间</span><br><span class="line">ft = time.strftime(&apos;%Y/%m/%d %H:%M:%S&apos;)</span><br><span class="line">st = time.strptime(ft,&apos;%Y/%m/%d %H:%M:%S&apos;)</span><br><span class="line">print(st)</span><br><span class="line"># 结构化时间 ---&gt; 时间戳</span><br><span class="line">t = time.mktime(st)</span><br><span class="line">print(t)</span><br><span class="line"></span><br><span class="line"># 时间戳 ----&gt; 结构化时间</span><br><span class="line">t = time.time()</span><br><span class="line">st = time.localtime(t)</span><br><span class="line">print(st)</span><br><span class="line"># 结构化时间 ---&gt; 格式化时间</span><br><span class="line">ft = time.strftime(&apos;%Y/%m/%d %H:%M:%S&apos;,st)</span><br><span class="line">print(ft)</span><br></pre></td></tr></table></figure>
+<p>计算时间差</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import time</span><br><span class="line">true_time=time.mktime(time.strptime(&apos;2017-09-11 08:30:00&apos;,&apos;%Y-%m-%d %H:%M:%S&apos;))</span><br><span class="line">time_now=time.mktime(time.strptime(&apos;2017-09-12 11:00:00&apos;,&apos;%Y-%m-%d %H:%M:%S&apos;))</span><br><span class="line">dif_time=time_now-true_time</span><br><span class="line">struct_time=time.gmtime(dif_time)</span><br><span class="line">print(&apos;过去了%d年%d月%d天%d小时%d分钟%d秒&apos;%(struct_time.tm_year-1970,struct_time.tm_mon-1,</span><br><span class="line">                                       struct_time.tm_mday-1,struct_time.tm_hour,</span><br><span class="line">                                       struct_time.tm_min,struct_time.tm_sec))</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; 过去了0年0月1天2小时30分钟0秒</span><br></pre></td></tr></table></figure>
+<h2 id="calendar-🍀"><a href="#calendar-🍀" class="headerlink" title="calendar 🍀"></a>calendar 🍀</h2><p>此模块的函数都是日历相关的 , 例如打印某月的字符串月历</p>
+<p>星期一是默认的每周第一天 , 星期天是默认的最后一天 ; 更改设置需要调用 calendar.setfirstweekday() 函数</p>
+<h3 id="内置函数-🍀-1"><a href="#内置函数-🍀-1" class="headerlink" title="内置函数  🍀"></a>内置函数  🍀</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>calendar.calendar(year,w=2,l=1,c=6)</td>
+<td>返回一个多行字符串格式的year年年历 , 3个月一行 , 间隔距离为c ; 每日宽度间隔为w字符 , 每行长度为21<em> W+18+2</em> C ; l是每星期行数</td>
+</tr>
+<tr>
+<td>calendar.firstweekday( )</td>
+<td>返回当前每周起始日期的设置 ; 默认情况下 , 首次载入caendar模块时返回0 , 即星期一</td>
+</tr>
+<tr>
+<td>calendar.isleap(year)</td>
+<td>是闰年返回True , 否则为false</td>
+</tr>
+<tr>
+<td>calendar.leapdays(y1,y2)</td>
+<td>返回在Y1 , Y2两年之间的闰年总数</td>
+</tr>
+<tr>
+<td>calendar.month(year,month,w=2,l=1)</td>
+<td>返回一个多行字符串格式的year年month月日历 , 两行标题 , 一周一行 ; 每日宽度间隔为w字符 , 每行的长度为7* w+6 , l是每星期的行数</td>
+</tr>
+<tr>
+<td>calendar.monthcalendar(year,month)</td>
+<td>返回一个整数的单层嵌套列表 , 每个子列表装载代表一个星期的整数 ; Year年month月外的日期都设为0 ; 范围内的日子都由该月第几日表示 , 从1开始</td>
+</tr>
+<tr>
+<td>calendar.monthrange(year,month)</td>
+<td>返回两个整数 , 第一个是该月的星期几的日期码 , 第二个是该月的日期码 , 日从0（星期一）到6（星期日）; 月从1到12</td>
+</tr>
+<tr>
+<td>calendar.prcal(year,w=2,l=1,c=6)</td>
+<td>相当于 print calendar.calendar(year , w , l , c)</td>
+</tr>
+<tr>
+<td>calendar.prmonth(year,month,w=2,l=1)</td>
+<td>相当于 print calendar.calendar（year , w , l , c）</td>
+</tr>
+<tr>
+<td>calendar.setfirstweekday(weekday)</td>
+<td>设置每周的起始日期码 , 0（星期一）到6（星期日）</td>
+</tr>
+<tr>
+<td>calendar.timegm(tupletime)</td>
+<td>和time.gmtime相反: 接受一个时间元组形式 , 返回该时刻的时间辍（1970纪元后经过的浮点秒数）</td>
+</tr>
+<tr>
+<td>calendar.weekday(year,month,day)</td>
+<td>返回给定日期的日期码 , 0（星期一）到6（星期日） , 月份为 1（一月） 到 12（12月）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="实例-🍀-1"><a href="#实例-🍀-1" class="headerlink" title="实例  🍀"></a>实例  🍀</h3><p>打印指定日历</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入模块</span></span><br><span class="line"><span class="keyword">import</span> calendar</span><br><span class="line"><span class="comment"># 调用函数</span></span><br><span class="line">cal = calendar.month(<span class="number">2016</span>,<span class="number">8</span>)</span><br><span class="line"><span class="comment"># 打印2016年8月的日历</span></span><br><span class="line">print(cal)</span><br><span class="line">------结果如下-------</span><br><span class="line">    August <span class="number">2016</span></span><br><span class="line">Mo Tu We Th Fr Sa Su</span><br><span class="line"> <span class="number">1</span>  <span class="number">2</span>  <span class="number">3</span>  <span class="number">4</span>  <span class="number">5</span>  <span class="number">6</span>  <span class="number">7</span></span><br><span class="line"> <span class="number">8</span>  <span class="number">9</span> <span class="number">10</span> <span class="number">11</span> <span class="number">12</span> <span class="number">13</span> <span class="number">14</span></span><br><span class="line"><span class="number">15</span> <span class="number">16</span> <span class="number">17</span> <span class="number">18</span> <span class="number">19</span> <span class="number">20</span> <span class="number">21</span></span><br><span class="line"><span class="number">22</span> <span class="number">23</span> <span class="number">24</span> <span class="number">25</span> <span class="number">26</span> <span class="number">27</span> <span class="number">28</span></span><br><span class="line"><span class="number">29</span> <span class="number">30</span> <span class="number">31</span></span><br></pre></td></tr></table></figure>
+<p>python中处理日期和时间的模块还有 pytz , datedutil , datetime</p>
+<p>可以通过import module ; help(module) 来进行学习</p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/">20.Python之路 - 时间和日期模块</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年06月26日 - 09:06</p>
+  <p><span>最后更新:</span>2020年06月30日 - 20:06</p>
+  <p><span>原始链接:</span><a href="/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/" title="20.Python之路 - 时间和日期模块">https://jesse.top/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/26/python/03-Modules/05-Python之路 - 正则表达式/" rel="next" title="21.Python之路 - 正则表达式">
+                <i class="fa fa-chevron-left"></i> 21.Python之路 - 正则表达式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/26/python/03-Modules/03-Python之路 - 包导入详解/" rel="prev" title="19.Python之路 - 包导入详解">
+                19.Python之路 - 包导入详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/"
+           data-title="20.Python之路 - 时间和日期模块" data-url="https://jesse.top/2020/06/26/python/03-Modules/04-Python之路 - 时间和日期模块/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python之路-时间和日期模块"><span class="nav-number">1.</span> <span class="nav-text">Python之路 - 时间和日期模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍-🍀"><span class="nav-number">1.1.</span> <span class="nav-text">介绍  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#time-🍀"><span class="nav-number">1.2.</span> <span class="nav-text">time  🍀</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内置函数-🍀"><span class="nav-number">1.2.1.</span> <span class="nav-text">内置函数  🍀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#格式化符号-🍀"><span class="nav-number">1.2.2.</span> <span class="nav-text">格式化符号  🍀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时间元组说明-🍀"><span class="nav-number">1.2.3.</span> <span class="nav-text">时间元组说明  🍀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例-🍀"><span class="nav-number">1.2.4.</span> <span class="nav-text">实例  🍀</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#calendar-🍀"><span class="nav-number">1.3.</span> <span class="nav-text">calendar 🍀</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内置函数-🍀-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">内置函数  🍀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例-🍀-1"><span class="nav-number">1.3.2.</span> <span class="nav-text">实例  🍀</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (GMT+08:00) &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

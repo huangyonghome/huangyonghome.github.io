@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="k8s," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="kubernetes API服务器权限(ServiceAccount &amp;amp;&amp;amp; RBAC)ServiceAccount介绍​        每个Pod都与一个ServiceAccount相关联,它代表了运行在pod中应用程序的身份证明.每个pod在启动的时候kubernetes会自动挂载ServiceAccount的TOKEN到pod容器的/var/run/secretes/kuber">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes API服务器权限(ServiceAccount &amp;&amp; RBAC)">
+<meta property="og:url" content="https://jesse.top/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="kubernetes API服务器权限(ServiceAccount &amp;amp;&amp;amp; RBAC)ServiceAccount介绍​        每个Pod都与一个ServiceAccount相关联,它代表了运行在pod中应用程序的身份证明.每个pod在启动的时候kubernetes会自动挂载ServiceAccount的TOKEN到pod容器的/var/run/secretes/kuber">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-29T14:48:30.299Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kubernetes API服务器权限(ServiceAccount &amp;&amp; RBAC)">
+<meta name="twitter:description" content="kubernetes API服务器权限(ServiceAccount &amp;amp;&amp;amp; RBAC)ServiceAccount介绍​        每个Pod都与一个ServiceAccount相关联,它代表了运行在pod中应用程序的身份证明.每个pod在启动的时候kubernetes会自动挂载ServiceAccount的TOKEN到pod容器的/var/run/secretes/kuber">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/"/>
+
+
+
+
+
+  <title>kubernetes API服务器权限(ServiceAccount && RBAC) | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kubernetes API服务器权限(ServiceAccount && RBAC)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T11:59:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="kubernetes-API服务器权限-ServiceAccount-amp-amp-RBAC"><a href="#kubernetes-API服务器权限-ServiceAccount-amp-amp-RBAC" class="headerlink" title="kubernetes API服务器权限(ServiceAccount &amp;&amp; RBAC)"></a>kubernetes API服务器权限(ServiceAccount &amp;&amp; RBAC)</h2><h3 id="ServiceAccount介绍"><a href="#ServiceAccount介绍" class="headerlink" title="ServiceAccount介绍"></a>ServiceAccount介绍</h3><p>​        每个Pod都与一个ServiceAccount相关联,它代表了运行在pod中应用程序的身份证明.每个pod在启动的时候kubernetes会自动挂载ServiceAccount的TOKEN到pod容器的<code>/var/run/secretes/kubernetes.io/serviceaccount/token</code>文件.pod内的应用程序通过这个token连接API服务器.API服务器的身份验证插件会对ServiceAccount进行身份认证.ServiceAccount所拥有的权限决定了pod内的应用程序所尝试执行的操作是否被允许</p>
+<p>​        ServiceAccount只不过是一种运行在pod中的应用程序和API服务器身份认证的一种方式.应用程序通过在请求中传递serviceaccount的token和API服务器通信</p>
+<hr>
+<h3 id="了解ServiceAccount资源"><a href="#了解ServiceAccount资源" class="headerlink" title="了解ServiceAccount资源"></a>了解ServiceAccount资源</h3><p>​        ServiceAccount和pod,Secret,ConfigMap等一样,本身也是一种资源.他们作用在单独的命名空间.kubernetes为每个命名空间自动创建一个默认的ServiceAccount(名字是default),可以像查看其它资源一样使用<code>kubectl get sa</code>来查看ServiceAccount列表</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl get sa</span><br><span class="line">NAME      SECRETS   AGE</span><br><span class="line">default   1         51d</span><br></pre></td></tr></table></figure>
+<ul>
+<li>同一个命名空间下的多个pod可以使用同一个ServiceAccount</li>
+<li>pod只能使用同一个命名空间下的ServiceAccount</li>
+<li>如果在pod的manifest文件中没有显示的指定ServiceAccount名称.则默认使用default ServiceAccount</li>
+</ul>
+<h3 id="创建ServiceAccount"><a href="#创建ServiceAccount" class="headerlink" title="创建ServiceAccount"></a>创建ServiceAccount</h3><p>​        为什么要去创建新的ServiceAccount,而不是所有pod都使用默认的ServiceAccount? 为了集群的安全性,尽量做到权限最小分配的原则,只对有需要的Pod配置有相应较高权限的ServiceAccount,而其他pod使用default默认ServiceAccount应该不允许他们检索或者修改部署在集群中的任何资源.</p>
+<p>​        下面实验一下如何创建其他ServiceAccount,并且分配给Pod</p>
+<ul>
+<li>创建ServiceAccount很简单,直接使用<code>kubectl create serviceaccount</code>命令</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl create serviceaccount foo</span><br><span class="line">serviceaccount/foo created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]# kubectl describe sa foo</span><br><span class="line">Name:                foo</span><br><span class="line">Namespace:           default</span><br><span class="line">Labels:              &lt;none&gt;</span><br><span class="line">Annotations:         &lt;none&gt;</span><br><span class="line">Image pull secrets:  &lt;none&gt;</span><br><span class="line">Mountable secrets:   foo-token-ktjj5</span><br><span class="line">Tokens:              foo-token-ktjj5</span><br><span class="line">Events:              &lt;none&gt;</span><br><span class="line">[root@k8s-master ~]#</span><br></pre></td></tr></table></figure>
+<p>上面就创建了一个名为foo的serviceaccount.如果查看这个名为foo-token-ktjj5的TOKEN秘钥可以发现这个ServiceAccount也和default默认的ServiceAccount一样具有相同的条目(CA证书,命名空间,token),当然这2个token本身是不一样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl describe secret foo-token-ktjj5</span><br><span class="line">Name:         foo-token-ktjj5</span><br><span class="line">Namespace:    default</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  kubernetes.io/service-account.name: foo</span><br><span class="line">              kubernetes.io/service-account.uid: 28cb7741-eaf3-46bb-bd58-3f1ddb748c2e</span><br><span class="line"></span><br><span class="line">Type:  kubernetes.io/service-account-token</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">ca.crt:     1025 bytes</span><br><span class="line">namespace:  7 bytes</span><br><span class="line">token:      eyJhbGciOiJSUzI1NiIsImtpZCI6InI3cE50azROV1pseDJqNmxVQTlSWjF6Vk9YVFFnamZEWFF5RG56YTJhaWMifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImZvby10b2tlbi1rdGpqNSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJmb28iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIyOGNiNzc0MS1lYWYzLTQ2YmItYmQ1OC0zZjFkZGI3NDhjMmUiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpmb28ifQ.KdfyYVkb7Ye_sV8yUWqU6I8fe8Pck7cyTDdwh08Y9w0f4cwJKqIwsuVn39VCpYIH3PaDsKoxBv7Bpahn6lfiP3MgA4zcWlX4vtBUxJCAt-GBXBTcHkqQ6BwtxFzkY4rgsXLd5HuqsrqrZbxrSM1zfNovPccRgklN3kbz0BuxTmKQ65E9DFhAt5kmzajO3qvAB_ymGeoJLMul1fZEqLnV48UEKN5KFAxVfwo0b4On2LcKOVkmG_P7yO7X6TsE6zEN03kvoxjOd0vnJrGUCT9fu0KlabRyDsyDWsua-Su2kv-gDg3O6zQxqDGgEwRxTb2-7Cbv6PaFbfCwSRnCC8Y6FA</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将ServiceAccount分配给pod</li>
+</ul>
+<p>将ServiceAccount赋值给Pod非常简单,进需要在pod的manifest文件中的spec字段下指定serviceAccountName即可.例如下面之前学习过的curl镜像和kubectl-proxy的ambassador镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: curl-custome-sa</span><br><span class="line">spec:</span><br><span class="line">  #指定pod使用哪个serviceaccount</span><br><span class="line">  serviceAccountName: foo</span><br><span class="line">  containers:</span><br><span class="line">    - name: main</span><br><span class="line">      image: tutum/curl</span><br><span class="line">      command: [&apos;sleep&apos;,&apos;9999999&apos;]</span><br><span class="line">    - name: ambassador</span><br><span class="line">      image: luksa/kubectl-proxy:1.6.2</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>ServiceAccount必须在pod创建之前新建,后续不能被修改</p>
+</blockquote>
+<ul>
+<li>使用新创建的ServiceAccount访问API服务器.(通过ambassador容器)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl exec -it curl-custome-sa -c main curl localhost:8001/api/v1/pods</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;Status&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;status&quot;: &quot;Failure&quot;,</span><br><span class="line">  &quot;message&quot;: &quot;pods is forbidden: User \&quot;system:serviceaccount:default:foo\&quot; cannot list resource \&quot;pods\&quot; in API group \&quot;\&quot; at the cluster scope&quot;,</span><br><span class="line">  &quot;reason&quot;: &quot;Forbidden&quot;,</span><br><span class="line">  &quot;details&quot;: &#123;</span><br><span class="line">    &quot;kind&quot;: &quot;pods&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;code&quot;: 403</span><br></pre></td></tr></table></figure>
+<p>还是无法访问? 这是因为RBAC(基于角色权限控制)插件没有给这个ServiceAccount进行权限授权.</p>
+<hr>
+<h3 id="介绍RBAC"><a href="#介绍RBAC" class="headerlink" title="介绍RBAC"></a>介绍RBAC</h3><p>​        在1.6版本开始,集群安全性显著提高.RBAC在集群中默认开启.RBAC会阻止未授权的用户查看和修改集群状态.API服务器对外暴露了REST接口,用户可以通过向服务器发送HTTP请求来执行动作.</p>
+<p>​        REST客户端发送GET,POST,PUT,DELETE和其他类型的HTTP请求到特定的URL资源.这些资源可以是kubernetes的Pod,Service,Secret等等.</p>
+<p>​        RBAC支持的支持一些动词(例如,get,create,update)等映射到客户端请求的HTTP方法(GET,POST,PUT).完整的映射方法如下表</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">HTTP方法</th>
+<th style="text-align:center">RBAC动词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">GET,HEAD</td>
+<td style="text-align:center">get(或者watch用于监听)</td>
+</tr>
+<tr>
+<td style="text-align:center">POST</td>
+<td style="text-align:center">create</td>
+</tr>
+<tr>
+<td style="text-align:center">PUT</td>
+<td style="text-align:center">update</td>
+</tr>
+<tr>
+<td style="text-align:center">PATCH</td>
+<td style="text-align:center">patch</td>
+</tr>
+<tr>
+<td style="text-align:center">DELETE</td>
+<td style="text-align:center">delete</td>
+</tr>
+</tbody>
+</table>
+<p>​        除了可以对全部资源类型应用安装权限,RBAC规则还可以引用于特定的资源实例,以及非资源URL路径.(并不是API服务器对外暴露的每个路径都映射到一个资源),例如/api路径,/healthz健康路径</p>
+<p>​        RBAC授权插件将用户角色作为决定用户能否执行操作的关键因素主体.(可以是一个人,一个ServiceAccount,或者一组人,一组ServiceAccount).一个用户可以有多个角色.</p>
+<hr>
+<h3 id="介绍RBAC资源"><a href="#介绍RBAC资源" class="headerlink" title="介绍RBAC资源"></a>介绍RBAC资源</h3><p>RBAC授权规则通过四种资源来进行配置.可以分为两个组:</p>
+<ul>
+<li>Role(角色)和ClusterRole(集群角色).他们指定了在资源上可以执行哪些动作</li>
+<li>RoleBinding(角色绑定)和ClusterRoleBinding.(集群角色绑定).他们将上述角色绑定到特定的用户,组或者ServiceAccount上</li>
+</ul>
+<blockquote>
+<p>角色定义了可以有什么访问权限,而角色绑定决定了谁可以做这些操作</p>
+</blockquote>
+<p>角色和集群角色,或者角色绑定和集群角色绑定之间的区别在于角色和角色绑定是命名空间资源.而集群角色和集群角色绑定是集群级别的资源(独立资源,不属于任何命名空间).</p>
+<ul>
+<li>单个命名空间可以创建多个角色,以及多个角色绑定</li>
+<li>尽管角色绑定是在命名空间下的.但是也可以引用其他命名空间下的集群角色.</li>
+</ul>
+<hr>
+<h3 id="演示RBAC的实践"><a href="#演示RBAC的实践" class="headerlink" title="演示RBAC的实践"></a>演示RBAC的实践</h3><ul>
+<li><h5 id="创建2个命名空间-然后在2个命名空间下运行kubectl-proxy-pod"><a href="#创建2个命名空间-然后在2个命名空间下运行kubectl-proxy-pod" class="headerlink" title="创建2个命名空间,然后在2个命名空间下运行kubectl-proxy pod."></a>创建2个命名空间,然后在2个命名空间下运行<code>kubectl-proxy</code> pod.</h5></li>
+</ul>
+<p>下面这个配置创建了<code>foo</code>,<code>bar</code>这2个名称空间.以及在每个名称空间下创建了一个<code>kubectl-proxy</code>的test容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># kubectl create ns foo</span></span><br><span class="line">namespace/foo created</span><br><span class="line">[root@k8s-master ~]<span class="comment"># kubectl create ns bar</span></span><br><span class="line">namespace/bar created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment"># kubectl run test --image=luksa/kubectl-proxy -n foo</span></span><br><span class="line">kubectl run --generator=deployment/apps.v1 is DEPRECATED and will be removed <span class="keyword">in</span> a future version. Use kubectl run --generator=run-pod/v1 or kubectl create instead.</span><br><span class="line">deployment.apps/<span class="built_in">test</span> created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment"># kubectl run test --image=luksa/kubectl-proxy -n bar</span></span><br><span class="line">kubectl run --generator=deployment/apps.v1 is DEPRECATED and will be removed <span class="keyword">in</span> a future version. Use kubectl run --generator=run-pod/v1 or kubectl create instead.</span><br><span class="line">deployment.apps/<span class="built_in">test</span> created</span><br></pre></td></tr></table></figure>
+<p>列出各名称空间下的pod</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># kubectl get po -n foo</span></span><br><span class="line">NAME                    READY   STATUS    RESTARTS   AGE</span><br><span class="line"><span class="built_in">test</span>-7b4bb6b9ff-qpppf   1/1     Running   0          28m</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment"># kubectl get po -n bar</span></span><br><span class="line">NAME                    READY   STATUS    RESTARTS   AGE</span><br><span class="line"><span class="built_in">test</span>-7b4bb6b9ff-jl6v5   1/1     Running   0          42m</span><br></pre></td></tr></table></figure>
+<p>此时由于还没有授权,进入pod容器内部,对API服务器发起http访问请求时.API服务器不允许Pod访问services服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@k8s-master ~]# kubectl exec -it test-7b4bb6b9ff-qpppf -n foo sh</span><br><span class="line"></span><br><span class="line">/ # curl localhost:8001/api/v1/namespaces/foo/services</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;Status&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;status&quot;: &quot;Failure&quot;,</span><br><span class="line">  &quot;message&quot;: &quot;services is forbidden: User \&quot;system:serviceaccount:foo:default\&quot; cannot list resource \&quot;services\&quot; in API group \&quot;\&quot; in the namespace \&quot;foo\&quot;&quot;,</span><br><span class="line">  &quot;reason&quot;: &quot;Forbidden&quot;,</span><br><span class="line">  &quot;details&quot;: &#123;</span><br><span class="line">    &quot;kind&quot;: &quot;services&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;code&quot;: 403</span><br><span class="line">&#125;/ #</span><br></pre></td></tr></table></figure>
+<hr>
+<ul>
+<li><h5 id="使用Role和RoleBinding"><a href="#使用Role和RoleBinding" class="headerlink" title="使用Role和RoleBinding"></a>使用Role和RoleBinding</h5><h5 id="创建Role"><a href="#创建Role" class="headerlink" title="创建Role"></a>创建Role</h5><p>Role资源定义了哪些操作可以在哪些资源上执行.下面的配置文件定义了一个Role.允许用户获取并列出foo命名空间中的服务</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: Role</span><br><span class="line">metadata:</span><br><span class="line">  #该role所在的命名空间,如果没有填写,则此role应用在默认的命名空间</span><br><span class="line">  namespace: foo</span><br><span class="line">  name: service-reader</span><br><span class="line">#以下是此role定义的规则</span><br><span class="line">rules:</span><br><span class="line">    #Service是核心apiGroup的资源,所以没有apiGroup名,就是&quot;&quot;空</span><br><span class="line">  - apiGroups: [&quot;&quot;]</span><br><span class="line">    #该Role角色授权的规则,允许get,list访问权限</span><br><span class="line">    verbs: [&quot;get&quot;,&quot;list&quot;]</span><br><span class="line">   #这个规则和服务有关,(必须使用复数)</span><br><span class="line">    resources: [&quot;services&quot;]</span><br><span class="line">~</span><br></pre></td></tr></table></figure>
+<p>Role配置文件中定义了以下信息:</p>
+<ul>
+<li>Role所处的名称空间</li>
+<li>Role角色名</li>
+<li>verbs: 角色允许的访问权限</li>
+<li>resources: 角色允许访问的资源</li>
+</ul>
+<p>创建role</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># kubectl create -f serviceaccount-service-reader.yaml</span></span><br><span class="line">role.rbac.authorization.k8s.io/service-reader created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment"># kubectl get role -n foo</span></span><br><span class="line">NAME             AGE</span><br><span class="line">service-reader   6m18s</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment"># kubectl describe role -n foo service-reader</span></span><br><span class="line">Name:         service-reader</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  &lt;none&gt;</span><br><span class="line">PolicyRule:</span><br><span class="line">  Resources  Non-Resource URLs  Resource Names  Verbs</span><br><span class="line">  ---------  -----------------  --------------  -----</span><br><span class="line">  services   []                 []              [get list]</span><br><span class="line">[root@k8s-master ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><h5 id="将Role角色绑定到ServiceAccount"><a href="#将Role角色绑定到ServiceAccount" class="headerlink" title="将Role角色绑定到ServiceAccount"></a>将Role角色绑定到ServiceAccount</h5><p>​      Role角色定义了哪些操作可以执行,但是没有指定谁拥有该角色.要做到这一点,需要将角色绑定到一个主体上.它可以是一个usr(用户),或者一个ServiceAccount.或者一个组.</p>
+<p>​        通过创建一个RoleBinding资源来实现将角色绑定到主体.使用<code>kubectl create rolebinding</code>.</p>
+<p>完整格式是<code>kubectl create rolebinding 绑定名 --role=角色名 --serviceaccount=命名空间:ServiceAccount名 -n 命名空间</code>.下面是具体的例子实现</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># kubectl create rolebinding test --role=service-reader --serviceaccount=foo:default -n foo</span></span><br><span class="line">rolebinding.rbac.authorization.k8s.io/<span class="built_in">test</span> created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment"># kubectl get rolebinding test -n foo  -o yaml</span></span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: RoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  creationTimestamp: <span class="string">"2020-05-05T09:45:58Z"</span></span><br><span class="line">  name: <span class="built_in">test</span></span><br><span class="line">  namespace: foo</span><br><span class="line">  resourceVersion: <span class="string">"10719596"</span></span><br><span class="line">  selfLink: /apis/rbac.authorization.k8s.io/v1/namespaces/foo/rolebindings/<span class="built_in">test</span></span><br><span class="line">  uid: a400ece9-ceb7-4a57-8687-f385a69b9190</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: Role</span><br><span class="line">  name: service-reader</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: default</span><br><span class="line">  namespace: foo</span><br></pre></td></tr></table></figure>
+<p>​        在上面的例子中创建了一个test的rolebinding的角色绑定资源.将<code>service-reader</code>这个Role角色绑定到foo名称空间下的default默认ServiceAccount下.</p>
+<p>​        通过yaml文件显示,RoleBinding角色绑定引用了单一的角色(从<code>roleRef</code>字段可以看到引用的Role角色信息).RoleBinding可以将单个角色绑定到多个主体.</p>
+<p>​        因为这个RoleBinding将service-reader这个Role角色绑定到了foo命名空间下的ServiceAccount下.所以现在foo下的pod可以访问集群的Service资源了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#进入foo命名空间下的Pod容器内部,通过API服务器访问services</span><br><span class="line">/ # curl localhost:8001/api/v1/namespaces/foo/services</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;ServiceList&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line">    &quot;selfLink&quot;: &quot;/api/v1/namespaces/foo/services&quot;,</span><br><span class="line">    &quot;resourceVersion&quot;: &quot;10720460&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;items&quot;: []  #items列表为空很正常,因为foo名称空间下没有任何Serivce资源</span><br><span class="line">&#125;/ #</span><br></pre></td></tr></table></figure>
+</li>
+<li><h5 id="在RoleBinding角色绑定中使用其他名称空间的ServiceAccount"><a href="#在RoleBinding角色绑定中使用其他名称空间的ServiceAccount" class="headerlink" title="在RoleBinding角色绑定中使用其他名称空间的ServiceAccount"></a>在RoleBinding角色绑定中使用其他名称空间的ServiceAccount</h5><p>​    刚才在foo的名称空间下创建了Role和RoleBinding.并且foo下的pod可以正常通过API服务器访问Service资源了.但是很显然bar名称空间下pod没有任何访问权限.</p>
+<p>​    可以修改foo名称空间中的RoleBinding,并添加另一个pod的ServiceAccount.即使这个ServiceAccount在另一个不同的名称空间中.</p>
+<p>​        修改RoleBinding资源名为test的配置文件</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl edit rolebinding test -n foo</span><br><span class="line">rolebinding.rbac.authorization.k8s.io/test edited</span><br><span class="line"></span><br><span class="line">#在配置文件中最后新增一个subjects配置.引用来自bar名称空间中的default ServiceAccount</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: RoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  creationTimestamp: &quot;2020-05-05T09:45:58Z&quot;</span><br><span class="line">  name: test</span><br><span class="line">  namespace: foo</span><br><span class="line">  resourceVersion: &quot;10719596&quot;</span><br><span class="line">  selfLink: /apis/rbac.authorization.k8s.io/v1/namespaces/foo/rolebindings/test</span><br><span class="line">  uid: a400ece9-ceb7-4a57-8687-f385a69b9190</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: Role</span><br><span class="line">  name: service-reader</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: default</span><br><span class="line">  namespace: foo</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: default</span><br><span class="line">  namespace: bar</span><br></pre></td></tr></table></figure>
+<p>此时,bar名称空间下的Pod可以访问foo名称空间下的Service资源(但是仍然不能访问bar自己名称空间下的资源)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">/ <span class="comment"># curl localhost:8001/api/v1/namespaces/foo/services</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"kind"</span>: <span class="string">"ServiceList"</span>,</span><br><span class="line">  <span class="string">"apiVersion"</span>: <span class="string">"v1"</span>,</span><br><span class="line">  <span class="string">"metadata"</span>: &#123;</span><br><span class="line">    <span class="string">"selfLink"</span>: <span class="string">"/api/v1/namespaces/foo/services"</span>,</span><br><span class="line">    <span class="string">"resourceVersion"</span>: <span class="string">"10722489"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"items"</span>: []</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">/ <span class="comment"># curl localhost:8001/api/v1/namespaces/bar/services</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"kind"</span>: <span class="string">"Status"</span>,</span><br><span class="line">  <span class="string">"apiVersion"</span>: <span class="string">"v1"</span>,</span><br><span class="line">  <span class="string">"metadata"</span>: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"Failure"</span>,</span><br><span class="line">  <span class="string">"message"</span>: <span class="string">"services is forbidden: User \"system:serviceaccount:bar:default\" cannot list resource \"services\" in API group \"\" in the namespace \"bar\""</span>,</span><br><span class="line">  <span class="string">"reason"</span>: <span class="string">"Forbidden"</span>,</span><br><span class="line">  <span class="string">"details"</span>: &#123;</span><br><span class="line">    <span class="string">"kind"</span>: <span class="string">"services"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"code"</span>: 403</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="ClusterRole和ClusterRoleBinding"><a href="#ClusterRole和ClusterRoleBinding" class="headerlink" title="ClusterRole和ClusterRoleBinding"></a>ClusterRole和ClusterRoleBinding</h3><p>​    Role和RoleBinding都是名称空间的资源,他们属于一个单一的名称空间资源上.但是如上面那个例子,RoleBinding可以引用来自其他名称空间中的ServiceAccount.</p>
+<p>​    除了这些名称空间里的资源,还存在2个集群级别的RBAC资源:<strong>ClusterRole</strong>和<strong>ClusterRoleBinding</strong>.之所以存在集群级别的 资源是因为常规的<strong>Role</strong>和<strong>RoleBinding</strong>只允许访问和角色在同一个名称空间中的资源.如果希望允许不同名称空间下的Pod可以互相访问资源,则需要在每个名称空间中创建一个相同的<strong>Role</strong>和<strong>RoleBinding</strong>.</p>
+<p>​    另外,一些特定的资源完全不在任何名称空间中(例如.Node,PV,namespace等等).我们也提过API服务器对外暴露的一些不表示资源的URL路径(例如/healthz).常规<strong>Role</strong>和<strong>RoleBinding</strong>不能对这些类型的URL进行授权.但是<strong>ClusterRole</strong>可以.</p>
+<h5 id="创建ClusterRole"><a href="#创建ClusterRole" class="headerlink" title="创建ClusterRole"></a>创建ClusterRole</h5><p>命令格式和Role类似:<code>kubectl create clusterrole 名字</code>.下面这个例子创建一个pv-reader的集群角色,允许只读访问persistentvolumes资源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># kubectl create clusterrole pv-reader --verb=get,list --resource=persistentvolumes</span></span><br><span class="line">clusterrole.rbac.authorization.k8s.io/pv-reader created</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment"># kubectl get clusterrole pv-reader -o yaml</span></span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: ClusterRole</span><br><span class="line">metadata:</span><br><span class="line">  creationTimestamp: <span class="string">"2020-05-05T10:26:01Z"</span></span><br><span class="line">  name: pv-reader</span><br><span class="line">  resourceVersion: <span class="string">"10725342"</span></span><br><span class="line">  selfLink: /apis/rbac.authorization.k8s.io/v1/clusterroles/pv-reader</span><br><span class="line">  uid: 2c6d3083-3385-46b3-9ea6-b479f57e7db5</span><br><span class="line">rules:</span><br><span class="line">- apiGroups:</span><br><span class="line">  - <span class="string">""</span></span><br><span class="line">  resources:</span><br><span class="line">  - persistentvolumes</span><br><span class="line">  verbs:</span><br><span class="line">  - get</span><br><span class="line">  - list</span><br><span class="line">[root@k8s-master ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<h5 id="创建ClusterRoleBinding"><a href="#创建ClusterRoleBinding" class="headerlink" title="创建ClusterRoleBinding"></a>创建ClusterRoleBinding</h5><p>命令和RoleBinding使用方法类似: <code>kubectl create clusterrolebind</code></p>
+<p>下面的命令创建了个一个pv-test的<code>ClusterRoleBinding</code>集群角色绑定对线,指定的角色是<code>pv-reader</code>,分配给的ServiceAccount是<code>foo</code>名称空间下的default默认ServiceAccount</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl create clusterrolebinding pv-test --clusterrole=pv-reader --serviceaccount=foo:default</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/pv-test created</span><br></pre></td></tr></table></figure>
+<p>现在foo名称空间下的Pod就可以访问集群下的persistentvolume(PV)资源了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/ <span class="comment"># curl localhost:8001/api/v1/persistentvolumes</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"kind"</span>: <span class="string">"PersistentVolumeList"</span>,</span><br><span class="line">  <span class="string">"apiVersion"</span>: <span class="string">"v1"</span>,</span><br><span class="line">  <span class="string">"metadata"</span>: &#123;</span><br><span class="line">    <span class="string">"selfLink"</span>: <span class="string">"/api/v1/persistentvolumes"</span>,</span><br><span class="line">    <span class="string">"resourceVersion"</span>: <span class="string">"10858720"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"items"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"metadata"</span>: &#123;</span><br><span class="line">        <span class="string">"name"</span>: <span class="string">"pv-1"</span>,</span><br><span class="line">        <span class="string">"selfLink"</span>: <span class="string">"/api/v1/persistentvolumes/pv-1"</span>,</span><br><span class="line">        <span class="string">"uid"</span>: <span class="string">"544a9c07-1c41-41c5-8ed4-da41b4d11cf5"</span>,</span><br><span class="line">        <span class="string">"resourceVersion"</span>: <span class="string">"10245103"</span>,</span><br><span class="line">        <span class="string">"creationTimestamp"</span>: <span class="string">"2020-05-02T02:54:43Z"</span>,</span><br><span class="line">        .......</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>由于指定了绑定到foo名称空间下的ServiceAccount.所以显而易见,bar名称空间下的pod没有权限访问perssitentvolumes资源</p>
+</blockquote>
+<hr>
+<h3 id="ClusterRole授权访问指定命名空间中的资源"><a href="#ClusterRole授权访问指定命名空间中的资源" class="headerlink" title="ClusterRole授权访问指定命名空间中的资源"></a>ClusterRole授权访问指定命名空间中的资源</h3><p><strong>ClusterRole</strong>不是必须一直和集群级别的<strong>ClusterRoleBinding</strong>绑定使用.他们也可以和常规的<strong>RoleBinding</strong>进行捆绑.</p>
+<p>在kubernetes中,有很多系统预定义的RBAC角色资源.通过<code>kubectl get</code>命令就可以看到系统预定义的角色.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl get role -n kube-system</span><br><span class="line">kubectl get clusterrole</span><br><span class="line">kubectl get rolebinding -n kube-system</span><br><span class="line">kubectl get clusterrolebinding</span><br></pre></td></tr></table></figure>
+<p>下面是一个系统预定义的名为view的集群角色</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># kubectl get clusterrole view -o yaml</span></span><br><span class="line"></span><br><span class="line">  name: view</span><br><span class="line">  resourceVersion: <span class="string">"413"</span></span><br><span class="line">  selfLink: /apis/rbac.authorization.k8s.io/v1/clusterroles/view</span><br><span class="line">  uid: 0aa05d0e-69b3-45df-8f92-be922386dbfe</span><br><span class="line">rules:</span><br><span class="line">- apiGroups:</span><br><span class="line">  - <span class="string">""</span></span><br><span class="line">  resources:</span><br><span class="line">  - configmaps</span><br><span class="line">  - endpoints</span><br><span class="line">  - persistentvolumeclaims</span><br><span class="line">  - persistentvolumeclaims/status</span><br><span class="line">  - pods</span><br><span class="line">  - replicationcontrollers</span><br><span class="line">  - replicationcontrollers/scale</span><br><span class="line">  - serviceaccounts</span><br><span class="line">  - services</span><br><span class="line">  - services/status</span><br><span class="line">  verbs:</span><br><span class="line">  - get</span><br><span class="line">  - list</span><br><span class="line">  - watch</span><br><span class="line">- apiGroups:</span><br><span class="line">  - <span class="string">""</span></span><br><span class="line">  .......</span><br></pre></td></tr></table></figure>
+<p>​        这个ClusterRole又很多规则,允许只读(get,list,watch)访问各种资源.这些资源都是有名称空间的.这个名为View的ClusterRole的作用取决于它是和<strong>ClusterRoleBinding</strong>绑定还是和<strong>RoleBinding</strong>绑定.</p>
+<ul>
+<li><p>如果创建了一个<strong>ClusterRoleBinding</strong>,并且引用了View这个<strong>ClusterRole</strong>.那么绑定的主体可以在所有名称空间中查看指定资源</p>
+</li>
+<li><p>如果创建的是一个<strong>RoleBinding</strong>,并且引用了View这个<strong>ClusterRole</strong>,那么在绑定中列出的主体只能查看在RoleBinding名称空间中的资源.</p>
+</li>
+</ul>
+<p>下面观察一下一个ClusterRole绑定到<strong>ClusterRoleBinding</strong>和<strong>RoleBinding</strong>的不同效果</p>
+<p>在实验之前,确认一下默认情况下foo名称空间下的pod无论是访问集群下的pod还是名称空间下的pod都没有权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">/ <span class="comment"># curl localhost:8001/api/v1/pods</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"kind"</span>: <span class="string">"Status"</span>,</span><br><span class="line">  <span class="string">"apiVersion"</span>: <span class="string">"v1"</span>,</span><br><span class="line">  <span class="string">"metadata"</span>: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"Failure"</span>,</span><br><span class="line">  <span class="string">"message"</span>: <span class="string">"pods is forbidden: User \"system:serviceaccount:foo:default\" cannot list resource \"pods\" in API group \"\" at the cluster scope"</span>,</span><br><span class="line">  <span class="string">"reason"</span>: <span class="string">"Forbidden"</span>,</span><br><span class="line">  <span class="string">"details"</span>: &#123;</span><br><span class="line">    <span class="string">"kind"</span>: <span class="string">"pods"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"code"</span>: 403</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">/ <span class="comment"># curl localhost:8001/api/v1/namespaces/foo/pods</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"kind"</span>: <span class="string">"Status"</span>,</span><br><span class="line">  <span class="string">"apiVersion"</span>: <span class="string">"v1"</span>,</span><br><span class="line">  <span class="string">"metadata"</span>: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"Failure"</span>,</span><br><span class="line">  <span class="string">"message"</span>: <span class="string">"pods is forbidden: User \"system:serviceaccount:foo:default\" cannot list resource \"pods\" in API group \"\" in the namespace \"foo\""</span>,</span><br><span class="line">  <span class="string">"reason"</span>: <span class="string">"Forbidden"</span>,</span><br><span class="line">  <span class="string">"details"</span>: &#123;</span><br><span class="line">    <span class="string">"kind"</span>: <span class="string">"pods"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"code"</span>: 403</span><br></pre></td></tr></table></figure>
+<h4 id="1-ClusterRole绑定到ClusterRoleBinding"><a href="#1-ClusterRole绑定到ClusterRoleBinding" class="headerlink" title="1.ClusterRole绑定到ClusterRoleBinding"></a>1.ClusterRole绑定到ClusterRoleBinding</h4><p>下面的命令将view这个ClusterRole绑定到foo名称空间下的ServiceAccount</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl create clusterrolebinding view-test --clusterrole=view --serviceaccount=foo:default</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/view-test created</span><br></pre></td></tr></table></figure>
+<p>现在pod能列出foo名称空间下的Pod了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/namespaces/foo/pods</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;PodList&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line">    &quot;selfLink&quot;: &quot;/api/v1/namespaces/foo/pods&quot;,</span><br><span class="line">    &quot;resourceVersion&quot;: &quot;10865044&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;items&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;metadata&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;test-7b4bb6b9ff-qpppf&quot;,</span><br></pre></td></tr></table></figure>
+<p>而且也可以列出bar名称空间下的Pod了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/namespaces/bar/pods</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;PodList&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line">    &quot;selfLink&quot;: &quot;/api/v1/namespaces/bar/pods&quot;,</span><br><span class="line">    &quot;resourceVersion&quot;: &quot;10865200&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;items&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;metadata&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;test-7b4bb6b9ff-jl6v5&quot;</span><br></pre></td></tr></table></figure>
+<p>还可以使用/api/v1/pods的URL路径来检索所有名称空间中的pod</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/pods | more</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;PodList&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line">    &quot;selfLink&quot;: &quot;/api/v1/pods&quot;,</span><br><span class="line">    &quot;resourceVersion&quot;: &quot;10872966&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;items&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;metadata&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;test-7b4bb6b9ff-jl6v5&quot;,</span><br><span class="line">        &quot;generateName&quot;: &quot;test-7b4bb6b9ff-&quot;,</span><br><span class="line">        &quot;namespace&quot;: &quot;bar&quot;,</span><br><span class="line">        ......</span><br></pre></td></tr></table></figure>
+<p><strong>总结:</strong> 正如预期的那样.将ClusterRole绑定到ClusterRoleBinding.便可以获取整个集群中(包括所有名称空间)下的所有pod的列表.</p>
+<hr>
+<h4 id="2-将ClusterRole绑定到RoleBinding"><a href="#2-将ClusterRole绑定到RoleBinding" class="headerlink" title="2.将ClusterRole绑定到RoleBinding."></a>2.将ClusterRole绑定到RoleBinding.</h4><p>先删除刚才创建的view-test的绑定关系删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl delete clusterrolebinding view-test</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io &quot;view-test&quot; deleted</span><br></pre></td></tr></table></figure>
+<p>创建一个RoleBinding替代</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl create rolebinding view-test --clusterrole=view --serviceaccount=foo:default -n foo</span><br><span class="line">rolebinding.rbac.authorization.k8s.io/view-test created</span><br></pre></td></tr></table></figure>
+<p>现在foo名称空间有一个RoleBinding,将同一个名称空间中的default ServiceAccount绑定到view这个<strong>ClusterRole</strong></p>
+<p>现在pod仍然可以访问当前名称空间下的Pod</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/namespaces/foo/pods</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;PodList&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line">    &quot;selfLink&quot;: &quot;/api/v1/namespaces/foo/pods&quot;,</span><br><span class="line">    &quot;resourceVersion&quot;: &quot;10876697&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;items&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;metadata&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;test-7b4bb6b9ff-qpppf&quot;,</span><br></pre></td></tr></table></figure>
+<p>但是现在已经无法访问bar名称空间下的pod了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/namespaces/bar/pods</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;Status&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;status&quot;: &quot;Failure&quot;,</span><br><span class="line">  &quot;message&quot;: &quot;pods is forbidden: User \&quot;system:serviceaccount:foo:default\&quot; cannot list resource \&quot;pods\&quot; in API group \&quot;\&quot; in the namespace \&quot;bar\&quot;&quot;,</span><br><span class="line">  &quot;reason&quot;: &quot;Forbidden&quot;,</span><br><span class="line">  &quot;details&quot;: &#123;</span><br><span class="line">    &quot;kind&quot;: &quot;pods&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;code&quot;: 403</span><br></pre></td></tr></table></figure>
+<p>整个集群下的pod资源当然也无法访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/ # curl localhost:8001/api/v1/pods</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;Status&quot;,</span><br><span class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">  &quot;metadata&quot;: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;status&quot;: &quot;Failure&quot;,</span><br><span class="line">  &quot;message&quot;: &quot;pods is forbidden: User \&quot;system:serviceaccount:foo:default\&quot; cannot list resource \&quot;pods\&quot; in API group \&quot;\&quot; at the cluster scope&quot;,</span><br><span class="line">  &quot;reason&quot;: &quot;Forbidden&quot;,</span><br><span class="line">  &quot;details&quot;: &#123;</span><br><span class="line">    &quot;kind&quot;: &quot;pods&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;code&quot;: 403</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="总结Role-ClusterRole-RoleBinding和ClusterRoleBinding的组合"><a href="#总结Role-ClusterRole-RoleBinding和ClusterRoleBinding的组合" class="headerlink" title="总结Role,ClusterRole,RoleBinding和ClusterRoleBinding的组合"></a>总结Role,ClusterRole,RoleBinding和ClusterRoleBinding的组合</h3><table>
+<thead>
+<tr>
+<th>访问资源</th>
+<th>角色类型</th>
+<th>绑定类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>集群级别的资源(Nodes,PersistentVolumes,……)</td>
+<td>ClusterRole</td>
+<td>ClusterRoleBinding</td>
+</tr>
+<tr>
+<td>非资源URL(/api,/healthz……)</td>
+<td>ClusterRole</td>
+<td>ClusterRoleBinding</td>
+</tr>
+<tr>
+<td>在任何名称空间中的资源(跨所有名称空间的资源)</td>
+<td>ClusterRole</td>
+<td>ClusterRoleBinding</td>
+</tr>
+<tr>
+<td>具体名称空间中的资源(在多个名称空间中重用这个相同的ClusterRole</td>
+<td>ClusterRole</td>
+<td>RoleBinding</td>
+</tr>
+<tr>
+<td>在具体名称空间中的资源(Role必须在每个名称空间中定义)</td>
+<td>Role</td>
+<td>RoleBinding</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="了解默认的ClusterRole和ClusterRoleBinding"><a href="#了解默认的ClusterRole和ClusterRoleBinding" class="headerlink" title="了解默认的ClusterRole和ClusterRoleBinding"></a>了解默认的ClusterRole和ClusterRoleBinding</h3><p>Kubernetes提供了默认的ClusterRole和ClusterRoleBinding.API服务器启动时都会更新他们,这保证了如果你错误地删除角色和绑定,Kubernetes会重新创建默认的角色和绑定</p>
+<p><code>kubectl get clusterrolebinding</code>和<code>kubectl get clusterrole</code>命令显示了系统默认的ClusterRole和ClusterRoleBinding</p>
+<p>在前面的例子中,使用了默认的view ClusterRole.它允许读取一个名称空间中的大多数资源(除了Role,RoleBinding,Secret).</p>
+<p>下面是一些其他的默认<strong>ClusterRole</strong>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#允许修改一个名称空间中的资源,不允许查看和修改Role,RoleBinding</span><br><span class="line">ClusterRole: edit</span><br><span class="line"></span><br><span class="line">#一个名称空间中的资源完全控制权.可以读取和修改名称空间中的任何资源.和上面的区别在于是否有权限查看修改Role,RoleBinding</span><br><span class="line">ClusterRole: admin</span><br><span class="line"></span><br><span class="line">#集群完全控制权限</span><br><span class="line">ClusterRole: cluster-admin</span><br></pre></td></tr></table></figure>
+<p>显然将admin或者cluster-admin授予pod应用程序或者用户是一个坏主意,和安全问题一样,最好是仅仅给每个人提供他们所需的权限(最小权限原则)</p>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结:"></a>总结:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#创建ServiceAccount</span><br><span class="line">kubectl create serviceaccount 服务账号名 </span><br><span class="line"></span><br><span class="line">#将ServiceAccount分配给pod</span><br><span class="line">在pod的manifest配置文件中指定ServiceAccount名:</span><br><span class="line">serviceAccountName: 服务账号名</span><br><span class="line"></span><br><span class="line">#RBAC4种角色资源</span><br><span class="line">Role: 常规角色.定义了对某个资源具有某种访问权限</span><br><span class="line">RoleBinding: 常规角色绑定.定义了该角色绑定到哪个主体</span><br><span class="line">ClusterRole: 集群角色.同上</span><br><span class="line">ClusterRoleBinding: 集群角色绑定.同上</span><br><span class="line"></span><br><span class="line">区别在于:</span><br><span class="line">常规角色和集群角色绑定作用于某个名称空间下.</span><br><span class="line">集群角色和集群角色绑定作用于整个集群,不受限于任何名称空间</span><br><span class="line"></span><br><span class="line">#了解集群默认集群角色和集群角色绑定</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/">kubernetes API服务器权限(ServiceAccount && RBAC)</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年06月26日 - 11:06</p>
+  <p><span>最后更新:</span>2020年06月29日 - 22:06</p>
+  <p><span>原始链接:</span><a href="/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/" title="kubernetes API服务器权限(ServiceAccount && RBAC)">https://jesse.top/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/26/kubernetes/kubernetes Deployment/" rel="next" title="kuberentes Deployment">
+                <i class="fa fa-chevron-left"></i> kuberentes Deployment
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/26/kubernetes/k8s挂载NFS网络磁盘/" rel="prev" title="k8s挂载NFS网络磁盘">
+                k8s挂载NFS网络磁盘 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/"
+           data-title="kubernetes API服务器权限(ServiceAccount && RBAC)" data-url="https://jesse.top/2020/06/26/kubernetes/kubernetes API服务器权限(ServiceAccount && RBAC)/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#kubernetes-API服务器权限-ServiceAccount-amp-amp-RBAC"><span class="nav-number">1.</span> <span class="nav-text">kubernetes API服务器权限(ServiceAccount &amp;&amp; RBAC)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ServiceAccount介绍"><span class="nav-number">1.1.</span> <span class="nav-text">ServiceAccount介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#了解ServiceAccount资源"><span class="nav-number">1.2.</span> <span class="nav-text">了解ServiceAccount资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建ServiceAccount"><span class="nav-number">1.3.</span> <span class="nav-text">创建ServiceAccount</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍RBAC"><span class="nav-number">1.4.</span> <span class="nav-text">介绍RBAC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍RBAC资源"><span class="nav-number">1.5.</span> <span class="nav-text">介绍RBAC资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#演示RBAC的实践"><span class="nav-number">1.6.</span> <span class="nav-text">演示RBAC的实践</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建2个命名空间-然后在2个命名空间下运行kubectl-proxy-pod"><span class="nav-number">1.6.0.1.</span> <span class="nav-text">创建2个命名空间,然后在2个命名空间下运行kubectl-proxy pod.</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用Role和RoleBinding"><span class="nav-number">1.6.0.2.</span> <span class="nav-text">使用Role和RoleBinding</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建Role"><span class="nav-number">1.6.0.3.</span> <span class="nav-text">创建Role</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#将Role角色绑定到ServiceAccount"><span class="nav-number">1.6.0.4.</span> <span class="nav-text">将Role角色绑定到ServiceAccount</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在RoleBinding角色绑定中使用其他名称空间的ServiceAccount"><span class="nav-number">1.6.0.5.</span> <span class="nav-text">在RoleBinding角色绑定中使用其他名称空间的ServiceAccount</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ClusterRole和ClusterRoleBinding"><span class="nav-number">1.7.</span> <span class="nav-text">ClusterRole和ClusterRoleBinding</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建ClusterRole"><span class="nav-number">1.7.0.1.</span> <span class="nav-text">创建ClusterRole</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建ClusterRoleBinding"><span class="nav-number">1.7.0.2.</span> <span class="nav-text">创建ClusterRoleBinding</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ClusterRole授权访问指定命名空间中的资源"><span class="nav-number">1.8.</span> <span class="nav-text">ClusterRole授权访问指定命名空间中的资源</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-ClusterRole绑定到ClusterRoleBinding"><span class="nav-number">1.8.1.</span> <span class="nav-text">1.ClusterRole绑定到ClusterRoleBinding</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-将ClusterRole绑定到RoleBinding"><span class="nav-number">1.8.2.</span> <span class="nav-text">2.将ClusterRole绑定到RoleBinding.</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结Role-ClusterRole-RoleBinding和ClusterRoleBinding的组合"><span class="nav-number">1.9.</span> <span class="nav-text">总结Role,ClusterRole,RoleBinding和ClusterRoleBinding的组合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#了解默认的ClusterRole和ClusterRoleBinding"><span class="nav-number">1.10.</span> <span class="nav-text">了解默认的ClusterRole和ClusterRoleBinding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.11.</span> <span class="nav-text">总结:</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (GMT+08:00) &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

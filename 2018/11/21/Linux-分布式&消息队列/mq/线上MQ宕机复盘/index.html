@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="MQ," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="线上MQ宕机复盘 背景时间:2018年11月20号晚上10点40 服务器:mq-slave 故障现象: 钉钉收到报警MQ服务器的rabbitmq进程挂了.手动启动后,过一会超时退出">
+<meta name="keywords" content="MQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线上MQ宕机复盘">
+<meta property="og:url" content="https://jesse.top/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="线上MQ宕机复盘 背景时间:2018年11月20号晚上10点40 服务器:mq-slave 故障现象: 钉钉收到报警MQ服务器的rabbitmq进程挂了.手动启动后,过一会超时退出">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-01-05T15:05:15.465Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="线上MQ宕机复盘">
+<meta name="twitter:description" content="线上MQ宕机复盘 背景时间:2018年11月20号晚上10点40 服务器:mq-slave 故障现象: 钉钉收到报警MQ服务器的rabbitmq进程挂了.手动启动后,过一会超时退出">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/"/>
+
+
+
+
+
+  <title>线上MQ宕机复盘 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">线上MQ宕机复盘</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-21T17:59:58+08:00">
+                2018-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux-分布式&消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-分布式-消息队列/mq/" itemprop="url" rel="index">
+                    <span itemprop="name">mq</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="线上MQ宕机复盘"><a href="#线上MQ宕机复盘" class="headerlink" title="线上MQ宕机复盘"></a>线上MQ宕机复盘</h2><hr>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>时间:2018年11月20号晚上10点40</p>
+<p>服务器:mq-slave</p>
+<p>故障现象: 钉钉收到报警MQ服务器的rabbitmq进程挂了.手动启动后,过一会超时退出</p>
+<a id="more"></a>
+<hr>
+<p>1.查看日志.提示delayed_message插件超时.无法启动.</p>
+<p>联系开发.可能是白天修改了延时队列机制的缘故</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">less /var/log/rabbitmq/rabbit@node2</span><br><span class="line"></span><br><span class="line">Error: &#123;&#123;case_clause,&#123;timeout,[rabbit_delayed_messagerabbit@node2]&#125;&#125;, [&#123;rabbit_boot_steps,&apos;-run_step/2-lc$^1/1-1-&apos;,1, [&#123;file,&quot;src/rabbit_boot_steps.erl&quot;&#125;,&#123;line,49&#125;]&#125;, &#123;rabbit_boot_steps,run_step,2, [&#123;file,&quot;src/rabbit_boot_steps.erl&quot;&#125;,&#123;line,49&#125;]&#125;, &#123;rabbit_boot_steps,&apos;-run_boot_steps/1-lc$^0/1-0-&apos;,1, [&#123;file,&quot;src/rabbit_boot_steps.erl&quot;&#125;,&#123;line,26&#125;]&#125;, &#123;rabbit_boot_steps,run_boot_steps,1, [&#123;file,&quot;src/rabbit_boot_steps.erl&quot;&#125;,&#123;line,26&#125;]&#125;, &#123;rabbit,start_apps,1,[&#123;file,&quot;src/rabbit.erl&quot;&#125;,&#123;line,447&#125;]&#125;, &#123;rabbit_plugins,ensure,1,[&#123;file,&quot;src/rabbit_plugins.erl&quot;&#125;,&#123;line,49&#125;]&#125;, &#123;rpc,&apos;-handle_call_call/6-fun-0-&apos;,5,[&#123;file,&quot;rpc.erl&quot;&#125;,&#123;line,206&#125;]&#125;]&#125;</span><br></pre></td></tr></table></figure>
+<p>2.关闭该插件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmq-plugins disable rabbitmq_delayed_message_exchange</span><br><span class="line">he following plugins have been disabled: </span><br><span class="line">rabbitmq_delayed_message_exchange</span><br></pre></td></tr></table></figure>
+<p>3.再次启动.可以成功启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# service rabbitmq-server start</span><br></pre></td></tr></table></figure>
+<p>4.尝试手动启动该插件.仍然超时失败</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmq-plugins enable rabbitmq_delayed_message_exchange</span><br><span class="line"></span><br><span class="line">The following plugins have been enabled:</span><br><span class="line">rabbitmq_delayed_message_exchange</span><br><span class="line"></span><br><span class="line">Applying plugin configuration to rabbit@node2... failed. Error: &#123;&#123;case_clause,&#123;timeout,[rabbit_delayed_messagerabbit@node2]&#125;&#125;, [&#123;rabbit_boot_steps,&apos;-run_step/2-lc$^1/1-1-&apos;,1, [&#123;file,&quot;src/rabbit_boot_steps.erl&quot;&#125;,&#123;line,49&#125;]&#125;, &#123;rabbit_boot_steps,run_step,2, [&#123;file,&quot;src/rabbit_boot_steps.erl&quot;&#125;,&#123;line,49&#125;]&#125;, &#123;rabbit_boot_steps,&apos;-run_boot_steps/1-lc$^0/1-0-&apos;,1, [&#123;file,&quot;src/rabbit_boot_steps.erl&quot;&#125;,&#123;line,26&#125;]&#125;, &#123;rabbit_boot_steps,run_boot_steps,1, [&#123;file,&quot;src/rabbit_boot_steps.erl&quot;&#125;,&#123;line,26&#125;]&#125;, &#123;rabbit,start_apps,1,[&#123;file,&quot;src/rabbit.erl&quot;&#125;,&#123;line,447&#125;]&#125;, &#123;rabbit_plugins,ensure,1,[&#123;file,&quot;src/rabbit_plugins.erl&quot;&#125;,&#123;line,49&#125;]&#125;, &#123;rpc,&apos;-handle_call_call/6-fun-0-&apos;,5,[&#123;file,&quot;rpc.erl&quot;&#125;,&#123;line,206&#125;]&#125;]&#125;</span><br></pre></td></tr></table></figure>
+<p>5.停止rabbitmq服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# service rabbitmq-server stop</span><br></pre></td></tr></table></figure>
+<hr>
+<p>联系开发.可能是延迟队列消息太多,将服务器的MQ程序卡死,导致插件无响应.从而无法启动.由于MQ使用了2台服务器座位集群,而且使用了镜像队列方式.所以清洗mq-slave服务器这台服务器的数据.重新启动.</p>
+<p>确定是否使用镜像队列方式可以通过以下命令查看.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmqctl list_policies</span><br><span class="line">Listing policies ...</span><br><span class="line">/	ha-all	all	^	&#123;&quot;ha-mode&quot;:&quot;all&quot;,&quot;ha-sync-mode&quot;:&quot;automatic&quot;&#125;	0</span><br></pre></td></tr></table></figure>
+<p>ha-mode: 代表使用镜像队列.</p>
+<p>ha-sync-mode:表示自动同步数据</p>
+<p>更多信息请网上搜索</p>
+<hr>
+<p>1.关闭插件,重新启动rabbitmq进程.(因为清除数据需要先启动rabbitmq进程)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# service rabbitmq-server start</span><br></pre></td></tr></table></figure>
+<p>2.将这台服务器从集群节点拿掉.不然清楚数据会影响现有的生产环境</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmqctl stop_app</span><br><span class="line">Stopping node rabbit@node2 ...</span><br></pre></td></tr></table></figure>
+<p>3.数据删除完毕后,重新启动rabbitmq节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmqctl start_app Starting node rabbit@node2 ...</span><br></pre></td></tr></table></figure>
+<p>4.启动插件.显示已经启动了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">oot@node2:~# rabbitmq-plugins enable rabbitmq_delayed_message_exchange</span><br><span class="line">Plugin configuration unchanged.</span><br><span class="line">Applying plugin configuration to rabbit@node2... nothing to do.</span><br></pre></td></tr></table></figure>
+<p>5.显示插件,查看确实已经成功启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmq-plugins list -E</span><br><span class="line"></span><br><span class="line">Configured: E = explicitly enabled; e = implicitly enabled</span><br><span class="line"> | Status:   * = running on rabbit@node2</span><br><span class="line"> |/</span><br><span class="line">[E*] rabbitmq_delayed_message_exchange 0.0.1</span><br><span class="line">[E*] rabbitmq_management               3.6.3</span><br></pre></td></tr></table></figure>
+<p>6.查看节点状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl status</span><br></pre></td></tr></table></figure>
+<p>7.查看集群状态.可以看到只识别到本身这台的节点,没有加入到集群</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmqctl cluster_status </span><br><span class="line"></span><br><span class="line">Cluster status of node rabbit@node2 ... </span><br><span class="line">[&#123;nodes,[&#123;disc,[rabbit@node2]&#125;]&#125;, </span><br><span class="line">&#123;running_nodes,[rabbit@node2]&#125;,</span><br><span class="line">&#123;cluster_name,&lt;&lt;&quot;rabbit@node2&quot;&gt;&gt;&#125;, </span><br><span class="line">&#123;partitions,[]&#125;, &#123;alarms,[&#123;rabbit@node2,[]&#125;]&#125;]</span><br></pre></td></tr></table></figure>
+<p>8.关闭这台服务器节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmqctl stop_app Stopping node rabbit@node2 ...</span><br></pre></td></tr></table></figure>
+<p>9.加入另外一台node1的集群</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmqctl join_cluster rabbit@node1 </span><br><span class="line">Clustering node rabbit@node2 with rabbit@node1 ...</span><br></pre></td></tr></table></figure>
+<p>10.启动节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmqctl start_app </span><br><span class="line">Starting node rabbit@node2 ...</span><br></pre></td></tr></table></figure>
+<p>11.查看集群状态.可以看到2个节点都识别到了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmqctl cluster_status</span><br><span class="line">Cluster status of node rabbit@node2 ...</span><br><span class="line">[&#123;nodes,[&#123;disc,[rabbit@node1,rabbit@node2]&#125;]&#125;,</span><br><span class="line"> &#123;running_nodes,[rabbit@node1,rabbit@node2]&#125;,</span><br><span class="line"> &#123;cluster_name,&lt;&lt;&quot;rabbit@node1&quot;&gt;&gt;&#125;,</span><br><span class="line"> &#123;partitions,[]&#125;,</span><br><span class="line"> &#123;alarms,[&#123;rabbit@node1,[]&#125;,&#123;rabbit@node2,[]&#125;]&#125;]</span><br><span class="line">root@node2:~#</span><br></pre></td></tr></table></figure>
+<p>12.查看日志,可以看到集群正在往该节点上同步数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">=WARNING REPORT==== 21-Nov-2018::00:39:47 === msg_store_persistent: rebuilding indices from scratch</span><br><span class="line"></span><br><span class="line">=INFO REPORT==== 21-Nov-2018::00:39:48 === Mirrored queue &apos;hsq.marketingcenter.finish_pin_event&apos; in vhost &apos;/&apos;: Adding mirror on node rabbit@node2: &lt;0.11440.0&gt;</span><br><span class="line"></span><br><span class="line">=INFO REPORT==== 21-Nov-2018::00:39:48 === Mirrored queue &apos;hsq.msgcenter.app_push_notification&apos; in vhost &apos;/&apos;: Adding mirror on node rabbit@node2: &lt;0.11444.0&gt;</span><br><span class="line"></span><br><span class="line">=INFO REPORT==== 21-Nov-2018::00:39:48 === Mirrored queue &apos;hsq.msgcenter.lottery_push_notification&apos; in vhost &apos;/&apos;: Adding mirror on node rabbit@node2: &lt;0.11448.0&gt;</span><br><span class="line"></span><br><span class="line">=INFO REPORT==== 21-Nov-2018::00:39:48 === Mirrored queue &apos;push_robot&apos; in vhost &apos;/&apos;: Adding mirror on node rabbit@node2: &lt;0.11452.0&gt;</span><br><span class="line"></span><br><span class="line">=INFO REPORT==== 21-Nov-2018::00:39:48 === Mirrored queue &apos;hsq.tradecenter.refund_point&apos; in vhost &apos;/&apos;: Adding mirror on node rabbit@node2: &lt;0.11456.0&gt;</span><br></pre></td></tr></table></figure>
+<p>13.在本节点上查看队列.可以看到队列已经同步过来了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@node2:~# rabbitmqctl list_queues</span><br></pre></td></tr></table></figure>
+<p>另外在web控制台上还能看到更详细的信息.</p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/">线上MQ宕机复盘</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2018年11月21日 - 17:11</p>
+  <p><span>最后更新:</span>2021年01月05日 - 23:01</p>
+  <p><span>原始链接:</span><a href="/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/" title="线上MQ宕机复盘">https://jesse.top/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MQ/" rel="tag"># MQ</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/21/Linux-Basic/文本处理/vim使用技巧/" rel="next" title="vim使用技巧">
+                <i class="fa fa-chevron-left"></i> vim使用技巧
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/21/Linux-分布式&消息队列/mq/rabbitmq集群版本升级/" rel="prev" title="rabbitmq集群版本升级">
+                rabbitmq集群版本升级 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/"
+           data-title="线上MQ宕机复盘" data-url="https://jesse.top/2018/11/21/Linux-分布式&消息队列/mq/线上MQ宕机复盘/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#线上MQ宕机复盘"><span class="nav-number">1.</span> <span class="nav-text">线上MQ宕机复盘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (GMT+08:00) &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

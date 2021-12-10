@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="prometheus," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="prometheus监控mysql介绍本文使用的是官方的mysqld_exporter.github地址:mysqld_exporter  mysql版本需要在5.6版本或以上  mysqld_exporter提供很多监控项(具体参考github项目介绍).如果需要开启一个监控项,在启动mysqld_exporter时,携带以下命令: 1--collect.key 如果需要关闭某个监控项.携带以下">
+<meta name="keywords" content="prometheus">
+<meta property="og:type" content="article">
+<meta property="og:title" content="prometheus监控mysql">
+<meta property="og:url" content="https://jesse.top/2021/03/10/prometheus/prometheus监控mysql/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="prometheus监控mysql介绍本文使用的是官方的mysqld_exporter.github地址:mysqld_exporter  mysql版本需要在5.6版本或以上  mysqld_exporter提供很多监控项(具体参考github项目介绍).如果需要开启一个监控项,在启动mysqld_exporter时,携带以下命令: 1--collect.key 如果需要关闭某个监控项.携带以下">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img2.jesse.top/image-20201126103328877.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20201126105202201.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20201126105345163.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20210329171207919.png">
+<meta property="og:image" content="https://img2.jesse.top/image-20210329171842731.png">
+<meta property="og:updated_time" content="2021-04-01T13:59:58.464Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="prometheus监控mysql">
+<meta name="twitter:description" content="prometheus监控mysql介绍本文使用的是官方的mysqld_exporter.github地址:mysqld_exporter  mysql版本需要在5.6版本或以上  mysqld_exporter提供很多监控项(具体参考github项目介绍).如果需要开启一个监控项,在启动mysqld_exporter时,携带以下命令: 1--collect.key 如果需要关闭某个监控项.携带以下">
+<meta name="twitter:image" content="https://img2.jesse.top/image-20201126103328877.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2021/03/10/prometheus/prometheus监控mysql/"/>
+
+
+
+
+
+  <title>prometheus监控mysql | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/03/10/prometheus/prometheus监控mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">prometheus监控mysql</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-10T07:59:58+08:00">
+                2021-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/prometheus/" itemprop="url" rel="index">
+                    <span itemprop="name">prometheus</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/03/10/prometheus/prometheus监控mysql/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/03/10/prometheus/prometheus监控mysql/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="prometheus监控mysql"><a href="#prometheus监控mysql" class="headerlink" title="prometheus监控mysql"></a>prometheus监控mysql</h3><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>本文使用的是官方的mysqld_exporter.github地址:<a href="https://github.com/prometheus/mysqld_exporter" target="_blank" rel="noopener">mysqld_exporter</a></p>
+<blockquote>
+<p>mysql版本需要在5.6版本或以上</p>
+</blockquote>
+<p>mysqld_exporter提供很多监控项(具体参考github项目介绍).如果需要开启一个监控项,在启动mysqld_exporter时,携带以下命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--collect.key</span><br></pre></td></tr></table></figure>
+<p>如果需要关闭某个监控项.携带以下命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--no-collect.key</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果mysqld_exporter的版本小于0.10.0,命令有些变化,双横杠变成单横杠,使用-collect.key 或者-collect.key=True|false</p>
+</blockquote>
+<hr>
+<h3 id="mysqld-exporter安装"><a href="#mysqld-exporter安装" class="headerlink" title="mysqld_exporter安装"></a>mysqld_exporter安装</h3><p>安装方式很简单,.下面是一个Ansible脚本以供参考</p>
+<a id="more"></a>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- hosts:</span> <span class="string">mysql-prod</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">work</span></span><br><span class="line"><span class="attr">  become:</span> <span class="literal">yes</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">检查mysqld_exporter是否已经安装</span></span><br><span class="line"><span class="attr">      systemd:</span> </span><br><span class="line"><span class="attr">        name:</span> <span class="string">mysqld_exporter</span></span><br><span class="line"><span class="attr">        state:</span> <span class="string">started</span></span><br><span class="line"><span class="attr">      ignore_errors:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">      register:</span> <span class="string">result</span></span><br><span class="line">    </span><br><span class="line"><span class="attr">    - name:</span> <span class="string">安装mysqld_exporter</span></span><br><span class="line"><span class="attr">      unarchive:</span></span><br><span class="line"><span class="attr">        src:</span> <span class="attr">http://repo.doweidu.com/prometheus/mysqld_exporter-0.12.1.linux-amd64.tar.gz</span></span><br><span class="line"><span class="attr">        dest:</span> <span class="string">/home/work/</span></span><br><span class="line"><span class="attr">        remote_src:</span> <span class="literal">yes</span></span><br><span class="line"><span class="attr">      when:</span> <span class="string">result</span> <span class="string">is</span> <span class="string">failed</span> </span><br><span class="line">    </span><br><span class="line"><span class="attr">    - name:</span> <span class="string">重命名</span></span><br><span class="line"><span class="attr">      command:</span> <span class="string">mv</span> <span class="string">/home/work/mysqld_exporter-0.12.1.linux-amd64</span> <span class="string">/home/work/mysqld_exporter</span></span><br><span class="line"><span class="attr">      when:</span> <span class="string">result</span> <span class="string">is</span> <span class="string">failed</span> </span><br><span class="line">    </span><br><span class="line"><span class="attr">    - name:</span> <span class="string">拷贝到/usr/local下</span></span><br><span class="line"><span class="attr">      shell:</span> <span class="string">cp</span> <span class="bullet">-r</span> <span class="string">/home/work/mysqld_exporter</span> <span class="string">/usr/local/</span></span><br><span class="line"><span class="attr">      when:</span> <span class="string">result</span> <span class="string">is</span> <span class="string">failed</span></span><br><span class="line"></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">拷贝配置文件到/usr/local/mysqld_exporter下</span></span><br><span class="line"><span class="attr">      copy:</span> <span class="string">src=files/localhost_db.cnf</span> <span class="string">dest=/usr/local/mysqld_exporter/</span></span><br><span class="line"><span class="attr">      when:</span> <span class="string">result</span> <span class="string">is</span> <span class="string">failed</span></span><br><span class="line">    </span><br><span class="line"><span class="attr">    - name:</span> <span class="string">拷贝systemd文件</span></span><br><span class="line"><span class="attr">      copy:</span> <span class="string">src=files/mysqld_exporter.service</span> <span class="string">dest=/usr/lib/systemd/system/mysqld_exporter.service</span></span><br><span class="line"><span class="attr">      when:</span> <span class="string">result</span> <span class="string">is</span> <span class="string">failed</span> </span><br><span class="line"></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">启动mysqld_exporter</span></span><br><span class="line"><span class="attr">      systemd:</span> <span class="string">name=mysqld_exporter</span> <span class="string">state=started</span> <span class="string">enabled=yes</span></span><br><span class="line"><span class="attr">      when:</span> <span class="string">result</span> <span class="string">is</span> <span class="string">failed</span></span><br></pre></td></tr></table></figure>
+<p>这里需要准备一个<code>localhost_db.cnf</code>配置文件.内容如下</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[client]</span></span><br><span class="line"><span class="string">host=127.0.0.1</span>  <span class="comment">#mysql服务器地址</span></span><br><span class="line"><span class="comment">#port=          #mysql端口,默认为3306,如果端口是默认3306,可以删掉这行</span></span><br><span class="line"><span class="string">user=zabbix</span>     <span class="comment">#mysql用于监控的账号</span></span><br><span class="line"><span class="string">password=xxxxxx</span>  <span class="comment">#密码</span></span><br></pre></td></tr></table></figure>
+<p>mysqld_exporter启动脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=mysqld_exporter</span><br><span class="line">Documentation=https://prometheus.io/</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">User=root</span><br><span class="line">ExecStart=/usr/local/mysqld_exporter/mysqld_exporter --config.my-cnf=/usr/local/mysqld_exporter/localhost_db.cnf</span><br><span class="line">Restart=on-failure</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<p>Ansible脚本执行完毕后,就可以通过<code>IP:9104</code>来访问mysql的Metrics</p>
+<p>为了监控到主机的情况.此时还需要部署node_exporter客户端.关于Node_exporter我在另一篇笔记中再详细介绍</p>
+<hr>
+<h4 id="prometheus配置"><a href="#prometheus配置" class="headerlink" title="prometheus配置"></a>prometheus配置</h4><p>由于mysqld_exporter没有任何监控项能获取到mysql服务器的主机名.所以将数据展示到grafana时,只能通过IP去查看监控图表.这非常的不方便.比如下面截图中,当mysql服务器数量较多时,很难知道IP地址对应的是具体哪台服务器:</p>
+<p><img src="https://img2.jesse.top/image-20201126103328877.png" alt="image-20201126103328877"></p>
+<p>此时,就需要在prometheus配置文件中,将每个mysql服务器添加labels,给服务器打上主机名和组名的标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- job_name: &apos;aliyun-mysql-exporter&apos;</span><br><span class="line">    static_configs:</span><br><span class="line">     - targets:</span><br><span class="line">         - &apos;10.111.200.176:9104&apos;</span><br><span class="line">       labels:</span><br><span class="line">         hostname: &apos;mg-goodscenter-mysql-master&apos;</span><br><span class="line">         group: &apos;mg-mysql&apos;</span><br><span class="line"></span><br><span class="line">     - targets: [&apos;10.111.50.39:9104&apos;]</span><br><span class="line">       labels:</span><br><span class="line">         hostname: &apos;mg-msg-mysql-master&apos;</span><br><span class="line">         group: &apos;mg-mysql&apos;</span><br><span class="line"></span><br><span class="line">......以下省略......</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="grafana-dashboard"><a href="#grafana-dashboard" class="headerlink" title="grafana dashboard"></a>grafana dashboard</h4><p>下载dashboard: <a href="https://grafana.com/grafana/dashboards/7362" target="_blank" rel="noopener">https://grafana.com/grafana/dashboards/7362</a> </p>
+<p>或者直接在grafana中添加7362的dashboard</p>
+<p>原生的dashboard只有一个instance的变量.为了添加主机名,更好的区分和展示监控效果,需要做一些修改.</p>
+<p><strong>1.定义变量:</strong></p>
+<ul>
+<li><p>job变量:</p>
+<ul>
+<li>name:job</li>
+<li><p>label: job</p>
+</li>
+<li><p>query: label_values(mysql_up,job)</p>
+</li>
+</ul>
+</li>
+<li><p>group变量:</p>
+<ul>
+<li>name: group</li>
+<li>label:主机组</li>
+<li>Query:label_values(mysql_up{job=~”$job”}, group)</li>
+</ul>
+</li>
+</ul>
+<p><strong>2.修改变量</strong></p>
+<p>将host变量修改为:</p>
+<p>name: host</p>
+<p>label: 主机名</p>
+<p>query:label_values(mysql_up{job=~”$job”,group=~”$group”}, hostname)</p>
+<p><strong>3.变量页面最终设置如下:</strong></p>
+<p><img src="https://img2.jesse.top/image-20201126105202201.png" alt="image-20201126105202201"></p>
+<p>接着,将当前的dashboard的json文件导出.复制下面的json文件</p>
+<p><img src="https://img2.jesse.top/image-20201126105345163.png" alt="image-20201126105345163"></p>
+<p>将文件中的<code>instance=~</code>全部替换为<code>hostname=~</code>.然后复制回去,点击<code>Save Changes</code></p>
+<p>此时,可以通过主机组和主机名筛选具体的mysql服务器.</p>
+<p><img src="https://img2.jesse.top/image-20210329171207919.png" alt="image-20210329171207919"></p>
+<p><img src="https://img2.jesse.top/image-20210329171842731.png" alt="image-20210329171842731"></p>
+<blockquote>
+<p>别忘记保存dashboard</p>
+</blockquote>
+<hr>
+<h4 id="rules告警规则"><a href="#rules告警规则" class="headerlink" title="rules告警规则"></a>rules告警规则</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br></pre></td><td class="code"><pre><span class="line">groups:</span><br><span class="line">- name: MySQLStatsAlert</span><br><span class="line">  rules:</span><br><span class="line">  - alert: MySQL is down</span><br><span class="line">    expr: mysql_up == 0</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: critical</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; MySQL is down&quot;</span><br><span class="line">      description: &quot;MySQL database is down. This requires immediate action!&quot;</span><br><span class="line">  - alert: open files high</span><br><span class="line">    expr: mysql_global_status_innodb_num_open_files &gt; (mysql_global_variables_open_files_limit) * 0.75</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; open files high&quot;</span><br><span class="line">      description: &quot;Open files is high. Please consider increasing open_files_limit.&quot;</span><br><span class="line">  - alert: Read buffer size is bigger than max. allowed packet size</span><br><span class="line">    expr: mysql_global_variables_read_buffer_size &gt; mysql_global_variables_slave_max_allowed_packet</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Read buffer size is bigger than max. allowed packet size&quot;</span><br><span class="line">      description: &quot;Read buffer size (read_buffer_size) is bigger than max. allowed packet size (max_allowed_packet).This can break your replication.&quot;</span><br><span class="line">  - alert: Sort buffer possibly missconfigured</span><br><span class="line">    expr: mysql_global_variables_innodb_sort_buffer_size &lt;256*1024 or mysql_global_variables_read_buffer_size &gt; 4*1024*1024</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Sort buffer possibly missconfigured&quot;</span><br><span class="line">      description: &quot;Sort buffer size is either too big or too small. A good value for sort_buffer_size is between 256k and 4M.&quot;</span><br><span class="line">  - alert: Thread stack size is too small</span><br><span class="line">    expr: mysql_global_variables_thread_stack &lt;196608</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Thread stack size is too small&quot;</span><br><span class="line">      description: &quot;Thread stack size is too small. This can cause problems when you use Stored Language constructs for example. A typical is 256k for thread_stack_size.&quot;</span><br><span class="line">  - alert: Used more than 80% of max connections limited</span><br><span class="line">    expr: mysql_global_status_max_used_connections &gt; mysql_global_variables_max_connections * 0.8</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Used more than 80% of max connections limited&quot;</span><br><span class="line">      description: &quot;Used more than 80% of max connections limited&quot;</span><br><span class="line">  - alert: InnoDB Force Recovery is enabled</span><br><span class="line">    expr: mysql_global_variables_innodb_force_recovery != 0</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; InnoDB Force Recovery is enabled&quot;</span><br><span class="line">      description: &quot;InnoDB Force Recovery is enabled. This mode should be used for data recovery purposes only. It prohibits writing to the data.&quot;</span><br><span class="line">  - alert: InnoDB Log File size is too small</span><br><span class="line">    expr: mysql_global_variables_innodb_log_file_size &lt; 16777216</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; InnoDB Log File size is too small&quot;</span><br><span class="line">      description: &quot;The InnoDB Log File size is possibly too small. Choosing a small InnoDB Log File size can have significant performance impacts.&quot;</span><br><span class="line">  - alert: InnoDB Flush Log at Transaction Commit</span><br><span class="line">    expr: mysql_global_variables_innodb_flush_log_at_trx_commit != 1</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; InnoDB Flush Log at Transaction Commit&quot;</span><br><span class="line">      description: &quot;InnoDB Flush Log at Transaction Commit is set to a values != 1. This can lead to a loss of commited transactions in case of a power failure.&quot;</span><br><span class="line">  - alert: Table definition cache too small</span><br><span class="line">    expr: mysql_global_status_open_table_definitions &gt; mysql_global_variables_table_definition_cache</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: page</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Table definition cache too small&quot;</span><br><span class="line">      description: &quot;Your Table Definition Cache is possibly too small. If it is much too small this can have significant performance impacts!&quot;</span><br><span class="line">  - alert: Table open cache too small</span><br><span class="line">    expr: mysql_global_status_open_tables &gt;mysql_global_variables_table_open_cache * 99/100</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: page</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Table open cache too small&quot;</span><br><span class="line">      description: &quot;Your Table Open Cache is possibly too small (old name Table Cache). If it is much too small this can have significant performance impacts!&quot;</span><br><span class="line">  - alert: Thread stack size is possibly too small</span><br><span class="line">    expr: mysql_global_variables_thread_stack &lt; 262144</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: page</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Thread stack size is possibly too small&quot;</span><br><span class="line">      description: &quot;Thread stack size is possibly too small. This can cause problems when you use Stored Language constructs for example. A typical is 256k for thread_stack_size.&quot;</span><br><span class="line">  - alert: InnoDB Buffer Pool Instances is too small</span><br><span class="line">    expr: mysql_global_variables_innodb_buffer_pool_instances == 1</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: page</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; InnoDB Buffer Pool Instances is too small&quot;</span><br><span class="line">      description: &quot;If you are using MySQL 5.5 and higher you should use several InnoDB Buffer Pool Instances for performance reasons. Some rules are: InnoDB Buffer Pool Instance should be at least 1 Gbyte in size. InnoDB Buffer Pool Instances you can set equal to the number of cores of your machine.&quot;</span><br><span class="line">  - alert: InnoDB Plugin is enabled</span><br><span class="line">    expr: mysql_global_variables_ignore_builtin_innodb == 1</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: page</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; InnoDB Plugin is enabled&quot;</span><br><span class="line">      description: &quot;InnoDB Plugin is enabled&quot;</span><br><span class="line">  - alert: Binary Log is disabled</span><br><span class="line">    expr: mysql_global_variables_log_bin != 1</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Binary Log is disabled&quot;</span><br><span class="line">      description: &quot;Binary Log is disabled. This prohibits you to do Point in Time Recovery (PiTR).&quot;</span><br><span class="line">  - alert: Binlog Cache size too small</span><br><span class="line">    expr: mysql_global_variables_binlog_cache_size &lt; 1048576</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: page</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Binlog Cache size too small&quot;</span><br><span class="line">      description: &quot;Binlog Cache size is possibly to small. A value of 1 Mbyte or higher is OK.&quot;</span><br><span class="line">  - alert: Binlog Statement Cache size too small</span><br><span class="line">    expr: mysql_global_variables_binlog_stmt_cache_size &lt;1048576 and mysql_global_variables_binlog_stmt_cache_size &gt; 0</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: page</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Binlog Statement Cache size too small&quot;</span><br><span class="line">      description: &quot;Binlog Statement Cache size is possibly to small. A value of 1 Mbyte or higher is typically OK.&quot;</span><br><span class="line">  - alert: Binlog Transaction Cache size too small</span><br><span class="line">    expr: mysql_global_variables_binlog_cache_size  &lt;1048576</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: page</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Binlog Transaction Cache size too small&quot;</span><br><span class="line">      description: &quot;Binlog Transaction Cache size is possibly to small. A value of 1 Mbyte or higher is typically OK.&quot;</span><br><span class="line">  - alert: Sync Binlog is enabled</span><br><span class="line">    expr: mysql_global_variables_sync_binlog == 1</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: page</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Sync Binlog is enabled&quot;</span><br><span class="line">      description: &quot;Sync Binlog is enabled. This leads to higher data security but on the cost of write performance.&quot;</span><br><span class="line">  - alert: IO thread stopped</span><br><span class="line">    expr: mysql_slave_status_slave_io_running != 1</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: critical</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; IO thread stopped&quot;</span><br><span class="line">      description: &quot;IO thread has stopped. This is usually because it cannot connect to the Master any more.&quot;</span><br><span class="line">  - alert: SQL thread stopped</span><br><span class="line">    expr: mysql_slave_status_slave_sql_running == 0</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: critical</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; SQL thread stopped&quot;</span><br><span class="line">      description: &quot;SQL thread has stopped. This is usually because it cannot apply a SQL statement received from the master.&quot;</span><br><span class="line">  - alert: SQL thread stopped</span><br><span class="line">    expr: mysql_slave_status_slave_sql_running != 1</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: critical</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Sync Binlog is enabled&quot;</span><br><span class="line">      description: &quot;SQL thread has stopped. This is usually because it cannot apply a SQL statement received from the master.&quot;</span><br><span class="line">  - alert: Slave lagging behind Master</span><br><span class="line">    expr: rate(mysql_slave_status_seconds_behind_master[1m]) &gt;30</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Slave lagging behind Master&quot;</span><br><span class="line">      description: &quot;Slave is lagging behind Master. Please check if Slave threads are running and if there are some performance issues!&quot;</span><br><span class="line">  - alert: Slave is NOT read only(Please ignore this warning indicator.)</span><br><span class="line">    expr: mysql_global_variables_read_only != 0</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: page</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; Slave is NOT read only&quot;</span><br><span class="line">      description: &quot;Slave is NOT set to read only. You can accidentally manipulate data on the slave and get inconsistencies...&quot;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2021/03/10/prometheus/prometheus监控mysql/">prometheus监控mysql</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2021年03月10日 - 07:03</p>
+  <p><span>最后更新:</span>2021年04月01日 - 21:04</p>
+  <p><span>原始链接:</span><a href="/2021/03/10/prometheus/prometheus监控mysql/" title="prometheus监控mysql">https://jesse.top/2021/03/10/prometheus/prometheus监控mysql/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2021/03/10/prometheus/prometheus监控mysql/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/prometheus/" rel="tag"># prometheus</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/02/06/kubernetes/pod/kubernetes--pod原理/" rel="next" title="Kubernetes pod原理">
+                <i class="fa fa-chevron-left"></i> Kubernetes pod原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/03/20/docker/Docker原理----3.mount挂载/" rel="prev" title="Docker原理----3.mount挂载">
+                Docker原理----3.mount挂载 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2021/03/10/prometheus/prometheus监控mysql/"
+           data-title="prometheus监控mysql" data-url="https://jesse.top/2021/03/10/prometheus/prometheus监控mysql/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#prometheus监控mysql"><span class="nav-number">1.</span> <span class="nav-text">prometheus监控mysql</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#介绍"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysqld-exporter安装"><span class="nav-number">2.</span> <span class="nav-text">mysqld_exporter安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#prometheus配置"><span class="nav-number">2.1.</span> <span class="nav-text">prometheus配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#grafana-dashboard"><span class="nav-number">2.2.</span> <span class="nav-text">grafana dashboard</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rules告警规则"><span class="nav-number">2.3.</span> <span class="nav-text">rules告警规则</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (GMT+08:00) &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

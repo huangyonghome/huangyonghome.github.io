@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Python之路 - 特殊操作符介绍  🍀在 Python 中 , 我们自定义类都是基于 Object 对象实现的 , 而在 Object 对象中有一些特殊的操作符 (__method__) 控制着整个对象的行为 , 所以 , 如果我们想对对象的行为进行控制 , 我们就需要自己来实现这些方法 ; 当然很多人称这些方法为 Python 魔法方法 (魔术方法)  下面 , 看看这些方法吧 基本行为">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="33.Python之路 - 特殊操作符">
+<meta property="og:url" content="https://jesse.top/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="Python之路 - 特殊操作符介绍  🍀在 Python 中 , 我们自定义类都是基于 Object 对象实现的 , 而在 Object 对象中有一些特殊的操作符 (__method__) 控制着整个对象的行为 , 所以 , 如果我们想对对象的行为进行控制 , 我们就需要自己来实现这些方法 ; 当然很多人称这些方法为 Python 魔法方法 (魔术方法)  下面 , 看看这些方法吧 基本行为">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-30T12:32:51.226Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="33.Python之路 - 特殊操作符">
+<meta name="twitter:description" content="Python之路 - 特殊操作符介绍  🍀在 Python 中 , 我们自定义类都是基于 Object 对象实现的 , 而在 Object 对象中有一些特殊的操作符 (__method__) 控制着整个对象的行为 , 所以 , 如果我们想对对象的行为进行控制 , 我们就需要自己来实现这些方法 ; 当然很多人称这些方法为 Python 魔法方法 (魔术方法)  下面 , 看看这些方法吧 基本行为">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/"/>
+
+
+
+
+
+  <title>33.Python之路 - 特殊操作符 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">33.Python之路 - 特殊操作符</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-26T09:20:58+08:00">
+                2020-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/04-Object-Oriented/" itemprop="url" rel="index">
+                    <span itemprop="name">04-Object-Oriented</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Python之路-特殊操作符"><a href="#Python之路-特殊操作符" class="headerlink" title="Python之路 - 特殊操作符"></a>Python之路 - 特殊操作符</h1><h2 id="介绍-🍀"><a href="#介绍-🍀" class="headerlink" title="介绍  🍀"></a>介绍  🍀</h2><p>在 Python 中 , 我们自定义类都是基于 Object 对象实现的 , 而在 Object 对象中有一些特殊的操作符 (<code>__method__</code>) 控制着整个对象的行为 , 所以 , 如果我们想对对象的行为进行控制 , 我们就需要自己来实现这些方法 ; 当然很多人称这些方法为 Python 魔法方法 (魔术方法) </p>
+<p>下面 , 看看这些方法吧</p>
+<h2 id="基本行为-🍀"><a href="#基本行为-🍀" class="headerlink" title="基本行为  🍀"></a>基本行为  🍀</h2><table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>控制行为</th>
+<th>调用说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__new__</code></td>
+<td>对象创建</td>
+<td><code>__init__</code> 只是用处初始化 , <code>__new__</code> 调用的结果会交给 <code>__init__</code> 进一步处理</td>
+</tr>
+<tr>
+<td><code>__init__</code></td>
+<td>对象初始化</td>
+<td>构造函数 , 进行属性设置</td>
+</tr>
+<tr>
+<td><code>__del__</code></td>
+<td>对象删除</td>
+<td>析构函数 , 进行对象的销毁</td>
+</tr>
+<tr>
+<td><code>__repr__</code></td>
+<td>对象显示 , 针对对象</td>
+<td>终端显示 , 返回值必须为字符串 , 实例见表下方</td>
+</tr>
+<tr>
+<td><code>__str__</code></td>
+<td>对象显示 , 针对 <code>print</code></td>
+<td><code>print</code> 显示结果 , 返回值必须为字符串 , 如果未实现该方法 , <code>print</code> 将使用 <code>__repr__</code></td>
+</tr>
+<tr>
+<td><code>__bytes__</code></td>
+<td>字节对象转换</td>
+<td>返回值必须为一个bytes对象 , bytes(obj)</td>
+</tr>
+<tr>
+<td><code>__format__</code></td>
+<td>格式化字符串</td>
+<td>返回值必须为字符串对象 , format(obj)</td>
+</tr>
+<tr>
+<td><code>__lt__</code></td>
+<td><code>&lt;</code> 运算</td>
+<td><code>x &lt; y</code> , 返回布尔值 , 下同</td>
+</tr>
+<tr>
+<td><code>__le__</code></td>
+<td><code>&lt;=</code> 运算</td>
+<td><code>x &lt;= y</code></td>
+</tr>
+<tr>
+<td><code>__eq__</code></td>
+<td><code>=</code> 运算</td>
+<td><code>x == y</code></td>
+</tr>
+<tr>
+<td><code>__ne__</code></td>
+<td><code>!=</code> 运算</td>
+<td><code>x != y</code></td>
+</tr>
+<tr>
+<td><code>__gt__</code></td>
+<td><code>&gt;</code> 运算</td>
+<td><code>x &gt; y</code></td>
+</tr>
+<tr>
+<td><code>__ge__</code></td>
+<td><code>&gt;=</code> 运算</td>
+<td><code>x &gt;= y</code></td>
+</tr>
+<tr>
+<td><code>__hash__</code></td>
+<td>可哈希</td>
+<td>返回一个哈希对象 , hash(obj) , 注意 : 定义该方法同时应该定义 <code>__eq__</code></td>
+</tr>
+<tr>
+<td><code>__bool__</code></td>
+<td>真假测试</td>
+<td>返回布尔值</td>
+</tr>
+<tr>
+<td><code>__call__</code></td>
+<td>对象调用</td>
+<td>在对象被调用时执行</td>
+</tr>
+<tr>
+<td><code>__len__</code></td>
+<td><code>len()</code></td>
+<td>使用 <code>len(obj)</code> 时被调用 , 为防止值测试抛出 <code>OverflowError</code> , 必须定义 <code>__bool__()</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>__repr__</code> 与 <code>__str__</code> 对比实例 : </p>
+<a id="more"></a>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 类定义</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>:</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">'&lt;repr:%s&gt;'</span> % self.name</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">'&lt;str:%s&gt;'</span> % self.name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 终端结果</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj = Foo(<span class="string">'Lyon'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj</span><br><span class="line">&lt;repr:Lyon&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(obj)</span><br><span class="line">&lt;str:Lyon&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="访问行为-🍀"><a href="#访问行为-🍀" class="headerlink" title="访问行为  🍀"></a>访问行为  🍀</h2><table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>控制行为</th>
+<th>调用说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__getattr__</code></td>
+<td><code>.</code> 属性访问运算</td>
+<td>获取 <code>x.name</code> , <code>__getattribute__</code> 查询失败后被调用 , 下方实例进一步说明</td>
+</tr>
+<tr>
+<td><code>__getattribute__</code></td>
+<td><code>.</code> 属性访问运算</td>
+<td>获取 <code>x.name</code> , 查询属性时被调用</td>
+</tr>
+<tr>
+<td><code>__setattr__</code></td>
+<td><code>.</code> 属性赋值运算</td>
+<td><code>self.attr = value → self.__setattr__(&quot;attr&quot;, value)</code> , 见下方实例进一步说明</td>
+</tr>
+<tr>
+<td><code>__delattr__</code></td>
+<td><code>.</code> 属性删除运算</td>
+<td><code>del obj.name</code> 时被调用</td>
+</tr>
+<tr>
+<td><code>__dir__</code></td>
+<td><code>dir</code> 运算</td>
+<td><code>dir()</code> 调用时被调用 , 必须返回一个序列 , <code>dir()</code> 会将序列转换成 list 并排序</td>
+</tr>
+</tbody>
+</table>
+<p><code>__getattr__</code> 说明实例 : </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># __getattr__</span></span><br><span class="line"><span class="comment"># 注意在定义__getattr__或者__getattribute__时,不要出现 self. 因为这样会导致递归调用</span></span><br><span class="line"><span class="comment"># 正确的方式是,使用object的__getattr__,__getattribute__,或者直接定义返回值</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">'Attribute &lt;%s&gt; fetch failure'</span> % item</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattribute__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        <span class="comment"># return object.__getattribute__(self, item)</span></span><br><span class="line">        <span class="keyword">if</span> item == <span class="string">"name"</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'Lyon'</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> AttributeError(item)</span><br><span class="line"></span><br><span class="line">x = Foo(<span class="string">'Lyon'</span>)</span><br><span class="line">print(x.name)</span><br><span class="line">print(x.age)</span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">执行结果:</span></span><br><span class="line"><span class="string">Lyon</span></span><br><span class="line"><span class="string">Attribute &lt;age&gt; fetch failure</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<p> <code>__setattr__</code>  说明实例 : </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># __setattr__</span></span><br><span class="line"><span class="comment"># 与__getattr__一样,在定义__setattr__时,不要出现 self. 因为这样会导致递归调用</span></span><br><span class="line"><span class="comment"># 正确的方式是,使用object的__setattr__,或者使用self.__dict__[key]</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__setattr__</span><span class="params">(self, key, value)</span>:</span></span><br><span class="line">        <span class="comment"># object.__setattr__(self, key, value)</span></span><br><span class="line">        <span class="keyword">if</span> key == <span class="string">"name"</span>:</span><br><span class="line">            self.__dict__[key] = value</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> AttributeError(key + <span class="string">' not allowed'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">x = Foo(<span class="string">'Lyon'</span>)</span><br><span class="line">x.name = <span class="string">"Kenneth"</span></span><br><span class="line">x.age = <span class="number">18</span></span><br><span class="line">print(x.__dict__)</span><br><span class="line">module1</span><br></pre></td></tr></table></figure>
+<h2 id="描述器行为-🍀"><a href="#描述器行为-🍀" class="headerlink" title="描述器行为  🍀"></a>描述器行为  🍀</h2><table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>控制行为</th>
+<th>调用说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__get__</code></td>
+<td><code>.</code> 对象访问运算</td>
+<td>访问对象时被调用 , 对象访问意指 <code>.</code> 后面接的不是一个属性而是一个对象 , 见下方实例说明</td>
+</tr>
+<tr>
+<td><code>__set__</code></td>
+<td><code>.</code> 对象赋值运算</td>
+<td>对象赋值时被调用</td>
+</tr>
+<tr>
+<td><code>__delete__</code></td>
+<td><code>.</code> 对象删除运算</td>
+<td>对象删除时被调用</td>
+</tr>
+<tr>
+<td><code>__set_name__</code></td>
+<td>所有者创建</td>
+<td>在创建所有者时被调用 , Python 3.6 新增</td>
+</tr>
+</tbody>
+</table>
+<p><code>__get__</code> , <code>__set__</code> , <code>__delete__</code> 实例</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关于对象访问一说,是建立在两个的使用基础上的</span></span><br><span class="line"><span class="comment"># 单纯来讲,就是所有者类中的一个属性,是另一个类的实例</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dependency</span>:</span></span><br><span class="line">    <span class="string">""" 附属类 """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__get__</span><span class="params">(self, instance, owner)</span>:</span></span><br><span class="line">        print(<span class="string">'%s.%s is called...'</span> % (<span class="string">'Dependency'</span>, <span class="string">'__get__'</span>))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__set__</span><span class="params">(self, instance, value)</span>:</span></span><br><span class="line">        print(<span class="string">'%s.%s is called...'</span> % (<span class="string">'Dependency'</span>, <span class="string">'__set__'</span>))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__delete__</span><span class="params">(self, instance)</span>:</span></span><br><span class="line">        print(<span class="string">'%s.%s is called...'</span> % (<span class="string">'Dependency'</span>, <span class="string">'__delete__'</span>))</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Owner</span>:</span></span><br><span class="line">    <span class="string">""" 所有者类 """</span></span><br><span class="line">    dependency = Dependency()</span><br><span class="line"></span><br><span class="line">o = Owner()</span><br><span class="line">o.dependency</span><br><span class="line">o.dependency = <span class="string">'Lyon'</span></span><br><span class="line"><span class="keyword">del</span> o.dependency</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">执行结果:</span></span><br><span class="line"><span class="string">Dependency.__get__ is called...</span></span><br><span class="line"><span class="string">Dependency.__set__ is called...</span></span><br><span class="line"><span class="string">Dependency.__delete__ is called...</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<p><code>__set_name__</code> 是在上例 <code>Owner</code> 实例创建时被调用 , Python 3.6 新增</p>
+<h2 id="容器行为-🍀"><a href="#容器行为-🍀" class="headerlink" title="容器行为  🍀"></a>容器行为  🍀</h2><table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>控制行为</th>
+<th>调用说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__getitem__</code></td>
+<td>序列方式访问</td>
+<td><code>self[key]</code> 时被调用</td>
+</tr>
+<tr>
+<td><code>__missing__</code></td>
+<td>序列方式访问失败</td>
+<td><code>self[key]</code> 时 key 不在字典中被调用</td>
+</tr>
+<tr>
+<td><code>__setitem__</code></td>
+<td>序列方式赋值</td>
+<td><code>self[key] = value</code> 时被调用</td>
+</tr>
+<tr>
+<td><code>__delitem__</code></td>
+<td>序列方式删除</td>
+<td><code>del self[key]</code> 时被调用</td>
+</tr>
+<tr>
+<td><code>__iter__</code></td>
+<td>迭代环境</td>
+<td>通过 <code>iter(obj)</code> 调用 , 如使用for循环进行遍历</td>
+</tr>
+<tr>
+<td><code>__reversed__</code></td>
+<td><code>reversed()</code></td>
+<td><code>reversed(obj)</code> 时被调用</td>
+</tr>
+<tr>
+<td><code>__contains__</code></td>
+<td>成员关系 <code>in</code></td>
+<td><code>item in self</code> 时调用</td>
+</tr>
+</tbody>
+</table>
+<h2 id="运算行为-🍀"><a href="#运算行为-🍀" class="headerlink" title="运算行为  🍀"></a>运算行为  🍀</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基本运算行为</span></span><br><span class="line">object.__add__(self, other)              <span class="comment"># +</span></span><br><span class="line">object.__sub__(self, other)              <span class="comment"># -</span></span><br><span class="line">object.__mul__(self, other)              <span class="comment"># *</span></span><br><span class="line">object.__matmul__(self, other)           <span class="comment"># @</span></span><br><span class="line">object.__truediv__(self, other)          <span class="comment"># /</span></span><br><span class="line">object.__floordiv__(self, other)         <span class="comment"># //</span></span><br><span class="line">object.__mod__(self, other)              <span class="comment"># %</span></span><br><span class="line">object.__divmod__(self, other)           <span class="comment"># divmod()</span></span><br><span class="line">object.__pow__(self, other[, modulo])    <span class="comment"># pow()  **</span></span><br><span class="line">object.__lshift__(self, other)           <span class="comment"># &lt;&lt;</span></span><br><span class="line">object.__rshift__(self, other)           <span class="comment"># &gt;&gt;</span></span><br><span class="line">object.__and__(self, other)              <span class="comment"># &amp;</span></span><br><span class="line">object.__xor__(self, other)              <span class="comment"># ^</span></span><br><span class="line">object.__or__(self, other)               <span class="comment"># |</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 二进制运算行为</span></span><br><span class="line">object.__radd__(self, other)             </span><br><span class="line">object.__rsub__(self, other)             </span><br><span class="line">object.__rmul__(self, other)             </span><br><span class="line">object.__rmatmul__(self, other)          </span><br><span class="line">object.__rtruediv__(self, other)        </span><br><span class="line">object.__rfloordiv__(self, other)       </span><br><span class="line">object.__rmod__(self, other)             </span><br><span class="line">object.__rdivmod__(self, other)  </span><br><span class="line">object.__rpow__(self, other)</span><br><span class="line">object.__rlshift__(self, other)         </span><br><span class="line">object.__rrshift__(self, other)          </span><br><span class="line">object.__rand__(self, other)            </span><br><span class="line">object.__rxor__(self, other)           </span><br><span class="line">object.__ror__(self, other) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 加=运算行为</span></span><br><span class="line">object.__iadd__(self, other)             <span class="comment"># +=</span></span><br><span class="line">object.__isub__(self, other)             <span class="comment"># -=</span></span><br><span class="line">object.__imul__(self, other)             <span class="comment"># *=</span></span><br><span class="line">object.__imatmul__(self, other)</span><br><span class="line">object.__itruediv__(self, other)</span><br><span class="line">object.__ifloordiv__(self, other)</span><br><span class="line">object.__imod__(self, other)</span><br><span class="line">object.__ipow__(self, other[, modulo])</span><br><span class="line">object.__ilshift__(self, other)</span><br><span class="line">object.__irshift__(self, other)</span><br><span class="line">object.__iand__(self, other)</span><br><span class="line">object.__ixor__(self, other)</span><br><span class="line">object.__ior__(self, other)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 一元算数运算</span></span><br><span class="line">object.__neg__(self)</span><br><span class="line">object.__pos__(self)</span><br><span class="line">object.__abs__(self)</span><br><span class="line">object.__invert__(self)</span><br><span class="line"></span><br><span class="line"><span class="comment"># complex(),int(),float()</span></span><br><span class="line">object.__complex__(self)</span><br><span class="line">object.__int__(self)</span><br><span class="line">object.__float__(self)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 整数值hex(X),bin(X),oct(X),o[X],O[X:]</span></span><br><span class="line">object.__index__(self)</span><br><span class="line"></span><br><span class="line"><span class="comment"># round(),trunc(),floor(),ceil()</span></span><br><span class="line">object.__round__(self[, ndigits])</span><br><span class="line">object.__trunc__(self)</span><br><span class="line">object.__floor__(self)</span><br><span class="line">object.__ceil__(self)</span><br></pre></td></tr></table></figure>
+<h2 id="上下文管理行为-🍀"><a href="#上下文管理行为-🍀" class="headerlink" title="上下文管理行为  🍀"></a>上下文管理行为  🍀</h2><table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>控制行为</th>
+<th>调用说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__enter__</code></td>
+<td>进入上下文环境</td>
+<td>使用with进入上下文环境时被调用</td>
+</tr>
+<tr>
+<td><code>__exit__</code></td>
+<td>退出上下文环境</td>
+<td>退出上下文环境时被调用</td>
+</tr>
+</tbody>
+</table>
+<p>实例</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__enter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 返回值赋值给as指定变量</span></span><br><span class="line">        <span class="keyword">return</span> self</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__exit__</span><span class="params">(self, exc_type, exc_val, exc_tb)</span>:</span></span><br><span class="line">        print(<span class="string">'exc_type'</span>,exc_type)  <span class="comment"># 异常类型</span></span><br><span class="line">        print(<span class="string">'exc_val'</span>,exc_val)    <span class="comment"># 异常值</span></span><br><span class="line">        print(<span class="string">'exc_tb'</span>,exc_tb)      <span class="comment"># 追溯信息</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span>                 <span class="comment"># 返回值为True,那么异常会被清空,就好像啥都没发生一样,</span></span><br><span class="line">                                    <span class="comment"># with后的语句正常执行</span></span><br><span class="line">                                    <span class="comment"># 为False异常会抛出</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Foo(<span class="string">'Lyon'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">raise</span> AttributeError(<span class="string">'ignore exception'</span>)</span><br><span class="line">print(<span class="string">'over'</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="slots-🍀"><a href="#slots-🍀" class="headerlink" title="__slots__  🍀"></a>__slots__  🍀</h2><p><code>__slots__</code> 的作用是阻止在实例化类时为实例分配dict , 默认情况下每个类都会有一个dict,通过<code>__dict__</code> 访问 , 这个dict维护了这个实例的所有属性 </p>
+<p>作用 : </p>
+<ul>
+<li>减少内存使用</li>
+<li>限制对实例添加新的属性</li>
+</ul>
+<p>缺点 : </p>
+<ul>
+<li>不可被继承</li>
+<li>不可动弹添加新属性</li>
+</ul>
+<p>实例</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>:</span></span><br><span class="line">    __slots__ = [<span class="string">'name'</span>, <span class="string">'age'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></span><br><span class="line">        self.name = name</span><br><span class="line">        self.age = age</span><br><span class="line"></span><br><span class="line">f = Foo(<span class="string">'Lyon'</span>, <span class="number">18</span>)</span><br><span class="line">print(f.name)</span><br><span class="line">print(f.age)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 报错</span></span><br><span class="line">f.sex = <span class="string">'Man'</span></span><br></pre></td></tr></table></figure>
+<p>更多 <a href="https://docs.python.org/3/reference/datamodel.html#object.__index__" target="_blank" rel="noopener">Data model</a></p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/">33.Python之路 - 特殊操作符</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2020年06月26日 - 09:06</p>
+  <p><span>最后更新:</span>2020年06月30日 - 20:06</p>
+  <p><span>原始链接:</span><a href="/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/" title="33.Python之路 - 特殊操作符">https://jesse.top/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/26/python/05-Network/01-Python之路 - 网络编程初识/" rel="next" title="34.Python之路 - 网络编程初识">
+                <i class="fa fa-chevron-left"></i> 34.Python之路 - 网络编程初识
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/26/python/04-Object-Oriented/08-Python之路 - 异常处理/" rel="prev" title="32.Python之路 - 异常处理">
+                32.Python之路 - 异常处理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/"
+           data-title="33.Python之路 - 特殊操作符" data-url="https://jesse.top/2020/06/26/python/04-Object-Oriented/Python之路 - 特殊操作符/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python之路-特殊操作符"><span class="nav-number">1.</span> <span class="nav-text">Python之路 - 特殊操作符</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍-🍀"><span class="nav-number">1.1.</span> <span class="nav-text">介绍  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本行为-🍀"><span class="nav-number">1.2.</span> <span class="nav-text">基本行为  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问行为-🍀"><span class="nav-number">1.3.</span> <span class="nav-text">访问行为  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#描述器行为-🍀"><span class="nav-number">1.4.</span> <span class="nav-text">描述器行为  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器行为-🍀"><span class="nav-number">1.5.</span> <span class="nav-text">容器行为  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运算行为-🍀"><span class="nav-number">1.6.</span> <span class="nav-text">运算行为  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上下文管理行为-🍀"><span class="nav-number">1.7.</span> <span class="nav-text">上下文管理行为  🍀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#slots-🍀"><span class="nav-number">1.8.</span> <span class="nav-text">__slots__  🍀</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (GMT+08:00) &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

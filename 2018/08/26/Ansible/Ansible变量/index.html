@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Ansible," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Ansible变量ansible有多重方式定义变量,还可以通过fact来获取变量.接下来学习一下ansibled 变量知识">
+<meta name="keywords" content="Ansible">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ansible变量">
+<meta property="og:url" content="https://jesse.top/2018/08/26/Ansible/Ansible变量/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="Ansible变量ansible有多重方式定义变量,还可以通过fact来获取变量.接下来学习一下ansibled 变量知识">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-01T14:27:37.281Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ansible变量">
+<meta name="twitter:description" content="Ansible变量ansible有多重方式定义变量,还可以通过fact来获取变量.接下来学习一下ansibled 变量知识">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2018/08/26/Ansible/Ansible变量/"/>
+
+
+
+
+
+  <title>Ansible变量 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2018/08/26/Ansible/Ansible变量/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ansible变量</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T22:59:58+08:00">
+                2018-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Ansible/" itemprop="url" rel="index">
+                    <span itemprop="name">Ansible</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/26/Ansible/Ansible变量/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/26/Ansible/Ansible变量/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Ansible变量"><a href="#Ansible变量" class="headerlink" title="Ansible变量"></a>Ansible变量</h2><p>ansible有多重方式定义变量,还可以通过fact来获取变量.接下来学习一下ansibled 变量知识</p>
+<hr>
+<a id="more"></a>
+<h3 id="在Inventory主机文件中定义变量"><a href="#在Inventory主机文件中定义变量" class="headerlink" title="在Inventory主机文件中定义变量"></a>在Inventory主机文件中定义变量</h3><p>可以对每台主机分配具体的变量,然后在playbook中调用.例如下面的主机Host和host2的变量定义:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[atlanta]</span><br><span class="line">host1 http_port=80 maxRequestsPerChild=808</span><br><span class="line">host2 http_port=303 maxRequestsPerChild=909</span><br></pre></td></tr></table></figure>
+<p>也可以定义属于整个组的变量,这些变量在组内的所有服务器节点上生效:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[atlanta]</span><br><span class="line">host1</span><br><span class="line">host2</span><br><span class="line"></span><br><span class="line">[atlanta:vars]</span><br><span class="line">ntp_server=ntp.atlanta.example.com</span><br><span class="line">proxy=proxy.atlanta.example.com</span><br></pre></td></tr></table></figure>
+<p>ansible还会从/etc/ansible/host_vars目录下寻找主机名命名的变量文件.例如如果inventory下有个host1主机,则可以在/etc/ansible/host_vars目录下创建host1文件.并且定义如下内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">foo: bar</span><br><span class="line">baz: qux</span><br></pre></td></tr></table></figure>
+<p>则以上2个变量则会应用到host1主机中.</p>
+<p>同理,可以在/etc/ansible/group_vars目录下创建主机组命名的变量文件,比如新建一个atlanta文件,且定义上面变量,则这2个变量会被应用到整个atlanta主机组</p>
+<hr>
+<h2 id="在playbook中定义变量"><a href="#在playbook中定义变量" class="headerlink" title="在playbook中定义变量"></a>在playbook中定义变量</h2><p>1.在playbook中定义vars字段可以定义变量.例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vars:</span><br><span class="line">  key_files: /etc/nginx/ssl/nginx.key</span><br><span class="line">  cert_files: /etc/nginx/ssl/nginx.crt</span><br><span class="line">  conf_files: /etc/nginx/sites-avaliable/default</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>note: 在Inventory文件中定义变量是用var=value,而在Playbook以及下面讲到的yaml格式的变量文件中变量格式为var: value</p>
+</blockquote>
+<p>2.还可以通过vars_files字段定义一个文件.然后将变量写入到这个文件内:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vars_files:</span><br><span class="line">   - nginx.yml</span><br><span class="line">   </span><br><span class="line">nginx.yml文件内容如下:</span><br><span class="line">  key_files: /etc/nginx/ssl/nginx.key</span><br><span class="line">  cert_files: /etc/nginx/ssl/nginx.crt</span><br><span class="line">  conf_files: /etc/nginx/sites-avaliable/default</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="引用变量"><a href="#引用变量" class="headerlink" title="引用变量"></a>引用变量</h3><p>ansible使用jinjia2模板系统在playbook中引用变量.引用方法为 .例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">My amp goes to &#123;&#123; max_amp_value &#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>### </p>
+<h3 id="查看变量的值"><a href="#查看变量的值" class="headerlink" title="查看变量的值"></a>查看变量的值</h3><p>在之前的文档中提到了可以用debug模块来打印变量:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- name: print the variable</span><br><span class="line">  debug: var=myvarname</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="注册变量"><a href="#注册变量" class="headerlink" title="注册变量"></a>注册变量</h3><p>经常需要基于task执行的结果来设置变量值.想要实现这个操作可以再调用模块时使用register语句来注册变量</p>
+<p>例如,将whiami命令执行的结果保存到变量login中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- name: capture output of whoami command</span><br><span class="line">  command: whoami</span><br><span class="line">  register: login</span><br></pre></td></tr></table></figure>
+<p>访问login变量中的内容可以使用下列方法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- debug: msg=&quot;login is &#123;&#123;login.stdout&#125;&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果变量中包含字典,可以使用点号. 或者中括号[]来访问字典内的Key.上面也可以写成:</p>
+<p>login[‘stdout’]</p>
+<p>比如还有下面的常见嵌套变量:</p>
+<p>ansible_eth1[‘ipv4’][‘address’] </p>
+<p>or:</p>
+<p>ansible_eth1[‘ipv4’][‘address’]</p>
+<p>ansible_eth1.ipv4[‘address’]</p>
+<p>ansible_eth1.ipv4.address</p>
+</blockquote>
+<h3 id="fact"><a href="#fact" class="headerlink" title="fact"></a>fact</h3><p>ansible在执行playbook的时候,第一步就是采集主机的fact信息.主要包括:操作系统,IP地址,CPU,内存等等.这些信息都保存在fact变量中.</p>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$vim facttest.yml</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"> - hosts: all</span><br><span class="line">   remote_user: root</span><br><span class="line">   gather_facts: True</span><br><span class="line">   tasks:</span><br><span class="line">     - name: print the fact varibale:ansible_distrubution</span><br><span class="line">       debug: var=ansible_distribution</span><br></pre></td></tr></table></figure>
+<p>输出结果如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$ansible-playbook facttest.yml</span><br><span class="line"></span><br><span class="line">PLAY [all] *******************************************************************************************************************************************************************************************************</span><br><span class="line"></span><br><span class="line">TASK [Gathering Facts] *******************************************************************************************************************************************************************************************</span><br><span class="line">ok: [10.0.4.231]</span><br><span class="line">ok: [10.0.4.230]</span><br><span class="line"></span><br><span class="line">TASK [print the fact varibale:ansible_distrubution] **************************************************************************************************************************************************************</span><br><span class="line">ok: [10.0.4.231] =&gt; &#123;</span><br><span class="line">    &quot;ansible_distribution&quot;: &quot;CentOS&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [10.0.4.230] =&gt; &#123;</span><br><span class="line">    &quot;ansible_distribution&quot;: &quot;CentOS&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP *******************************************************************************************************************************************************************************************************</span><br><span class="line">10.0.4.230                 : ok=2    changed=0    unreachable=0    failed=0</span><br><span class="line">10.0.4.231                 : ok=2    changed=0    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在调用fact变量时,并不需要register关键字来注册变量,因为fact是自动注册的.另外还有一些模块也会自带返回fact变量.比如docker模块</p>
+</blockquote>
+<h4 id="查询某台服务器的所有fact信息"><a href="#查询某台服务器的所有fact信息" class="headerlink" title="查询某台服务器的所有fact信息:"></a>查询某台服务器的所有fact信息:</h4><p>setup特殊模块可以显示fact信息:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$ansible 10.0.4.230 -m setup</span><br><span class="line">10.0.4.230 | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;ansible_facts&quot;: &#123;</span><br><span class="line">        &quot;ansible_all_ipv4_addresses&quot;: [</span><br><span class="line">            &quot;10.0.4.230&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;ansible_all_ipv6_addresses&quot;: [</span><br><span class="line">            &quot;fe80::20c:29ff:fedc:b1c7&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;ansible_apparmor&quot;: &#123;</span><br><span class="line">            &quot;status&quot;: &quot;disabled&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">其余的fact内容忽略</span><br></pre></td></tr></table></figure>
+<p>由于fact内容实在太多.setup模块还支持filter参数,来匹配想要查找的fact信息.如果没有匹配到则返回空:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$ansible 10.0.4.230 -m setup -a &apos;filter=ansible_eth*&apos;</span><br><span class="line">10.0.4.230 | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;ansible_facts&quot;: &#123;&#125;,</span><br><span class="line">    &quot;changed&quot;: false</span><br><span class="line">&#125;</span><br><span class="line">[root@localhost playbook]$ansible 10.0.4.230 -m setup -a &apos;filter=ansible_ip*&apos;</span><br><span class="line">10.0.4.230 | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;ansible_facts&quot;: &#123;&#125;,</span><br><span class="line">    &quot;changed&quot;: false</span><br><span class="line">&#125;</span><br><span class="line">[root@localhost playbook]$ansible 10.0.4.230 -m setup -a &apos;filter=ansible_*ipv4*&apos;</span><br><span class="line">10.0.4.230 | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;ansible_facts&quot;: &#123;</span><br><span class="line">        &quot;ansible_all_ipv4_addresses&quot;: [</span><br><span class="line">            &quot;10.0.4.230&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;ansible_default_ipv4&quot;: &#123;</span><br><span class="line">            &quot;address&quot;: &quot;10.0.4.230&quot;,</span><br><span class="line">            &quot;alias&quot;: &quot;eno16777736&quot;,</span><br><span class="line">            &quot;broadcast&quot;: &quot;10.0.4.255&quot;,</span><br><span class="line">            &quot;gateway&quot;: &quot;10.0.4.254&quot;,</span><br><span class="line">            &quot;interface&quot;: &quot;eno16777736&quot;,</span><br><span class="line">            &quot;macaddress&quot;: &quot;00:0c:29:dc:b1:c7&quot;,</span><br><span class="line">            &quot;mtu&quot;: 1500,</span><br><span class="line">            &quot;netmask&quot;: &quot;255.255.255.0&quot;,</span><br><span class="line">            &quot;network&quot;: &quot;10.0.4.0&quot;,</span><br><span class="line">            &quot;type&quot;: &quot;ether&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;changed&quot;: false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h3><p>Ansible会自动提供一些变量,即使你没有去定义他们.这些变量是ansible预留的.所以用户不应该手动定义重名的变量.比如下面这些:</p>
+<ul>
+<li><strong>hostvars</strong></li>
+</ul>
+<p>hostvars可以让你访问所有主机节点的fact信息.如果一台服务器想要访问另一个节点服务器的fact信息,这很有用.一般语法是:hostvars[‘inventory_hostname’][‘fact信息’]:例如下面的例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$vim facttest.yml</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"> - hosts: all</span><br><span class="line">   remote_user: root</span><br><span class="line">   gather_facts: True</span><br><span class="line">   tasks:</span><br><span class="line">     - name: print the fact varibale:ansible_distrubution</span><br><span class="line">       debug: var=hostvars[inventory_hostname][&apos;ansible_all_ipv4_addresses&apos;]</span><br></pre></td></tr></table></figure>
+<p>执行结果:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$ansible-playbook facttest.yml</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">TASK [print the fact varibale:ansible_distrubution] **************************************************************************************************************************************************************</span><br><span class="line">ok: [10.0.4.231] =&gt; &#123;</span><br><span class="line">    &quot;hostvars[inventory_hostname][&apos;ansible_all_ipv4_addresses&apos;]&quot;: [</span><br><span class="line">        &quot;10.0.4.231&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">ok: [10.0.4.230] =&gt; &#123;</span><br><span class="line">    &quot;hostvars[inventory_hostname][&apos;ansible_all_ipv4_addresses&apos;]&quot;: [</span><br><span class="line">        &quot;10.0.4.230&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>inventory_hostname</strong></li>
+</ul>
+<p>inventory_hostname是ansible识别的当前主机的主机名.如果是在hosts文件中定义过别名.比如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">beta ansible_ssh_host=10.0.0.250</span><br></pre></td></tr></table></figure>
+<p>那么inventory_hostname就是beta</p>
+<ul>
+<li><strong>groups</strong></li>
+</ul>
+<p>当要访问一组主机的变量时,groups变量会很有用.比如一个模板文件需要知道一个test群组内所有服务器的IP地址.那么可以编辑这样一个模板配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for host in group.test %&#125;</span><br><span class="line">   server &#123;&#123; host.inventory_hostname &#125;&#125; &#123;&#123;host.ansible_default_ipv4.address&#125;&#125;:80</span><br><span class="line"> &#123;% endfor %&#125;</span><br><span class="line"> </span><br><span class="line"> 最终生成的配置文件如下:</span><br><span class="line"> server test1 10.0.4.230</span><br><span class="line"> server test2 10.0.4.231</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="命令行输入变量"><a href="#命令行输入变量" class="headerlink" title="命令行输入变量"></a>命令行输入变量</h3><p>通过向ansible-playbook传递-e var=value参数可以像shell脚本那样使用Playbook.并且该参数的变量拥有最高优先级.例如下面的例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$vim greet.yml</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">  - hosts: 10.0.4.230</span><br><span class="line">    vars:</span><br><span class="line">       greeting: &quot;hello&quot;</span><br><span class="line">    tasks:</span><br><span class="line">       - name: print greeting</span><br><span class="line">         debug: msg=&quot;&#123;&#123; greeting &#125;&#125;&quot;</span><br></pre></td></tr></table></figure>
+<p>通过-e指定greeting变量执行playbook:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$ansible-playbook greet.yml -e &apos;greeting=&quot;hello world&quot;&apos;</span><br><span class="line"></span><br><span class="line">TASK [print greeting] ******************************************************************************************************************************</span><br><span class="line">ok: [10.0.4.230] =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;hello world&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时greeting的变量值变成了”hello world” .而不是playbook中定义的”hello”</p>
+<p>注意,如果变量包含空格,要把整个-e后面的参数用单引号括起来..否则就会得出意外的结果:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$ansible-playbook greet.yml -e greeting=&quot;hello world&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">TASK [print greeting] ******************************************************************************************************************************</span><br><span class="line">ok: [10.0.4.230] =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;hello&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外,-e选项不仅仅可以传递单个字符串,还能传递进一个包含变量的文件.比如下面的例子中,将greetvars.yml这整个文件传递进playbook:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost playbook]$ansible-playbook greet.yml -e @greetvars.yml</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="变量优先级"><a href="#变量优先级" class="headerlink" title="变量优先级:"></a>变量优先级:</h3><p>1.命令行中使用-e参数手动指定</p>
+<p>2.inventory主机文件,或者yaml文件定义的主机变量或者群组变量</p>
+<p>3.FACT变量</p>
+<p>4.role的default/main.yml文件定义的变量</p>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/08/26/Ansible/Ansible变量/">Ansible变量</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2018年08月26日 - 22:08</p>
+  <p><span>最后更新:</span>2018年12月01日 - 22:12</p>
+  <p><span>原始链接:</span><a href="/2018/08/26/Ansible/Ansible变量/" title="Ansible变量">https://jesse.top/2018/08/26/Ansible/Ansible变量/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2018/08/26/Ansible/Ansible变量/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Ansible/" rel="tag"># Ansible</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/26/Ansible/playbook高级特性/" rel="next" title="Ansible playbook高级特性">
+                <i class="fa fa-chevron-left"></i> Ansible playbook高级特性
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/26/Ansible/Ansible的Playbook介绍以及技巧/" rel="prev" title="Ansible-Playbook">
+                Ansible-Playbook <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2018/08/26/Ansible/Ansible变量/"
+           data-title="Ansible变量" data-url="https://jesse.top/2018/08/26/Ansible/Ansible变量/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ansible变量"><span class="nav-number">1.</span> <span class="nav-text">Ansible变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在Inventory主机文件中定义变量"><span class="nav-number">1.1.</span> <span class="nav-text">在Inventory主机文件中定义变量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在playbook中定义变量"><span class="nav-number">2.</span> <span class="nav-text">在playbook中定义变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引用变量"><span class="nav-number">2.1.</span> <span class="nav-text">引用变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看变量的值"><span class="nav-number">2.2.</span> <span class="nav-text">查看变量的值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册变量"><span class="nav-number">2.3.</span> <span class="nav-text">注册变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fact"><span class="nav-number">2.4.</span> <span class="nav-text">fact</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查询某台服务器的所有fact信息"><span class="nav-number">2.4.1.</span> <span class="nav-text">查询某台服务器的所有fact信息:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内置变量"><span class="nav-number">2.5.</span> <span class="nav-text">内置变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命令行输入变量"><span class="nav-number">2.6.</span> <span class="nav-text">命令行输入变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变量优先级"><span class="nav-number">2.7.</span> <span class="nav-text">变量优先级:</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (GMT+08:00) &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

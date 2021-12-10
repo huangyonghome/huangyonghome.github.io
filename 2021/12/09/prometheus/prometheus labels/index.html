@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "59f7787a"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="prometheus," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jesse's home" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="prometheus lables介绍本篇笔记重点学习Prometheus的relabel_config.也就是标签的管理,包括标签过滤,自定义标签,动态替换标签等. 在Prometheus的官方文档有详细介绍: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config 一. 标">
+<meta name="keywords" content="prometheus">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Prometheus 动态lables标签">
+<meta property="og:url" content="https://jesse.top/2021/12/09/prometheus/prometheus labels/index.html">
+<meta property="og:site_name" content="Jesse&#39;s home">
+<meta property="og:description" content="prometheus lables介绍本篇笔记重点学习Prometheus的relabel_config.也就是标签的管理,包括标签过滤,自定义标签,动态替换标签等. 在Prometheus的官方文档有详细介绍: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config 一. 标">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img2.jesse.top/image-20210914172649800.png">
+<meta property="og:updated_time" content="2021-12-10T14:46:20.465Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Prometheus 动态lables标签">
+<meta name="twitter:description" content="prometheus lables介绍本篇笔记重点学习Prometheus的relabel_config.也就是标签的管理,包括标签过滤,自定义标签,动态替换标签等. 在Prometheus的官方文档有详细介绍: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config 一. 标">
+<meta name="twitter:image" content="https://img2.jesse.top/image-20210914172649800.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jesse.top/2021/12/09/prometheus/prometheus labels/"/>
+
+
+
+
+
+  <title>Prometheus 动态lables标签 | Jesse's home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jesse's home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jesse.top/2021/12/09/prometheus/prometheus labels/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jesse's home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Prometheus 动态lables标签</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-09T07:59:58+08:00">
+                2021-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/prometheus/" itemprop="url" rel="index">
+                    <span itemprop="name">prometheus</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/12/09/prometheus/prometheus labels/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/12/09/prometheus/prometheus labels/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="prometheus-lables"><a href="#prometheus-lables" class="headerlink" title="prometheus lables"></a>prometheus lables</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>本篇笔记重点学习Prometheus的<code>relabel_config</code>.也就是标签的管理,包括标签过滤,自定义标签,动态替换标签等.</p>
+<p>在Prometheus的官方文档有详细介绍:</p>
+<p><a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config" target="_blank" rel="noopener">https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config</a></p>
+<h3 id="一-标签作用"><a href="#一-标签作用" class="headerlink" title="一. 标签作用"></a>一. 标签作用</h3><p> Prometheus中存储的数据为时间序列，是由Metric的名字和一系列的标签(键值对)唯一标识的, 不同的标签代表不同的时间序列，即 通过指定标签查询指定数据 。</p>
+<p>Alertmanager还可以根据标签进行分组,将同一个标签的多个告警通知,打包成一条告警短信发送.</p>
+<h3 id="二-Metadata标签"><a href="#二-Metadata标签" class="headerlink" title="二.Metadata标签"></a>二.Metadata标签</h3><p>在Prometheus所有的Target实例中，都包含一些默认的Metadata标签信息。可以通过Prometheus UI的Targets页面中查看这些实例的Metadata标签的内容：<br>• <strong>address</strong>：当前Target实例的访问地址<host>:<port><br>• <strong>scheme</strong>：采集目标服务访问地址的HTTP Scheme，HTTP或者HTTPS<br>• <strong>metrics_path</strong>：采集目标服务访问地址的访问路径<br>一般来说元标签只是Prometheus内部使用，**我们一般不会让其做什么事情，并且这些标签是不会写到数据库当中的，使用promql是查询不到这些标签的.</port></host></p>
+<a id="more"></a>
+<h3 id="三-自定义标签"><a href="#三-自定义标签" class="headerlink" title="三.自定义标签"></a>三.自定义标签</h3><p>在Prometheus的配置文件里可以定义laebls.添加标签的Key:Value信息.Key是标签名,Value是标签值.在下面的例子中,为某个target定义了2个标签:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- job_name: &apos;Shanghai Linux Server&apos;</span><br><span class="line">   basic_auth:</span><br><span class="line">     username: prometheus</span><br><span class="line">     password: 123456</span><br><span class="line">   static_configs:</span><br><span class="line">   - targets: [&apos;192.168.179.99:9100&apos;]</span><br><span class="line">     labels:</span><br><span class="line">       idc: sss</span><br><span class="line">       project: blog</span><br></pre></td></tr></table></figure>
+<h3 id="修改标签"><a href="#修改标签" class="headerlink" title="修改标签"></a>修改标签</h3><p>在下面2个阶段可以对标签进行修改:</p>
+<ul>
+<li><code>relabel_configs</code> : <strong>在数据采集之前</strong>.在这个阶段可以过滤特定的监控目标(keep,drop),或者过滤某个标签(labelkeep,labeldrop)</li>
+<li><code>metric_relabel_configs</code> : <strong>抓取到数据之后</strong>.对标签进行重新标记</li>
+</ul>
+<h4 id="修改标签的场景"><a href="#修改标签的场景" class="headerlink" title="修改标签的场景:"></a>修改标签的场景:</h4><ul>
+<li>动态生成新标签(根据已有标签生成新的标签)</li>
+<li>过滤target(对匹配某个标签的target进行过滤)</li>
+<li>删除不需要标签</li>
+<li>添加新标签</li>
+</ul>
+<h4 id="标签匹配之后的动作Action"><a href="#标签匹配之后的动作Action" class="headerlink" title="标签匹配之后的动作Action:"></a>标签匹配之后的动作Action:</h4><ul>
+<li><code>replace</code> : 默认.通过regex匹配source_label的值，使用replacement来引用表达式匹配的分组，分组使用$1,$2…引用（正则匹配，提取字段重新创建新标签，<strong>注意这里是创建新的标签</strong>）</li>
+<li><code>keep</code> : 删除regex与连接不匹配的目标 source_labels,让Prometheus<strong>丢弃没有匹配</strong>到regex的target</li>
+<li><p><code>drop</code> : 删除regex与连接匹配的目标 source_labels,让Prometheus<strong>丢弃匹配</strong>到regex的target</p>
+</li>
+<li><p><code>labeldrop</code> : 删除regex匹配的标签,和<code>drop</code> 区别是这里是删除某个标签,而不是删除target</p>
+</li>
+<li><p><code>labelkeep</code>: 删除regex不匹配的标签,和<code>keep</code> 区别是这里是删除某个标签,而不是删除target</p>
+</li>
+<li><p><code>labelmap</code> : 匹配regex所有标签名称，并将捕获的内容分组，用第一个分组内容作为新的标签名（使用正则提取出多个字段，使用匹配到的作为新标签名，但是标签的内容不会改变，相对于对原有标签换了个名字,原标签仍然存在）</p>
+</li>
+</ul>
+<h3 id="修改标签场景实战"><a href="#修改标签场景实战" class="headerlink" title="修改标签场景实战"></a>修改标签场景实战</h3><p>下面以Prometheus+Consul的自动发现为例,介绍修改标签的实际场景.</p>
+<p>服务器通过Consul的API进行注册:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">cat /tmp/consul.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;ID&quot;: &quot;node-exporter-172.26.4.53&quot;,</span><br><span class="line">    &quot;Name&quot;: &quot;node-exporter-172.26.4.53&quot;,</span><br><span class="line">    &quot;Tags&quot;: [</span><br><span class="line">        &quot;node-exporter&quot;</span><br><span class="line">    ],</span><br><span class="line">    &quot;Address&quot;: &quot;172.26.4.53&quot;,</span><br><span class="line">    &quot;Port&quot;: 9100,</span><br><span class="line">    &quot;Meta&quot;: &#123;</span><br><span class="line">        &quot;app&quot;: &quot;nginx&quot;,</span><br><span class="line">        &quot;project&quot;: &quot;abc&quot;</span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;EnableTagOverride&quot;: false,</span><br><span class="line">    &quot;Check&quot;: &#123;</span><br><span class="line">        &quot;HTTP&quot;: &quot;http://172.26.4.53:9100/metrics&quot;,</span><br><span class="line">        &quot;Interval&quot;: &quot;30s&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;Weights&quot;: &#123;</span><br><span class="line">        &quot;Passing&quot;: 10,</span><br><span class="line">        &quot;Warning&quot;: 1</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>服务注册:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --request PUT --data @consul-0.json http://172.16.83.201:8500/v1/agent/service/register</span><br></pre></td></tr></table></figure>
+<p>下面是Prometheus的配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- job_name: &apos;consul-prometheus&apos;</span><br><span class="line">    consul_sd_configs:</span><br><span class="line">      - server: &apos;172.16.83.201:8500&apos;</span><br><span class="line">        services: []</span><br><span class="line">    relabel_configs:</span><br><span class="line">      - source_labels: [__meta_consul_tags]</span><br><span class="line">        regex: .*node-exporter.*</span><br><span class="line">        action: keep</span><br><span class="line">      - regex: __meta_consul_service_metadata_(.+)</span><br><span class="line">        action: labelmap</span><br></pre></td></tr></table></figure>
+<p>在Prometheus的UI界面的Service Discovery自动发现可以看到target的label信息</p>
+<p><img src="https://img2.jesse.top/image-20210914172649800.png" alt="image-20210914172649800"></p>
+<p>左边是通过consul注册时的meta元标签,在Consul注册时定义的数据都会以__meta_consul_的标签格式展示.而之前提到过, __meta开头的是元数据.只供Prometheus内部使用.</p>
+<p>右边的target labels是经过匹配,修改后的标签.而target labels的标签才是我们可以查询或者搜索的,有实际意义的标签.</p>
+<h3 id="修改标签场景一-过滤Target"><a href="#修改标签场景一-过滤Target" class="headerlink" title="修改标签场景一: 过滤Target"></a>修改标签场景一: 过滤Target</h3><p>在Prometheus的配置文件中下面的<code>relabel_configs</code> 定义了一条匹配到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">relabel_configs:</span><br><span class="line">  - source_labels: [__meta_consul_tags]</span><br><span class="line">    regex: .*node-exporter.*</span><br><span class="line">    action: keep</span><br></pre></td></tr></table></figure>
+<p>我们在Consul注册的时候定义了一个Tag:<code>node-exporter</code> .这个配置表示保留<code>__meta_consul_tags</code> 这个标签的值是”.<em>node-exporter.</em>“ 的target.如果服务器注册Consul时,tags不能匹配到”.<em>node-exporter.</em>那么这个服务器会被Prometheus过滤.即使这个服务器运行了node-exporter</p>
+<p>我们还可以通过<code>drop</code>将consul自身的服务器从target里拿掉.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- source_labels: [__meta_consul_service]</span><br><span class="line">        regex: &apos;consul&apos;</span><br><span class="line">        action: drop</span><br></pre></td></tr></table></figure>
+<p>在<code>__meta_consul_service</code> 匹配到<code>consul</code> 值的标签就drop掉.不监控consul服务器</p>
+<h4 id="修改标签场景二-动态新增自定义标签"><a href="#修改标签场景二-动态新增自定义标签" class="headerlink" title="修改标签场景二: 动态新增自定义标签"></a>修改标签场景二: 动态新增自定义标签</h4><p>在通过Consul注册的时候可以携带自定义标签:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&quot;Meta&quot;: &#123;</span><br><span class="line">       &quot;app&quot;: &quot;nginx&quot;,</span><br><span class="line">       &quot;project&quot;: &quot;abc&quot;</span><br><span class="line"></span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+<p>这些自定义的标签,在Prometheus里会自动添加下面2个标签:</p>
+<p><code>__meta_consul_service_metadata_app=nginx</code></p>
+<p><code>__meta_consul_service_metadata_project=abc</code> </p>
+<p>但是这些标签是元标签.所以要转换成自定义标签.通过下面的Prometheus配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- job_name: &apos;consul-prometheus&apos;</span><br><span class="line">    consul_sd_configs:</span><br><span class="line">      - server: &apos;172.16.83.201:8500&apos;</span><br><span class="line">        services: []</span><br><span class="line">    relabel_configs:</span><br><span class="line">      - regex: __meta_consul_service_metadata_(.+)</span><br><span class="line">        action: labelmap</span><br></pre></td></tr></table></figure>
+<p>匹配<code>__meta_consul_service_metadata_(.+)</code>的标签,然后将匹配到的分组<code>(.+)</code> 生成一个新的标签.</p>
+<p>也就是<code>__meta_consul_service_metadata_app=nginx</code> 匹配到<code>app=nginx</code> .然后生产一个<code>app=nginx</code>的标签.也就是在Prometheus的UI界面中看到的target labels</p>
+<blockquote>
+<p>labelmap的作用是产生一个新的标签,原来的标签仍然存在.</p>
+</blockquote>
+<p><strong>目前我是利用Ansible的jinjia2模板动态为服务器定义标签,然后在Prometheus中利用labelmap将标签动态生成为自定义标签.</strong></p>
+<h4 id="修改标签场景三-删除某个标签"><a href="#修改标签场景三-删除某个标签" class="headerlink" title="修改标签场景三: 删除某个标签"></a>修改标签场景三: 删除某个标签</h4><p>有些标签不希望被存储上，那么可以使用 labeldrop：删除regex匹配的标签去完成不需要入库 将里面的标签删除掉，在入库之前删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- job_name: &apos;Linux Server&apos;</span><br><span class="line">  basic_auth:</span><br><span class="line">    username: prometheus</span><br><span class="line">    password: 123456</span><br><span class="line">  static_configs:</span><br><span class="line">  - targets: [&apos;192.168.179.99:9100&apos;]</span><br><span class="line">  relabel_configs:</span><br><span class="line">  - action: labeldrop</span><br><span class="line">    regex: &quot;job&quot;   #正则匹配标签名称</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+   
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2021/12/09/prometheus/prometheus labels/">Prometheus 动态lables标签</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jesse 的个人博客">Jesse</a></p>
+  <p><span>发布时间:</span>2021年12月09日 - 07:12</p>
+  <p><span>最后更新:</span>2021年12月10日 - 22:12</p>
+  <p><span>原始链接:</span><a href="/2021/12/09/prometheus/prometheus labels/" title="Prometheus 动态lables标签">https://jesse.top/2021/12/09/prometheus/prometheus labels/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://jesse.top/2021/12/09/prometheus/prometheus labels/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">禁止商业用途</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jesse 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jesse 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/prometheus/" rel="tag"># prometheus</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/20/docker/Docker原理----1.Namespace/" rel="next" title="Docker原理----1.Namespace">
+                <i class="fa fa-chevron-left"></i> Docker原理----1.Namespace
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/12/09/SRE运维/SRE运维笔记/" rel="prev" title="SRE运维笔记">
+                SRE运维笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2021/12/09/prometheus/prometheus labels/"
+           data-title="Prometheus 动态lables标签" data-url="https://jesse.top/2021/12/09/prometheus/prometheus labels/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Jesse" />
+            
+              <p class="site-author-name" itemprop="name">Jesse</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥,虚心若愚.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#prometheus-lables"><span class="nav-number">1.</span> <span class="nav-text">prometheus lables</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一-标签作用"><span class="nav-number">1.2.</span> <span class="nav-text">一. 标签作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-Metadata标签"><span class="nav-number">1.3.</span> <span class="nav-text">二.Metadata标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-自定义标签"><span class="nav-number">1.4.</span> <span class="nav-text">三.自定义标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改标签"><span class="nav-number">1.5.</span> <span class="nav-text">修改标签</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修改标签的场景"><span class="nav-number">1.5.1.</span> <span class="nav-text">修改标签的场景:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标签匹配之后的动作Action"><span class="nav-number">1.5.2.</span> <span class="nav-text">标签匹配之后的动作Action:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改标签场景实战"><span class="nav-number">1.6.</span> <span class="nav-text">修改标签场景实战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改标签场景一-过滤Target"><span class="nav-number">1.7.</span> <span class="nav-text">修改标签场景一: 过滤Target</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修改标签场景二-动态新增自定义标签"><span class="nav-number">1.7.1.</span> <span class="nav-text">修改标签场景二: 动态新增自定义标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改标签场景三-删除某个标签"><span class="nav-number">1.7.2.</span> <span class="nav-text">修改标签场景三: 删除某个标签</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; Tue Jun 12 2018 08:00:00 GMT+0800 (GMT+08:00) &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"comments"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '3CtYiIp3Dijlw0XHyLxqMUM0-gzGzoHsz',
+        appKey: '6dleF8bCPBg8gTr0pBp1IgVe',
+        placeholder: '欢迎留言交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
